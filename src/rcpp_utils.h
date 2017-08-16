@@ -10,7 +10,7 @@
 #define MULTIPLENETWORK_RCPP_UTILS_H_
 
 #include "Rcpp.h"
-#include "mlnetwork.h"
+#include "multinet.h"
 #include "r_functions.h"
 #include <unordered_set>
 #include <vector>
@@ -24,10 +24,13 @@ std::unordered_set<LayerSharedPtr> resolve_layers_unordered(const MLNetworkShare
 std::vector<ActorSharedPtr> resolve_actors(const MLNetworkSharedPtr& mnet, const CharacterVector& names);
 std::unordered_set<ActorSharedPtr> resolve_actors_unordered(const MLNetworkSharedPtr& mnet, const CharacterVector& names);
 
-std::vector<EdgeSharedPtr> resolve_edges(const MLNetworkSharedPtr& mnet, const CharacterVector& edge_matrix);
+std::vector<EdgeSharedPtr> resolve_edges(const MLNetworkSharedPtr& mnet, const DataFrame& edge_matrix);
 
-std::vector<NodeSharedPtr> resolve_nodes(const MLNetworkSharedPtr& mnet, const CharacterVector& node_matrix);
+std::vector<NodeSharedPtr> resolve_nodes(const MLNetworkSharedPtr& mnet, const DataFrame& node_matrix);
 
 edge_mode resolve_mode(std::string mode);
+
+DataFrame to_dataframe(CommunityStructureSharedPtr cs);
+
 
 #endif /* MULTIPLENETWORK_RCPP_UTILS_H_ */

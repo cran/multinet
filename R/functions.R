@@ -1,5 +1,8 @@
 loadModule("multinet",TRUE)
 
+# Functions loading some famous small datasets
+# More datasets can be downloaded from the book webpage: multilayer.it.uu.se
+
 ml.aucs <- function() {
 	read.ml(system.file("extdata", "aucs.mpx", package="multinet"),"AUCS")
 }
@@ -12,6 +15,8 @@ ml.florentine <- function() {
 	read.ml(system.file("extdata", "florentine_families.mpx", package="multinet"),"Florentine families")
 }
 
+# Casting of (a portion of) a multilayer network into an igraph (multi)graph. This is done by creating an intermediate graphml file and loading it as an igraph file
+
 as.igraph.Rcpp_RMLNetwork <- function (x, layers=NULL, merge.actors=TRUE, all.actors=FALSE, ...) {
     if (is.null(layers)) {
         layers <- layers.ml(x)
@@ -23,76 +28,94 @@ as.igraph.Rcpp_RMLNetwork <- function (x, layers=NULL, merge.actors=TRUE, all.ac
     g
 }
 
-plot.Rcpp_RMLNetwork <- function(x, method="multi", layers=NULL, layer.colors=NULL, grid=NULL, layout=NULL, layout.par=list(), layout.independent=TRUE, communities=NULL,...) {
-    if (is.null(layers)) {
-        layers <- layers.ml(x)
-    }
+# (Rudimentary) plotting function.
+
     
-    temp_g <- as.igraph(x, layers)
+plot.Rcpp_RMLNetwork <- function(x,
+layout=NULL, grid=NULL, mai=.1,
+vertex.shape=16, vertex.cex=1, vertex.color=NULL,
+vertex.labels=NULL, vertex.labels.pos=3, vertex.labels.offset=.5, vertex.labels.cex=1,
+edge.type=1, edge.width=1, edge.color=1,
+edge.arrow.length=0.1, edge.arrow.angle=20,
+com=NULL, com.cex=1, ...) {
     
-    if (is.null(layer.colors)) {
-        layer.colors <- rainbow(length(layers))
-    }
-    edge_colors <- rep(1,length(E(temp_g)))
-    col_index <- 1
-    for (layer in layers) {
-        edge_colors[E(temp_g)$e_type==layer] <- layer.colors[col_index]
-        col_index <- col_index+1
+    num.cols = num.layers.ml(x)
+    num.rows = 1
+    if (!is.null(grid)) {
+        if (!length(grid)==2) stop("argument grid must have two elements")
+        num.rows = grid[1]
+        num.cols = grid[2]
     }
     
     if (is.null(layout)) {
-        layout <- layout.fruchterman.reingold
-        l <- do.call(layout,c(list(temp_g),layout.par))
+        layout <- layout.multiforce.ml(x)
     }
-    else {
-        l <- layout
+    
+    x_coord <- function(xyz_coord) {
+        xyz_coord$x+xyz_coord$z%%num.cols*width
     }
-       
-    if (method=="multi") {
- 	    if (is.null(communities)) {
-    		igraph.groups = list();
-    	}
-    	else {
-        	igraph.groups = get.groups.ml(communities);
-    	}
-        plot(temp_g,vertex.label=V(temp_g)$id,edge.color=edge_colors,layout=l,mark.groups=igraph.groups,...)
-    }
-    if (method=="slice") {
-        if (is.null(grid)) {
-            grid = c(1,num.layers.ml(x))
+   
+   y_coord <- function(xyz_coord) {
+       xyz_coord$y+(num.rows-1-xyz_coord$z%/%num.cols)*height
+   }
+   
+    #
+    x.min = min(layout$x)
+    y.min = min(layout$y)
+    x.max = max(layout$x)
+    y.max = max(layout$y)
+    
+    width = x.max-x.min + mai*(x.max-x.min);
+    x.min = x.min - mai/2*(x.max-x.min)
+    height = y.max-y.min + mai*(y.max-y.min);
+    y.min = y.min - mai/2*(y.max-y.min)
+    
+plot(NA,type="n",xlim=c(x.min,x.min+width*num.cols),ylim=c(y.min,y.min+height*num.rows),xaxt="n",yaxt="n",bty="n",xlab="",ylab="")
+
+    # draw grid
+    segments((0:num.cols*width)+x.min,y.min,(0:num.cols*width)+x.min,y.min+height*num.rows)
+    segments(x.min,(0:num.rows*height)+y.min,x.min+width*num.cols,(0:num.rows*height)+y.min)
+    
+    # draw communities
+    if (!is.null(com) && nrow(com)>0) {
+        num.com <- max(com$cid)+1
+        palette = rainbow(num.com, alpha=.5)
+        draw.areas <- function(d) {
+            xc <- x_coord(layout[d$aid,])
+            yc <- y_coord(layout[d$aid,])
+            # add some margin around nodes
+            os <- par()$cxy*com.cex
+            xc <- c(xc+os[1]/2,xc+os[1]/2,xc-os[1]/2,xc-os[1]/2)
+            yc <- c(yc+os[2]/2,yc-os[2]/2,yc+os[2]/2,yc-os[2]/2)
+                
+            extreme.points = chull(xc,yc)
+        xspline(xc[extreme.points],yc[extreme.points],open=F,shape=1,border=NA,col=palette[d$cid+1])
         }
-        par(mfrow=grid)
-        col_index <- 1
-        for (layer in layers) {
-            temp_g <- as.igraph(x,layer)
-            vertex_color <- rep("SkyBlue2",length(V(temp_g)))
-            vertex_color[get.vertex.attribute(temp_g,paste("layer:",layer))=="F"] <- "white"
-            if (layout.independent) {
-                l <- do.call(layout,c(list(temp_g),layout.par))
-            }
-            if (is.null(communities)) {
-    			igraph.groups = list();
-    		}
-    		else {
-	        	igraph.groups = get.groups.ml(communities[communities[,2]==layer,]);
-    		}
-        
-           	par(mar=c(0,0,0,0))
-            plot(temp_g,vertex.label=V(temp_g)$id,vertex.color=vertex_color,edge.color=layer.colors[col_index],layout=l,mark.groups=igraph.groups,...)
-            col_index <- col_index+1
-            box()
-        }
-        par(mfrow=c(1,1))
+        c.list <- get.community.list.ml(com,x);
+        lapply(c.list, draw.areas)
     }
+    
+    # draw edges
+    e <- edges.idx.ml(x)
+    draw_edge <- function(d) {
+        if (d['dir']==0) {
+        segments(x_coord(layout[d['from'],]),
+        y_coord(layout[d['from'],]),x_coord(layout[d['to'],]),y_coord(layout[d['to'],]), lty=edge.type, lwd=edge.width, col=edge.color)
+        }
+        if (d['dir']==1) {
+        arrows(x_coord(layout[d['from'],]),
+        y_coord(layout[d['from'],]),x_coord(layout[d['to'],]),y_coord(layout[d['to'],]), length=edge.arrow.length, angle=edge.arrow.angle, lty=edge.type, lwd=edge.width, col=edge.color)
+        }
+    }
+    apply(e,1,draw_edge)
+
+# draw nodes
+
+if (is.null(vertex.color)) vertex.color=layout$z+1
+points(x_coord(layout),y_coord(layout),pch=vertex.shape,col=vertex.color,cex=vertex.cex)
+
+# draw labels
+    if (is.null(vertex.labels)) vertex.labels=layout$actor
+text(x_coord(layout),y_coord(layout),labels=vertex.labels, pos=vertex.labels.pos, offset=vertex.labels.offset, cex=vertex.labels.cex)
 }
 
-get.groups.ml <- function(communities) {
-	community.ids <- unique(unlist(communities[,3]));
-	groups <- vector("list",length(community.ids))
-	j <- 1; 
-	for (i in community.ids) {
-		groups[[j]] <- unlist(unique(communities[communities[,3]==i,][,1]))
-		j <- j+1
-	}
-	groups
-}

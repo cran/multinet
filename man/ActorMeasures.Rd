@@ -25,7 +25,7 @@ relevance.ml(mlnetwork,actors=character(0),layers=character(0),mode="all")
 xrelevance.ml(mlnetwork,actors=character(0),layers=character(0),mode="all")
 }
 \arguments{
-\item{mlnetwork}{A multilayer network}
+\item{mlnetwork}{A multilayer network.}
 \item{actors}{An array of names of actors.}
 \item{layers}{An array of names of layers.}
 \item{mode}{This argument can take values "in", "out" or "all" to count respectively incoming edges, outgoing edges or both.}
@@ -38,9 +38,9 @@ a high degree deviation, showing an uneven usage of the layers (or layers with d
 
 \code{neighborhood.ml} returns the number of actors adjacent to the input actor restricted to the specified layers. \code{xneighborhood.ml} returns the number of actors adjacent to the input actor restricted to the specified layers and not present in the other layers.
 
-\code{connective.redundancy.ml} returns 1 minus neighborhood/degree.
+\code{connective.redundancy.ml} returns 1 minus neighborhood divided by degree.
 
-\code{relevance.ml} returns the percentage of neighbors present on the specified layers, while \code{xrelevance.ml} returns the percentage of neighbors present on the specified layers and not on others.
+\code{relevance.ml} returns the percentage of neighbors present on the specified layers. \code{xrelevance.ml} returns the percentage of neighbors present on the specified layers and not on others.
 }
 \references{
 Berlingerio, Michele, Michele Coscia, Fosca Giannotti, Anna Monreale, and Dino Pedreschi. 2011. "Foundations of Multidimensional Network Analysis." In International Conference on Social Network Analysis and Mining (ASONAM), 485-89. IEEE Computer Society.
@@ -53,12 +53,16 @@ net <- ml.aucs()
 degree.ml(net)
 # degree of actors U54 and U3, only considering layers work and coauthor
 degree.ml(net,c("U54","U3"),c("work","coauthor"),"in")
+# an indication of whether U54 and U3 are selectively active only on some layers
+degree.deviation.ml(net,c("U54","U3"))
 # co-workers of U54
 neighborhood.ml(net,"U54","work")
 # co-workers of U54 who are not connected to U54 on other layers
 xneighborhood.ml(net,"U54","work")
 # percentage of neighbors of U54 who are also co-workers
 relevance.ml(net,"U54","work")
+# redundancy between work and lunch
+connective.redundancy.ml(net,"U54",c("work","lunch"))
 # percentage of neighbors of U54 who would no longer
 # be neighbors by removing this layer
 xrelevance.ml(net,"U54","work")
