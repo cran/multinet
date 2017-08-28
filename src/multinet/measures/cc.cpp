@@ -26,7 +26,7 @@ double cc(const MLNetworkSharedPtr& mnet, const NodeSharedPtr& node) {
 				num_edges++;
 		}
 	}
-	return num_edges*2/(num_neigh*(num_neigh-1));
+	return num_edges*2.0/(num_neigh*(num_neigh-1));
 }
 } // Namespace mlnet
 

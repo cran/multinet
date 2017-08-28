@@ -1,4 +1,4 @@
-3d8478e018c14f7d0f737c98c54e0bee *DESCRIPTION
+deeab4bac050fb1a8448591bd387ff90 *DESCRIPTION
 175864d51acfbad10b7938b7cc0eb035 *NAMESPACE
 c0bed85c8056f1956ee680ce932b26a6 *R/functions.R
 0f4c1ba781bba30aff157469c252f70e *inst/extdata/aucs.mpx
@@ -17,7 +17,7 @@ c3eeeb32486cfbbbb4406ea797577686 *inst/extdata/book.mpx
 30a411f67e59cd7db981d397d10d4fd0 *man/Layout.Rd
 204bfa82543cba3d359c497eb5fa3aa4 *man/Manipulation.Rd
 22e7bef9546029a5f48b769cc770e5be *man/Navigation.Rd
-da9b78ed64164fc04a354e2a71565681 *man/Plot.Rd
+973a8088915b839745b0712ca06698cd *man/Plot.Rd
 699b358b6f9fff609368fb5da21240fc *man/Predefined.Rd
 a052e1729de2647566015915d297a7ca *man/Properties.Rd
 1e8e2c8a7a51e53571b58e2fc0525d57 *man/RandomWalkMeasures.Rd
@@ -29,17 +29,20 @@ a052e1729de2647566015915d297a7ca *man/Properties.Rd
 f7b024cedbc7caada2c8f48b81fdf2a4 *src/eclat/apriori/src/apriori.mak
 fe128636a793cbcab338eb40e0d46427 *src/eclat/apriori/src/istree.c
 9a674f1ab43d67d534a294f6ac6ae7ca *src/eclat/apriori/src/istree.h
+583b635aef6e951d5f3701db8e2e7847 *src/eclat/apriori/src/makefile
 a0e0cb1e8cc29c83263d556370540b7f *src/eclat/eclat/src/eclat.c
 0f5b009fbe6d9771bbd91c2004b7c329 *src/eclat/eclat/src/eclat.cpp
 a6ce5d5a632c1283faeec54bba317c1f *src/eclat/eclat/src/eclat.h
 27f1a371685df83381f9e9977d22a214 *src/eclat/eclat/src/eclat.mak
 f010153849c56abe737a849fec1ab933 *src/eclat/eclat/src/make._at
+0ecd892d7c8e39f40b09d4e307b3ead5 *src/eclat/eclat/src/makefile
 f60dd383678ac3b90cbfa4a2ba014aeb *src/eclat/eclat/src/out
 d2d7ddb84bb5dc601aa1b0dcf843b16b *src/eclat/eclat/src/test1.tab
 21fb7e20520c5a5d4f7cf8d5e53fcb57 *src/eclat/math/src/chi2.c
 b140c96c338c73bb6abb52833b3cbc50 *src/eclat/math/src/chi2.h
 985c455e38155536b63366ec3d88e662 *src/eclat/math/src/gamma.c
 ac39f9738c723fe1a2a48b2a2f491a17 *src/eclat/math/src/gamma.h
+f51f5726fc82a6ff734446f0b494cbb0 *src/eclat/math/src/makefile
 92ab756f0f5656cc3b35742d4daf5d3d *src/eclat/math/src/math.mak
 3c6e7441abea0f11dd48eb740d2fd323 *src/eclat/math/src/ruleval.c
 2ab66bc7d9d3be5d01eadad770d28e11 *src/eclat/math/src/ruleval.h
@@ -47,6 +50,7 @@ ac39f9738c723fe1a2a48b2a2f491a17 *src/eclat/math/src/gamma.h
 5e1295b738914fc651c45ac16d15db3b *src/eclat/tract/src/clomax.h
 aac6fb4b08936803cdb6406f3cd330f2 *src/eclat/tract/src/fim16.c
 493a00dc5f7716a97f5ed7dc74a0afcf *src/eclat/tract/src/fim16.h
+5322d4c3845fe52187bc06badc8f5e93 *src/eclat/tract/src/makefile
 9b79266ac53187e638bf239383cfa005 *src/eclat/tract/src/patspec.c
 45be7107a0e3cb6f3de67333455f7440 *src/eclat/tract/src/patspec.h
 c11c430436257d2c89d4763be8174d83 *src/eclat/tract/src/report.c
@@ -60,6 +64,7 @@ f1bca9d7abda01999301860221a74590 *src/eclat/util/src/error.h
 4ec0896b155c7a2474aed54ceb7cfb14 *src/eclat/util/src/escape.c
 d738287dc9f086a98fb216aa62477777 *src/eclat/util/src/escape.h
 16b485d255dfa0971fab26e59f274fa8 *src/eclat/util/src/fntypes.h
+5aaa7b03df4b52b511fe5b271d3e4023 *src/eclat/util/src/makefile
 b3ad1f16051fe86234dffa1f543d2f74 *src/eclat/util/src/memsys.c
 060a58ddea54a3299e9cace70a2bb837 *src/eclat/util/src/memsys.h
 32d870bed97ff9c6760dea3a761cd574 *src/eclat/util/src/scanner.c
@@ -1211,7 +1216,7 @@ ef38af204d3421d4893fe135c620d48b *src/lib/dlib/svm/kcentroid_overloads.h
 033d40ccfd1abb800726bc5baaf574d4 *src/lib/dlib/svm/kernel_abstract.h
 7c57df2092af26eb5846aedd12024a7f *src/lib/dlib/svm/kernel_matrix.h
 1541af5ef4c1023aebe5bfb65e3eedf6 *src/lib/dlib/svm/kernel_matrix_abstract.h
-547689bd5df6e8db6c6d055b593b3b0d *src/lib/dlib/svm/kkmeans.h
+0727d07fed5044c6bb374ca22f87d74f *src/lib/dlib/svm/kkmeans.h
 371a9ba2506e288cf36b92c93c40511a *src/lib/dlib/svm/kkmeans_abstract.h
 11f35a01196b8e5a4704cdbba2d59c3e *src/lib/dlib/svm/krls.h
 4a6da7420d98793fae5d1c10f6fa050d *src/lib/dlib/svm/krls_abstract.h
@@ -2081,10 +2086,10 @@ a8cf64bee7d58d533a0a5d7c3744051b *src/lib/spectra/SymGEigsSolver.h
 91de6ba6088affb6dac5cc240fe0fc2b *src/lib/spectra/Util/GEigsMode.h
 86b758f01c43cf3c3230093ab57f01b5 *src/lib/spectra/Util/SelectionRule.h
 4fbb06945c2418b173a9d32a37a47100 *src/lib/spectra/Util/SimpleRandom.h
-6467075d84bb67945dfe0d900ed228c6 *src/multinet/community/abacus.cpp
+e1138f9d151b9c626de1934e34f5e8c5 *src/multinet/community/abacus.cpp
 19c915a340172effb6d19a9d1a4ae002 *src/multinet/community/acl.cpp
 86fa3477445db8934a64164c79b9edbb *src/multinet/community/community_evaluation.cpp
-1d34f4f5c806cb1992d9e3a309bb2ba1 *src/multinet/community/cutils.cpp
+295deba6e8b7edce1921b6e7e7823c5d *src/multinet/community/cutils.cpp
 e3e0236be4568a688f891df2b40cbe10 *src/multinet/community/datastructures.cpp
 bccb1cddf317476a16e13fea609662f1 *src/multinet/community/flattening.cpp
 2f1d0b380931d932528a65afb3750e69 *src/multinet/community/glouvain.cpp
@@ -2092,7 +2097,7 @@ bccb1cddf317476a16e13fea609662f1 *src/multinet/community/flattening.cpp
 001a7df4d241194e2c521effe1bc3f83 *src/multinet/community/lart.cpp
 f939cbc935e1da7a07d88c073308cacc *src/multinet/community/ml-cpm.cpp
 e8d245dea49d0f2cb07f68b46d106d7e *src/multinet/community/modularity.cpp
-9a0425e879472ef6a6ded3fd21f86559 *src/multinet/community/pmm.cpp
+f98e96e8c18bd2628a08b9e5b332c2ea *src/multinet/community/pmm.cpp
 75810be6cfc43a57b75464526038d14f *src/multinet/datastructures/MLNetwork.cpp
 77fc0e40986da1e04c4ee083f27c67e7 *src/multinet/datastructures/actor_sets.cpp
 d20d584cef06bcd86c0655577d431ac7 *src/multinet/datastructures/attributes/Attribute.cpp
@@ -2125,7 +2130,7 @@ d14024e882863f92e10621c7cd97fe87 *src/multinet/io/multilayer.cpp
 34deafa029f03454231276dee11814ee *src/multinet/layout/circular.cpp
 278610be3a99008ad61588501efed54a *src/multinet/layout/multiforce.cpp
 fbb922027ff109a187c7855d3344d185 *src/multinet/measures/betweenness.cpp_todo
-60ece0f75068a0b488db6ed360b70e68 *src/multinet/measures/cc.cpp
+2e8ab29c04d766fd79f73f171db62e39 *src/multinet/measures/cc.cpp
 fc84eb29ece0b4ebb7b95878713b87d9 *src/multinet/measures/correlation.cpp
 69eb9d9e78ca0b12cd0ce1faca8dc776 *src/multinet/measures/degree.cpp
 0d0451438ebcbce37d1b88ebca1914c0 *src/multinet/measures/distance_based.cpp
