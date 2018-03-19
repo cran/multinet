@@ -1,8 +1,8 @@
 Package: multinet
 Type: Package
 Title: Analysis and Mining of Multilayer Social Networks
-Version: 1.1.1
-Date: 2017-08-08
+Version: 1.1.2
+Date: 2018-03-18
 Author: Matteo Magnani, Mikael Dubik (lart and glouvain functions). The package uses functions from dlib, Eigen, Spectra and eclat libraries, whose code has been included in our source package.
 Maintainer: Matteo Magnani <matteo.magnani@it.uu.se>
 Description: Functions for the creation/generation and analysis of multilayer social networks.
@@ -13,5 +13,5 @@ RcppModules: multinet
 SystemRequirements: A C++11 compiler
 NeedsCompilation: yes
 Repository: CRAN
-Packaged: 2017-08-27 20:59:36 UTC; matteomagnani
-Date/Publication: 2017-08-28 10:45:32 UTC
+Packaged: 2018-03-19 03:44:11 UTC; matteomagnami
+Date/Publication: 2018-03-19 08:39:13 UTC
