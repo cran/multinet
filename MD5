@@ -1,4 +1,4 @@
-7e493da3364a7da2def3a67e07bc2209 *DESCRIPTION
+a23605f8e79e11b58e5c66ba640e576d *DESCRIPTION
 175864d51acfbad10b7938b7cc0eb035 *NAMESPACE
 c0bed85c8056f1956ee680ce932b26a6 *R/functions.R
 0f4c1ba781bba30aff157469c252f70e *inst/extdata/aucs.mpx
@@ -373,7 +373,7 @@ fdd6bce68947940aa93ae8985f8b835b *src/lib/dlib/set_utils/set_utils.h
 fb6f3899f50480b8dd36289356df0457 *src/lib/dlib/smart_pointers.h
 ed29330c3d3d2c062f7e57d90baa6af1 *src/lib/dlib/smart_pointers/scoped_ptr.h
 e42dcdebc2f57fad51b253f72c97fce0 *src/lib/dlib/smart_pointers/scoped_ptr_abstract.h
-7c715f01f987a1781f7a9d1f7dbd06db *src/lib/dlib/smart_pointers/shared_ptr.h
+b30787defde7a621e51f091acc0233d2 *src/lib/dlib/smart_pointers/shared_ptr.h
 109a2e9bdaefa12ed0c3c7fe707198b8 *src/lib/dlib/smart_pointers/shared_ptr_abstract.h
 da2744542ff1375fef3e0ac9c70acd3f *src/lib/dlib/smart_pointers/shared_ptr_thread_safe.h
 e8d6757fc4b61bb7edd4a8795dc25dd2 *src/lib/dlib/smart_pointers/shared_ptr_thread_safe_abstract.h
@@ -1091,7 +1091,7 @@ a8cf64bee7d58d533a0a5d7c3744051b *src/lib/spectra/SymGEigsSolver.h
 4fbb06945c2418b173a9d32a37a47100 *src/lib/spectra/Util/SimpleRandom.h
 e1138f9d151b9c626de1934e34f5e8c5 *src/multinet/community/abacus.cpp
 19c915a340172effb6d19a9d1a4ae002 *src/multinet/community/acl.cpp
-8254fed84f5a5f5a3efcb6c0e39599c7 *src/multinet/community/community_evaluation.cpp
+02f8838fb7715d12f7bfa918b56d0113 *src/multinet/community/community_evaluation.cpp
 295deba6e8b7edce1921b6e7e7823c5d *src/multinet/community/cutils.cpp
 e3e0236be4568a688f891df2b40cbe10 *src/multinet/community/datastructures.cpp
 1ad4a6c01484ff88d94b83e8f52ccd4f *src/multinet/community/flattening.cpp
