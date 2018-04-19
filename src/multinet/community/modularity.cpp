@@ -227,7 +227,7 @@ double extended_modularity(const MLNetworkSharedPtr& mnet,
 			for(NodeSharedPtr node1:com->get_nodes()){
 				for(NodeSharedPtr node2:com->get_nodes()){
 					//if it is not the same node and there is an edge between the corresponding two actors
-					if(node1 != node2 &  mnet->get_edge(node1,node2)!=NULL){
+					if(node1 != node2 && mnet->get_edge(node1,node2)!=NULL){
 					 //a-calculate the actual belonging co_efficient of the this link (referred to as r(i,j,c) in the paper)
 						first_node_belonging_co=1;
 						second_node_belonging_co= 1;
