@@ -1,0 +1,6 @@
+# version 1.1.5 
+
+- introduced "vertex" as a synonim of "node", to later replace it
+- added legend functionality to plotting function
+- updated multiforce layout function (fixed frame borders)
+- added summary and as.list functions

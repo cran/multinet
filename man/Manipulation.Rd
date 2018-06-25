@@ -2,11 +2,13 @@
 \alias{Network management: updates}
 \alias{add.layers.ml}
 \alias{add.actors.ml}
+\alias{add.vertices.ml}
 \alias{add.nodes.ml}
 \alias{add.edges.ml}
 
 \alias{delete.layers.ml}
 \alias{delete.actors.ml}
+\alias{delete.vertices.ml}
 \alias{delete.nodes.ml}
 \alias{delete.edges.ml}
 \title{
@@ -20,21 +22,24 @@ The functions \code{add.nodes.ml} and \code{delete.nodes.ml} add/remove the inpu
 \usage{
 add.layers.ml(mlnetwork, layers, directed=FALSE)
 add.actors.ml(mlnetwork, actors)
+add.vertices.ml(mlnetwork, vertices)
 add.nodes.ml(mlnetwork, nodes)
 add.edges.ml(mlnetwork, edges)
 
 delete.layers.ml(mlnetwork, layers)
 delete.actors.ml(mlnetwork, actors)
+delete.vertices.ml(mlnetwork, vertices)
 delete.nodes.ml(mlnetwork, nodes)
 delete.edges.ml(mlnetwork, edges)
 }
 \arguments{
-\item{mlnetwork}{A multilayer network.}
-\item{layers}{An array of names of layers.}
-\item{actors}{An array of names of actors.}
-\item{directed}{Determines if the layer(s) is (are) directed or undirected. If multiple layers are specified, directed should be either a single value or an array with as many values as the number of layers.}
-\item{nodes}{A dataframe of nodes to be updated. The first column specifies actor names, the second layer names.}
-\item{edges}{A dataframe containing the nodes to be connected. The four columns must contain, in this order: actor1 name, layer1 name, actor2 name, layer2 name. The directionality of the edge (directed/undirected) is pre-defined depending on the layer(s).}
+\item{mlnetwork}{a multilayer network.}
+\item{layers}{an array of names of layers.}
+\item{actors}{an array of names of actors.}
+\item{directed}{determines if the layer(s) is (are) directed or undirected. If multiple layers are specified, directed should be either a single value or an array with as many values as the number of layers.}
+\item{vertices}{a dataframe of vertices to be updated. The first column specifies actor names, the second layer names.}
+\item{nodes}{a synonim for vertices, for backward compatibility with previous versions of the library.}
+\item{edges}{a dataframe containing the nodes to be connected. The four columns must contain, in this order: actor1 name, layer1 name, actor2 name, layer2 name. The directionality of the edge (directed/undirected) is pre-defined depending on the layer(s).}
 }
 \seealso{
 \link{Network management: properties}, \link{Network management: edge directionality}
@@ -52,15 +57,15 @@ add.actors.ml(net,c("A2","A3"))
 num.actors.ml(net)
 actors.ml(net)
 # Adding some nodes (actor A3 is not present in layer l3: no corresponding node there)
-nodes <- data.frame(
+vertices <- data.frame(
     c("A1","A2","A3","A1","A2","A3"),
     c("l1","l1","l1","l2","l2","l2"))
-add.nodes.ml(net,nodes)
-nodes <- data.frame(
+add.vertices.ml(net, vertices)
+vertices <- data.frame(
     c("A1","A2"),
     c("l3","l3"))
-add.nodes.ml(net,nodes)
-nodes.ml(net)
+add.nodes.ml(net, vertices)
+vertices.ml(net)
 # We create a data frame specifying two edges:
 # A2,l2 -- A3,l1
 # A2,l2 -- A3,l2
@@ -79,7 +84,7 @@ delete.layers.ml(net,"l1")
 # "A1" in layers "l2" and "l3"
 delete.actors.ml(net,"A1")
 # deleting node A2,l3 and edge A2,l2 -- A3,l2
-delete.nodes.ml(net,data.frame("A2","l3"))
+delete.vertices.ml(net,data.frame("A2","l3"))
 edges <- data.frame("A2","l2","A3","l2")
 delete.edges.ml(net,edges)
 net

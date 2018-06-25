@@ -85,15 +85,17 @@ RCPP_MODULE(multinet){
     function("layers.ml", &layers, List::create( _["mlnetwork"]), "Returns the list of layers in the input multilayer network");
     function("actors.ml", &actors, List::create( _["mlnetwork"], _["layers"]=CharacterVector()), "Returns the list of actors present in the input layers, or in the whole multilayer network if no layers are specified");
     function("nodes.ml", &nodes, List::create( _["mlnetwork"], _["layers"]=CharacterVector()), "Returns the list of nodes in the input layers, or in the whole multilayer network if no layers are specified");
+    function("vertices.ml", &nodes, List::create( _["mlnetwork"], _["layers"]=CharacterVector()), "Returns the list of vertices in the input layers, or in the whole multilayer network if no layers are specified");
     function("edges.ml", &edges, List::create( _["mlnetwork"], _["layers1"]=CharacterVector(), _["layers2"]=CharacterVector()), "Returns the list of edges among nodes in the input layers (if only one set of layers is specified), or from the first set of input layers to the second set of input layers, or in the whole multilayer network if no layers are specified");
     
     function("edges.idx.ml", &edges_idx, List::create( _["mlnetwork"]), "miao");
 
 
     function("num.layers.ml", &numLayers, List::create( _["mlnetwork"]), "Returns the number of layers in the input mlnetwork");
-    function("num.actors.ml", &numActors, List::create( _["mlnetwork"], _["layers"]=CharacterVector()), "Returns the number of actors in the set of input layers, or in the whole mlnetwork if no layers are specified");
-    function("num.nodes.ml", &numNodes, List::create( _["mlnetwork"], _["layers"]=CharacterVector()), "Returns the number of nodes in the set of input layers, or in the whole mlnetwork if no layers are specified");
-    function("num.edges.ml", &numEdges, List::create( _["mlnetwork"], _["layers1"]=CharacterVector(), _["layers2"]=CharacterVector()), "Returns the number of edges in the set of input layers, or in the whole mlnetwork if no layers are specified");
+    function("num.actors.ml", &numActors, List::create( _["mlnetwork"], _["layers"]=CharacterVector()), "Returns the number of actors in the set of input layers, or in the whole multilayer network if no layers are specified");
+    function("num.nodes.ml", &numNodes, List::create( _["mlnetwork"], _["layers"]=CharacterVector()), "Returns the number of nodes in the set of input layers, or in the whole multilayer network if no layers are specified");
+    function("num.vertices.ml", &numNodes, List::create( _["mlnetwork"], _["layers"]=CharacterVector()), "Returns the number of vertices in the set of input layers, or in the whole multilayer network if no layers are specified");
+    function("num.edges.ml", &numEdges, List::create( _["mlnetwork"], _["layers1"]=CharacterVector(), _["layers2"]=CharacterVector()), "Returns the number of edges in the set of input layers, or in the whole multilayer network if no layers are specified");
 
     function("is.directed.ml", &isDirected, List::create( _["mlnetwork"], _["layers1"]=CharacterVector(), _["layers2"]=CharacterVector()), "Returns a logical vector indicating for each pair of layers if it is directed or not");
 
@@ -107,6 +109,7 @@ RCPP_MODULE(multinet){
     function("add.layers.ml", &addLayers, List::create( _["mlnetwork"], _["layers"], _["directed"]=false), "Adds one or more layers to a multilayer network");
     function("add.actors.ml", &addActors, List::create( _["mlnetwork"], _["actors"]), "Adds one or more actors to a multilayer network");
     function("add.nodes.ml", &addNodes, List::create( _["mlnetwork"], _["nodes"]), "Adds one or more nodes to a layer of a multilayer network");
+    function("add.vertices.ml", &addNodes, List::create( _["mlnetwork"], _["vertices"]), "Adds one or more vertices to a layer of a multilayer network");
     function("add.edges.ml", &addEdges, List::create( _["mlnetwork"], _["edges"]), "Adds one or more edges to a multilayer network - each edge is a quadruple [actor,layer,actor,layer]");
 
     function("set.directed.ml", &setDirected, List::create( _["mlnetwork"], _["directionalities"]), "Set the directionality of one or more pairs of layers");
@@ -114,14 +117,15 @@ RCPP_MODULE(multinet){
     function("delete.layers.ml", &deleteLayers, List::create( _["mlnetwork"], _["layers"]), "Deletes one or more layers from a multilayer network");
     function("delete.actors.ml", &deleteActors, List::create( _["mlnetwork"], _["actors"]), "Deletes one or more actors from a multilayer network");
     function("delete.nodes.ml", &deleteNodes, List::create( _["mlnetwork"], _["nodes"]), "Deletes one or more nodes from a layer of a multilayer network");
+    function("delete.vertices.ml", &deleteNodes, List::create( _["mlnetwork"], _["vertices"]), "Deletes one or more vertices from a layer of a multilayer network");
     function("delete.edges.ml", &deleteEdges, List::create( _["mlnetwork"], _["edges"]), "Deletes one or more edges from a multilayer network - each edge is a quadruple [actor,layer,actor,layer]");
 
     // ATTRIBUTE HANDLING
 
-    function("new.attributes.ml", &newAttributes, List::create( _["mlnetwork"], _["attributes"], _["type"]="string", _["target"]="actor", _["layer"]="", _["layer1"]="", _["layer2"]=""), "Creates a new attribute so that values can be associated to actors, layers, nodes or edges");
+    function("new.attributes.ml", &newAttributes, List::create( _["mlnetwork"], _["attributes"], _["type"]="string", _["target"]="actor", _["layer"]="", _["layer1"]="", _["layer2"]=""), "Creates a new attribute so that values can be associated to actors, layers, vertices or edges");
     function("list.attributes.ml", &getAttributes, List::create( _["mlnetwork"], _["target"]="actor"), "Returns the list of attributes defined for the input multilayer network");
-    function("get.values.ml", &getValues, List::create( _["mlnetwork"], _["attribute"], _["actors"]=CharacterVector(), _["layers"]=CharacterVector(), _["nodes"]=CharacterMatrix(0,0), _["edges"]=CharacterMatrix(0,0)), "Returns the value of an attribute on the specified actors, layers, nodes or edges");
-    function("set.values.ml", &setValues, List::create( _["mlnetwork"], _["attribute"], _["actors"]=CharacterVector(), _["layers"]=CharacterVector(), _["nodes"]=CharacterMatrix(0,0), _["edges"]=CharacterMatrix(0,0), _["values"]), "Sets the value of an attribute for the specified actors/vertexes/edges");
+    function("get.values.ml", &getValues, List::create( _["mlnetwork"], _["attribute"], _["actors"]=CharacterVector(), _["layers"]=CharacterVector(), _["nodes"]=CharacterMatrix(0,0), _["edges"]=CharacterMatrix(0,0)), "Returns the value of an attribute on the specified actors, layers, vertices or edges");
+    function("set.values.ml", &setValues, List::create( _["mlnetwork"], _["attribute"], _["actors"]=CharacterVector(), _["layers"]=CharacterVector(), _["nodes"]=CharacterMatrix(0,0), _["edges"]=CharacterMatrix(0,0), _["values"]), "Sets the value of an attribute for the specified actors/vertices/edges");
 
     // TRANSFORMATION
 

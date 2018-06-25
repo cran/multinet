@@ -1,5 +1,10 @@
+
+/*
+ * June 22, 2018: replaced rescaling of the node positions with hard frames, as in the Frucht/R algorithm.
+ */
 #include <stdio.h>
 #include <vector>
+#include <unordered_map>
 #include <iostream>
 #include "layout.h"
 
@@ -21,7 +26,11 @@ hash_map<NodeSharedPtr,xyz_coordinates> multiforce(MLNetworkSharedPtr& mnet, dou
 	double temp = std::sqrt(mnet->get_actors()->size());
 	double start_temp = temp;
 	double area = width*length;
-	double k = std::sqrt(area/mnet->get_actors()->size());
+    std::unordered_map<LayerSharedPtr,double> k;
+    for (LayerSharedPtr l: *mnet->get_layers())
+    {
+        k[l] = std::sqrt(area/mnet->get_nodes(l)->size());
+    }
 	for (ActorSharedPtr a: *mnet->get_actors()) {
 		double y = drand()*length-length/2;  // suggest to move these here
 		double x = drand()*width-width/2; // suggest to move these here
@@ -49,14 +58,14 @@ hash_map<NodeSharedPtr,xyz_coordinates> multiforce(MLNetworkSharedPtr& mnet, dou
 					//std::cout << "rep " << Delta.x << " " << Delta.y << std::endl;
 					double DeltaNorm = std::sqrt(Delta.x*Delta.x+Delta.y*Delta.y);
 					if (DeltaNorm==0) continue;
-					disp[v].x = disp[v].x + Delta.x/DeltaNorm*fr(DeltaNorm,k)*weight_in.at(l);
-					disp[v].y = disp[v].y + Delta.y/DeltaNorm*fr(DeltaNorm,k)*weight_in.at(l);
+					disp[v].x = disp[v].x + Delta.x/DeltaNorm*fr(DeltaNorm,k.at(l))*weight_in.at(l);
+					disp[v].y = disp[v].y + Delta.y/DeltaNorm*fr(DeltaNorm,k.at(l))*weight_in.at(l);
 				}
                 // add effect of gravity, to prevent disc. components from diverging
                 double DeltaNorm = std::sqrt(pos[v].x*pos[v].x+pos[v].y*pos[v].y);
                 if (DeltaNorm==0) continue;
-                disp[v].x = disp[v].x - pos[v].x/DeltaNorm*fain(DeltaNorm,k)*gravity.at(l);
-                disp[v].y = disp[v].y - pos[v].y/DeltaNorm*fain(DeltaNorm,k)*gravity.at(l);
+                disp[v].x = disp[v].x - pos[v].x/DeltaNorm*fain(DeltaNorm,k.at(l))*gravity.at(l);
+                disp[v].y = disp[v].y - pos[v].y/DeltaNorm*fain(DeltaNorm,k.at(l))*gravity.at(l);
                 
 			}
 		}
@@ -71,10 +80,10 @@ hash_map<NodeSharedPtr,xyz_coordinates> multiforce(MLNetworkSharedPtr& mnet, dou
 				//std::cout << "a-in " << Delta.x << " " << Delta.y << std::endl;
 				double DeltaNorm = std::sqrt(Delta.x*Delta.x+Delta.y*Delta.y);
 				if (DeltaNorm==0) continue;
-				disp[v].x = disp[v].x - Delta.x/DeltaNorm*fain(DeltaNorm,k)*weight_in.at(l);
-				disp[v].y = disp[v].y - Delta.y/DeltaNorm*fain(DeltaNorm,k)*weight_in.at(l);
-				disp[u].x = disp[u].x + Delta.x/DeltaNorm*fain(DeltaNorm,k)*weight_in.at(l);
-				disp[u].y = disp[u].y + Delta.y/DeltaNorm*fain(DeltaNorm,k)*weight_in.at(l);
+				disp[v].x = disp[v].x - Delta.x/DeltaNorm*fain(DeltaNorm,k.at(l))*weight_in.at(l);
+				disp[v].y = disp[v].y - Delta.y/DeltaNorm*fain(DeltaNorm,k.at(l))*weight_in.at(l);
+				disp[u].x = disp[u].x + Delta.x/DeltaNorm*fain(DeltaNorm,k.at(l))*weight_in.at(l);
+				disp[u].y = disp[u].y + Delta.y/DeltaNorm*fain(DeltaNorm,k.at(l))*weight_in.at(l);
 			}
 		}
         // calculate attractive forces across layers
@@ -88,10 +97,10 @@ hash_map<NodeSharedPtr,xyz_coordinates> multiforce(MLNetworkSharedPtr& mnet, dou
 					//std::cout << "a-inter " << Delta.x << " " << Delta.y << std::endl;
 					double DeltaNorm = std::sqrt(Delta.x*Delta.x+Delta.y*Delta.y);
 					if (DeltaNorm==0) continue;
-					disp[v].x = disp[v].x - Delta.x/DeltaNorm*fainter(DeltaNorm,k)*weight_inter.at(v->layer);
-					disp[v].y = disp[v].y - Delta.y/DeltaNorm*fainter(DeltaNorm,k)*weight_inter.at(v->layer);
-					disp[u].x = disp[u].x + Delta.x/DeltaNorm*fainter(DeltaNorm,k)*weight_inter.at(u->layer);
-					disp[u].y = disp[u].y + Delta.y/DeltaNorm*fainter(DeltaNorm,k)*weight_inter.at(u->layer);
+					disp[v].x = disp[v].x - Delta.x/DeltaNorm*fainter(DeltaNorm,k.at(v->layer))*weight_inter.at(v->layer);
+					disp[v].y = disp[v].y - Delta.y/DeltaNorm*fainter(DeltaNorm,k.at(v->layer))*weight_inter.at(v->layer);
+					disp[u].x = disp[u].x + Delta.x/DeltaNorm*fainter(DeltaNorm,k.at(u->layer))*weight_inter.at(u->layer);
+					disp[u].y = disp[u].y + Delta.y/DeltaNorm*fainter(DeltaNorm,k.at(u->layer))*weight_inter.at(u->layer);
 				}
 			}
 		}
@@ -101,8 +110,8 @@ hash_map<NodeSharedPtr,xyz_coordinates> multiforce(MLNetworkSharedPtr& mnet, dou
 			if (dispNorm==0) continue;
 			pos[v].x = pos[v].x + (disp[v].x/dispNorm)*std::min(dispNorm,temp);
 			pos[v].y = pos[v].y + (disp[v].y/dispNorm)*std::min(dispNorm,temp);
-			//pos[v].x = std::min(width/2, std::max(-width/2, pos[v].x)); // suggest to remove - it might actually be useful...
-			//pos[v].y = std::min(length/2, std::max(-length/2, pos[v].y)); // suggest to remove - it might actually be useful...
+			pos[v].x = std::min(width/2, std::max(-width/2, pos[v].x)); // suggest to remove - it might actually be useful...
+			pos[v].y = std::min(length/2, std::max(-length/2, pos[v].y)); // suggest to remove - it might actually be useful...
 		}
 		// reduce the temperature
 		temp -= start_temp/iterations;

@@ -3,9 +3,16 @@
 \alias{multinet}
 \docType{package}
 \title{
-Multilayer social network analysis and mining
+\packageTitle{multinet}
 }
 \description{
+\packageDescription{multinet}
+}
+\details{
+
+The DESCRIPTION file:
+\packageDESCRIPTION{multinet}
+\packageIndices{multinet}
 This package defines a class to store multilayer networks and functions to pre-process, analyze and mine them.
 
 With \emph{multilayer social network} we indicate a network where nodes (V) are organized into multiple layers (L) and each node corresponds to an actor (A), where the same actor can be mapped to nodes in different layers. Formally, a multilayer social network as implemented in this package is a graph G = (V, E) where V is a subset of A x L.
@@ -23,19 +30,12 @@ Communities can be extracted using various clustering algorithms, described in \
 
 Most of the methods provided by this package are described in the book "Multilayer Social Networks". These methods have been proposed by many different authors: extensive references are available in the book, and in the documentation of each function we indicate the main reference we have followed for the implementation. For a few methods developed after the book was published we give specific references to the corresponding literature.
 }
-%\details{
-%\tabular{ll}{
-%Package: \tab multinet\cr
-%Type: \tab Package\cr
-%Version: \tab 1.0\cr
-%Date: \tab 2015-10-01\cr
-%License: \tab GPL\cr
-%}
-%}
 \author{
-Matteo Magnani \email{matteo.magnani@it.uu.se}
+\packageAuthor{multinet}
+
+Maintainer: \packageMaintainer{multinet}
 }
 \references{
 Dickison, Magnani, and Rossi, 2016. Multilayer Social Networks. Cambridge University Press. ISBN: 978-1107438750
 }
-\keyword{ multilayer network social analysis mining }
+\keyword{ package }
