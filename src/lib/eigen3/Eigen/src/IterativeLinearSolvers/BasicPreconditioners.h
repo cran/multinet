@@ -10,7 +10,7 @@
 #ifndef EIGEN_BASIC_PRECONDITIONERS_H
 #define EIGEN_BASIC_PRECONDITIONERS_H
 
-namespace Eigen { 
+namespace Eigen {
 
 /** \ingroup IterativeLinearSolvers_Module
   * \brief A preconditioner based on the digonal entries
@@ -39,68 +39,98 @@ class DiagonalPreconditioner
     typedef Matrix<Scalar,Dynamic,1> Vector;
   public:
     typedef typename Vector::StorageIndex StorageIndex;
-    enum {
-      ColsAtCompileTime = Dynamic,
-      MaxColsAtCompileTime = Dynamic
+    enum
+    {
+        ColsAtCompileTime = Dynamic,
+        MaxColsAtCompileTime = Dynamic
     };
 
     DiagonalPreconditioner() : m_isInitialized(false) {}
 
     template<typename MatType>
-    explicit DiagonalPreconditioner(const MatType& mat) : m_invdiag(mat.cols())
+    explicit
+    DiagonalPreconditioner(const MatType& mat) : m_invdiag(mat.cols())
     {
-      compute(mat);
+        compute(mat);
     }
 
-    Index rows() const { return m_invdiag.size(); }
-    Index cols() const { return m_invdiag.size(); }
-    
-    template<typename MatType>
-    DiagonalPreconditioner& analyzePattern(const MatType& )
+    Index
+    rows() const
     {
-      return *this;
+        return m_invdiag.size();
     }
-    
-    template<typename MatType>
-    DiagonalPreconditioner& factorize(const MatType& mat)
+    Index
+    cols() const
     {
-      m_invdiag.resize(mat.cols());
-      for(int j=0; j<mat.outerSize(); ++j)
-      {
-        typename MatType::InnerIterator it(mat,j);
-        while(it && it.index()!=j) ++it;
-        if(it && it.index()==j && it.value()!=Scalar(0))
-          m_invdiag(j) = Scalar(1)/it.value();
-        else
-          m_invdiag(j) = Scalar(1);
-      }
-      m_isInitialized = true;
-      return *this;
+        return m_invdiag.size();
     }
-    
+
     template<typename MatType>
-    DiagonalPreconditioner& compute(const MatType& mat)
+    DiagonalPreconditioner&
+    analyzePattern(const MatType& )
     {
-      return factorize(mat);
+        return *this;
+    }
+
+    template<typename MatType>
+    DiagonalPreconditioner&
+    factorize(const MatType& mat)
+    {
+        m_invdiag.resize(mat.cols());
+
+        for (int j=0; j<mat.outerSize(); ++j)
+        {
+            typename MatType::InnerIterator it(mat,j);
+
+            while (it && it.index()!=j)
+            {
+                ++it;
+            }
+
+            if (it && it.index()==j && it.value()!=Scalar(0))
+            {
+                m_invdiag(j) = Scalar(1)/it.value();
+            }
+
+            else
+            {
+                m_invdiag(j) = Scalar(1);
+            }
+        }
+
+        m_isInitialized = true;
+        return *this;
+    }
+
+    template<typename MatType>
+    DiagonalPreconditioner&
+    compute(const MatType& mat)
+    {
+        return factorize(mat);
     }
 
     /** \internal */
     template<typename Rhs, typename Dest>
-    void _solve_impl(const Rhs& b, Dest& x) const
+    void
+    _solve_impl(const Rhs& b, Dest& x) const
     {
-      x = m_invdiag.array() * b.array() ;
+        x = m_invdiag.array() * b.array() ;
     }
 
     template<typename Rhs> inline const Solve<DiagonalPreconditioner, Rhs>
     solve(const MatrixBase<Rhs>& b) const
     {
-      eigen_assert(m_isInitialized && "DiagonalPreconditioner is not initialized.");
-      eigen_assert(m_invdiag.size()==b.rows()
-                && "DiagonalPreconditioner::solve(): invalid number of rows of the right hand side matrix b");
-      return Solve<DiagonalPreconditioner, Rhs>(*this, b.derived());
+        eigen_assert(m_isInitialized && "DiagonalPreconditioner is not initialized.");
+        eigen_assert(m_invdiag.size()==b.rows()
+                     && "DiagonalPreconditioner::solve(): invalid number of rows of the right hand side matrix b");
+        return Solve<DiagonalPreconditioner, Rhs>(*this, b.derived());
     }
-    
-    ComputationInfo info() { return Success; }
+
+    ComputationInfo
+    info()
+    {
+        return Success;
+    }
 
   protected:
     Vector m_invdiag;
@@ -121,7 +151,7 @@ class DiagonalPreconditioner
   * \implsparsesolverconcept
   *
   * The diagonal entries are pre-inverted and stored into a dense vector.
-  * 
+  *
   * \sa class LeastSquaresConjugateGradient, class DiagonalPreconditioner
   */
 template <typename _Scalar>
@@ -136,41 +166,57 @@ class LeastSquareDiagonalPreconditioner : public DiagonalPreconditioner<_Scalar>
     LeastSquareDiagonalPreconditioner() : Base() {}
 
     template<typename MatType>
-    explicit LeastSquareDiagonalPreconditioner(const MatType& mat) : Base()
+    explicit
+    LeastSquareDiagonalPreconditioner(const MatType& mat) : Base()
     {
-      compute(mat);
+        compute(mat);
     }
 
     template<typename MatType>
-    LeastSquareDiagonalPreconditioner& analyzePattern(const MatType& )
+    LeastSquareDiagonalPreconditioner&
+    analyzePattern(const MatType& )
     {
-      return *this;
+        return *this;
     }
-    
+
     template<typename MatType>
-    LeastSquareDiagonalPreconditioner& factorize(const MatType& mat)
+    LeastSquareDiagonalPreconditioner&
+    factorize(const MatType& mat)
     {
-      // Compute the inverse squared-norm of each column of mat
-      m_invdiag.resize(mat.cols());
-      for(Index j=0; j<mat.outerSize(); ++j)
-      {
-        RealScalar sum = mat.innerVector(j).squaredNorm();
-        if(sum>0)
-          m_invdiag(j) = RealScalar(1)/sum;
-        else
-          m_invdiag(j) = RealScalar(1);
-      }
-      Base::m_isInitialized = true;
-      return *this;
+        // Compute the inverse squared-norm of each column of mat
+        m_invdiag.resize(mat.cols());
+
+        for (Index j=0; j<mat.outerSize(); ++j)
+        {
+            RealScalar sum = mat.innerVector(j).squaredNorm();
+
+            if (sum>0)
+            {
+                m_invdiag(j) = RealScalar(1)/sum;
+            }
+
+            else
+            {
+                m_invdiag(j) = RealScalar(1);
+            }
+        }
+
+        Base::m_isInitialized = true;
+        return *this;
     }
-    
+
     template<typename MatType>
-    LeastSquareDiagonalPreconditioner& compute(const MatType& mat)
+    LeastSquareDiagonalPreconditioner&
+    compute(const MatType& mat)
     {
-      return factorize(mat);
+        return factorize(mat);
     }
-    
-    ComputationInfo info() { return Success; }
+
+    ComputationInfo
+    info()
+    {
+        return Success;
+    }
 
   protected:
 };
@@ -189,21 +235,42 @@ class IdentityPreconditioner
     IdentityPreconditioner() {}
 
     template<typename MatrixType>
-    explicit IdentityPreconditioner(const MatrixType& ) {}
-    
-    template<typename MatrixType>
-    IdentityPreconditioner& analyzePattern(const MatrixType& ) { return *this; }
-    
-    template<typename MatrixType>
-    IdentityPreconditioner& factorize(const MatrixType& ) { return *this; }
+    explicit
+    IdentityPreconditioner(const MatrixType& ) {}
 
     template<typename MatrixType>
-    IdentityPreconditioner& compute(const MatrixType& ) { return *this; }
-    
+    IdentityPreconditioner&
+    analyzePattern(const MatrixType& )
+    {
+        return *this;
+    }
+
+    template<typename MatrixType>
+    IdentityPreconditioner&
+    factorize(const MatrixType& )
+    {
+        return *this;
+    }
+
+    template<typename MatrixType>
+    IdentityPreconditioner&
+    compute(const MatrixType& )
+    {
+        return *this;
+    }
+
     template<typename Rhs>
-    inline const Rhs& solve(const Rhs& b) const { return b; }
-    
-    ComputationInfo info() { return Success; }
+    inline const Rhs&
+    solve(const Rhs& b) const
+    {
+        return b;
+    }
+
+    ComputationInfo
+    info()
+    {
+        return Success;
+    }
 };
 
 } // end namespace Eigen

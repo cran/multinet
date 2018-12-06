@@ -116,64 +116,88 @@
 /*----------------------------------------------------------------------
   Type Definitions
 ----------------------------------------------------------------------*/
-typedef struct {                /* --- pattern spectrum row -- */
-  RSUPP  min, max;              /* minimum and maximum support */
-  RSUPP  cur;                   /* current maximum support */
-  size_t sum;                   /* sum of occurrences (for this size) */
-  size_t *frqs;                 /* occurrence counters (by support) */
+typedef struct                  /* --- pattern spectrum row -- */
+{
+    RSUPP  min, max;              /* minimum and maximum support */
+    RSUPP  cur;                   /* current maximum support */
+    size_t sum;                   /* sum of occurrences (for this size) */
+    size_t *frqs;                 /* occurrence counters (by support) */
 } PSPROW;                       /* (pattern spectrum row) */
 
-typedef struct {                /* --- pattern spectrum --- */
-  ITEM   minsize;               /* minimum pattern size (offset) */
-  ITEM   maxsize;               /* maximum pattern size (limit) */
-  RSUPP  minsupp;               /* minimum support (offset) */
-  RSUPP  maxsupp;               /* maximum support (limit) */
-  size_t sigcnt;                /* number of registered signatures */
-  size_t total;                 /* total frequency of signatures */
-  ITEM   max;                   /* number of pattern spectrum rows */
-  ITEM   cur;                   /* current maximum used size/row */
-  int    err;                   /* error status */
-  PSPROW *rows;                 /* pattern spectrum rows (by size) */
+typedef struct                  /* --- pattern spectrum --- */
+{
+    ITEM   minsize;               /* minimum pattern size (offset) */
+    ITEM   maxsize;               /* maximum pattern size (limit) */
+    RSUPP  minsupp;               /* minimum support (offset) */
+    RSUPP  maxsupp;               /* maximum support (limit) */
+    size_t sigcnt;                /* number of registered signatures */
+    size_t total;                 /* total frequency of signatures */
+    ITEM   max;                   /* number of pattern spectrum rows */
+    ITEM   cur;                   /* current maximum used size/row */
+    int    err;                   /* error status */
+    PSPROW *rows;                 /* pattern spectrum rows (by size) */
 } PATSPEC;                      /* (pattern spectrum) */
 
 /*----------------------------------------------------------------------
   Functions
 ----------------------------------------------------------------------*/
-extern PATSPEC* psp_create  (ITEM  minsize, ITEM  maxsize,
-                             RSUPP minsupp, RSUPP maxsupp);
-extern void     psp_delete  (PATSPEC *psp);
-extern void     psp_clear   (PATSPEC *psp);
-extern ITEM     psp_minsize (PATSPEC *psp);
-extern ITEM     psp_maxsize (PATSPEC *psp);
-extern ITEM     psp_min     (PATSPEC *psp);
-extern ITEM     psp_max     (PATSPEC *psp);
-extern RSUPP    psp_minsupp (PATSPEC *psp);
-extern RSUPP    psp_maxsupp (PATSPEC *psp);
-extern RSUPP    psp_min4sz  (PATSPEC *psp, ITEM size);
-extern RSUPP    psp_max4sz  (PATSPEC *psp, ITEM size);
-extern int      psp_error   (PATSPEC *psp);
-extern size_t   psp_sigcnt  (PATSPEC *psp);
-extern size_t   psp_total   (PATSPEC *psp);
-extern size_t   psp_getfrq  (PATSPEC *psp, ITEM size, RSUPP supp);
-extern int      psp_setfrq  (PATSPEC *psp, ITEM size, RSUPP supp,
-                             size_t frq);
-extern int      psp_incfrq  (PATSPEC *psp, ITEM size, RSUPP supp,
-                             size_t frq);
-extern int      psp_addpsp  (PATSPEC *dst, PATSPEC *src);
+extern PATSPEC*
+psp_create  (ITEM  minsize, ITEM  maxsize,
+             RSUPP minsupp, RSUPP maxsupp);
+extern void
+psp_delete  (PATSPEC *psp);
+extern void
+psp_clear   (PATSPEC *psp);
+extern ITEM
+psp_minsize (PATSPEC *psp);
+extern ITEM
+psp_maxsize (PATSPEC *psp);
+extern ITEM
+psp_min     (PATSPEC *psp);
+extern ITEM
+psp_max     (PATSPEC *psp);
+extern RSUPP
+psp_minsupp (PATSPEC *psp);
+extern RSUPP
+psp_maxsupp (PATSPEC *psp);
+extern RSUPP
+psp_min4sz  (PATSPEC *psp, ITEM size);
+extern RSUPP
+psp_max4sz  (PATSPEC *psp, ITEM size);
+extern int
+psp_error   (PATSPEC *psp);
+extern size_t
+psp_sigcnt  (PATSPEC *psp);
+extern size_t
+psp_total   (PATSPEC *psp);
+extern size_t
+psp_getfrq  (PATSPEC *psp, ITEM size, RSUPP supp);
+extern int
+psp_setfrq  (PATSPEC *psp, ITEM size, RSUPP supp,
+             size_t frq);
+extern int
+psp_incfrq  (PATSPEC *psp, ITEM size, RSUPP supp,
+             size_t frq);
+extern int
+psp_addpsp  (PATSPEC *dst, PATSPEC *src);
 #ifdef PSP_ESTIM
-extern int      psp_tbgest  (TABAG *tabag, PATSPEC *psp, size_t eqsur,
-                             double alpha, size_t smpls);
+extern int
+psp_tbgest  (TABAG *tabag, PATSPEC *psp, size_t eqsur,
+             double alpha, size_t smpls);
 #ifdef PSP_TRAIN
-extern int      psp_tnsest  (TRAINSET *tns, PATSPEC *psp, size_t eqsur,
-                             double width, double alpha, size_t smpls,
-                             int seq);
+extern int
+psp_tnsest  (TRAINSET *tns, PATSPEC *psp, size_t eqsur,
+             double width, double alpha, size_t smpls,
+             int seq);
 #endif
 #endif
 #ifdef PSP_REPORT
-extern int      psp_report  (PATSPEC *psp, TABWRITE *twr, double scale);
+extern int
+psp_report  (PATSPEC *psp, TABWRITE *twr, double scale);
 #endif
 #ifndef NDEBUG
-extern void     psp_show    (PATSPEC *psp);
+extern void
+psp_show    (PATSPEC *psp);
 #endif
 
 /*----------------------------------------------------------------------

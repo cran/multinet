@@ -100,75 +100,107 @@
 /*----------------------------------------------------------------------
   Type Definitions
 ----------------------------------------------------------------------*/
-typedef struct cmnode {         /* --- c/m prefix tree node --- */
-  ITEM          item;           /* associated item (last item in set) */
-  RSUPP         supp;           /* support of represented item set */
-  struct cmnode *sibling;       /* successor node in sibling list */
-  struct cmnode *children;      /* list of child nodes */
+typedef struct cmnode           /* --- c/m prefix tree node --- */
+{
+    ITEM          item;           /* associated item (last item in set) */
+    RSUPP         supp;           /* support of represented item set */
+    struct cmnode *sibling;       /* successor node in sibling list */
+    struct cmnode *children;      /* list of child nodes */
 } CMNODE;                       /* (c/m prefix tree node) */
 
-typedef struct {                /* --- c/m prefix tree --- */
-  MEMSYS *mem;                  /* memory management system */
-  ITEM   size;                  /* (maximum) number of items */
-  int    dir;                   /* direction of item order */
-  ITEM   item;                  /* associated prefix item */
-  RSUPP  max;                   /* maximum support for prefix */
-  CMNODE root;                  /* root node of the tree */
-  int    keep[1];               /* flags for cmt_xproj() calls */
+typedef struct                  /* --- c/m prefix tree --- */
+{
+    MEMSYS *mem;                  /* memory management system */
+    ITEM   size;                  /* (maximum) number of items */
+    int    dir;                   /* direction of item order */
+    ITEM   item;                  /* associated prefix item */
+    RSUPP  max;                   /* maximum support for prefix */
+    CMNODE root;                  /* root node of the tree */
+    int    keep[1];               /* flags for cmt_xproj() calls */
 } CMTREE;                       /* (c/m prefix tree) */
 
-typedef struct {                /* --- closed/maximal filter --- */
-  int    dir;                   /* direction of item order */
-  ITEM   size;                  /* maximum number of prefix trees */
-  ITEM   cnt;                   /* current number of prefix trees */
-  CMTREE *trees[1];             /* conditional prefix trees */
+typedef struct                  /* --- closed/maximal filter --- */
+{
+    int    dir;                   /* direction of item order */
+    ITEM   size;                  /* maximum number of prefix trees */
+    ITEM   cnt;                   /* current number of prefix trees */
+    CMTREE *trees[1];             /* conditional prefix trees */
 } CLOMAX;                       /* (closed/maximal filter) */
 
 /*----------------------------------------------------------------------
   Prefix Tree Functions
 ----------------------------------------------------------------------*/
-extern CMTREE* cmt_create  (MEMSYS *mem, int dir, ITEM size);
-extern void    cmt_clear   (CMTREE *cmt);
-extern void    cmt_delete  (CMTREE *cmt, int delms);
-extern MEMSYS* cmt_memsys  (CMTREE *cmt);
-extern ITEM    cmt_cnt     (CMTREE *cmt);
-extern int     cmt_dir     (CMTREE *cmt);
-extern RSUPP   cmt_supp    (CMTREE *cmt);
-extern RSUPP   cmt_max     (CMTREE *cmt);
-extern int     cmt_valid   (CMTREE *cmt);
-extern size_t  cmt_nodecnt (CMTREE *pat);
-extern size_t  cmt_nodemax (CMTREE *pat);
+extern CMTREE*
+cmt_create  (MEMSYS *mem, int dir, ITEM size);
+extern void
+cmt_clear   (CMTREE *cmt);
+extern void
+cmt_delete  (CMTREE *cmt, int delms);
+extern MEMSYS*
+cmt_memsys  (CMTREE *cmt);
+extern ITEM
+cmt_cnt     (CMTREE *cmt);
+extern int
+cmt_dir     (CMTREE *cmt);
+extern RSUPP
+cmt_supp    (CMTREE *cmt);
+extern RSUPP
+cmt_max     (CMTREE *cmt);
+extern int
+cmt_valid   (CMTREE *cmt);
+extern size_t
+cmt_nodecnt (CMTREE *pat);
+extern size_t
+cmt_nodemax (CMTREE *pat);
 
-extern int     cmt_add     (CMTREE *cmt, const ITEM *items, ITEM n,
-                            RSUPP supp);
-extern RSUPP   cmt_get     (CMTREE *cmt, const ITEM *items, ITEM n);
-extern void    cmt_prune   (CMTREE *cmt, ITEM item);
-extern CMTREE* cmt_project (CMTREE *dst, CMTREE *src, ITEM item);
-extern CMTREE* cmt_xproj   (CMTREE *dst, CMTREE *src, ITEM item,
-                            const ITEM *keep, ITEM n);
+extern int
+cmt_add     (CMTREE *cmt, const ITEM *items, ITEM n,
+             RSUPP supp);
+extern RSUPP
+cmt_get     (CMTREE *cmt, const ITEM *items, ITEM n);
+extern void
+cmt_prune   (CMTREE *cmt, ITEM item);
+extern CMTREE*
+cmt_project (CMTREE *dst, CMTREE *src, ITEM item);
+extern CMTREE*
+cmt_xproj   (CMTREE *dst, CMTREE *src, ITEM item,
+             const ITEM *keep, ITEM n);
 
 #ifndef NDEBUG
-extern void    cmt_show    (CMTREE *cmt, ITEMBASE *base, int ind);
+extern void
+cmt_show    (CMTREE *cmt, ITEMBASE *base, int ind);
 #endif
 
 /*----------------------------------------------------------------------
   Closed/Maximal Filter Functions
 ----------------------------------------------------------------------*/
-extern CLOMAX* cm_create   (int dir, ITEM size);
-extern void    cm_delete   (CLOMAX *cm);
-extern ITEM    cm_cnt      (CLOMAX *cm);
-extern int     cm_dir      (CLOMAX *cm);
-extern RSUPP   cm_supp     (CLOMAX *cm);
-extern CMTREE* cm_tree     (CLOMAX *cm, ITEM i);
+extern CLOMAX*
+cm_create   (int dir, ITEM size);
+extern void
+cm_delete   (CLOMAX *cm);
+extern ITEM
+cm_cnt      (CLOMAX *cm);
+extern int
+cm_dir      (CLOMAX *cm);
+extern RSUPP
+cm_supp     (CLOMAX *cm);
+extern CMTREE*
+cm_tree     (CLOMAX *cm, ITEM i);
 
-extern int     cm_add      (CLOMAX *cm, ITEM item, RSUPP supp);
-extern int     cm_addnc    (CLOMAX *cm, ITEM item, RSUPP supp);
-extern void    cm_remove   (CLOMAX *cm, ITEM n);
-extern RSUPP   cm_tail     (CLOMAX *cm, const ITEM *items, ITEM n);
-extern int     cm_update   (CLOMAX *cm, const ITEM *items, ITEM n,
-                            RSUPP supp);
+extern int
+cm_add      (CLOMAX *cm, ITEM item, RSUPP supp);
+extern int
+cm_addnc    (CLOMAX *cm, ITEM item, RSUPP supp);
+extern void
+cm_remove   (CLOMAX *cm, ITEM n);
+extern RSUPP
+cm_tail     (CLOMAX *cm, const ITEM *items, ITEM n);
+extern int
+cm_update   (CLOMAX *cm, const ITEM *items, ITEM n,
+             RSUPP supp);
 #ifndef NDEBUG
-extern void    cm_show     (CLOMAX *cm, ITEMBASE *base, int ind);
+extern void
+cm_show     (CLOMAX *cm, ITEMBASE *base, int ind);
 #endif
 
 /*----------------------------------------------------------------------

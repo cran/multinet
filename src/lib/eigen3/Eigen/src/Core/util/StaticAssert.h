@@ -26,24 +26,25 @@
 
 #ifndef EIGEN_NO_STATIC_ASSERT
 
-  #if EIGEN_MAX_CPP_VER>=11 && (__has_feature(cxx_static_assert) || (defined(__cplusplus) && __cplusplus >= 201103L) || (EIGEN_COMP_MSVC >= 1600))
+#if EIGEN_MAX_CPP_VER>=11 && (__has_feature(cxx_static_assert) || (defined(__cplusplus) && __cplusplus >= 201103L) || (EIGEN_COMP_MSVC >= 1600))
 
-    // if native static_assert is enabled, let's use it
-    #define EIGEN_STATIC_ASSERT(X,MSG) static_assert(X,#MSG);
+// if native static_assert is enabled, let's use it
+#define EIGEN_STATIC_ASSERT(X,MSG) static_assert(X,#MSG);
 
-  #else // not CXX0X
+#else // not CXX0X
 
-    namespace Eigen {
+namespace Eigen {
 
-    namespace internal {
+namespace internal {
 
-    template<bool condition>
-    struct static_assertion {};
+template<bool condition>
+struct static_assertion {};
 
-    template<>
-    struct static_assertion<true>
+template<>
+struct static_assertion<true>
+{
+    enum
     {
-      enum {
         YOU_TRIED_CALLING_A_VECTOR_METHOD_ON_A_MATRIX,
         YOU_MIXED_VECTORS_OF_DIFFERENT_SIZES,
         YOU_MIXED_MATRICES_OF_DIFFERENT_SIZES,
@@ -102,33 +103,33 @@
         STORAGE_KIND_MUST_MATCH,
         STORAGE_INDEX_MUST_MATCH,
         CHOLMOD_SUPPORTS_DOUBLE_PRECISION_ONLY
-      };
     };
+};
 
-    } // end namespace internal
+} // end namespace internal
 
-    } // end namespace Eigen
+} // end namespace Eigen
 
-    // Specialized implementation for MSVC to avoid "conditional
-    // expression is constant" warnings.  This implementation doesn't
-    // appear to work under GCC, hence the multiple implementations.
-    #if EIGEN_COMP_MSVC
+// Specialized implementation for MSVC to avoid "conditional
+// expression is constant" warnings.  This implementation doesn't
+// appear to work under GCC, hence the multiple implementations.
+#if EIGEN_COMP_MSVC
 
-      #define EIGEN_STATIC_ASSERT(CONDITION,MSG) \
+#define EIGEN_STATIC_ASSERT(CONDITION,MSG) \
         {Eigen::internal::static_assertion<bool(CONDITION)>::MSG;}
 
-    #else
-      // In some cases clang interprets bool(CONDITION) as function declaration
-      #define EIGEN_STATIC_ASSERT(CONDITION,MSG) \
+#else
+// In some cases clang interprets bool(CONDITION) as function declaration
+#define EIGEN_STATIC_ASSERT(CONDITION,MSG) \
         if (Eigen::internal::static_assertion<static_cast<bool>(CONDITION)>::MSG) {}
 
-    #endif
+#endif
 
-  #endif // not CXX0X
+#endif // not CXX0X
 
 #else // EIGEN_NO_STATIC_ASSERT
 
-  #define EIGEN_STATIC_ASSERT(CONDITION,MSG) eigen_assert((CONDITION) && #MSG);
+#define EIGEN_STATIC_ASSERT(CONDITION,MSG) eigen_assert((CONDITION) && #MSG);
 
 #endif // EIGEN_NO_STATIC_ASSERT
 

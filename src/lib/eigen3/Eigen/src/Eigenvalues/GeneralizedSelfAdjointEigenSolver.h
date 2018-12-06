@@ -13,7 +13,7 @@
 
 #include "./Tridiagonalization.h"
 
-namespace Eigen { 
+namespace Eigen {
 
 /** \eigenvalues_module \ingroup Eigenvalues_Module
   *
@@ -73,7 +73,8 @@ class GeneralizedSelfAdjointEigenSolver : public SelfAdjointEigenSolver<_MatrixT
       *
       * \sa compute() for an example
       */
-    explicit GeneralizedSelfAdjointEigenSolver(Index size)
+    explicit
+    GeneralizedSelfAdjointEigenSolver(Index size)
         : Base(size)
     {}
 
@@ -105,9 +106,9 @@ class GeneralizedSelfAdjointEigenSolver : public SelfAdjointEigenSolver<_MatrixT
       */
     GeneralizedSelfAdjointEigenSolver(const MatrixType& matA, const MatrixType& matB,
                                       int options = ComputeEigenvectors|Ax_lBx)
-      : Base(matA.cols())
+        : Base(matA.cols())
     {
-      compute(matA, matB, options);
+        compute(matA, matB, options);
     }
 
     /** \brief Computes generalized eigendecomposition of given matrix pencil.
@@ -150,8 +151,9 @@ class GeneralizedSelfAdjointEigenSolver : public SelfAdjointEigenSolver<_MatrixT
       *
       * \sa GeneralizedSelfAdjointEigenSolver(const MatrixType&, const MatrixType&, int)
       */
-    GeneralizedSelfAdjointEigenSolver& compute(const MatrixType& matA, const MatrixType& matB,
-                                               int options = ComputeEigenvectors|Ax_lBx);
+    GeneralizedSelfAdjointEigenSolver&
+    compute(const MatrixType& matA, const MatrixType& matB,
+            int options = ComputeEigenvectors|Ax_lBx);
 
   protected:
 
@@ -162,63 +164,74 @@ template<typename MatrixType>
 GeneralizedSelfAdjointEigenSolver<MatrixType>& GeneralizedSelfAdjointEigenSolver<MatrixType>::
 compute(const MatrixType& matA, const MatrixType& matB, int options)
 {
-  eigen_assert(matA.cols()==matA.rows() && matB.rows()==matA.rows() && matB.cols()==matB.rows());
-  eigen_assert((options&~(EigVecMask|GenEigMask))==0
-          && (options&EigVecMask)!=EigVecMask
-          && ((options&GenEigMask)==0 || (options&GenEigMask)==Ax_lBx
-           || (options&GenEigMask)==ABx_lx || (options&GenEigMask)==BAx_lx)
-          && "invalid option parameter");
+    eigen_assert(matA.cols()==matA.rows() && matB.rows()==matA.rows() && matB.cols()==matB.rows());
+    eigen_assert((options&~(EigVecMask|GenEigMask))==0
+                 && (options&EigVecMask)!=EigVecMask
+                 && ((options&GenEigMask)==0 || (options&GenEigMask)==Ax_lBx
+                     || (options&GenEigMask)==ABx_lx || (options&GenEigMask)==BAx_lx)
+                 && "invalid option parameter");
 
-  bool computeEigVecs = ((options&EigVecMask)==0) || ((options&EigVecMask)==ComputeEigenvectors);
+    bool computeEigVecs = ((options&EigVecMask)==0) || ((options&EigVecMask)==ComputeEigenvectors);
 
-  // Compute the cholesky decomposition of matB = L L' = U'U
-  LLT<MatrixType> cholB(matB);
+    // Compute the cholesky decomposition of matB = L L' = U'U
+    LLT<MatrixType> cholB(matB);
 
-  int type = (options&GenEigMask);
-  if(type==0)
-    type = Ax_lBx;
+    int type = (options&GenEigMask);
 
-  if(type==Ax_lBx)
-  {
-    // compute C = inv(L) A inv(L')
-    MatrixType matC = matA.template selfadjointView<Lower>();
-    cholB.matrixL().template solveInPlace<OnTheLeft>(matC);
-    cholB.matrixU().template solveInPlace<OnTheRight>(matC);
+    if (type==0)
+    {
+        type = Ax_lBx;
+    }
 
-    Base::compute(matC, computeEigVecs ? ComputeEigenvectors : EigenvaluesOnly );
+    if (type==Ax_lBx)
+    {
+        // compute C = inv(L) A inv(L')
+        MatrixType matC = matA.template selfadjointView<Lower>();
+        cholB.matrixL().template solveInPlace<OnTheLeft>(matC);
+        cholB.matrixU().template solveInPlace<OnTheRight>(matC);
 
-    // transform back the eigen vectors: evecs = inv(U) * evecs
-    if(computeEigVecs)
-      cholB.matrixU().solveInPlace(Base::m_eivec);
-  }
-  else if(type==ABx_lx)
-  {
-    // compute C = L' A L
-    MatrixType matC = matA.template selfadjointView<Lower>();
-    matC = matC * cholB.matrixL();
-    matC = cholB.matrixU() * matC;
+        Base::compute(matC, computeEigVecs ? ComputeEigenvectors : EigenvaluesOnly );
 
-    Base::compute(matC, computeEigVecs ? ComputeEigenvectors : EigenvaluesOnly);
+        // transform back the eigen vectors: evecs = inv(U) * evecs
+        if (computeEigVecs)
+        {
+            cholB.matrixU().solveInPlace(Base::m_eivec);
+        }
+    }
 
-    // transform back the eigen vectors: evecs = inv(U) * evecs
-    if(computeEigVecs)
-      cholB.matrixU().solveInPlace(Base::m_eivec);
-  }
-  else if(type==BAx_lx)
-  {
-    // compute C = L' A L
-    MatrixType matC = matA.template selfadjointView<Lower>();
-    matC = matC * cholB.matrixL();
-    matC = cholB.matrixU() * matC;
+    else if (type==ABx_lx)
+    {
+        // compute C = L' A L
+        MatrixType matC = matA.template selfadjointView<Lower>();
+        matC = matC * cholB.matrixL();
+        matC = cholB.matrixU() * matC;
 
-    Base::compute(matC, computeEigVecs ? ComputeEigenvectors : EigenvaluesOnly);
+        Base::compute(matC, computeEigVecs ? ComputeEigenvectors : EigenvaluesOnly);
 
-    // transform back the eigen vectors: evecs = L * evecs
-    if(computeEigVecs)
-      Base::m_eivec = cholB.matrixL() * Base::m_eivec;
-  }
+        // transform back the eigen vectors: evecs = inv(U) * evecs
+        if (computeEigVecs)
+        {
+            cholB.matrixU().solveInPlace(Base::m_eivec);
+        }
+    }
 
-  return *this;
+    else if (type==BAx_lx)
+    {
+        // compute C = L' A L
+        MatrixType matC = matA.template selfadjointView<Lower>();
+        matC = matC * cholB.matrixL();
+        matC = cholB.matrixU() * matC;
+
+        Base::compute(matC, computeEigVecs ? ComputeEigenvectors : EigenvaluesOnly);
+
+        // transform back the eigen vectors: evecs = L * evecs
+        if (computeEigVecs)
+        {
+            Base::m_eivec = cholB.matrixL() * Base::m_eivec;
+        }
+    }
+
+    return *this;
 }
 
 } // end namespace Eigen

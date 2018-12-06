@@ -20,38 +20,53 @@
 ----------------------------------------------------------------------*/
 typedef unsigned short BITTA;   /* --- bit rep. of a transaction --- */
 
-typedef struct {                /* --- FIM 16 items machine --- */
-  ISREPORT *report;             /* item set reporter */
-  int      dir;                 /* processing direction */
-  SUPP     smin;                /* minimum support */
-  SUPP     ttw;                 /* total transaction weight */
-  BITTA    tor;                 /* bitwise or of added trans. */
-  SUPP     *wgts;               /* transaction weights */
-  ITEM     *map;                /* item identifier map */
-  SUPP     supps[16];           /* support values of items */
-  BITTA    *btas[16];           /* array of bit rep. transactions */
-  BITTA    *ends[16];           /* ends of transaction arrays */
+typedef struct                  /* --- FIM 16 items machine --- */
+{
+    ISREPORT *report;             /* item set reporter */
+    int      dir;                 /* processing direction */
+    SUPP     smin;                /* minimum support */
+    SUPP     ttw;                 /* total transaction weight */
+    BITTA    tor;                 /* bitwise or of added trans. */
+    SUPP     *wgts;               /* transaction weights */
+    ITEM     *map;                /* item identifier map */
+    SUPP     supps[16];           /* support values of items */
+    BITTA    *btas[16];           /* array of bit rep. transactions */
+    BITTA    *ends[16];           /* ends of transaction arrays */
 } FIM16;                        /* (FIM 16 items machine) */
 
 /*----------------------------------------------------------------------
   Functions
 ----------------------------------------------------------------------*/
-extern FIM16* m16_create (int dir, SUPP supp, ISREPORT *report);
-extern void   m16_delete (FIM16 *fim);
-extern int    m16_dir    (FIM16 *fim);
-extern void   m16_setmap (FIM16 *fim, int i, ITEM id);
-extern ITEM   m16_getmap (FIM16 *fim, int i);
-extern void   m16_clrmap (FIM16 *fim);
-extern void   m16_add    (FIM16 *fim, BITTA tract, SUPP wgt);
-extern void   m16_addx   (FIM16 *fim, const ITEM *items, ITEM n,
-                          SUPP wgt);
-extern void   m16_adds   (FIM16 *fim, const ITEM *items, SUPP wgt);
-extern void   m16_addta  (FIM16 *fim, TRACT *tract);
-extern void   m16_addtbg (FIM16 *fim, TABAG *tabag);
-extern void   m16_clear  (FIM16 *fim);
-extern int    m16_mine   (FIM16 *fim);
+extern FIM16*
+m16_create (int dir, SUPP supp, ISREPORT *report);
+extern void
+m16_delete (FIM16 *fim);
+extern int
+m16_dir    (FIM16 *fim);
+extern void
+m16_setmap (FIM16 *fim, int i, ITEM id);
+extern ITEM
+m16_getmap (FIM16 *fim, int i);
+extern void
+m16_clrmap (FIM16 *fim);
+extern void
+m16_add    (FIM16 *fim, BITTA tract, SUPP wgt);
+extern void
+m16_addx   (FIM16 *fim, const ITEM *items, ITEM n,
+            SUPP wgt);
+extern void
+m16_adds   (FIM16 *fim, const ITEM *items, SUPP wgt);
+extern void
+m16_addta  (FIM16 *fim, TRACT *tract);
+extern void
+m16_addtbg (FIM16 *fim, TABAG *tabag);
+extern void
+m16_clear  (FIM16 *fim);
+extern int
+m16_mine   (FIM16 *fim);
 #ifndef NDEBUG
-extern void   m16_show   (FIM16 *fim);
+extern void
+m16_show   (FIM16 *fim);
 #endif
 
 /*----------------------------------------------------------------------

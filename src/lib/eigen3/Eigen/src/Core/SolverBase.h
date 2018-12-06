@@ -46,17 +46,18 @@ class SolverBase : public EigenBase<Derived>
     typedef typename internal::traits<Derived>::Scalar Scalar;
     typedef Scalar CoeffReturnType;
 
-    enum {
-      RowsAtCompileTime = internal::traits<Derived>::RowsAtCompileTime,
-      ColsAtCompileTime = internal::traits<Derived>::ColsAtCompileTime,
-      SizeAtCompileTime = (internal::size_at_compile_time<internal::traits<Derived>::RowsAtCompileTime,
-                                                          internal::traits<Derived>::ColsAtCompileTime>::ret),
-      MaxRowsAtCompileTime = internal::traits<Derived>::MaxRowsAtCompileTime,
-      MaxColsAtCompileTime = internal::traits<Derived>::MaxColsAtCompileTime,
-      MaxSizeAtCompileTime = (internal::size_at_compile_time<internal::traits<Derived>::MaxRowsAtCompileTime,
-                                                             internal::traits<Derived>::MaxColsAtCompileTime>::ret),
-      IsVectorAtCompileTime = internal::traits<Derived>::MaxRowsAtCompileTime == 1
-                           || internal::traits<Derived>::MaxColsAtCompileTime == 1
+    enum
+    {
+        RowsAtCompileTime = internal::traits<Derived>::RowsAtCompileTime,
+        ColsAtCompileTime = internal::traits<Derived>::ColsAtCompileTime,
+        SizeAtCompileTime = (internal::size_at_compile_time<internal::traits<Derived>::RowsAtCompileTime,
+                             internal::traits<Derived>::ColsAtCompileTime>::ret),
+        MaxRowsAtCompileTime = internal::traits<Derived>::MaxRowsAtCompileTime,
+        MaxColsAtCompileTime = internal::traits<Derived>::MaxColsAtCompileTime,
+        MaxSizeAtCompileTime = (internal::size_at_compile_time<internal::traits<Derived>::MaxRowsAtCompileTime,
+                                internal::traits<Derived>::MaxColsAtCompileTime>::ret),
+        IsVectorAtCompileTime = internal::traits<Derived>::MaxRowsAtCompileTime == 1
+                                || internal::traits<Derived>::MaxColsAtCompileTime == 1
     };
 
     /** Default constructor */
@@ -74,8 +75,8 @@ class SolverBase : public EigenBase<Derived>
     inline const Solve<Derived, Rhs>
     solve(const MatrixBase<Rhs>& b) const
     {
-      eigen_assert(derived().rows()==b.rows() && "solve(): invalid number of rows of the right hand side matrix b");
-      return Solve<Derived, Rhs>(derived(), b.derived());
+        eigen_assert(derived().rows()==b.rows() && "solve(): invalid number of rows of the right hand side matrix b");
+        return Solve<Derived, Rhs>(derived(), b.derived());
     }
 
     /** \internal the return type of transpose() */
@@ -87,16 +88,17 @@ class SolverBase : public EigenBase<Derived>
       *
       * \sa adjoint(), solve()
       */
-    inline ConstTransposeReturnType transpose() const
+    inline ConstTransposeReturnType
+    transpose() const
     {
-      return ConstTransposeReturnType(derived());
+        return ConstTransposeReturnType(derived());
     }
 
     /** \internal the return type of adjoint() */
     typedef typename internal::conditional<NumTraits<Scalar>::IsComplex,
-                        CwiseUnaryOp<internal::scalar_conjugate_op<Scalar>, ConstTransposeReturnType>,
-                        ConstTransposeReturnType
-                     >::type AdjointReturnType;
+            CwiseUnaryOp<internal::scalar_conjugate_op<Scalar>, ConstTransposeReturnType>,
+            ConstTransposeReturnType
+            >::type AdjointReturnType;
     /** \returns an expression of the adjoint of the factored matrix
       *
       * A typical usage is to solve for the adjoint problem A' x = b:
@@ -106,9 +108,10 @@ class SolverBase : public EigenBase<Derived>
       *
       * \sa transpose(), solve()
       */
-    inline AdjointReturnType adjoint() const
+    inline AdjointReturnType
+    adjoint() const
     {
-      return AdjointReturnType(derived().transpose());
+        return AdjointReturnType(derived().transpose());
     }
 
   protected:
@@ -119,7 +122,7 @@ namespace internal {
 template<typename Derived>
 struct generic_xpr_base<Derived, MatrixXpr, SolverStorage>
 {
-  typedef SolverBase<Derived> type;
+    typedef SolverBase<Derived> type;
 
 };
 

@@ -1,22 +1,6 @@
 loadModule("multinet",TRUE)
 
-# Functions loading some famous small datasets
-# More datasets can be downloaded from the book webpage: multilayer.it.uu.se
-
-ml.aucs <- function() {
-	read.ml(system.file("extdata", "aucs.mpx", package="multinet"),"AUCS")
-}
-
-ml.toy <- function() {
-	read.ml(system.file("extdata", "book.mpx", package="multinet"),"toy")
-}
-
-ml.florentine <- function() {
-	read.ml(system.file("extdata", "florentine_families.mpx", package="multinet"),"Florentine families")
-}
-
-# Casting of (a portion of) a multilayer network into an igraph (multi)graph.
-# This is done by creating an intermediate graphml file and loading it as an igraph file
+# Casting of (a portion of) a multilayer network into an igraph (multi)graph. This is done by creating an intermediate graphml file and loading it as an igraph file
 
 as.igraph.Rcpp_RMLNetwork <- function (x, layers=NULL, merge.actors=TRUE, all.actors=FALSE, ...) {
     if (is.null(layers)) {
@@ -29,49 +13,103 @@ as.igraph.Rcpp_RMLNetwork <- function (x, layers=NULL, merge.actors=TRUE, all.ac
     g
 }
 
+
 # A function to convert the network into a list of igraph objects
 as.list.Rcpp_RMLNetwork <- function(x, ...) {
     layer.names = sort(layers.ml(x))
     layers <- vector("list",num.layers.ml(x)+1)
     layers[[1]] <- as.igraph(x)
     names(layers)[1] <- "_flat_"
-    for (i in 1 : num.layers.ml(x)) {
-        layers[[i+1]] <- as.igraph(x,layer.names[i])
-        bad.vs<-V(layers[[i+1]])[degree(layers[[i+1]]) == 0]
-        # remove isolated nodes
-        layers[[i+1]] <-delete.vertices(layers[[i+1]], bad.vs)
-        names(layers)[i+1] <- layer.names[i]
+    if (num.layers.ml(x)>0) {
+        for (i in 1 : num.layers.ml(x)) {
+            layers[[i+1]] <- as.igraph(x,layer.names[i])
+            bad.vs<-V(layers[[i+1]])[degree(layers[[i+1]]) == 0]
+            # remove isolated nodes
+            layers[[i+1]] <-delete.vertices(layers[[i+1]], bad.vs)
+            names(layers)[i+1] <- layer.names[i]
+        }
     }
     layers
+}
+
+#
+add.igraph.layer.ml <- function(mlnetwork, g, name)
+{
+    if (is.null(vertex_attr(g)$name))
+    {
+        stop("igraph object must have a vertex attribute 'name' with vertex names")
+    }
+    
+    add.layers.ml(mlnetwork, name, is.directed(g))
+    
+    add.actors.ml(mlnetwork, vertex_attr(g)$name)
+    
+    vertices = data.frame(actor=vertex_attr(g)$name, layer=name)
+    add.vertices.ml(mlnetwork, vertices)
+    
+    for (attr in names(vertex_attr(g)))
+    {
+        if (is.numeric(vertex_attr(g)[[attr]]))
+        {
+            add.attributes.ml(mlnetwork, attributes=attr, type="numeric", target="vertex", layer=name)
+        }
+        if (is.character(vertex_attr(g)[[attr]]))
+        {
+            add.attributes.ml(mlnetwork, attributes=attr, type="string", target="vertex", layer=name)
+        }
+        set.values.ml(mlnetwork, attr, vertices=vertices, values=vertex_attr(g)[[attr]])
+    }
+    
+    
+    edges = data.frame(
+    actor1=get.edgelist(g)[,1], layer1=name,
+    actor2=get.edgelist(g)[,2], layer2=name)
+    
+    add.edges.ml(mlnetwork, edges)
+    
+    for (attr in names(edge_attr(g)))
+    {
+        if (is.numeric(edge_attr(g)[[attr]]))
+        {
+            add.attributes.ml(mlnetwork, attributes=attr, type="numeric", target="edge", layer=name)
+        }
+        if (is.character(edge_attr(g)[[attr]]))
+        {
+            add.attributes.ml(mlnetwork, attributes=attr, type="string", target="edge", layer=name)
+        }
+        set.values.ml(mlnetwork, attr, edges=edges, values=edge_attr(g)[[attr]])
+    }
 }
 
 # Basic layer-by-layer statistics
 summary.Rcpp_RMLNetwork <- function(object, ...) {
     mlnet.layers <- as.list(object)
-    mlnet.table <- as.data.frame(matrix(0,length(mlnet.layers),7))
-    dimnames(mlnet.table) <- list(names(mlnet.layers),c("n","m","nc","dens","cc","apl","dia"))
-    for (i in 1 : length(mlnet.layers)) {
-        mlnet.table[i,1] = vcount(mlnet.layers[[i]])
-        mlnet.table[i,2] = ecount(mlnet.layers[[i]])
-        mlnet.table[i,3] = count_components(mlnet.layers[[i]])
-        mlnet.table[i,4] = graph.density(mlnet.layers[[i]])
-        mlnet.table[i,5] = transitivity(mlnet.layers[[i]])
-        mlnet.table[i,6] = average.path.length(mlnet.layers[[i]])
-        mlnet.table[i,7] = diameter(mlnet.layers[[i]])
+    mlnet.table <- as.data.frame(matrix(0,length(mlnet.layers),8))
+    dimnames(mlnet.table) <- list(names(mlnet.layers),c("n","m","dir","nc","dens","cc","apl","dia"))
+    if (num.layers.ml(object)>0) {
+        for (i in 1 : length(mlnet.layers)) {
+            mlnet.table[i,1] = vcount(mlnet.layers[[i]])
+            mlnet.table[i,2] = ecount(mlnet.layers[[i]])
+            mlnet.table[i,3] = is.directed(mlnet.layers[[i]])
+            mlnet.table[i,4] = count_components(mlnet.layers[[i]])
+            mlnet.table[i,5] = graph.density(mlnet.layers[[i]])
+            mlnet.table[i,6] = transitivity(mlnet.layers[[i]])
+            mlnet.table[i,7] = average.path.length(mlnet.layers[[i]])
+            mlnet.table[i,8] = diameter(mlnet.layers[[i]])
+        }
     }
     mlnet.table
 }
 
 # (Rudimentary) plotting function.
 
+    
 plot.Rcpp_RMLNetwork <- function(x,
 layout=NULL, grid=NULL, mai=.1,
-vertex.shape=16, vertex.cex=1, vertex.size=vertex.cex, vertex.color=NULL,
+vertex.shape=16, vertex.cex=1, vertex.color=NULL,
 vertex.labels=NULL, vertex.labels.pos=3, vertex.labels.offset=.5, vertex.labels.cex=1,
 edge.type=1, edge.width=1, edge.color=1,
 edge.arrow.length=0.1, edge.arrow.angle=20,
-legend.x=NULL, legend.y=NULL, legend.pch=20,
-legend.cex=.5, legend.inset=c(0, 0),
 com=NULL, com.cex=1, ...) {
     
     num.cols = num.layers.ml(x)
@@ -111,15 +149,6 @@ plot(NA,type="n",xlim=c(x.min,x.min+width*num.cols),ylim=c(y.min,y.min+height*nu
     segments((0:num.cols*width)+x.min,y.min,(0:num.cols*width)+x.min,y.min+height*num.rows)
     segments(x.min,(0:num.rows*height)+y.min,x.min+width*num.cols,(0:num.rows*height)+y.min)
     
-    # draw legend
-    if (!is.null(legend.x))
-    {
-        legend.col <- 1:num.layers.ml(x)
-        if (!is.null(vertex.color)) legend.col=1
-        legend(legend.x, legend.y, legend=layers.ml(x), col = legend.col, bty = "n", pch=legend.pch,
-        cex = legend.cex, inset = legend.inset)
-    }
-    
     # draw communities
     if (!is.null(com) && nrow(com)>0) {
         num.com <- max(com$cid)+1
@@ -153,12 +182,13 @@ plot(NA,type="n",xlim=c(x.min,x.min+width*num.cols),ylim=c(y.min,y.min+height*nu
     }
     apply(e,1,draw_edge)
 
-    # draw nodes
-    if (is.null(vertex.color)) vertex.color=layout$z+1
-    points(x_coord(layout),y_coord(layout),pch=vertex.shape,col=vertex.color,cex=vertex.size)
+# draw nodes
 
-    # draw labels
+if (is.null(vertex.color)) vertex.color=layout$z+1
+points(x_coord(layout),y_coord(layout),pch=vertex.shape,col=vertex.color,cex=vertex.cex)
+
+# draw labels
     if (is.null(vertex.labels)) vertex.labels=layout$actor
-    text(x_coord(layout),y_coord(layout),labels=vertex.labels, pos=vertex.labels.pos, offset=vertex.labels.offset, cex=vertex.labels.cex)
+text(x_coord(layout),y_coord(layout),labels=vertex.labels, pos=vertex.labels.pos, offset=vertex.labels.offset, cex=vertex.labels.cex)
 }
 

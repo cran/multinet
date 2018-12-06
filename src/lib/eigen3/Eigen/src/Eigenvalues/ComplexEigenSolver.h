@@ -14,7 +14,7 @@
 
 #include "./ComplexSchur.h"
 
-namespace Eigen { 
+namespace Eigen {
 
 /** \eigenvalues_module \ingroup Eigenvalues_Module
   *
@@ -49,12 +49,13 @@ template<typename _MatrixType> class ComplexEigenSolver
     /** \brief Synonym for the template parameter \p _MatrixType. */
     typedef _MatrixType MatrixType;
 
-    enum {
-      RowsAtCompileTime = MatrixType::RowsAtCompileTime,
-      ColsAtCompileTime = MatrixType::ColsAtCompileTime,
-      Options = MatrixType::Options,
-      MaxRowsAtCompileTime = MatrixType::MaxRowsAtCompileTime,
-      MaxColsAtCompileTime = MatrixType::MaxColsAtCompileTime
+    enum
+    {
+        RowsAtCompileTime = MatrixType::RowsAtCompileTime,
+        ColsAtCompileTime = MatrixType::ColsAtCompileTime,
+        Options = MatrixType::Options,
+        MaxRowsAtCompileTime = MatrixType::MaxRowsAtCompileTime,
+        MaxColsAtCompileTime = MatrixType::MaxColsAtCompileTime
     };
 
     /** \brief Scalar type for matrices of type #MatrixType. */
@@ -90,12 +91,12 @@ template<typename _MatrixType> class ComplexEigenSolver
       * perform decompositions via compute().
       */
     ComplexEigenSolver()
-            : m_eivec(),
-              m_eivalues(),
-              m_schur(),
-              m_isInitialized(false),
-              m_eigenvectorsOk(false),
-              m_matX()
+        : m_eivec(),
+          m_eivalues(),
+          m_schur(),
+          m_isInitialized(false),
+          m_eigenvectorsOk(false),
+          m_matX()
     {}
 
     /** \brief Default Constructor with memory preallocation
@@ -104,13 +105,14 @@ template<typename _MatrixType> class ComplexEigenSolver
       * according to the specified problem \a size.
       * \sa ComplexEigenSolver()
       */
-    explicit ComplexEigenSolver(Index size)
-            : m_eivec(size, size),
-              m_eivalues(size),
-              m_schur(size),
-              m_isInitialized(false),
-              m_eigenvectorsOk(false),
-              m_matX(size, size)
+    explicit
+    ComplexEigenSolver(Index size)
+        : m_eivec(size, size),
+          m_eivalues(size),
+          m_schur(size),
+          m_isInitialized(false),
+          m_eigenvectorsOk(false),
+          m_matX(size, size)
     {}
 
     /** \brief Constructor; computes eigendecomposition of given matrix.
@@ -123,15 +125,16 @@ template<typename _MatrixType> class ComplexEigenSolver
       * This constructor calls compute() to compute the eigendecomposition.
       */
     template<typename InputType>
-    explicit ComplexEigenSolver(const EigenBase<InputType>& matrix, bool computeEigenvectors = true)
-            : m_eivec(matrix.rows(),matrix.cols()),
-              m_eivalues(matrix.cols()),
-              m_schur(matrix.rows()),
-              m_isInitialized(false),
-              m_eigenvectorsOk(false),
-              m_matX(matrix.rows(),matrix.cols())
+    explicit
+    ComplexEigenSolver(const EigenBase<InputType>& matrix, bool computeEigenvectors = true)
+        : m_eivec(matrix.rows(),matrix.cols()),
+          m_eivalues(matrix.cols()),
+          m_schur(matrix.rows()),
+          m_isInitialized(false),
+          m_eigenvectorsOk(false),
+          m_matX(matrix.rows(),matrix.cols())
     {
-      compute(matrix.derived(), computeEigenvectors);
+        compute(matrix.derived(), computeEigenvectors);
     }
 
     /** \brief Returns the eigenvectors of given matrix.
@@ -154,11 +157,12 @@ template<typename _MatrixType> class ComplexEigenSolver
       * Example: \include ComplexEigenSolver_eigenvectors.cpp
       * Output: \verbinclude ComplexEigenSolver_eigenvectors.out
       */
-    const EigenvectorType& eigenvectors() const
+    const EigenvectorType&
+    eigenvectors() const
     {
-      eigen_assert(m_isInitialized && "ComplexEigenSolver is not initialized.");
-      eigen_assert(m_eigenvectorsOk && "The eigenvectors have not been computed together with the eigenvalues.");
-      return m_eivec;
+        eigen_assert(m_isInitialized && "ComplexEigenSolver is not initialized.");
+        eigen_assert(m_eigenvectorsOk && "The eigenvectors have not been computed together with the eigenvalues.");
+        return m_eivec;
     }
 
     /** \brief Returns the eigenvalues of given matrix.
@@ -179,10 +183,11 @@ template<typename _MatrixType> class ComplexEigenSolver
       * Example: \include ComplexEigenSolver_eigenvalues.cpp
       * Output: \verbinclude ComplexEigenSolver_eigenvalues.out
       */
-    const EigenvalueType& eigenvalues() const
+    const EigenvalueType&
+    eigenvalues() const
     {
-      eigen_assert(m_isInitialized && "ComplexEigenSolver is not initialized.");
-      return m_eivalues;
+        eigen_assert(m_isInitialized && "ComplexEigenSolver is not initialized.");
+        return m_eivalues;
     }
 
     /** \brief Computes eigendecomposition of given matrix.
@@ -210,38 +215,43 @@ template<typename _MatrixType> class ComplexEigenSolver
       * Output: \verbinclude ComplexEigenSolver_compute.out
       */
     template<typename InputType>
-    ComplexEigenSolver& compute(const EigenBase<InputType>& matrix, bool computeEigenvectors = true);
+    ComplexEigenSolver&
+    compute(const EigenBase<InputType>& matrix, bool computeEigenvectors = true);
 
     /** \brief Reports whether previous computation was successful.
       *
       * \returns \c Success if computation was succesful, \c NoConvergence otherwise.
       */
-    ComputationInfo info() const
+    ComputationInfo
+    info() const
     {
-      eigen_assert(m_isInitialized && "ComplexEigenSolver is not initialized.");
-      return m_schur.info();
+        eigen_assert(m_isInitialized && "ComplexEigenSolver is not initialized.");
+        return m_schur.info();
     }
 
     /** \brief Sets the maximum number of iterations allowed. */
-    ComplexEigenSolver& setMaxIterations(Index maxIters)
+    ComplexEigenSolver&
+    setMaxIterations(Index maxIters)
     {
-      m_schur.setMaxIterations(maxIters);
-      return *this;
+        m_schur.setMaxIterations(maxIters);
+        return *this;
     }
 
     /** \brief Returns the maximum number of iterations. */
-    Index getMaxIterations()
+    Index
+    getMaxIterations()
     {
-      return m_schur.getMaxIterations();
+        return m_schur.getMaxIterations();
     }
 
   protected:
-    
-    static void check_template_parameters()
+
+    static void
+    check_template_parameters()
     {
-      EIGEN_STATIC_ASSERT_NON_INTEGER(Scalar);
+        EIGEN_STATIC_ASSERT_NON_INTEGER(Scalar);
     }
-    
+
     EigenvectorType m_eivec;
     EigenvalueType m_eivalues;
     ComplexSchur<MatrixType> m_schur;
@@ -250,95 +260,117 @@ template<typename _MatrixType> class ComplexEigenSolver
     EigenvectorType m_matX;
 
   private:
-    void doComputeEigenvectors(RealScalar matrixnorm);
-    void sortEigenvalues(bool computeEigenvectors);
+    void
+    doComputeEigenvectors(RealScalar matrixnorm);
+    void
+    sortEigenvalues(bool computeEigenvectors);
 };
 
 
 template<typename MatrixType>
 template<typename InputType>
-ComplexEigenSolver<MatrixType>& 
+ComplexEigenSolver<MatrixType>&
 ComplexEigenSolver<MatrixType>::compute(const EigenBase<InputType>& matrix, bool computeEigenvectors)
 {
-  check_template_parameters();
-  
-  // this code is inspired from Jampack
-  eigen_assert(matrix.cols() == matrix.rows());
+    check_template_parameters();
 
-  // Do a complex Schur decomposition, A = U T U^*
-  // The eigenvalues are on the diagonal of T.
-  m_schur.compute(matrix.derived(), computeEigenvectors);
+    // this code is inspired from Jampack
+    eigen_assert(matrix.cols() == matrix.rows());
 
-  if(m_schur.info() == Success)
-  {
-    m_eivalues = m_schur.matrixT().diagonal();
-    if(computeEigenvectors)
-      doComputeEigenvectors(m_schur.matrixT().norm());
-    sortEigenvalues(computeEigenvectors);
-  }
+    // Do a complex Schur decomposition, A = U T U^*
+    // The eigenvalues are on the diagonal of T.
+    m_schur.compute(matrix.derived(), computeEigenvectors);
 
-  m_isInitialized = true;
-  m_eigenvectorsOk = computeEigenvectors;
-  return *this;
+    if (m_schur.info() == Success)
+    {
+        m_eivalues = m_schur.matrixT().diagonal();
+
+        if (computeEigenvectors)
+        {
+            doComputeEigenvectors(m_schur.matrixT().norm());
+        }
+
+        sortEigenvalues(computeEigenvectors);
+    }
+
+    m_isInitialized = true;
+    m_eigenvectorsOk = computeEigenvectors;
+    return *this;
 }
 
 
 template<typename MatrixType>
-void ComplexEigenSolver<MatrixType>::doComputeEigenvectors(RealScalar matrixnorm)
+void
+ComplexEigenSolver<MatrixType>::doComputeEigenvectors(RealScalar matrixnorm)
 {
-  const Index n = m_eivalues.size();
+    const Index n = m_eivalues.size();
 
-  matrixnorm = numext::maxi(matrixnorm,(std::numeric_limits<RealScalar>::min)());
+    matrixnorm = numext::maxi(matrixnorm,(std::numeric_limits<RealScalar>::min)());
 
-  // Compute X such that T = X D X^(-1), where D is the diagonal of T.
-  // The matrix X is unit triangular.
-  m_matX = EigenvectorType::Zero(n, n);
-  for(Index k=n-1 ; k>=0 ; k--)
-  {
-    m_matX.coeffRef(k,k) = ComplexScalar(1.0,0.0);
-    // Compute X(i,k) using the (i,k) entry of the equation X T = D X
-    for(Index i=k-1 ; i>=0 ; i--)
+    // Compute X such that T = X D X^(-1), where D is the diagonal of T.
+    // The matrix X is unit triangular.
+    m_matX = EigenvectorType::Zero(n, n);
+
+    for (Index k=n-1 ; k>=0 ; k--)
     {
-      m_matX.coeffRef(i,k) = -m_schur.matrixT().coeff(i,k);
-      if(k-i-1>0)
-        m_matX.coeffRef(i,k) -= (m_schur.matrixT().row(i).segment(i+1,k-i-1) * m_matX.col(k).segment(i+1,k-i-1)).value();
-      ComplexScalar z = m_schur.matrixT().coeff(i,i) - m_schur.matrixT().coeff(k,k);
-      if(z==ComplexScalar(0))
-      {
-        // If the i-th and k-th eigenvalue are equal, then z equals 0.
-        // Use a small value instead, to prevent division by zero.
-        numext::real_ref(z) = NumTraits<RealScalar>::epsilon() * matrixnorm;
-      }
-      m_matX.coeffRef(i,k) = m_matX.coeff(i,k) / z;
-    }
-  }
+        m_matX.coeffRef(k,k) = ComplexScalar(1.0,0.0);
 
-  // Compute V as V = U X; now A = U T U^* = U X D X^(-1) U^* = V D V^(-1)
-  m_eivec.noalias() = m_schur.matrixU() * m_matX;
-  // .. and normalize the eigenvectors
-  for(Index k=0 ; k<n ; k++)
-  {
-    m_eivec.col(k).normalize();
-  }
+        // Compute X(i,k) using the (i,k) entry of the equation X T = D X
+        for (Index i=k-1 ; i>=0 ; i--)
+        {
+            m_matX.coeffRef(i,k) = -m_schur.matrixT().coeff(i,k);
+
+            if (k-i-1>0)
+            {
+                m_matX.coeffRef(i,k) -= (m_schur.matrixT().row(i).segment(i+1,k-i-1) * m_matX.col(k).segment(i+1,k-i-1)).value();
+            }
+
+            ComplexScalar z = m_schur.matrixT().coeff(i,i) - m_schur.matrixT().coeff(k,k);
+
+            if (z==ComplexScalar(0))
+            {
+                // If the i-th and k-th eigenvalue are equal, then z equals 0.
+                // Use a small value instead, to prevent division by zero.
+                numext::real_ref(z) = NumTraits<RealScalar>::epsilon() * matrixnorm;
+            }
+
+            m_matX.coeffRef(i,k) = m_matX.coeff(i,k) / z;
+        }
+    }
+
+    // Compute V as V = U X; now A = U T U^* = U X D X^(-1) U^* = V D V^(-1)
+    m_eivec.noalias() = m_schur.matrixU() * m_matX;
+
+    // .. and normalize the eigenvectors
+    for (Index k=0 ; k<n ; k++)
+    {
+        m_eivec.col(k).normalize();
+    }
 }
 
 
 template<typename MatrixType>
-void ComplexEigenSolver<MatrixType>::sortEigenvalues(bool computeEigenvectors)
+void
+ComplexEigenSolver<MatrixType>::sortEigenvalues(bool computeEigenvectors)
 {
-  const Index n =  m_eivalues.size();
-  for (Index i=0; i<n; i++)
-  {
-    Index k;
-    m_eivalues.cwiseAbs().tail(n-i).minCoeff(&k);
-    if (k != 0)
+    const Index n =  m_eivalues.size();
+
+    for (Index i=0; i<n; i++)
     {
-      k += i;
-      std::swap(m_eivalues[k],m_eivalues[i]);
-      if(computeEigenvectors)
-	m_eivec.col(i).swap(m_eivec.col(k));
+        Index k;
+        m_eivalues.cwiseAbs().tail(n-i).minCoeff(&k);
+
+        if (k != 0)
+        {
+            k += i;
+            std::swap(m_eivalues[k],m_eivalues[i]);
+
+            if (computeEigenvectors)
+            {
+                m_eivec.col(i).swap(m_eivec.col(k));
+            }
+        }
     }
-  }
 }
 
 } // end namespace Eigen

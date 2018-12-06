@@ -42,7 +42,7 @@ EIGEN_DEVICE_FUNC
 EIGEN_STRONG_INLINE const CwiseBinaryOp<CustomBinaryOp, const Derived, const OtherDerived>
 binaryExpr(const EIGEN_CURRENT_STORAGE_BASE_CLASS<OtherDerived> &other, const CustomBinaryOp& func = CustomBinaryOp()) const
 {
-  return CwiseBinaryOp<CustomBinaryOp, const Derived, const OtherDerived>(derived(), other.derived(), func);
+    return CwiseBinaryOp<CustomBinaryOp, const Derived, const OtherDerived>(derived(), other.derived(), func);
 }
 
 
@@ -60,7 +60,8 @@ const CwiseBinaryOp<internal::scalar_product_op<Scalar,T>,Derived,Constant<T> > 
   * \tparam T is the scalar type of \a scalar. It must be compatible with the scalar type of the given expression.
   */
 template<typename T> friend
-const CwiseBinaryOp<internal::scalar_product_op<T,Scalar>,Constant<T>,Derived> operator*(const T& scalar, const StorageBaseType& expr);
+const CwiseBinaryOp<internal::scalar_product_op<T,Scalar>,Constant<T>,Derived>
+operator*(const T& scalar, const StorageBaseType& expr);
 #endif
 
 
@@ -90,9 +91,9 @@ EIGEN_DEVICE_FUNC
 inline const CwiseBinaryOp<internal::scalar_boolean_and_op, const Derived, const OtherDerived>
 operator&&(const EIGEN_CURRENT_STORAGE_BASE_CLASS<OtherDerived> &other) const
 {
-  EIGEN_STATIC_ASSERT((internal::is_same<bool,Scalar>::value && internal::is_same<bool,typename OtherDerived::Scalar>::value),
-                      THIS_METHOD_IS_ONLY_FOR_EXPRESSIONS_OF_BOOL);
-  return CwiseBinaryOp<internal::scalar_boolean_and_op, const Derived, const OtherDerived>(derived(),other.derived());
+    EIGEN_STATIC_ASSERT((internal::is_same<bool,Scalar>::value && internal::is_same<bool,typename OtherDerived::Scalar>::value),
+                        THIS_METHOD_IS_ONLY_FOR_EXPRESSIONS_OF_BOOL);
+    return CwiseBinaryOp<internal::scalar_boolean_and_op, const Derived, const OtherDerived>(derived(),other.derived());
 }
 
 /** \returns an expression of the coefficient-wise boolean \b or operator of \c *this and \a other
@@ -109,7 +110,7 @@ EIGEN_DEVICE_FUNC
 inline const CwiseBinaryOp<internal::scalar_boolean_or_op, const Derived, const OtherDerived>
 operator||(const EIGEN_CURRENT_STORAGE_BASE_CLASS<OtherDerived> &other) const
 {
-  EIGEN_STATIC_ASSERT((internal::is_same<bool,Scalar>::value && internal::is_same<bool,typename OtherDerived::Scalar>::value),
-                      THIS_METHOD_IS_ONLY_FOR_EXPRESSIONS_OF_BOOL);
-  return CwiseBinaryOp<internal::scalar_boolean_or_op, const Derived, const OtherDerived>(derived(),other.derived());
+    EIGEN_STATIC_ASSERT((internal::is_same<bool,Scalar>::value && internal::is_same<bool,typename OtherDerived::Scalar>::value),
+                        THIS_METHOD_IS_ONLY_FOR_EXPRESSIONS_OF_BOOL);
+    return CwiseBinaryOp<internal::scalar_boolean_or_op, const Derived, const OtherDerived>(derived(),other.derived());
 }

@@ -20,7 +20,7 @@ layout.circular.ml(mlnetwork)
 \item{iterations}{Number of iterations.}
 }
 \references{
-Fatemi, Zahra, Salehi, Mostafa, & Magnani, Matteo (2016). A simple multiforce layout for multiplex networks. arXiv 1607.03914
+Fatemi, Zahra, Salehi, Mostafa, & Magnani, Matteo (2018). A generalised force-based layout for multiplex sociograms. Social Informatics
 }
 \seealso{
 \link{Plotting}

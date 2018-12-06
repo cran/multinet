@@ -10,7 +10,7 @@
 #ifndef EIGEN_SKYLINEUTIL_H
 #define EIGEN_SKYLINEUTIL_H
 
-namespace Eigen { 
+namespace Eigen {
 
 #ifdef NDEBUG
 #define EIGEN_DBG_SKYLINE(X)
@@ -74,8 +74,9 @@ template<typename Lhs, typename Rhs, int ProductMode = skyline_product_mode<Lhs,
 template<typename T> class eval<T,IsSkyline>
 {
     typedef typename traits<T>::Scalar _Scalar;
-    enum {
-          _Flags = traits<T>::Flags
+    enum
+    {
+        _Flags = traits<T>::Flags
     };
 
   public:

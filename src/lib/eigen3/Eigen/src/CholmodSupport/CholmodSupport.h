@@ -10,26 +10,32 @@
 #ifndef EIGEN_CHOLMODSUPPORT_H
 #define EIGEN_CHOLMODSUPPORT_H
 
-namespace Eigen { 
+namespace Eigen {
 
 namespace internal {
 
 template<typename Scalar> struct cholmod_configure_matrix;
 
-template<> struct cholmod_configure_matrix<double> {
-  template<typename CholmodType>
-  static void run(CholmodType& mat) {
-    mat.xtype = CHOLMOD_REAL;
-    mat.dtype = CHOLMOD_DOUBLE;
-  }
+template<> struct cholmod_configure_matrix<double>
+{
+    template<typename CholmodType>
+    static void
+    run(CholmodType& mat)
+    {
+        mat.xtype = CHOLMOD_REAL;
+        mat.dtype = CHOLMOD_DOUBLE;
+    }
 };
 
-template<> struct cholmod_configure_matrix<std::complex<double> > {
-  template<typename CholmodType>
-  static void run(CholmodType& mat) {
-    mat.xtype = CHOLMOD_COMPLEX;
-    mat.dtype = CHOLMOD_DOUBLE;
-  }
+template<> struct cholmod_configure_matrix<std::complex<double> >
+{
+    template<typename CholmodType>
+    static void
+    run(CholmodType& mat)
+    {
+        mat.xtype = CHOLMOD_COMPLEX;
+        mat.dtype = CHOLMOD_DOUBLE;
+    }
 };
 
 // Other scalar types are not yet suppotred by Cholmod
@@ -55,112 +61,130 @@ template<> struct cholmod_configure_matrix<std::complex<double> > {
   * Note that the data are shared.
   */
 template<typename _Scalar, int _Options, typename _StorageIndex>
-cholmod_sparse viewAsCholmod(Ref<SparseMatrix<_Scalar,_Options,_StorageIndex> > mat)
+cholmod_sparse
+viewAsCholmod(Ref<SparseMatrix<_Scalar,_Options,_StorageIndex> > mat)
 {
-  cholmod_sparse res;
-  res.nzmax   = mat.nonZeros();
-  res.nrow    = mat.rows();
-  res.ncol    = mat.cols();
-  res.p       = mat.outerIndexPtr();
-  res.i       = mat.innerIndexPtr();
-  res.x       = mat.valuePtr();
-  res.z       = 0;
-  res.sorted  = 1;
-  if(mat.isCompressed())
-  {
-    res.packed  = 1;
-    res.nz = 0;
-  }
-  else
-  {
-    res.packed  = 0;
-    res.nz = mat.innerNonZeroPtr();
-  }
+    cholmod_sparse res;
+    res.nzmax   = mat.nonZeros();
+    res.nrow    = mat.rows();
+    res.ncol    = mat.cols();
+    res.p       = mat.outerIndexPtr();
+    res.i       = mat.innerIndexPtr();
+    res.x       = mat.valuePtr();
+    res.z       = 0;
+    res.sorted  = 1;
 
-  res.dtype   = 0;
-  res.stype   = -1;
-  
-  if (internal::is_same<_StorageIndex,int>::value)
-  {
-    res.itype = CHOLMOD_INT;
-  }
-  else if (internal::is_same<_StorageIndex,long>::value)
-  {
-    res.itype = CHOLMOD_LONG;
-  }
-  else
-  {
-    eigen_assert(false && "Index type not supported yet");
-  }
+    if (mat.isCompressed())
+    {
+        res.packed  = 1;
+        res.nz = 0;
+    }
 
-  // setup res.xtype
-  internal::cholmod_configure_matrix<_Scalar>::run(res);
-  
-  res.stype = 0;
-  
-  return res;
+    else
+    {
+        res.packed  = 0;
+        res.nz = mat.innerNonZeroPtr();
+    }
+
+    res.dtype   = 0;
+    res.stype   = -1;
+
+    if (internal::is_same<_StorageIndex,int>::value)
+    {
+        res.itype = CHOLMOD_INT;
+    }
+
+    else if (internal::is_same<_StorageIndex,long>::value)
+    {
+        res.itype = CHOLMOD_LONG;
+    }
+
+    else
+    {
+        eigen_assert(false && "Index type not supported yet");
+    }
+
+    // setup res.xtype
+    internal::cholmod_configure_matrix<_Scalar>::run(res);
+
+    res.stype = 0;
+
+    return res;
 }
 
 template<typename _Scalar, int _Options, typename _Index>
-const cholmod_sparse viewAsCholmod(const SparseMatrix<_Scalar,_Options,_Index>& mat)
+const cholmod_sparse
+viewAsCholmod(const SparseMatrix<_Scalar,_Options,_Index>& mat)
 {
-  cholmod_sparse res = viewAsCholmod(Ref<SparseMatrix<_Scalar,_Options,_Index> >(mat.const_cast_derived()));
-  return res;
+    cholmod_sparse res = viewAsCholmod(Ref<SparseMatrix<_Scalar,_Options,_Index> >(mat.const_cast_derived()));
+    return res;
 }
 
 template<typename _Scalar, int _Options, typename _Index>
-const cholmod_sparse viewAsCholmod(const SparseVector<_Scalar,_Options,_Index>& mat)
+const cholmod_sparse
+viewAsCholmod(const SparseVector<_Scalar,_Options,_Index>& mat)
 {
-  cholmod_sparse res = viewAsCholmod(Ref<SparseMatrix<_Scalar,_Options,_Index> >(mat.const_cast_derived()));
-  return res;
+    cholmod_sparse res = viewAsCholmod(Ref<SparseMatrix<_Scalar,_Options,_Index> >(mat.const_cast_derived()));
+    return res;
 }
 
 /** Returns a view of the Eigen sparse matrix \a mat as Cholmod sparse matrix.
   * The data are not copied but shared. */
 template<typename _Scalar, int _Options, typename _Index, unsigned int UpLo>
-cholmod_sparse viewAsCholmod(const SparseSelfAdjointView<const SparseMatrix<_Scalar,_Options,_Index>, UpLo>& mat)
+cholmod_sparse
+viewAsCholmod(const SparseSelfAdjointView<const SparseMatrix<_Scalar,_Options,_Index>, UpLo>& mat)
 {
-  cholmod_sparse res = viewAsCholmod(Ref<SparseMatrix<_Scalar,_Options,_Index> >(mat.matrix().const_cast_derived()));
-  
-  if(UpLo==Upper) res.stype =  1;
-  if(UpLo==Lower) res.stype = -1;
+    cholmod_sparse res = viewAsCholmod(Ref<SparseMatrix<_Scalar,_Options,_Index> >(mat.matrix().const_cast_derived()));
 
-  return res;
+    if (UpLo==Upper)
+    {
+        res.stype =  1;
+    }
+
+    if (UpLo==Lower)
+    {
+        res.stype = -1;
+    }
+
+    return res;
 }
 
 /** Returns a view of the Eigen \b dense matrix \a mat as Cholmod dense matrix.
   * The data are not copied but shared. */
 template<typename Derived>
-cholmod_dense viewAsCholmod(MatrixBase<Derived>& mat)
+cholmod_dense
+viewAsCholmod(MatrixBase<Derived>& mat)
 {
-  EIGEN_STATIC_ASSERT((internal::traits<Derived>::Flags&RowMajorBit)==0,THIS_METHOD_IS_ONLY_FOR_COLUMN_MAJOR_MATRICES);
-  typedef typename Derived::Scalar Scalar;
+    EIGEN_STATIC_ASSERT((internal::traits<Derived>::Flags&RowMajorBit)==0,THIS_METHOD_IS_ONLY_FOR_COLUMN_MAJOR_MATRICES);
+    typedef typename Derived::Scalar Scalar;
 
-  cholmod_dense res;
-  res.nrow   = mat.rows();
-  res.ncol   = mat.cols();
-  res.nzmax  = res.nrow * res.ncol;
-  res.d      = Derived::IsVectorAtCompileTime ? mat.derived().size() : mat.derived().outerStride();
-  res.x      = (void*)(mat.derived().data());
-  res.z      = 0;
+    cholmod_dense res;
+    res.nrow   = mat.rows();
+    res.ncol   = mat.cols();
+    res.nzmax  = res.nrow * res.ncol;
+    res.d      = Derived::IsVectorAtCompileTime ? mat.derived().size() : mat.derived().outerStride();
+    res.x      = (void*)(mat.derived().data());
+    res.z      = 0;
 
-  internal::cholmod_configure_matrix<Scalar>::run(res);
+    internal::cholmod_configure_matrix<Scalar>::run(res);
 
-  return res;
+    return res;
 }
 
 /** Returns a view of the Cholmod sparse matrix \a cm as an Eigen sparse matrix.
   * The data are not copied but shared. */
 template<typename Scalar, int Flags, typename StorageIndex>
-MappedSparseMatrix<Scalar,Flags,StorageIndex> viewAsEigen(cholmod_sparse& cm)
+MappedSparseMatrix<Scalar,Flags,StorageIndex>
+viewAsEigen(cholmod_sparse& cm)
 {
-  return MappedSparseMatrix<Scalar,Flags,StorageIndex>
-         (cm.nrow, cm.ncol, static_cast<StorageIndex*>(cm.p)[cm.ncol],
-          static_cast<StorageIndex*>(cm.p), static_cast<StorageIndex*>(cm.i),static_cast<Scalar*>(cm.x) );
+    return MappedSparseMatrix<Scalar,Flags,StorageIndex>
+           (cm.nrow, cm.ncol, static_cast<StorageIndex*>(cm.p)[cm.ncol],
+            static_cast<StorageIndex*>(cm.p), static_cast<StorageIndex*>(cm.i),static_cast<Scalar*>(cm.x) );
 }
 
-enum CholmodMode {
-  CholmodAuto, CholmodSimplicialLLt, CholmodSupernodalLLt, CholmodLDLt
+enum CholmodMode
+{
+    CholmodAuto, CholmodSimplicialLLt, CholmodSupernodalLLt, CholmodLDLt
 };
 
 
@@ -183,152 +207,180 @@ class CholmodBase : public SparseSolverBase<Derived>
     typedef typename MatrixType::RealScalar RealScalar;
     typedef MatrixType CholMatrixType;
     typedef typename MatrixType::StorageIndex StorageIndex;
-    enum {
-      ColsAtCompileTime = MatrixType::ColsAtCompileTime,
-      MaxColsAtCompileTime = MatrixType::MaxColsAtCompileTime
+    enum
+    {
+        ColsAtCompileTime = MatrixType::ColsAtCompileTime,
+        MaxColsAtCompileTime = MatrixType::MaxColsAtCompileTime
     };
 
   public:
 
     CholmodBase()
-      : m_cholmodFactor(0), m_info(Success), m_factorizationIsOk(false), m_analysisIsOk(false)
+        : m_cholmodFactor(0), m_info(Success), m_factorizationIsOk(false), m_analysisIsOk(false)
     {
-      EIGEN_STATIC_ASSERT((internal::is_same<double,RealScalar>::value), CHOLMOD_SUPPORTS_DOUBLE_PRECISION_ONLY);
-      m_shiftOffset[0] = m_shiftOffset[1] = 0.0;
-      cholmod_start(&m_cholmod);
+        EIGEN_STATIC_ASSERT((internal::is_same<double,RealScalar>::value), CHOLMOD_SUPPORTS_DOUBLE_PRECISION_ONLY);
+        m_shiftOffset[0] = m_shiftOffset[1] = 0.0;
+        cholmod_start(&m_cholmod);
     }
 
-    explicit CholmodBase(const MatrixType& matrix)
-      : m_cholmodFactor(0), m_info(Success), m_factorizationIsOk(false), m_analysisIsOk(false)
+    explicit
+    CholmodBase(const MatrixType& matrix)
+        : m_cholmodFactor(0), m_info(Success), m_factorizationIsOk(false), m_analysisIsOk(false)
     {
-      EIGEN_STATIC_ASSERT((internal::is_same<double,RealScalar>::value), CHOLMOD_SUPPORTS_DOUBLE_PRECISION_ONLY);
-      m_shiftOffset[0] = m_shiftOffset[1] = 0.0;
-      cholmod_start(&m_cholmod);
-      compute(matrix);
+        EIGEN_STATIC_ASSERT((internal::is_same<double,RealScalar>::value), CHOLMOD_SUPPORTS_DOUBLE_PRECISION_ONLY);
+        m_shiftOffset[0] = m_shiftOffset[1] = 0.0;
+        cholmod_start(&m_cholmod);
+        compute(matrix);
     }
 
     ~CholmodBase()
     {
-      if(m_cholmodFactor)
-        cholmod_free_factor(&m_cholmodFactor, &m_cholmod);
-      cholmod_finish(&m_cholmod);
+        if (m_cholmodFactor)
+        {
+            cholmod_free_factor(&m_cholmodFactor, &m_cholmod);
+        }
+
+        cholmod_finish(&m_cholmod);
     }
-    
-    inline StorageIndex cols() const { return internal::convert_index<StorageIndex, Index>(m_cholmodFactor->n); }
-    inline StorageIndex rows() const { return internal::convert_index<StorageIndex, Index>(m_cholmodFactor->n); }
-    
+
+    inline StorageIndex
+    cols() const
+    {
+        return internal::convert_index<StorageIndex, Index>(m_cholmodFactor->n);
+    }
+    inline StorageIndex
+    rows() const
+    {
+        return internal::convert_index<StorageIndex, Index>(m_cholmodFactor->n);
+    }
+
     /** \brief Reports whether previous computation was successful.
       *
       * \returns \c Success if computation was succesful,
       *          \c NumericalIssue if the matrix.appears to be negative.
       */
-    ComputationInfo info() const
+    ComputationInfo
+    info() const
     {
-      eigen_assert(m_isInitialized && "Decomposition is not initialized.");
-      return m_info;
+        eigen_assert(m_isInitialized && "Decomposition is not initialized.");
+        return m_info;
     }
 
     /** Computes the sparse Cholesky decomposition of \a matrix */
-    Derived& compute(const MatrixType& matrix)
+    Derived&
+    compute(const MatrixType& matrix)
     {
-      analyzePattern(matrix);
-      factorize(matrix);
-      return derived();
+        analyzePattern(matrix);
+        factorize(matrix);
+        return derived();
     }
-    
+
     /** Performs a symbolic decomposition on the sparsity pattern of \a matrix.
       *
       * This function is particularly useful when solving for several problems having the same structure.
-      * 
+      *
       * \sa factorize()
       */
-    void analyzePattern(const MatrixType& matrix)
+    void
+    analyzePattern(const MatrixType& matrix)
     {
-      if(m_cholmodFactor)
-      {
-        cholmod_free_factor(&m_cholmodFactor, &m_cholmod);
-        m_cholmodFactor = 0;
-      }
-      cholmod_sparse A = viewAsCholmod(matrix.template selfadjointView<UpLo>());
-      m_cholmodFactor = cholmod_analyze(&A, &m_cholmod);
-      
-      this->m_isInitialized = true;
-      this->m_info = Success;
-      m_analysisIsOk = true;
-      m_factorizationIsOk = false;
+        if (m_cholmodFactor)
+        {
+            cholmod_free_factor(&m_cholmodFactor, &m_cholmod);
+            m_cholmodFactor = 0;
+        }
+
+        cholmod_sparse A = viewAsCholmod(matrix.template selfadjointView<UpLo>());
+        m_cholmodFactor = cholmod_analyze(&A, &m_cholmod);
+
+        this->m_isInitialized = true;
+        this->m_info = Success;
+        m_analysisIsOk = true;
+        m_factorizationIsOk = false;
     }
-    
+
     /** Performs a numeric decomposition of \a matrix
       *
       * The given matrix must have the same sparsity pattern as the matrix on which the symbolic decomposition has been performed.
       *
       * \sa analyzePattern()
       */
-    void factorize(const MatrixType& matrix)
+    void
+    factorize(const MatrixType& matrix)
     {
-      eigen_assert(m_analysisIsOk && "You must first call analyzePattern()");
-      cholmod_sparse A = viewAsCholmod(matrix.template selfadjointView<UpLo>());
-      cholmod_factorize_p(&A, m_shiftOffset, 0, 0, m_cholmodFactor, &m_cholmod);
+        eigen_assert(m_analysisIsOk && "You must first call analyzePattern()");
+        cholmod_sparse A = viewAsCholmod(matrix.template selfadjointView<UpLo>());
+        cholmod_factorize_p(&A, m_shiftOffset, 0, 0, m_cholmodFactor, &m_cholmod);
 
-      // If the factorization failed, minor is the column at which it did. On success minor == n.
-      this->m_info = (m_cholmodFactor->minor == m_cholmodFactor->n ? Success : NumericalIssue);
-      m_factorizationIsOk = true;
+        // If the factorization failed, minor is the column at which it did. On success minor == n.
+        this->m_info = (m_cholmodFactor->minor == m_cholmodFactor->n ? Success : NumericalIssue);
+        m_factorizationIsOk = true;
     }
-    
+
     /** Returns a reference to the Cholmod's configuration structure to get a full control over the performed operations.
      *  See the Cholmod user guide for details. */
-    cholmod_common& cholmod() { return m_cholmod; }
-    
-    #ifndef EIGEN_PARSED_BY_DOXYGEN
+    cholmod_common&
+    cholmod()
+    {
+        return m_cholmod;
+    }
+
+#ifndef EIGEN_PARSED_BY_DOXYGEN
     /** \internal */
     template<typename Rhs,typename Dest>
-    void _solve_impl(const MatrixBase<Rhs> &b, MatrixBase<Dest> &dest) const
+    void
+    _solve_impl(const MatrixBase<Rhs> &b, MatrixBase<Dest> &dest) const
     {
-      eigen_assert(m_factorizationIsOk && "The decomposition is not in a valid state for solving, you must first call either compute() or symbolic()/numeric()");
-      const Index size = m_cholmodFactor->n;
-      EIGEN_UNUSED_VARIABLE(size);
-      eigen_assert(size==b.rows());
-      
-      // Cholmod needs column-major stoarge without inner-stride, which corresponds to the default behavior of Ref.
-      Ref<const Matrix<typename Rhs::Scalar,Dynamic,Dynamic,ColMajor> > b_ref(b.derived());
+        eigen_assert(m_factorizationIsOk && "The decomposition is not in a valid state for solving, you must first call either compute() or symbolic()/numeric()");
+        const Index size = m_cholmodFactor->n;
+        EIGEN_UNUSED_VARIABLE(size);
+        eigen_assert(size==b.rows());
 
-      cholmod_dense b_cd = viewAsCholmod(b_ref);
-      cholmod_dense* x_cd = cholmod_solve(CHOLMOD_A, m_cholmodFactor, &b_cd, &m_cholmod);
-      if(!x_cd)
-      {
-        this->m_info = NumericalIssue;
-        return;
-      }
-      // TODO optimize this copy by swapping when possible (be careful with alignment, etc.)
-      dest = Matrix<Scalar,Dest::RowsAtCompileTime,Dest::ColsAtCompileTime>::Map(reinterpret_cast<Scalar*>(x_cd->x),b.rows(),b.cols());
-      cholmod_free_dense(&x_cd, &m_cholmod);
+        // Cholmod needs column-major stoarge without inner-stride, which corresponds to the default behavior of Ref.
+        Ref<const Matrix<typename Rhs::Scalar,Dynamic,Dynamic,ColMajor> > b_ref(b.derived());
+
+        cholmod_dense b_cd = viewAsCholmod(b_ref);
+        cholmod_dense* x_cd = cholmod_solve(CHOLMOD_A, m_cholmodFactor, &b_cd, &m_cholmod);
+
+        if (!x_cd)
+        {
+            this->m_info = NumericalIssue;
+            return;
+        }
+
+        // TODO optimize this copy by swapping when possible (be careful with alignment, etc.)
+        dest = Matrix<Scalar,Dest::RowsAtCompileTime,Dest::ColsAtCompileTime>::Map(reinterpret_cast<Scalar*>(x_cd->x),b.rows(),b.cols());
+        cholmod_free_dense(&x_cd, &m_cholmod);
     }
-    
+
     /** \internal */
     template<typename RhsDerived, typename DestDerived>
-    void _solve_impl(const SparseMatrixBase<RhsDerived> &b, SparseMatrixBase<DestDerived> &dest) const
+    void
+    _solve_impl(const SparseMatrixBase<RhsDerived> &b, SparseMatrixBase<DestDerived> &dest) const
     {
-      eigen_assert(m_factorizationIsOk && "The decomposition is not in a valid state for solving, you must first call either compute() or symbolic()/numeric()");
-      const Index size = m_cholmodFactor->n;
-      EIGEN_UNUSED_VARIABLE(size);
-      eigen_assert(size==b.rows());
+        eigen_assert(m_factorizationIsOk && "The decomposition is not in a valid state for solving, you must first call either compute() or symbolic()/numeric()");
+        const Index size = m_cholmodFactor->n;
+        EIGEN_UNUSED_VARIABLE(size);
+        eigen_assert(size==b.rows());
 
-      // note: cs stands for Cholmod Sparse
-      Ref<SparseMatrix<typename RhsDerived::Scalar,ColMajor,typename RhsDerived::StorageIndex> > b_ref(b.const_cast_derived());
-      cholmod_sparse b_cs = viewAsCholmod(b_ref);
-      cholmod_sparse* x_cs = cholmod_spsolve(CHOLMOD_A, m_cholmodFactor, &b_cs, &m_cholmod);
-      if(!x_cs)
-      {
-        this->m_info = NumericalIssue;
-        return;
-      }
-      // TODO optimize this copy by swapping when possible (be careful with alignment, etc.)
-      dest.derived() = viewAsEigen<typename DestDerived::Scalar,ColMajor,typename DestDerived::StorageIndex>(*x_cs);
-      cholmod_free_sparse(&x_cs, &m_cholmod);
+        // note: cs stands for Cholmod Sparse
+        Ref<SparseMatrix<typename RhsDerived::Scalar,ColMajor,typename RhsDerived::StorageIndex> > b_ref(b.const_cast_derived());
+        cholmod_sparse b_cs = viewAsCholmod(b_ref);
+        cholmod_sparse* x_cs = cholmod_spsolve(CHOLMOD_A, m_cholmodFactor, &b_cs, &m_cholmod);
+
+        if (!x_cs)
+        {
+            this->m_info = NumericalIssue;
+            return;
+        }
+
+        // TODO optimize this copy by swapping when possible (be careful with alignment, etc.)
+        dest.derived() = viewAsEigen<typename DestDerived::Scalar,ColMajor,typename DestDerived::StorageIndex>(*x_cs);
+        cholmod_free_sparse(&x_cs, &m_cholmod);
     }
-    #endif // EIGEN_PARSED_BY_DOXYGEN
-    
-    
+#endif // EIGEN_PARSED_BY_DOXYGEN
+
+
     /** Sets the shift parameter that will be used to adjust the diagonal coefficients during the numerical factorization.
       *
       * During the numerical factorization, an offset term is added to the diagonal coefficients:\n
@@ -338,67 +390,81 @@ class CholmodBase : public SparseSolverBase<Derived>
       *
       * \returns a reference to \c *this.
       */
-    Derived& setShift(const RealScalar& offset)
+    Derived&
+    setShift(const RealScalar& offset)
     {
-      m_shiftOffset[0] = double(offset);
-      return derived();
+        m_shiftOffset[0] = double(offset);
+        return derived();
     }
-    
+
     /** \returns the determinant of the underlying matrix from the current factorization */
-    Scalar determinant() const
+    Scalar
+    determinant() const
     {
-      using std::exp;
-      return exp(logDeterminant());
+        using std::exp;
+        return exp(logDeterminant());
     }
 
     /** \returns the log determinant of the underlying matrix from the current factorization */
-    Scalar logDeterminant() const
+    Scalar
+    logDeterminant() const
     {
-      using std::log;
-      using numext::real;
-      eigen_assert(m_factorizationIsOk && "The decomposition is not in a valid state for solving, you must first call either compute() or symbolic()/numeric()");
+        using std::log;
+        using numext::real;
+        eigen_assert(m_factorizationIsOk && "The decomposition is not in a valid state for solving, you must first call either compute() or symbolic()/numeric()");
 
-      RealScalar logDet = 0;
-      Scalar *x = static_cast<Scalar*>(m_cholmodFactor->x);
-      if (m_cholmodFactor->is_super)
-      {
-        // Supernodal factorization stored as a packed list of dense column-major blocs,
-        // as described by the following structure:
+        RealScalar logDet = 0;
+        Scalar *x = static_cast<Scalar*>(m_cholmodFactor->x);
 
-        // super[k] == index of the first column of the j-th super node
-        StorageIndex *super = static_cast<StorageIndex*>(m_cholmodFactor->super);
-        // pi[k] == offset to the description of row indices
-        StorageIndex *pi = static_cast<StorageIndex*>(m_cholmodFactor->pi);
-        // px[k] == offset to the respective dense block
-        StorageIndex *px = static_cast<StorageIndex*>(m_cholmodFactor->px);
-
-        Index nb_super_nodes = m_cholmodFactor->nsuper;
-        for (Index k=0; k < nb_super_nodes; ++k)
+        if (m_cholmodFactor->is_super)
         {
-          StorageIndex ncols = super[k + 1] - super[k];
-          StorageIndex nrows = pi[k + 1] - pi[k];
+            // Supernodal factorization stored as a packed list of dense column-major blocs,
+            // as described by the following structure:
 
-          Map<const Array<Scalar,1,Dynamic>, 0, InnerStride<> > sk(x + px[k], ncols, InnerStride<>(nrows+1));
-          logDet += sk.real().log().sum();
+            // super[k] == index of the first column of the j-th super node
+            StorageIndex *super = static_cast<StorageIndex*>(m_cholmodFactor->super);
+            // pi[k] == offset to the description of row indices
+            StorageIndex *pi = static_cast<StorageIndex*>(m_cholmodFactor->pi);
+            // px[k] == offset to the respective dense block
+            StorageIndex *px = static_cast<StorageIndex*>(m_cholmodFactor->px);
+
+            Index nb_super_nodes = m_cholmodFactor->nsuper;
+
+            for (Index k=0; k < nb_super_nodes; ++k)
+            {
+                StorageIndex ncols = super[k + 1] - super[k];
+                StorageIndex nrows = pi[k + 1] - pi[k];
+
+                Map<const Array<Scalar,1,Dynamic>, 0, InnerStride<> > sk(x + px[k], ncols, InnerStride<>(nrows+1));
+                logDet += sk.real().log().sum();
+            }
         }
-      }
-      else
-      {
-        // Simplicial factorization stored as standard CSC matrix.
-        StorageIndex *p = static_cast<StorageIndex*>(m_cholmodFactor->p);
-        Index size = m_cholmodFactor->n;
-        for (Index k=0; k<size; ++k)
-          logDet += log(real( x[p[k]] ));
-      }
-      if (m_cholmodFactor->is_ll)
-        logDet *= 2.0;
-      return logDet;
+
+        else
+        {
+            // Simplicial factorization stored as standard CSC matrix.
+            StorageIndex *p = static_cast<StorageIndex*>(m_cholmodFactor->p);
+            Index size = m_cholmodFactor->n;
+
+            for (Index k=0; k<size; ++k)
+            {
+                logDet += log(real( x[p[k]] ));
+            }
+        }
+
+        if (m_cholmodFactor->is_ll)
+        {
+            logDet *= 2.0;
+        }
+
+        return logDet;
     };
 
     template<typename Stream>
-    void dumpMemory(Stream& /*s*/)
+    void
+    dumpMemory(Stream& /*s*/)
     {}
-    
+
   protected:
     mutable cholmod_common m_cholmod;
     cholmod_factor* m_cholmodFactor;
@@ -435,26 +501,30 @@ class CholmodSimplicialLLT : public CholmodBase<_MatrixType, _UpLo, CholmodSimpl
 {
     typedef CholmodBase<_MatrixType, _UpLo, CholmodSimplicialLLT> Base;
     using Base::m_cholmod;
-    
+
   public:
-    
+
     typedef _MatrixType MatrixType;
-    
-    CholmodSimplicialLLT() : Base() { init(); }
+
+    CholmodSimplicialLLT() : Base()
+    {
+        init();
+    }
 
     CholmodSimplicialLLT(const MatrixType& matrix) : Base()
     {
-      init();
-      this->compute(matrix);
+        init();
+        this->compute(matrix);
     }
 
     ~CholmodSimplicialLLT() {}
   protected:
-    void init()
+    void
+    init()
     {
-      m_cholmod.final_asis = 0;
-      m_cholmod.supernodal = CHOLMOD_SIMPLICIAL;
-      m_cholmod.final_ll = 1;
+        m_cholmod.final_asis = 0;
+        m_cholmod.supernodal = CHOLMOD_SIMPLICIAL;
+        m_cholmod.final_ll = 1;
     }
 };
 
@@ -486,25 +556,29 @@ class CholmodSimplicialLDLT : public CholmodBase<_MatrixType, _UpLo, CholmodSimp
 {
     typedef CholmodBase<_MatrixType, _UpLo, CholmodSimplicialLDLT> Base;
     using Base::m_cholmod;
-    
+
   public:
-    
+
     typedef _MatrixType MatrixType;
-    
-    CholmodSimplicialLDLT() : Base() { init(); }
+
+    CholmodSimplicialLDLT() : Base()
+    {
+        init();
+    }
 
     CholmodSimplicialLDLT(const MatrixType& matrix) : Base()
     {
-      init();
-      this->compute(matrix);
+        init();
+        this->compute(matrix);
     }
 
     ~CholmodSimplicialLDLT() {}
   protected:
-    void init()
+    void
+    init()
     {
-      m_cholmod.final_asis = 1;
-      m_cholmod.supernodal = CHOLMOD_SIMPLICIAL;
+        m_cholmod.final_asis = 1;
+        m_cholmod.supernodal = CHOLMOD_SIMPLICIAL;
     }
 };
 
@@ -535,25 +609,29 @@ class CholmodSupernodalLLT : public CholmodBase<_MatrixType, _UpLo, CholmodSuper
 {
     typedef CholmodBase<_MatrixType, _UpLo, CholmodSupernodalLLT> Base;
     using Base::m_cholmod;
-    
+
   public:
-    
+
     typedef _MatrixType MatrixType;
-    
-    CholmodSupernodalLLT() : Base() { init(); }
+
+    CholmodSupernodalLLT() : Base()
+    {
+        init();
+    }
 
     CholmodSupernodalLLT(const MatrixType& matrix) : Base()
     {
-      init();
-      this->compute(matrix);
+        init();
+        this->compute(matrix);
     }
 
     ~CholmodSupernodalLLT() {}
   protected:
-    void init()
+    void
+    init()
     {
-      m_cholmod.final_asis = 1;
-      m_cholmod.supernodal = CHOLMOD_SUPERNODAL;
+        m_cholmod.final_asis = 1;
+        m_cholmod.supernodal = CHOLMOD_SUPERNODAL;
     }
 };
 
@@ -586,51 +664,60 @@ class CholmodDecomposition : public CholmodBase<_MatrixType, _UpLo, CholmodDecom
 {
     typedef CholmodBase<_MatrixType, _UpLo, CholmodDecomposition> Base;
     using Base::m_cholmod;
-    
+
   public:
-    
+
     typedef _MatrixType MatrixType;
-    
-    CholmodDecomposition() : Base() { init(); }
+
+    CholmodDecomposition() : Base()
+    {
+        init();
+    }
 
     CholmodDecomposition(const MatrixType& matrix) : Base()
     {
-      init();
-      this->compute(matrix);
+        init();
+        this->compute(matrix);
     }
 
     ~CholmodDecomposition() {}
-    
-    void setMode(CholmodMode mode)
+
+    void
+    setMode(CholmodMode mode)
     {
-      switch(mode)
-      {
+        switch (mode)
+        {
         case CholmodAuto:
-          m_cholmod.final_asis = 1;
-          m_cholmod.supernodal = CHOLMOD_AUTO;
-          break;
+            m_cholmod.final_asis = 1;
+            m_cholmod.supernodal = CHOLMOD_AUTO;
+            break;
+
         case CholmodSimplicialLLt:
-          m_cholmod.final_asis = 0;
-          m_cholmod.supernodal = CHOLMOD_SIMPLICIAL;
-          m_cholmod.final_ll = 1;
-          break;
+            m_cholmod.final_asis = 0;
+            m_cholmod.supernodal = CHOLMOD_SIMPLICIAL;
+            m_cholmod.final_ll = 1;
+            break;
+
         case CholmodSupernodalLLt:
-          m_cholmod.final_asis = 1;
-          m_cholmod.supernodal = CHOLMOD_SUPERNODAL;
-          break;
+            m_cholmod.final_asis = 1;
+            m_cholmod.supernodal = CHOLMOD_SUPERNODAL;
+            break;
+
         case CholmodLDLt:
-          m_cholmod.final_asis = 1;
-          m_cholmod.supernodal = CHOLMOD_SIMPLICIAL;
-          break;
+            m_cholmod.final_asis = 1;
+            m_cholmod.supernodal = CHOLMOD_SIMPLICIAL;
+            break;
+
         default:
-          break;
-      }
+            break;
+        }
     }
   protected:
-    void init()
+    void
+    init()
     {
-      m_cholmod.final_asis = 1;
-      m_cholmod.supernodal = CHOLMOD_AUTO;
+        m_cholmod.final_asis = 1;
+        m_cholmod.supernodal = CHOLMOD_AUTO;
     }
 };
 

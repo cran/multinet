@@ -1,17 +1,17 @@
 Package: multinet
 Type: Package
 Title: Analysis and Mining of Multilayer Social Networks
-Version: 1.1.5
-Date: 2018-06-23
-Author: Matteo Magnani, Mikael Dubik (lart and glouvain functions). The package uses functions from dlib, Eigen, Spectra and eclat libraries, whose code has been included in our source package.
+Version: 2.0.0
+Date: 2018-11-20
+Author: Matteo Magnani, Davide Vega, Mikael Dubik (glouvain). The package uses functions from eclat (www.borgelt.net/eclat.html), for association rule mining, Eigen (eigen.tuxfamily.org) and spectra (https://spectralib.org), for matrix manipulation, Infomap (www.mapequation.org), for the Infomap community detection method, and Howard Hinnant's date and time library (https://github.com/HowardHinnant/date). The code from this libraries has been included in our source package.
 Maintainer: Matteo Magnani <matteo.magnani@it.uu.se>
 Description: Functions for the creation/generation and analysis of multilayer social networks.
 License: GPL
 Depends: igraph (>= 1.0.1), Rcpp (>= 0.12.11), methods
 LinkingTo: Rcpp
 RcppModules: multinet
-SystemRequirements: A C++11 compiler
+SystemRequirements: A C++14 compiler
 NeedsCompilation: yes
 Repository: CRAN
-Packaged: 2018-06-25 02:37:22 UTC; matteomagnami
-Date/Publication: 2018-06-25 07:29:08 UTC
+Packaged: 2018-12-06 13:24:47 UTC; matteomagnami
+Date/Publication: 2018-12-06 23:40:03 UTC

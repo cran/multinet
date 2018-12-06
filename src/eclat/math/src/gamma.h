@@ -14,20 +14,33 @@
 /*----------------------------------------------------------------------
   Functions
 ----------------------------------------------------------------------*/
-extern double logGamma   (double n);
-extern double Gamma      (double n);
-extern double lowerGamma (double n, double x);
-extern double upperGamma (double n, double x);
-extern double GammaP     (double n, double x);
-extern double GammaQ     (double n, double x);
+extern double
+logGamma   (double n);
+extern double
+Gamma      (double n);
+extern double
+lowerGamma (double n, double x);
+extern double
+upperGamma (double n, double x);
+extern double
+GammaP     (double n, double x);
+extern double
+GammaQ     (double n, double x);
 
-extern double Gammapdf   (double x,    double k, double theta);
-extern double Gammacdf   (double x,    double k, double theta);
-extern double GammacdfP  (double x,    double k, double theta);
-extern double GammacdfQ  (double x,    double k, double theta);
-extern double Gammaqtl   (double prob, double k, double theta);
-extern double GammaqtlP  (double prob, double k, double theta);
-extern double GammaqtlQ  (double prob, double k, double theta);
+extern double
+Gammapdf   (double x,    double k, double theta);
+extern double
+Gammacdf   (double x,    double k, double theta);
+extern double
+GammacdfP  (double x,    double k, double theta);
+extern double
+GammacdfQ  (double x,    double k, double theta);
+extern double
+Gammaqtl   (double prob, double k, double theta);
+extern double
+GammaqtlP  (double prob, double k, double theta);
+extern double
+GammaqtlQ  (double prob, double k, double theta);
 
 /*----------------------------------------------------------------------
   Preprocessor Definitions

@@ -33,7 +33,7 @@
 #ifndef EIGEN_SELFADJOINT_MATRIX_MATRIX_BLAS_H
 #define EIGEN_SELFADJOINT_MATRIX_MATRIX_BLAS_H
 
-namespace Eigen { 
+namespace Eigen {
 
 namespace internal {
 
@@ -52,38 +52,70 @@ struct product_selfadjoint_matrix<EIGTYPE,Index,LhsStorageOrder,true,ConjugateLh
     const EIGTYPE* _lhs, Index lhsStride, \
     const EIGTYPE* _rhs, Index rhsStride, \
     EIGTYPE* res,        Index resStride, \
-    EIGTYPE alpha, level3_blocking<EIGTYPE, EIGTYPE>& /*blocking*/) \
-  { \
-    char side='L', uplo='L'; \
-    BlasIndex m, n, lda, ldb, ldc; \
-    const EIGTYPE *a, *b; \
-    EIGTYPE beta(1); \
-    MatrixX##EIGPREFIX b_tmp; \
-\
-/* Set transpose options */ \
-/* Set m, n, k */ \
-    m = convert_index<BlasIndex>(rows);  \
-    n = convert_index<BlasIndex>(cols);  \
-\
-/* Set lda, ldb, ldc */ \
-    lda = convert_index<BlasIndex>(lhsStride); \
-    ldb = convert_index<BlasIndex>(rhsStride); \
-    ldc = convert_index<BlasIndex>(resStride); \
-\
-/* Set a, b, c */ \
-    if (LhsStorageOrder==RowMajor) uplo='U'; \
-    a = _lhs; \
-\
-    if (RhsStorageOrder==RowMajor) { \
-      Map<const MatrixX##EIGPREFIX, 0, OuterStride<> > rhs(_rhs,n,m,OuterStride<>(rhsStride)); \
-      b_tmp = rhs.adjoint(); \
-      b = b_tmp.data(); \
-      ldb = convert_index<BlasIndex>(b_tmp.outerStride()); \
-    } else b = _rhs; \
-\
-    BLASPREFIX##symm_(&side, &uplo, &m, &n, &numext::real_ref(alpha), (const BLASTYPE*)a, &lda, (const BLASTYPE*)b, &ldb, &numext::real_ref(beta), (BLASTYPE*)res, &ldc); \
-\
-  } \
+    EIGTYPE alpha, level3_blocking<EIGTYPE, EIGTYPE>&
+/*blocking*/) \
+{
+    \
+    char side='L', uplo='L';
+    \
+    BlasIndex m, n, lda, ldb, ldc;
+    \
+    const EIGTYPE *a, *b;
+    \
+    EIGTYPE beta(1);
+    \
+    MatrixX##EIGPREFIX b_tmp;
+    \
+    \
+    /* Set transpose options */ \
+    /* Set m, n, k */ \
+    m = convert_index<BlasIndex>(rows);
+    \
+    n = convert_index<BlasIndex>(cols);
+    \
+    \
+    /* Set lda, ldb, ldc */ \
+    lda = convert_index<BlasIndex>(lhsStride);
+    \
+    ldb = convert_index<BlasIndex>(rhsStride);
+    \
+    ldc = convert_index<BlasIndex>(resStride);
+    \
+    \
+    /* Set a, b, c */ \
+
+    if (LhsStorageOrder==RowMajor)
+    {
+        uplo='U';
+    } \
+
+    a = _lhs;
+    \
+    \
+
+    if (RhsStorageOrder==RowMajor)
+    {
+        \
+        Map<const MatrixX##EIGPREFIX, 0, OuterStride<> > rhs(_rhs,n,m,OuterStride<>(rhsStride));
+        \
+        b_tmp = rhs.adjoint();
+        \
+        b = b_tmp.data();
+        \
+        ldb = convert_index<BlasIndex>(b_tmp.outerStride());
+        \
+    }
+
+    else
+    {
+        b = _rhs;
+    } \
+
+    \
+    BLASPREFIX##symm_(&side, &uplo, &m, &n, &numext::real_ref(alpha), (const BLASTYPE*)a, &lda, (const BLASTYPE*)b, &ldb, &numext::real_ref(beta), (BLASTYPE*)res, &ldc);
+    \
+    \
+} \
 };
 
 

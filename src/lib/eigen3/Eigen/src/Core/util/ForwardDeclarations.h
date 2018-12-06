@@ -24,16 +24,16 @@ template<typename T> struct traits<const T> : traits<T> {};
 
 template<typename Derived> struct has_direct_access
 {
-  enum { ret = (traits<Derived>::Flags & DirectAccessBit) ? 1 : 0 };
+    enum { ret = (traits<Derived>::Flags & DirectAccessBit) ? 1 : 0 };
 };
 
 template<typename Derived> struct accessors_level
 {
-  enum { has_direct_access = (traits<Derived>::Flags & DirectAccessBit) ? 1 : 0,
-         has_write_access = (traits<Derived>::Flags & LvalueBit) ? 1 : 0,
-         value = has_direct_access ? (has_write_access ? DirectWriteAccessors : DirectAccessors)
-                                   : (has_write_access ? WriteAccessors       : ReadOnlyAccessors)
-  };
+    enum { has_direct_access = (traits<Derived>::Flags & DirectAccessBit) ? 1 : 0,
+           has_write_access = (traits<Derived>::Flags & LvalueBit) ? 1 : 0,
+           value = has_direct_access ? (has_write_access ? DirectWriteAccessors : DirectAccessors)
+                   : (has_write_access ? WriteAccessors       : ReadOnlyAccessors)
+         };
 };
 
 template<typename T> struct evaluator_traits;
@@ -56,22 +56,22 @@ class DenseCoeffsBase;
 template<typename _Scalar, int _Rows, int _Cols,
          int _Options = AutoAlign |
 #if EIGEN_GNUC_AT(3,4)
-    // workaround a bug in at least gcc 3.4.6
-    // the innermost ?: ternary operator is misparsed. We write it slightly
-    // differently and this makes gcc 3.4.6 happy, but it's ugly.
-    // The error would only show up with EIGEN_DEFAULT_TO_ROW_MAJOR is defined
-    // (when EIGEN_DEFAULT_MATRIX_STORAGE_ORDER_OPTION is RowMajor)
-                          ( (_Rows==1 && _Cols!=1) ? Eigen::RowMajor
-                          : !(_Cols==1 && _Rows!=1) ?  EIGEN_DEFAULT_MATRIX_STORAGE_ORDER_OPTION
-                          : Eigen::ColMajor ),
+         // workaround a bug in at least gcc 3.4.6
+         // the innermost ?: ternary operator is misparsed. We write it slightly
+         // differently and this makes gcc 3.4.6 happy, but it's ugly.
+         // The error would only show up with EIGEN_DEFAULT_TO_ROW_MAJOR is defined
+         // (when EIGEN_DEFAULT_MATRIX_STORAGE_ORDER_OPTION is RowMajor)
+         ( (_Rows==1 && _Cols!=1) ? Eigen::RowMajor
+           : !(_Cols==1 && _Rows!=1) ?  EIGEN_DEFAULT_MATRIX_STORAGE_ORDER_OPTION
+           : Eigen::ColMajor ),
 #else
-                          ( (_Rows==1 && _Cols!=1) ? Eigen::RowMajor
-                          : (_Cols==1 && _Rows!=1) ? Eigen::ColMajor
-                          : EIGEN_DEFAULT_MATRIX_STORAGE_ORDER_OPTION ),
+         ( (_Rows==1 && _Cols!=1) ? Eigen::RowMajor
+           : (_Cols==1 && _Rows!=1) ? Eigen::ColMajor
+           : EIGEN_DEFAULT_MATRIX_STORAGE_ORDER_OPTION ),
 #endif
          int _MaxRows = _Rows,
          int _MaxCols = _Cols
-> class Matrix;
+         > class Matrix;
 
 template<typename Derived> class MatrixBase;
 template<typename Derived> class ArrayBase;
@@ -111,7 +111,7 @@ template<typename _IndicesType> class TranspositionsWrapper;
 
 template<typename Derived,
          int Level = internal::accessors_level<Derived>::has_write_access ? WriteAccessors : ReadOnlyAccessors
-> class MapBase;
+         > class MapBase;
 template<int InnerStrideAtCompileTime, int OuterStrideAtCompileTime> class Stride;
 template<int Value = Dynamic> class InnerStride;
 template<int Value = Dynamic> class OuterStride;
@@ -159,7 +159,7 @@ template< typename T,
           typename RhsShape = typename evaluator_traits<typename T::Rhs>::Shape,
           typename LhsScalar = typename traits<typename T::Lhs>::Scalar,
           typename RhsScalar = typename traits<typename T::Rhs>::Scalar
-        > struct product_evaluator;
+          > struct product_evaluator;
 }
 
 template<typename Lhs, typename Rhs,
@@ -226,18 +226,18 @@ struct IOFormat;
 template<typename _Scalar, int _Rows, int _Cols,
          int _Options = AutoAlign |
 #if EIGEN_GNUC_AT(3,4)
-    // workaround a bug in at least gcc 3.4.6
-    // the innermost ?: ternary operator is misparsed. We write it slightly
-    // differently and this makes gcc 3.4.6 happy, but it's ugly.
-    // The error would only show up with EIGEN_DEFAULT_TO_ROW_MAJOR is defined
-    // (when EIGEN_DEFAULT_MATRIX_STORAGE_ORDER_OPTION is RowMajor)
-                          ( (_Rows==1 && _Cols!=1) ? Eigen::RowMajor
-                          : !(_Cols==1 && _Rows!=1) ?  EIGEN_DEFAULT_MATRIX_STORAGE_ORDER_OPTION
-                          : Eigen::ColMajor ),
+         // workaround a bug in at least gcc 3.4.6
+         // the innermost ?: ternary operator is misparsed. We write it slightly
+         // differently and this makes gcc 3.4.6 happy, but it's ugly.
+         // The error would only show up with EIGEN_DEFAULT_TO_ROW_MAJOR is defined
+         // (when EIGEN_DEFAULT_MATRIX_STORAGE_ORDER_OPTION is RowMajor)
+         ( (_Rows==1 && _Cols!=1) ? Eigen::RowMajor
+           : !(_Cols==1 && _Rows!=1) ?  EIGEN_DEFAULT_MATRIX_STORAGE_ORDER_OPTION
+           : Eigen::ColMajor ),
 #else
-                          ( (_Rows==1 && _Cols!=1) ? Eigen::RowMajor
-                          : (_Cols==1 && _Rows!=1) ? Eigen::ColMajor
-                          : EIGEN_DEFAULT_MATRIX_STORAGE_ORDER_OPTION ),
+         ( (_Rows==1 && _Cols!=1) ? Eigen::RowMajor
+           : (_Cols==1 && _Rows!=1) ? Eigen::ColMajor
+           : EIGEN_DEFAULT_MATRIX_STORAGE_ORDER_OPTION ),
 #endif
          int _MaxRows = _Rows, int _MaxCols = _Cols> class Array;
 template<typename ConditionMatrixType, typename ThenMatrixType, typename ElseMatrixType> class Select;
@@ -292,8 +292,9 @@ namespace internal {
 template <typename Scalar>
 struct stem_function
 {
-  typedef std::complex<typename NumTraits<Scalar>::Real> ComplexScalar;
-  typedef ComplexScalar type(ComplexScalar, int);
+    typedef std::complex<typename NumTraits<Scalar>::Real> ComplexScalar;
+    typedef ComplexScalar
+    type(ComplexScalar, int);
 };
 }
 

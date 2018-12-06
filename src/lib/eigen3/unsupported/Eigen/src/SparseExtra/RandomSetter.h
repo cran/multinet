@@ -10,7 +10,7 @@
 #ifndef EIGEN_RANDOMSETTER_H
 #define EIGEN_RANDOMSETTER_H
 
-namespace Eigen { 
+namespace Eigen {
 
 /** Represents a std::map
   *
@@ -18,13 +18,15 @@ namespace Eigen {
   */
 template<typename Scalar> struct StdMapTraits
 {
-  typedef int KeyType;
-  typedef std::map<KeyType,Scalar> Type;
-  enum {
-    IsSorted = 1
-  };
+    typedef int KeyType;
+    typedef std::map<KeyType,Scalar> Type;
+    enum
+    {
+        IsSorted = 1
+    };
 
-  static void setInvalidKey(Type&, const KeyType&) {}
+    static void
+    setInvalidKey(Type&, const KeyType&) {}
 };
 
 #ifdef EIGEN_UNORDERED_MAP_SUPPORT
@@ -46,13 +48,15 @@ template<typename Scalar> struct StdMapTraits
   */
 template<typename Scalar> struct StdUnorderedMapTraits
 {
-  typedef int KeyType;
-  typedef std::unordered_map<KeyType,Scalar> Type;
-  enum {
-    IsSorted = 0
-  };
+    typedef int KeyType;
+    typedef std::unordered_map<KeyType,Scalar> Type;
+    enum
+    {
+        IsSorted = 0
+    };
 
-  static void setInvalidKey(Type&, const KeyType&) {}
+    static void
+    setInvalidKey(Type&, const KeyType&) {}
 };
 #endif // EIGEN_UNORDERED_MAP_SUPPORT
 
@@ -63,14 +67,18 @@ template<typename Scalar> struct StdUnorderedMapTraits
   */
 template<typename Scalar> struct GoogleDenseHashMapTraits
 {
-  typedef int KeyType;
-  typedef google::dense_hash_map<KeyType,Scalar> Type;
-  enum {
-    IsSorted = 0
-  };
+    typedef int KeyType;
+    typedef google::dense_hash_map<KeyType,Scalar> Type;
+    enum
+    {
+        IsSorted = 0
+    };
 
-  static void setInvalidKey(Type& map, const KeyType& k)
-  { map.set_empty_key(k); }
+    static void
+    setInvalidKey(Type& map, const KeyType& k)
+    {
+        map.set_empty_key(k);
+    }
 };
 #endif
 
@@ -81,13 +89,15 @@ template<typename Scalar> struct GoogleDenseHashMapTraits
   */
 template<typename Scalar> struct GoogleSparseHashMapTraits
 {
-  typedef int KeyType;
-  typedef google::sparse_hash_map<KeyType,Scalar> Type;
-  enum {
-    IsSorted = 0
-  };
+    typedef int KeyType;
+    typedef google::sparse_hash_map<KeyType,Scalar> Type;
+    enum
+    {
+        IsSorted = 0
+    };
 
-  static void setInvalidKey(Type&, const KeyType&) {}
+    static void
+    setInvalidKey(Type&, const KeyType&) {}
 };
 #endif
 
@@ -144,11 +154,11 @@ template<typename Scalar> struct GoogleSparseHashMapTraits
 template<typename SparseMatrixType,
          template <typename T> class MapTraits =
 #if defined _DENSE_HASH_MAP_H_
-          GoogleDenseHashMapTraits
+         GoogleDenseHashMapTraits
 #elif defined _HASH_MAP
-          GnuHashMapTraits
+         GnuHashMapTraits
 #else
-          StdMapTraits
+         StdMapTraits
 #endif
          ,int OuterPacketBits = 6>
 class RandomSetter
@@ -158,16 +168,17 @@ class RandomSetter
 
     struct ScalarWrapper
     {
-      ScalarWrapper() : value(0) {}
-      Scalar value;
+        ScalarWrapper() : value(0) {}
+        Scalar value;
     };
     typedef typename MapTraits<ScalarWrapper>::KeyType KeyType;
     typedef typename MapTraits<ScalarWrapper>::Type HashMapType;
     static const int OuterPacketMask = (1 << OuterPacketBits) - 1;
-    enum {
-      SwapStorage = 1 - MapTraits<ScalarWrapper>::IsSorted,
-      TargetRowMajor = (SparseMatrixType::Flags & RowMajorBit) ? 1 : 0,
-      SetterRowMajor = SwapStorage ? 1-TargetRowMajor : TargetRowMajor
+    enum
+    {
+        SwapStorage = 1 - MapTraits<ScalarWrapper>::IsSorted,
+        TargetRowMajor = (SparseMatrixType::Flags & RowMajorBit) ? 1 : 0,
+        SetterRowMajor = SwapStorage ? 1-TargetRowMajor : TargetRowMajor
     };
 
   public:
@@ -178,126 +189,159 @@ class RandomSetter
       * a sparse matrix from scratch, then you must set it to zero first using the
       * setZero() function.
       */
-    inline RandomSetter(SparseMatrixType& target)
-      : mp_target(&target)
+    inline
+    RandomSetter(SparseMatrixType& target)
+        : mp_target(&target)
     {
-      const Index outerSize = SwapStorage ? target.innerSize() : target.outerSize();
-      const Index innerSize = SwapStorage ? target.outerSize() : target.innerSize();
-      m_outerPackets = outerSize >> OuterPacketBits;
-      if (outerSize&OuterPacketMask)
-        m_outerPackets += 1;
-      m_hashmaps = new HashMapType[m_outerPackets];
-      // compute number of bits needed to store inner indices
-      Index aux = innerSize - 1;
-      m_keyBitsOffset = 0;
-      while (aux)
-      {
-        ++m_keyBitsOffset;
-        aux = aux >> 1;
-      }
-      KeyType ik = (1<<(OuterPacketBits+m_keyBitsOffset));
-      for (Index k=0; k<m_outerPackets; ++k)
-        MapTraits<ScalarWrapper>::setInvalidKey(m_hashmaps[k],ik);
+        const Index outerSize = SwapStorage ? target.innerSize() : target.outerSize();
+        const Index innerSize = SwapStorage ? target.outerSize() : target.innerSize();
+        m_outerPackets = outerSize >> OuterPacketBits;
 
-      // insert current coeffs
-      for (Index j=0; j<mp_target->outerSize(); ++j)
-        for (typename SparseMatrixType::InnerIterator it(*mp_target,j); it; ++it)
-          (*this)(TargetRowMajor?j:it.index(), TargetRowMajor?it.index():j) = it.value();
+        if (outerSize&OuterPacketMask)
+        {
+            m_outerPackets += 1;
+        }
+
+        m_hashmaps = new HashMapType[m_outerPackets];
+        // compute number of bits needed to store inner indices
+        Index aux = innerSize - 1;
+        m_keyBitsOffset = 0;
+
+        while (aux)
+        {
+            ++m_keyBitsOffset;
+            aux = aux >> 1;
+        }
+
+        KeyType ik = (1<<(OuterPacketBits+m_keyBitsOffset));
+
+        for (Index k=0; k<m_outerPackets; ++k)
+        {
+            MapTraits<ScalarWrapper>::setInvalidKey(m_hashmaps[k],ik);
+        }
+
+        // insert current coeffs
+        for (Index j=0; j<mp_target->outerSize(); ++j)
+            for (typename SparseMatrixType::InnerIterator it(*mp_target,j); it; ++it)
+            {
+                (*this)(TargetRowMajor?j:it.index(), TargetRowMajor?it.index():j) = it.value();
+            }
     }
 
     /** Destructor updating back the sparse matrix target */
     ~RandomSetter()
     {
-      KeyType keyBitsMask = (1<<m_keyBitsOffset)-1;
-      if (!SwapStorage) // also means the map is sorted
-      {
-        mp_target->setZero();
-        mp_target->makeCompressed();
-        mp_target->reserve(nonZeros());
-        Index prevOuter = -1;
-        for (Index k=0; k<m_outerPackets; ++k)
+        KeyType keyBitsMask = (1<<m_keyBitsOffset)-1;
+
+        if (!SwapStorage) // also means the map is sorted
         {
-          const Index outerOffset = (1<<OuterPacketBits) * k;
-          typename HashMapType::iterator end = m_hashmaps[k].end();
-          for (typename HashMapType::iterator it = m_hashmaps[k].begin(); it!=end; ++it)
-          {
-            const Index outer = (it->first >> m_keyBitsOffset) + outerOffset;
-            const Index inner = it->first & keyBitsMask;
-            if (prevOuter!=outer)
+            mp_target->setZero();
+            mp_target->makeCompressed();
+            mp_target->reserve(nonZeros());
+            Index prevOuter = -1;
+
+            for (Index k=0; k<m_outerPackets; ++k)
             {
-              for (Index j=prevOuter+1;j<=outer;++j)
-                mp_target->startVec(j);
-              prevOuter = outer;
+                const Index outerOffset = (1<<OuterPacketBits) * k;
+                typename HashMapType::iterator end = m_hashmaps[k].end();
+
+                for (typename HashMapType::iterator it = m_hashmaps[k].begin(); it!=end; ++it)
+                {
+                    const Index outer = (it->first >> m_keyBitsOffset) + outerOffset;
+                    const Index inner = it->first & keyBitsMask;
+
+                    if (prevOuter!=outer)
+                    {
+                        for (Index j=prevOuter+1; j<=outer; ++j)
+                        {
+                            mp_target->startVec(j);
+                        }
+
+                        prevOuter = outer;
+                    }
+
+                    mp_target->insertBackByOuterInner(outer, inner) = it->second.value;
+                }
             }
-            mp_target->insertBackByOuterInner(outer, inner) = it->second.value;
-          }
+
+            mp_target->finalize();
         }
-        mp_target->finalize();
-      }
-      else
-      {
-        VectorXi positions(mp_target->outerSize());
-        positions.setZero();
-        // pass 1
-        for (Index k=0; k<m_outerPackets; ++k)
+
+        else
         {
-          typename HashMapType::iterator end = m_hashmaps[k].end();
-          for (typename HashMapType::iterator it = m_hashmaps[k].begin(); it!=end; ++it)
-          {
-            const Index outer = it->first & keyBitsMask;
-            ++positions[outer];
-          }
-        }
-        // prefix sum
-        Index count = 0;
-        for (Index j=0; j<mp_target->outerSize(); ++j)
-        {
-          Index tmp = positions[j];
-          mp_target->outerIndexPtr()[j] = count;
-          positions[j] = count;
-          count += tmp;
-        }
-        mp_target->makeCompressed();
-        mp_target->outerIndexPtr()[mp_target->outerSize()] = count;
-        mp_target->resizeNonZeros(count);
-        // pass 2
-        for (Index k=0; k<m_outerPackets; ++k)
-        {
-          const Index outerOffset = (1<<OuterPacketBits) * k;
-          typename HashMapType::iterator end = m_hashmaps[k].end();
-          for (typename HashMapType::iterator it = m_hashmaps[k].begin(); it!=end; ++it)
-          {
-            const Index inner = (it->first >> m_keyBitsOffset) + outerOffset;
-            const Index outer = it->first & keyBitsMask;
-            // sorted insertion
-            // Note that we have to deal with at most 2^OuterPacketBits unsorted coefficients,
-            // moreover those 2^OuterPacketBits coeffs are likely to be sparse, an so only a
-            // small fraction of them have to be sorted, whence the following simple procedure:
-            Index posStart = mp_target->outerIndexPtr()[outer];
-            Index i = (positions[outer]++) - 1;
-            while ( (i >= posStart) && (mp_target->innerIndexPtr()[i] > inner) )
+            VectorXi positions(mp_target->outerSize());
+            positions.setZero();
+
+            // pass 1
+            for (Index k=0; k<m_outerPackets; ++k)
             {
-              mp_target->valuePtr()[i+1] = mp_target->valuePtr()[i];
-              mp_target->innerIndexPtr()[i+1] = mp_target->innerIndexPtr()[i];
-              --i;
+                typename HashMapType::iterator end = m_hashmaps[k].end();
+
+                for (typename HashMapType::iterator it = m_hashmaps[k].begin(); it!=end; ++it)
+                {
+                    const Index outer = it->first & keyBitsMask;
+                    ++positions[outer];
+                }
             }
-            mp_target->innerIndexPtr()[i+1] = inner;
-            mp_target->valuePtr()[i+1] = it->second.value;
-          }
+
+            // prefix sum
+            Index count = 0;
+
+            for (Index j=0; j<mp_target->outerSize(); ++j)
+            {
+                Index tmp = positions[j];
+                mp_target->outerIndexPtr()[j] = count;
+                positions[j] = count;
+                count += tmp;
+            }
+
+            mp_target->makeCompressed();
+            mp_target->outerIndexPtr()[mp_target->outerSize()] = count;
+            mp_target->resizeNonZeros(count);
+
+            // pass 2
+            for (Index k=0; k<m_outerPackets; ++k)
+            {
+                const Index outerOffset = (1<<OuterPacketBits) * k;
+                typename HashMapType::iterator end = m_hashmaps[k].end();
+
+                for (typename HashMapType::iterator it = m_hashmaps[k].begin(); it!=end; ++it)
+                {
+                    const Index inner = (it->first >> m_keyBitsOffset) + outerOffset;
+                    const Index outer = it->first & keyBitsMask;
+                    // sorted insertion
+                    // Note that we have to deal with at most 2^OuterPacketBits unsorted coefficients,
+                    // moreover those 2^OuterPacketBits coeffs are likely to be sparse, an so only a
+                    // small fraction of them have to be sorted, whence the following simple procedure:
+                    Index posStart = mp_target->outerIndexPtr()[outer];
+                    Index i = (positions[outer]++) - 1;
+
+                    while ( (i >= posStart) && (mp_target->innerIndexPtr()[i] > inner) )
+                    {
+                        mp_target->valuePtr()[i+1] = mp_target->valuePtr()[i];
+                        mp_target->innerIndexPtr()[i+1] = mp_target->innerIndexPtr()[i];
+                        --i;
+                    }
+
+                    mp_target->innerIndexPtr()[i+1] = inner;
+                    mp_target->valuePtr()[i+1] = it->second.value;
+                }
+            }
         }
-      }
-      delete[] m_hashmaps;
+
+        delete[] m_hashmaps;
     }
 
     /** \returns a reference to the coefficient at given coordinates \a row, \a col */
-    Scalar& operator() (Index row, Index col)
+    Scalar&
+    operator() (Index row, Index col)
     {
-      const Index outer = SetterRowMajor ? row : col;
-      const Index inner = SetterRowMajor ? col : row;
-      const Index outerMajor = outer >> OuterPacketBits; // index of the packet/map
-      const Index outerMinor = outer & OuterPacketMask;  // index of the inner vector in the packet
-      const KeyType key = internal::convert_index<KeyType>((outerMinor<<m_keyBitsOffset) | inner);
-      return m_hashmaps[outerMajor][key].value;
+        const Index outer = SetterRowMajor ? row : col;
+        const Index inner = SetterRowMajor ? col : row;
+        const Index outerMajor = outer >> OuterPacketBits; // index of the packet/map
+        const Index outerMinor = outer & OuterPacketMask;  // index of the inner vector in the packet
+        const KeyType key = internal::convert_index<KeyType>((outerMinor<<m_keyBitsOffset) | inner);
+        return m_hashmaps[outerMajor][key].value;
     }
 
     /** \returns the number of non zero coefficients
@@ -305,12 +349,17 @@ class RandomSetter
       * \note According to the underlying map/hash_map implementation,
       * this function might be quite expensive.
       */
-    Index nonZeros() const
+    Index
+    nonZeros() const
     {
-      Index nz = 0;
-      for (Index k=0; k<m_outerPackets; ++k)
-        nz += static_cast<Index>(m_hashmaps[k].size());
-      return nz;
+        Index nz = 0;
+
+        for (Index k=0; k<m_outerPackets; ++k)
+        {
+            nz += static_cast<Index>(m_hashmaps[k].size());
+        }
+
+        return nz;
     }
 
 

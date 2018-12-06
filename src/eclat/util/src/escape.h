@@ -18,12 +18,17 @@ extern const char* esc_map[256];
 /*----------------------------------------------------------------------
   Functions
 ----------------------------------------------------------------------*/
-extern const char* esc_encode (int c);
-extern int         esc_decode (const char *s, char **end);
+extern const char*
+esc_encode (int c);
+extern int
+esc_decode (const char *s, char **end);
 
-extern size_t      esc_enclen (const char *s);
-extern size_t      esc_encstr (char *dst, const char *src);
-extern size_t      esc_decstr (char *dst, const char *src);
+extern size_t
+esc_enclen (const char *s);
+extern size_t
+esc_encstr (char *dst, const char *src);
+extern size_t
+esc_decstr (char *dst, const char *src);
 
 /*----------------------------------------------------------------------
   Preprocessor Definitions

@@ -11,27 +11,28 @@
 #ifndef EIGEN_MAP_H
 #define EIGEN_MAP_H
 
-namespace Eigen { 
+namespace Eigen {
 
 namespace internal {
 template<typename PlainObjectType, int MapOptions, typename StrideType>
 struct traits<Map<PlainObjectType, MapOptions, StrideType> >
-  : public traits<PlainObjectType>
+    : public traits<PlainObjectType>
 {
-  typedef traits<PlainObjectType> TraitsBase;
-  enum {
-    InnerStrideAtCompileTime = StrideType::InnerStrideAtCompileTime == 0
-                             ? int(PlainObjectType::InnerStrideAtCompileTime)
-                             : int(StrideType::InnerStrideAtCompileTime),
-    OuterStrideAtCompileTime = StrideType::OuterStrideAtCompileTime == 0
-                             ? int(PlainObjectType::OuterStrideAtCompileTime)
-                             : int(StrideType::OuterStrideAtCompileTime),
-    Alignment = int(MapOptions)&int(AlignedMask),
-    Flags0 = TraitsBase::Flags & (~NestByRefBit),
-    Flags = is_lvalue<PlainObjectType>::value ? int(Flags0) : (int(Flags0) & ~LvalueBit)
-  };
-private:
-  enum { Options }; // Expressions don't have Options
+    typedef traits<PlainObjectType> TraitsBase;
+    enum
+    {
+        InnerStrideAtCompileTime = StrideType::InnerStrideAtCompileTime == 0
+                                   ? int(PlainObjectType::InnerStrideAtCompileTime)
+                                   : int(StrideType::InnerStrideAtCompileTime),
+        OuterStrideAtCompileTime = StrideType::OuterStrideAtCompileTime == 0
+                                   ? int(PlainObjectType::OuterStrideAtCompileTime)
+                                   : int(StrideType::OuterStrideAtCompileTime),
+        Alignment = int(MapOptions)&int(AlignedMask),
+        Flags0 = TraitsBase::Flags & (~NestByRefBit),
+        Flags = is_lvalue<PlainObjectType>::value ? int(Flags0) : (int(Flags0) & ~LvalueBit)
+    };
+  private:
+    enum { Options }; // Expressions don't have Options
 };
 }
 
@@ -86,7 +87,7 @@ private:
   * \sa PlainObjectBase::Map(), \ref TopicStorageOrders
   */
 template<typename PlainObjectType, int MapOptions, typename StrideType> class Map
-  : public MapBase<Map<PlainObjectType, MapOptions, StrideType> >
+    : public MapBase<Map<PlainObjectType, MapOptions, StrideType> >
 {
   public:
 
@@ -96,21 +97,27 @@ template<typename PlainObjectType, int MapOptions, typename StrideType> class Ma
     typedef typename Base::PointerType PointerType;
     typedef PointerType PointerArgType;
     EIGEN_DEVICE_FUNC
-    inline PointerType cast_to_pointer_type(PointerArgType ptr) { return ptr; }
-
-    EIGEN_DEVICE_FUNC
-    inline Index innerStride() const
+    inline PointerType
+    cast_to_pointer_type(PointerArgType ptr)
     {
-      return StrideType::InnerStrideAtCompileTime != 0 ? m_stride.inner() : 1;
+        return ptr;
     }
 
     EIGEN_DEVICE_FUNC
-    inline Index outerStride() const
+    inline Index
+    innerStride() const
     {
-      return StrideType::OuterStrideAtCompileTime != 0 ? m_stride.outer()
-           : IsVectorAtCompileTime ? this->size()
-           : int(Flags)&RowMajorBit ? this->cols()
-           : this->rows();
+        return StrideType::InnerStrideAtCompileTime != 0 ? m_stride.inner() : 1;
+    }
+
+    EIGEN_DEVICE_FUNC
+    inline Index
+    outerStride() const
+    {
+        return StrideType::OuterStrideAtCompileTime != 0 ? m_stride.outer()
+               : IsVectorAtCompileTime ? this->size()
+               : int(Flags)&RowMajorBit ? this->cols()
+               : this->rows();
     }
 
     /** Constructor in the fixed-size case.
@@ -119,10 +126,11 @@ template<typename PlainObjectType, int MapOptions, typename StrideType> class Ma
       * \param stride optional Stride object, passing the strides.
       */
     EIGEN_DEVICE_FUNC
-    explicit inline Map(PointerArgType dataPtr, const StrideType& stride = StrideType())
-      : Base(cast_to_pointer_type(dataPtr)), m_stride(stride)
+    explicit inline
+    Map(PointerArgType dataPtr, const StrideType& stride = StrideType())
+        : Base(cast_to_pointer_type(dataPtr)), m_stride(stride)
     {
-      PlainObjectType::Base::_check_template_params();
+        PlainObjectType::Base::_check_template_params();
     }
 
     /** Constructor in the dynamic-size vector case.
@@ -132,10 +140,11 @@ template<typename PlainObjectType, int MapOptions, typename StrideType> class Ma
       * \param stride optional Stride object, passing the strides.
       */
     EIGEN_DEVICE_FUNC
-    inline Map(PointerArgType dataPtr, Index size, const StrideType& stride = StrideType())
-      : Base(cast_to_pointer_type(dataPtr), size), m_stride(stride)
+    inline
+    Map(PointerArgType dataPtr, Index size, const StrideType& stride = StrideType())
+        : Base(cast_to_pointer_type(dataPtr), size), m_stride(stride)
     {
-      PlainObjectType::Base::_check_template_params();
+        PlainObjectType::Base::_check_template_params();
     }
 
     /** Constructor in the dynamic-size matrix case.
@@ -146,10 +155,11 @@ template<typename PlainObjectType, int MapOptions, typename StrideType> class Ma
       * \param stride optional Stride object, passing the strides.
       */
     EIGEN_DEVICE_FUNC
-    inline Map(PointerArgType dataPtr, Index rows, Index cols, const StrideType& stride = StrideType())
-      : Base(cast_to_pointer_type(dataPtr), rows, cols), m_stride(stride)
+    inline
+    Map(PointerArgType dataPtr, Index rows, Index cols, const StrideType& stride = StrideType())
+        : Base(cast_to_pointer_type(dataPtr), rows, cols), m_stride(stride)
     {
-      PlainObjectType::Base::_check_template_params();
+        PlainObjectType::Base::_check_template_params();
     }
 
     EIGEN_INHERIT_ASSIGNMENT_OPERATORS(Map)

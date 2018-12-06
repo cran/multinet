@@ -1,16 +1,17 @@
-namespace Eigen { 
+namespace Eigen {
 
 namespace internal {
 
 template <typename Scalar>
-void r1updt(
-        Matrix< Scalar, Dynamic, Dynamic > &s,
-        const Matrix< Scalar, Dynamic, 1> &u,
-        std::vector<JacobiRotation<Scalar> > &v_givens,
-        std::vector<JacobiRotation<Scalar> > &w_givens,
-        Matrix< Scalar, Dynamic, 1> &v,
-        Matrix< Scalar, Dynamic, 1> &w,
-        bool *sing)
+void
+r1updt(
+    Matrix< Scalar, Dynamic, Dynamic > &s,
+    const Matrix< Scalar, Dynamic, 1> &u,
+    std::vector<JacobiRotation<Scalar> > &v_givens,
+    std::vector<JacobiRotation<Scalar> > &w_givens,
+    Matrix< Scalar, Dynamic, 1> &v,
+    Matrix< Scalar, Dynamic, 1> &w,
+    bool *sing)
 {
     typedef DenseIndex Index;
     const JacobiRotation<Scalar> IdentityRotation = JacobiRotation<Scalar>(1,0);
@@ -34,9 +35,12 @@ void r1updt(
 
     /* rotate the vector v into a multiple of the n-th unit vector */
     /* in such a way that a spike is introduced into w. */
-    for (j=n-2; j>=0; --j) {
+    for (j=n-2; j>=0; --j)
+    {
         w[j] = 0.;
-        if (v[j] != 0.) {
+
+        if (v[j] != 0.)
+        {
             /* determine a givens rotation which eliminates the */
             /* j-th element of v. */
             givens.makeGivens(-v[n-1], v[j]);
@@ -47,13 +51,18 @@ void r1updt(
             v_givens[j] = givens;
 
             /* apply the transformation to s and extend the spike in w. */
-            for (i = j; i < m; ++i) {
+            for (i = j; i < m; ++i)
+            {
                 temp = givens.c() * s(j,i) - givens.s() * w[i];
                 w[i] = givens.s() * s(j,i) + givens.c() * w[i];
                 s(j,i) = temp;
             }
-        } else
+        }
+
+        else
+        {
             v_givens[j] = IdentityRotation;
+        }
     }
 
     /* add the spike from the rank 1 update to w. */
@@ -61,14 +70,18 @@ void r1updt(
 
     /* eliminate the spike. */
     *sing = false;
-    for (j = 0; j < n-1; ++j) {
-        if (w[j] != 0.) {
+
+    for (j = 0; j < n-1; ++j)
+    {
+        if (w[j] != 0.)
+        {
             /* determine a givens rotation which eliminates the */
             /* j-th element of the spike. */
             givens.makeGivens(-s(j,j), w[j]);
 
             /* apply the transformation to s and reduce the spike in w. */
-            for (i = j; i < m; ++i) {
+            for (i = j; i < m; ++i)
+            {
                 temp = givens.c() * s(j,i) + givens.s() * w[i];
                 w[i] = -givens.s() * s(j,i) + givens.c() * w[i];
                 s(j,i) = temp;
@@ -77,20 +90,28 @@ void r1updt(
             /* store the information necessary to recover the */
             /* givens rotation. */
             w_givens[j] = givens;
-        } else
+        }
+
+        else
+        {
             v_givens[j] = IdentityRotation;
+        }
 
         /* test for zero diagonal elements in the output s. */
-        if (s(j,j) == 0.) {
+        if (s(j,j) == 0.)
+        {
             *sing = true;
         }
     }
+
     /* move w back into the last column of the output s. */
     s(n-1,n-1) = w[n-1];
 
-    if (s(j,j) == 0.) {
+    if (s(j,j) == 0.)
+    {
         *sing = true;
     }
+
     return;
 }
 

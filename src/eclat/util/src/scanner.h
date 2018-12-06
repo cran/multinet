@@ -70,65 +70,92 @@
   Type Definitions
 ----------------------------------------------------------------------*/
 #ifdef SCN_SCAN
-typedef struct {                /* --- scanner --- */
-  FILE   *file;                 /* file to scan */
-  CCHAR  *name;                 /* name of the file to scan */
-  int    token;                 /* current token */
-  int    len;                   /* current token value length */
-  size_t line;                  /* current input line of file */
-  size_t start;                 /* start line of comment */
-  int    back;                  /* flag for backward step */
-  int    ptoken, plen;          /* buffers for length, token */
-  size_t pline;                 /* buffer  for line */
-  char   *value;                /* token value (points to tvs[0/1]) */
-  char   *next;                 /* next character to read */
-  char   *end;                  /* current end of the buffer */
-  CCHAR  **msgs;                /* array  of error messages */
-  int    msgcnt;                /* number of error messages */
-  FILE   *errfile;              /* output file for error messages */
-  CCHAR  *errname;              /* name of the error output file */
-  char   tvs[2][SCN_MAXLEN+4];  /* buffers for token values */
-  char   buf[SCN_BUFSIZE];      /* read buffer */
+typedef struct                  /* --- scanner --- */
+{
+    FILE   *file;                 /* file to scan */
+    CCHAR  *name;                 /* name of the file to scan */
+    int    token;                 /* current token */
+    int    len;                   /* current token value length */
+    size_t line;                  /* current input line of file */
+    size_t start;                 /* start line of comment */
+    int    back;                  /* flag for backward step */
+    int    ptoken, plen;          /* buffers for length, token */
+    size_t pline;                 /* buffer  for line */
+    char   *value;                /* token value (points to tvs[0/1]) */
+    char   *next;                 /* next character to read */
+    char   *end;                  /* current end of the buffer */
+    CCHAR  **msgs;                /* array  of error messages */
+    int    msgcnt;                /* number of error messages */
+    FILE   *errfile;              /* output file for error messages */
+    CCHAR  *errname;              /* name of the error output file */
+    char   tvs[2][SCN_MAXLEN+4];  /* buffers for token values */
+    char   buf[SCN_BUFSIZE];      /* read buffer */
 } SCANNER;                      /* (scanner) */
 #endif
 
 /*----------------------------------------------------------------------
   Functions
 ----------------------------------------------------------------------*/
-extern size_t   scn_fmtlen   (const char *s, size_t *len);
-extern size_t   scn_format   (char *dst, const char *src, int quotes);
+extern size_t
+scn_fmtlen   (const char *s, size_t *len);
+extern size_t
+scn_format   (char *dst, const char *src, int quotes);
 
 #ifdef SCN_SCAN
-extern SCANNER* scn_create   (void);
-extern int      scn_delete   (SCANNER *scan, int close);
-extern int      scn_open     (SCANNER *scan, FILE *file, CCHAR *name);
-extern int      scn_close    (SCANNER *scan);
-extern FILE*    scn_file     (SCANNER *scan);
-extern CCHAR*   scn_name     (SCANNER *scan);
+extern SCANNER*
+scn_create   (void);
+extern int
+scn_delete   (SCANNER *scan, int close);
+extern int
+scn_open     (SCANNER *scan, FILE *file, CCHAR *name);
+extern int
+scn_close    (SCANNER *scan);
+extern FILE*
+scn_file     (SCANNER *scan);
+extern CCHAR*
+scn_name     (SCANNER *scan);
 
-extern int      scn_getc     (SCANNER *scan);
-extern int      scn_ungetc   (SCANNER *scan, int c);
+extern int
+scn_getc     (SCANNER *scan);
+extern int
+scn_ungetc   (SCANNER *scan, int c);
 
-extern int      scn_first    (SCANNER *scan);
-extern int      scn_next     (SCANNER *scan);
-extern int      scn_back     (SCANNER *scan);
+extern int
+scn_first    (SCANNER *scan);
+extern int
+scn_next     (SCANNER *scan);
+extern int
+scn_back     (SCANNER *scan);
 
-extern int      scn_token    (SCANNER *scan);
-extern CCHAR*   scn_value    (SCANNER *scan);
-extern int      scn_len      (SCANNER *scan);
-extern int      scn_line     (SCANNER *scan);
-extern int      scn_eof      (SCANNER *scan, int report);
-extern CCHAR*   scn_errmsg   (SCANNER *scan, char *buf, size_t size);
+extern int
+scn_token    (SCANNER *scan);
+extern CCHAR*
+scn_value    (SCANNER *scan);
+extern int
+scn_len      (SCANNER *scan);
+extern int
+scn_line     (SCANNER *scan);
+extern int
+scn_eof      (SCANNER *scan, int report);
+extern CCHAR*
+scn_errmsg   (SCANNER *scan, char *buf, size_t size);
 
-extern void     scn_setmsgs  (SCANNER *scan, const char *msgs[], int n);
-extern int      scn_erropen  (SCANNER *scan, FILE *file, CCHAR *name);
-extern int      scn_errclose (SCANNER *scan);
-extern FILE*    scn_errfile  (SCANNER *scan);
-extern CCHAR*   scn_errname  (SCANNER *scan);
-extern int      scn_error    (SCANNER *scan, int code, ...);
+extern void
+scn_setmsgs  (SCANNER *scan, const char *msgs[], int n);
+extern int
+scn_erropen  (SCANNER *scan, FILE *file, CCHAR *name);
+extern int
+scn_errclose (SCANNER *scan);
+extern FILE*
+scn_errfile  (SCANNER *scan);
+extern CCHAR*
+scn_errname  (SCANNER *scan);
+extern int
+scn_error    (SCANNER *scan, int code, ...);
 
-extern int      scn_recover  (SCANNER *scan,
-                              int stop, int beg, int end, int level);
+extern int
+scn_recover  (SCANNER *scan,
+              int stop, int beg, int end, int level);
 
 /*----------------------------------------------------------------------
   Preprocessor Definitions

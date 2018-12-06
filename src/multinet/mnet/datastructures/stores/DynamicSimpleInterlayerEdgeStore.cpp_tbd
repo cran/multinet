@@ -1,0 +1,13 @@
+/**
+ * History:
+ * - 2018.03.09 file created, following a restructuring of the previous library.
+ */
+#include "mnet/datastructures/stores/DynamicSimpleInterlayerEdgeStore.h"
+
+namespace uu {
+namespace net {
+
+
+}
+}
+

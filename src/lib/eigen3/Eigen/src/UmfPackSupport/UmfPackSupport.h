@@ -10,108 +10,142 @@
 #ifndef EIGEN_UMFPACKSUPPORT_H
 #define EIGEN_UMFPACKSUPPORT_H
 
-namespace Eigen { 
+namespace Eigen {
 
 /* TODO extract L, extract U, compute det, etc... */
 
 // generic double/complex<double> wrapper functions:
 
 
-inline void umfpack_defaults(double control[UMFPACK_CONTROL], double) 
-{ umfpack_di_defaults(control); }
-
-inline void umfpack_defaults(double control[UMFPACK_CONTROL], std::complex<double>) 
-{ umfpack_zi_defaults(control); }
-
-inline void umfpack_free_numeric(void **Numeric, double)
-{ umfpack_di_free_numeric(Numeric); *Numeric = 0; }
-
-inline void umfpack_free_numeric(void **Numeric, std::complex<double>)
-{ umfpack_zi_free_numeric(Numeric); *Numeric = 0; }
-
-inline void umfpack_free_symbolic(void **Symbolic, double)
-{ umfpack_di_free_symbolic(Symbolic); *Symbolic = 0; }
-
-inline void umfpack_free_symbolic(void **Symbolic, std::complex<double>)
-{ umfpack_zi_free_symbolic(Symbolic); *Symbolic = 0; }
-
-inline int umfpack_symbolic(int n_row,int n_col,
-                            const int Ap[], const int Ai[], const double Ax[], void **Symbolic,
-                            const double Control [UMFPACK_CONTROL], double Info [UMFPACK_INFO])
+inline void
+umfpack_defaults(double control[UMFPACK_CONTROL], double)
 {
-  return umfpack_di_symbolic(n_row,n_col,Ap,Ai,Ax,Symbolic,Control,Info);
+    umfpack_di_defaults(control);
 }
 
-inline int umfpack_symbolic(int n_row,int n_col,
-                            const int Ap[], const int Ai[], const std::complex<double> Ax[], void **Symbolic,
-                            const double Control [UMFPACK_CONTROL], double Info [UMFPACK_INFO])
+inline void
+umfpack_defaults(double control[UMFPACK_CONTROL], std::complex<double>)
 {
-  return umfpack_zi_symbolic(n_row,n_col,Ap,Ai,&numext::real_ref(Ax[0]),0,Symbolic,Control,Info);
+    umfpack_zi_defaults(control);
 }
 
-inline int umfpack_numeric( const int Ap[], const int Ai[], const double Ax[],
-                            void *Symbolic, void **Numeric,
-                            const double Control[UMFPACK_CONTROL],double Info [UMFPACK_INFO])
+inline void
+umfpack_free_numeric(void **Numeric, double)
 {
-  return umfpack_di_numeric(Ap,Ai,Ax,Symbolic,Numeric,Control,Info);
+    umfpack_di_free_numeric(Numeric);
+    *Numeric = 0;
 }
 
-inline int umfpack_numeric( const int Ap[], const int Ai[], const std::complex<double> Ax[],
-                            void *Symbolic, void **Numeric,
-                            const double Control[UMFPACK_CONTROL],double Info [UMFPACK_INFO])
+inline void
+umfpack_free_numeric(void **Numeric, std::complex<double>)
 {
-  return umfpack_zi_numeric(Ap,Ai,&numext::real_ref(Ax[0]),0,Symbolic,Numeric,Control,Info);
+    umfpack_zi_free_numeric(Numeric);
+    *Numeric = 0;
 }
 
-inline int umfpack_solve( int sys, const int Ap[], const int Ai[], const double Ax[],
-                          double X[], const double B[], void *Numeric,
-                          const double Control[UMFPACK_CONTROL], double Info[UMFPACK_INFO])
+inline void
+umfpack_free_symbolic(void **Symbolic, double)
 {
-  return umfpack_di_solve(sys,Ap,Ai,Ax,X,B,Numeric,Control,Info);
+    umfpack_di_free_symbolic(Symbolic);
+    *Symbolic = 0;
 }
 
-inline int umfpack_solve( int sys, const int Ap[], const int Ai[], const std::complex<double> Ax[],
-                          std::complex<double> X[], const std::complex<double> B[], void *Numeric,
-                          const double Control[UMFPACK_CONTROL], double Info[UMFPACK_INFO])
+inline void
+umfpack_free_symbolic(void **Symbolic, std::complex<double>)
 {
-  return umfpack_zi_solve(sys,Ap,Ai,&numext::real_ref(Ax[0]),0,&numext::real_ref(X[0]),0,&numext::real_ref(B[0]),0,Numeric,Control,Info);
+    umfpack_zi_free_symbolic(Symbolic);
+    *Symbolic = 0;
 }
 
-inline int umfpack_get_lunz(int *lnz, int *unz, int *n_row, int *n_col, int *nz_udiag, void *Numeric, double)
+inline int
+umfpack_symbolic(int n_row,int n_col,
+                 const int Ap[], const int Ai[], const double Ax[], void **Symbolic,
+                 const double Control [UMFPACK_CONTROL], double Info [UMFPACK_INFO])
 {
-  return umfpack_di_get_lunz(lnz,unz,n_row,n_col,nz_udiag,Numeric);
+    return umfpack_di_symbolic(n_row,n_col,Ap,Ai,Ax,Symbolic,Control,Info);
 }
 
-inline int umfpack_get_lunz(int *lnz, int *unz, int *n_row, int *n_col, int *nz_udiag, void *Numeric, std::complex<double>)
+inline int
+umfpack_symbolic(int n_row,int n_col,
+                 const int Ap[], const int Ai[], const std::complex<double> Ax[], void **Symbolic,
+                 const double Control [UMFPACK_CONTROL], double Info [UMFPACK_INFO])
 {
-  return umfpack_zi_get_lunz(lnz,unz,n_row,n_col,nz_udiag,Numeric);
+    return umfpack_zi_symbolic(n_row,n_col,Ap,Ai,&numext::real_ref(Ax[0]),0,Symbolic,Control,Info);
 }
 
-inline int umfpack_get_numeric(int Lp[], int Lj[], double Lx[], int Up[], int Ui[], double Ux[],
-                               int P[], int Q[], double Dx[], int *do_recip, double Rs[], void *Numeric)
+inline int
+umfpack_numeric( const int Ap[], const int Ai[], const double Ax[],
+                 void *Symbolic, void **Numeric,
+                 const double Control[UMFPACK_CONTROL],double Info [UMFPACK_INFO])
 {
-  return umfpack_di_get_numeric(Lp,Lj,Lx,Up,Ui,Ux,P,Q,Dx,do_recip,Rs,Numeric);
+    return umfpack_di_numeric(Ap,Ai,Ax,Symbolic,Numeric,Control,Info);
 }
 
-inline int umfpack_get_numeric(int Lp[], int Lj[], std::complex<double> Lx[], int Up[], int Ui[], std::complex<double> Ux[],
-                               int P[], int Q[], std::complex<double> Dx[], int *do_recip, double Rs[], void *Numeric)
+inline int
+umfpack_numeric( const int Ap[], const int Ai[], const std::complex<double> Ax[],
+                 void *Symbolic, void **Numeric,
+                 const double Control[UMFPACK_CONTROL],double Info [UMFPACK_INFO])
 {
-  double& lx0_real = numext::real_ref(Lx[0]);
-  double& ux0_real = numext::real_ref(Ux[0]);
-  double& dx0_real = numext::real_ref(Dx[0]);
-  return umfpack_zi_get_numeric(Lp,Lj,Lx?&lx0_real:0,0,Up,Ui,Ux?&ux0_real:0,0,P,Q,
-                                Dx?&dx0_real:0,0,do_recip,Rs,Numeric);
+    return umfpack_zi_numeric(Ap,Ai,&numext::real_ref(Ax[0]),0,Symbolic,Numeric,Control,Info);
 }
 
-inline int umfpack_get_determinant(double *Mx, double *Ex, void *NumericHandle, double User_Info [UMFPACK_INFO])
+inline int
+umfpack_solve( int sys, const int Ap[], const int Ai[], const double Ax[],
+               double X[], const double B[], void *Numeric,
+               const double Control[UMFPACK_CONTROL], double Info[UMFPACK_INFO])
 {
-  return umfpack_di_get_determinant(Mx,Ex,NumericHandle,User_Info);
+    return umfpack_di_solve(sys,Ap,Ai,Ax,X,B,Numeric,Control,Info);
 }
 
-inline int umfpack_get_determinant(std::complex<double> *Mx, double *Ex, void *NumericHandle, double User_Info [UMFPACK_INFO])
+inline int
+umfpack_solve( int sys, const int Ap[], const int Ai[], const std::complex<double> Ax[],
+               std::complex<double> X[], const std::complex<double> B[], void *Numeric,
+               const double Control[UMFPACK_CONTROL], double Info[UMFPACK_INFO])
 {
-  double& mx_real = numext::real_ref(*Mx);
-  return umfpack_zi_get_determinant(&mx_real,0,Ex,NumericHandle,User_Info);
+    return umfpack_zi_solve(sys,Ap,Ai,&numext::real_ref(Ax[0]),0,&numext::real_ref(X[0]),0,&numext::real_ref(B[0]),0,Numeric,Control,Info);
+}
+
+inline int
+umfpack_get_lunz(int *lnz, int *unz, int *n_row, int *n_col, int *nz_udiag, void *Numeric, double)
+{
+    return umfpack_di_get_lunz(lnz,unz,n_row,n_col,nz_udiag,Numeric);
+}
+
+inline int
+umfpack_get_lunz(int *lnz, int *unz, int *n_row, int *n_col, int *nz_udiag, void *Numeric, std::complex<double>)
+{
+    return umfpack_zi_get_lunz(lnz,unz,n_row,n_col,nz_udiag,Numeric);
+}
+
+inline int
+umfpack_get_numeric(int Lp[], int Lj[], double Lx[], int Up[], int Ui[], double Ux[],
+                    int P[], int Q[], double Dx[], int *do_recip, double Rs[], void *Numeric)
+{
+    return umfpack_di_get_numeric(Lp,Lj,Lx,Up,Ui,Ux,P,Q,Dx,do_recip,Rs,Numeric);
+}
+
+inline int
+umfpack_get_numeric(int Lp[], int Lj[], std::complex<double> Lx[], int Up[], int Ui[], std::complex<double> Ux[],
+                    int P[], int Q[], std::complex<double> Dx[], int *do_recip, double Rs[], void *Numeric)
+{
+    double& lx0_real = numext::real_ref(Lx[0]);
+    double& ux0_real = numext::real_ref(Ux[0]);
+    double& dx0_real = numext::real_ref(Dx[0]);
+    return umfpack_zi_get_numeric(Lp,Lj,Lx?&lx0_real:0,0,Up,Ui,Ux?&ux0_real:0,0,P,Q,
+                                  Dx?&dx0_real:0,0,do_recip,Rs,Numeric);
+}
+
+inline int
+umfpack_get_determinant(double *Mx, double *Ex, void *NumericHandle, double User_Info [UMFPACK_INFO])
+{
+    return umfpack_di_get_determinant(Mx,Ex,NumericHandle,User_Info);
+}
+
+inline int
+umfpack_get_determinant(std::complex<double> *Mx, double *Ex, void *NumericHandle, double User_Info [UMFPACK_INFO])
+{
+    double& mx_real = numext::real_ref(*Mx);
+    return umfpack_zi_get_determinant(&mx_real,0,Ex,NumericHandle,User_Info);
 }
 
 
@@ -148,9 +182,10 @@ class UmfPackLU : public SparseSolverBase<UmfPackLU<_MatrixType> >
     typedef SparseMatrix<Scalar> LUMatrixType;
     typedef SparseMatrix<Scalar,ColMajor,int> UmfpackMatrixType;
     typedef Ref<const UmfpackMatrixType, StandardCompressedFormat> UmfpackMatrixRef;
-    enum {
-      ColsAtCompileTime = MatrixType::ColsAtCompileTime,
-      MaxColsAtCompileTime = MatrixType::MaxColsAtCompileTime
+    enum
+    {
+        ColsAtCompileTime = MatrixType::ColsAtCompileTime,
+        MaxColsAtCompileTime = MatrixType::MaxColsAtCompileTime
     };
 
   public:
@@ -158,75 +193,121 @@ class UmfPackLU : public SparseSolverBase<UmfPackLU<_MatrixType> >
     typedef Array<double, UMFPACK_CONTROL, 1> UmfpackControl;
 
     UmfPackLU()
-      : m_dummy(0,0), mp_matrix(m_dummy)
+        : m_dummy(0,0), mp_matrix(m_dummy)
     {
-      init();
+        init();
     }
 
     template<typename InputMatrixType>
-    explicit UmfPackLU(const InputMatrixType& matrix)
-      : mp_matrix(matrix)
+    explicit
+    UmfPackLU(const InputMatrixType& matrix)
+        : mp_matrix(matrix)
     {
-      init();
-      compute(matrix);
+        init();
+        compute(matrix);
     }
 
     ~UmfPackLU()
     {
-      if(m_symbolic) umfpack_free_symbolic(&m_symbolic,Scalar());
-      if(m_numeric)  umfpack_free_numeric(&m_numeric,Scalar());
+        if (m_symbolic)
+        {
+            umfpack_free_symbolic(&m_symbolic,Scalar());
+        }
+
+        if (m_numeric)
+        {
+            umfpack_free_numeric(&m_numeric,Scalar());
+        }
     }
 
-    inline Index rows() const { return mp_matrix.rows(); }
-    inline Index cols() const { return mp_matrix.cols(); }
+    inline Index
+    rows() const
+    {
+        return mp_matrix.rows();
+    }
+    inline Index
+    cols() const
+    {
+        return mp_matrix.cols();
+    }
 
     /** \brief Reports whether previous computation was successful.
       *
       * \returns \c Success if computation was succesful,
       *          \c NumericalIssue if the matrix.appears to be negative.
       */
-    ComputationInfo info() const
+    ComputationInfo
+    info() const
     {
-      eigen_assert(m_isInitialized && "Decomposition is not initialized.");
-      return m_info;
+        eigen_assert(m_isInitialized && "Decomposition is not initialized.");
+        return m_info;
     }
 
-    inline const LUMatrixType& matrixL() const
+    inline const LUMatrixType&
+    matrixL() const
     {
-      if (m_extractedDataAreDirty) extractData();
-      return m_l;
+        if (m_extractedDataAreDirty)
+        {
+            extractData();
+        }
+
+        return m_l;
     }
 
-    inline const LUMatrixType& matrixU() const
+    inline const LUMatrixType&
+    matrixU() const
     {
-      if (m_extractedDataAreDirty) extractData();
-      return m_u;
+        if (m_extractedDataAreDirty)
+        {
+            extractData();
+        }
+
+        return m_u;
     }
 
-    inline const IntColVectorType& permutationP() const
+    inline const IntColVectorType&
+    permutationP() const
     {
-      if (m_extractedDataAreDirty) extractData();
-      return m_p;
+        if (m_extractedDataAreDirty)
+        {
+            extractData();
+        }
+
+        return m_p;
     }
 
-    inline const IntRowVectorType& permutationQ() const
+    inline const IntRowVectorType&
+    permutationQ() const
     {
-      if (m_extractedDataAreDirty) extractData();
-      return m_q;
+        if (m_extractedDataAreDirty)
+        {
+            extractData();
+        }
+
+        return m_q;
     }
 
-    /** Computes the sparse Cholesky decomposition of \a matrix 
+    /** Computes the sparse Cholesky decomposition of \a matrix
      *  Note that the matrix should be column-major, and in compressed format for best performance.
      *  \sa SparseMatrix::makeCompressed().
      */
     template<typename InputMatrixType>
-    void compute(const InputMatrixType& matrix)
+    void
+    compute(const InputMatrixType& matrix)
     {
-      if(m_symbolic) umfpack_free_symbolic(&m_symbolic,Scalar());
-      if(m_numeric)  umfpack_free_numeric(&m_numeric,Scalar());
-      grab(matrix.derived());
-      analyzePattern_impl();
-      factorize_impl();
+        if (m_symbolic)
+        {
+            umfpack_free_symbolic(&m_symbolic,Scalar());
+        }
+
+        if (m_numeric)
+        {
+            umfpack_free_numeric(&m_numeric,Scalar());
+        }
+
+        grab(matrix.derived());
+        analyzePattern_impl();
+        factorize_impl();
     }
 
     /** Performs a symbolic decomposition on the sparcity of \a matrix.
@@ -236,14 +317,22 @@ class UmfPackLU : public SparseSolverBase<UmfPackLU<_MatrixType> >
       * \sa factorize(), compute()
       */
     template<typename InputMatrixType>
-    void analyzePattern(const InputMatrixType& matrix)
+    void
+    analyzePattern(const InputMatrixType& matrix)
     {
-      if(m_symbolic) umfpack_free_symbolic(&m_symbolic,Scalar());
-      if(m_numeric)  umfpack_free_numeric(&m_numeric,Scalar());
-      
-      grab(matrix.derived());
+        if (m_symbolic)
+        {
+            umfpack_free_symbolic(&m_symbolic,Scalar());
+        }
 
-      analyzePattern_impl();
+        if (m_numeric)
+        {
+            umfpack_free_numeric(&m_numeric,Scalar());
+        }
+
+        grab(matrix.derived());
+
+        analyzePattern_impl();
     }
 
     /** Provides the return status code returned by UmfPack during the numeric
@@ -251,10 +340,11 @@ class UmfPackLU : public SparseSolverBase<UmfPackLU<_MatrixType> >
       *
       * \sa factorize(), compute()
       */
-    inline int umfpackFactorizeReturncode() const
+    inline int
+    umfpackFactorizeReturncode() const
     {
-      eigen_assert(m_numeric && "UmfPackLU: you must first call factorize()");
-      return m_fact_errorCode;
+        eigen_assert(m_numeric && "UmfPackLU: you must first call factorize()");
+        return m_fact_errorCode;
     }
 
     /** Provides access to the control settings array used by UmfPack.
@@ -263,22 +353,24 @@ class UmfPackLU : public SparseSolverBase<UmfPackLU<_MatrixType> >
       *
       * See UMFPACK documentation for details.
       */
-    inline const UmfpackControl& umfpackControl() const
+    inline const UmfpackControl&
+    umfpackControl() const
     {
-      return m_control;
+        return m_control;
     }
-    
+
     /** Provides access to the control settings array used by UmfPack.
       *
       * If this array contains NaN's, the default values are used.
       *
       * See UMFPACK documentation for details.
       */
-    inline UmfpackControl& umfpackControl()
+    inline UmfpackControl&
+    umfpackControl()
     {
-      return m_control;
+        return m_control;
     }
-    
+
     /** Performs a numeric decomposition of \a matrix
       *
       * The given matrix must has the same sparcity than the matrix on which the pattern anylysis has been performed.
@@ -286,90 +378,102 @@ class UmfPackLU : public SparseSolverBase<UmfPackLU<_MatrixType> >
       * \sa analyzePattern(), compute()
       */
     template<typename InputMatrixType>
-    void factorize(const InputMatrixType& matrix)
+    void
+    factorize(const InputMatrixType& matrix)
     {
-      eigen_assert(m_analysisIsOk && "UmfPackLU: you must first call analyzePattern()");
-      if(m_numeric)
-        umfpack_free_numeric(&m_numeric,Scalar());
+        eigen_assert(m_analysisIsOk && "UmfPackLU: you must first call analyzePattern()");
 
-      grab(matrix.derived());
-      
-      factorize_impl();
+        if (m_numeric)
+        {
+            umfpack_free_numeric(&m_numeric,Scalar());
+        }
+
+        grab(matrix.derived());
+
+        factorize_impl();
     }
 
     /** \internal */
     template<typename BDerived,typename XDerived>
-    bool _solve_impl(const MatrixBase<BDerived> &b, MatrixBase<XDerived> &x) const;
+    bool
+    _solve_impl(const MatrixBase<BDerived> &b, MatrixBase<XDerived> &x) const;
 
-    Scalar determinant() const;
+    Scalar
+    determinant() const;
 
-    void extractData() const;
+    void
+    extractData() const;
 
   protected:
 
-    void init()
+    void
+    init()
     {
-      m_info                  = InvalidInput;
-      m_isInitialized         = false;
-      m_numeric               = 0;
-      m_symbolic              = 0;
-      m_extractedDataAreDirty = true;
+        m_info                  = InvalidInput;
+        m_isInitialized         = false;
+        m_numeric               = 0;
+        m_symbolic              = 0;
+        m_extractedDataAreDirty = true;
     }
-    
-    void analyzePattern_impl()
-    {
-      umfpack_defaults(m_control.data(), Scalar());
-      int errorCode = 0;
-      errorCode = umfpack_symbolic(internal::convert_index<int>(mp_matrix.rows()),
-                                   internal::convert_index<int>(mp_matrix.cols()),
-                                   mp_matrix.outerIndexPtr(), mp_matrix.innerIndexPtr(), mp_matrix.valuePtr(),
-                                   &m_symbolic, m_control.data(), 0);
 
-      m_isInitialized = true;
-      m_info = errorCode ? InvalidInput : Success;
-      m_analysisIsOk = true;
-      m_factorizationIsOk = false;
-      m_extractedDataAreDirty = true;
-    }
-    
-    void factorize_impl()
+    void
+    analyzePattern_impl()
     {
-      m_fact_errorCode = umfpack_numeric(mp_matrix.outerIndexPtr(), mp_matrix.innerIndexPtr(), mp_matrix.valuePtr(),
-                                         m_symbolic, &m_numeric, m_control.data(), 0);
+        umfpack_defaults(m_control.data(), Scalar());
+        int errorCode = 0;
+        errorCode = umfpack_symbolic(internal::convert_index<int>(mp_matrix.rows()),
+                                     internal::convert_index<int>(mp_matrix.cols()),
+                                     mp_matrix.outerIndexPtr(), mp_matrix.innerIndexPtr(), mp_matrix.valuePtr(),
+                                     &m_symbolic, m_control.data(), 0);
 
-      m_info = m_fact_errorCode == UMFPACK_OK ? Success : NumericalIssue;
-      m_factorizationIsOk = true;
-      m_extractedDataAreDirty = true;
+        m_isInitialized = true;
+        m_info = errorCode ? InvalidInput : Success;
+        m_analysisIsOk = true;
+        m_factorizationIsOk = false;
+        m_extractedDataAreDirty = true;
     }
-    
+
+    void
+    factorize_impl()
+    {
+        m_fact_errorCode = umfpack_numeric(mp_matrix.outerIndexPtr(), mp_matrix.innerIndexPtr(), mp_matrix.valuePtr(),
+                                           m_symbolic, &m_numeric, m_control.data(), 0);
+
+        m_info = m_fact_errorCode == UMFPACK_OK ? Success : NumericalIssue;
+        m_factorizationIsOk = true;
+        m_extractedDataAreDirty = true;
+    }
+
     template<typename MatrixDerived>
-    void grab(const EigenBase<MatrixDerived> &A)
+    void
+    grab(const EigenBase<MatrixDerived> &A)
     {
-      mp_matrix.~UmfpackMatrixRef();
-      ::new (&mp_matrix) UmfpackMatrixRef(A.derived());
-    }
-    
-    void grab(const UmfpackMatrixRef &A)
-    {
-      if(&(A.derived()) != &mp_matrix)
-      {
         mp_matrix.~UmfpackMatrixRef();
-        ::new (&mp_matrix) UmfpackMatrixRef(A);
-      }
+        ::new (&mp_matrix) UmfpackMatrixRef(A.derived());
     }
-  
+
+    void
+    grab(const UmfpackMatrixRef &A)
+    {
+        if (&(A.derived()) != &mp_matrix)
+        {
+            mp_matrix.~UmfpackMatrixRef();
+            ::new (&mp_matrix) UmfpackMatrixRef(A);
+        }
+    }
+
     // cached data to reduce reallocation, etc.
     mutable LUMatrixType m_l;
     int m_fact_errorCode;
     UmfpackControl m_control;
-    
+
     mutable LUMatrixType m_u;
     mutable IntColVectorType m_p;
     mutable IntRowVectorType m_q;
 
     UmfpackMatrixType m_dummy;
     UmfpackMatrixRef mp_matrix;
-  
+
     void* m_numeric;
     void* m_symbolic;
 
@@ -377,79 +481,93 @@ class UmfPackLU : public SparseSolverBase<UmfPackLU<_MatrixType> >
     int m_factorizationIsOk;
     int m_analysisIsOk;
     mutable bool m_extractedDataAreDirty;
-    
+
   private:
     UmfPackLU(const UmfPackLU& ) { }
 };
 
 
 template<typename MatrixType>
-void UmfPackLU<MatrixType>::extractData() const
+void
+UmfPackLU<MatrixType>::extractData() const
 {
-  if (m_extractedDataAreDirty)
-  {
-    // get size of the data
-    int lnz, unz, rows, cols, nz_udiag;
-    umfpack_get_lunz(&lnz, &unz, &rows, &cols, &nz_udiag, m_numeric, Scalar());
+    if (m_extractedDataAreDirty)
+    {
+        // get size of the data
+        int lnz, unz, rows, cols, nz_udiag;
+        umfpack_get_lunz(&lnz, &unz, &rows, &cols, &nz_udiag, m_numeric, Scalar());
 
-    // allocate data
-    m_l.resize(rows,(std::min)(rows,cols));
-    m_l.resizeNonZeros(lnz);
+        // allocate data
+        m_l.resize(rows,(std::min)(rows,cols));
+        m_l.resizeNonZeros(lnz);
 
-    m_u.resize((std::min)(rows,cols),cols);
-    m_u.resizeNonZeros(unz);
+        m_u.resize((std::min)(rows,cols),cols);
+        m_u.resizeNonZeros(unz);
 
-    m_p.resize(rows);
-    m_q.resize(cols);
+        m_p.resize(rows);
+        m_q.resize(cols);
 
-    // extract
-    umfpack_get_numeric(m_l.outerIndexPtr(), m_l.innerIndexPtr(), m_l.valuePtr(),
-                        m_u.outerIndexPtr(), m_u.innerIndexPtr(), m_u.valuePtr(),
-                        m_p.data(), m_q.data(), 0, 0, 0, m_numeric);
+        // extract
+        umfpack_get_numeric(m_l.outerIndexPtr(), m_l.innerIndexPtr(), m_l.valuePtr(),
+                            m_u.outerIndexPtr(), m_u.innerIndexPtr(), m_u.valuePtr(),
+                            m_p.data(), m_q.data(), 0, 0, 0, m_numeric);
 
-    m_extractedDataAreDirty = false;
-  }
+        m_extractedDataAreDirty = false;
+    }
 }
 
 template<typename MatrixType>
-typename UmfPackLU<MatrixType>::Scalar UmfPackLU<MatrixType>::determinant() const
+typename UmfPackLU<MatrixType>::Scalar
+UmfPackLU<MatrixType>::determinant() const
 {
-  Scalar det;
-  umfpack_get_determinant(&det, 0, m_numeric, 0);
-  return det;
+    Scalar det;
+    umfpack_get_determinant(&det, 0, m_numeric, 0);
+    return det;
 }
 
 template<typename MatrixType>
 template<typename BDerived,typename XDerived>
-bool UmfPackLU<MatrixType>::_solve_impl(const MatrixBase<BDerived> &b, MatrixBase<XDerived> &x) const
+bool
+UmfPackLU<MatrixType>::_solve_impl(const MatrixBase<BDerived> &b, MatrixBase<XDerived> &x) const
 {
-  Index rhsCols = b.cols();
-  eigen_assert((BDerived::Flags&RowMajorBit)==0 && "UmfPackLU backend does not support non col-major rhs yet");
-  eigen_assert((XDerived::Flags&RowMajorBit)==0 && "UmfPackLU backend does not support non col-major result yet");
-  eigen_assert(b.derived().data() != x.derived().data() && " Umfpack does not support inplace solve");
-  
-  int errorCode;
-  Scalar* x_ptr = 0;
-  Matrix<Scalar,Dynamic,1> x_tmp;
-  if(x.innerStride()!=1)
-  {
-    x_tmp.resize(x.rows());
-    x_ptr = x_tmp.data();
-  }
-  for (int j=0; j<rhsCols; ++j)
-  {
-    if(x.innerStride()==1)
-      x_ptr = &x.col(j).coeffRef(0);
-    errorCode = umfpack_solve(UMFPACK_A,
-        mp_matrix.outerIndexPtr(), mp_matrix.innerIndexPtr(), mp_matrix.valuePtr(),
-        x_ptr, &b.const_cast_derived().col(j).coeffRef(0), m_numeric, m_control.data(), 0);
-    if(x.innerStride()!=1)
-      x.col(j) = x_tmp;
-    if (errorCode!=0)
-      return false;
-  }
+    Index rhsCols = b.cols();
+    eigen_assert((BDerived::Flags&RowMajorBit)==0 && "UmfPackLU backend does not support non col-major rhs yet");
+    eigen_assert((XDerived::Flags&RowMajorBit)==0 && "UmfPackLU backend does not support non col-major result yet");
+    eigen_assert(b.derived().data() != x.derived().data() && " Umfpack does not support inplace solve");
 
-  return true;
+    int errorCode;
+    Scalar* x_ptr = 0;
+    Matrix<Scalar,Dynamic,1> x_tmp;
+
+    if (x.innerStride()!=1)
+    {
+        x_tmp.resize(x.rows());
+        x_ptr = x_tmp.data();
+    }
+
+    for (int j=0; j<rhsCols; ++j)
+    {
+        if (x.innerStride()==1)
+        {
+            x_ptr = &x.col(j).coeffRef(0);
+        }
+
+        errorCode = umfpack_solve(UMFPACK_A,
+                                  mp_matrix.outerIndexPtr(), mp_matrix.innerIndexPtr(), mp_matrix.valuePtr(),
+                                  x_ptr, &b.const_cast_derived().col(j).coeffRef(0), m_numeric, m_control.data(), 0);
+
+        if (x.innerStride()!=1)
+        {
+            x.col(j) = x_tmp;
+        }
+
+        if (errorCode!=0)
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 } // end namespace Eigen

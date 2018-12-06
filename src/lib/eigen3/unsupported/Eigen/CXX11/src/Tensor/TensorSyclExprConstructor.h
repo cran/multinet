@@ -28,9 +28,10 @@ namespace internal {
 /// this class is used by EvalToOp in order to create an lhs expression which is
 /// a pointer from an accessor on device-only buffer
 template <typename PtrType, size_t N, typename... Params>
-struct EvalToLHSConstructor {
-  PtrType expr;
-  EvalToLHSConstructor(const utility::tuple::Tuple<Params...> &t): expr((&(*(utility::tuple::get<N>(t).get_pointer())))) {}
+struct EvalToLHSConstructor
+{
+    PtrType expr;
+    EvalToLHSConstructor(const utility::tuple::Tuple<Params...> &t): expr((&(*(utility::tuple::get<N>(t).get_pointer())))) {}
 };
 
 /// \struct ExprConstructor is used to reconstruct the expression on the device and
@@ -158,9 +159,9 @@ struct ExprConstructor<CVQual TensorAssignOp<OrigLHSExpr, OrigRHSExpr>,  CVQual 
   : lhsExpr(funcD.lhsExpr, t), rhsExpr(funcD.rhsExpr, t), expr(lhsExpr.expr, rhsExpr.expr) {}\
  };
 
- ASSIGN(const)
- ASSIGN()
- #undef ASSIGN
+ASSIGN(const)
+ASSIGN()
+#undef ASSIGN
 /// specialisation of the \ref ExprConstructor struct when the node type is
 ///  TensorEvalToOp
 #define EVALTO(CVQual)\
@@ -199,11 +200,13 @@ FORCEDEVAL(const)
 FORCEDEVAL()
 #undef FORCEDEVAL
 
-template <bool Conds,  size_t X , size_t Y > struct ValueCondition {
-  static const size_t Res =X;
+template <bool Conds,  size_t X, size_t Y > struct ValueCondition
+{
+    static const size_t Res =X;
 };
-template<size_t X, size_t Y> struct ValueCondition<false, X , Y> {
-  static const size_t Res =Y;
+template<size_t X, size_t Y> struct ValueCondition<false, X, Y>
+{
+    static const size_t Res =Y;
 };
 
 /// specialisation of the \ref ExprConstructor struct when the node type is TensorReductionOp
@@ -227,8 +230,9 @@ SYCLREDUCTIONEXPR()
 /// template deduction for \ref ExprConstructor struct
 template <typename OrigExpr, typename IndexExpr, typename FuncD, typename... Params>
 auto createDeviceExpression(FuncD &funcD, const utility::tuple::Tuple<Params...> &t)
-    -> decltype(ExprConstructor<OrigExpr, IndexExpr, Params...>(funcD, t)) {
-  return ExprConstructor<OrigExpr, IndexExpr, Params...>(funcD, t);
+-> decltype(ExprConstructor<OrigExpr, IndexExpr, Params...>(funcD, t))
+{
+    return ExprConstructor<OrigExpr, IndexExpr, Params...>(funcD, t);
 }
 
 } /// namespace TensorSycl

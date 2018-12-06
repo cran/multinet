@@ -32,7 +32,7 @@ struct traits<ForceAlignedAccess<ExpressionType> > : public traits<ExpressionTyp
 }
 
 template<typename ExpressionType> class ForceAlignedAccess
-  : public internal::dense_xpr_base< ForceAlignedAccess<ExpressionType> >::type
+    : public internal::dense_xpr_base< ForceAlignedAccess<ExpressionType> >::type
 {
   public:
 
@@ -41,62 +41,91 @@ template<typename ExpressionType> class ForceAlignedAccess
 
     EIGEN_DEVICE_FUNC explicit inline ForceAlignedAccess(const ExpressionType& matrix) : m_expression(matrix) {}
 
-    EIGEN_DEVICE_FUNC inline Index rows() const { return m_expression.rows(); }
-    EIGEN_DEVICE_FUNC inline Index cols() const { return m_expression.cols(); }
-    EIGEN_DEVICE_FUNC inline Index outerStride() const { return m_expression.outerStride(); }
-    EIGEN_DEVICE_FUNC inline Index innerStride() const { return m_expression.innerStride(); }
-
-    EIGEN_DEVICE_FUNC inline const CoeffReturnType coeff(Index row, Index col) const
+    EIGEN_DEVICE_FUNC inline Index
+    rows() const
     {
-      return m_expression.coeff(row, col);
+        return m_expression.rows();
+    }
+    EIGEN_DEVICE_FUNC inline Index
+    cols() const
+    {
+        return m_expression.cols();
+    }
+    EIGEN_DEVICE_FUNC inline Index
+    outerStride() const
+    {
+        return m_expression.outerStride();
+    }
+    EIGEN_DEVICE_FUNC inline Index
+    innerStride() const
+    {
+        return m_expression.innerStride();
     }
 
-    EIGEN_DEVICE_FUNC inline Scalar& coeffRef(Index row, Index col)
+    EIGEN_DEVICE_FUNC inline const CoeffReturnType
+    coeff(Index row, Index col) const
     {
-      return m_expression.const_cast_derived().coeffRef(row, col);
+        return m_expression.coeff(row, col);
     }
 
-    EIGEN_DEVICE_FUNC inline const CoeffReturnType coeff(Index index) const
+    EIGEN_DEVICE_FUNC inline Scalar&
+    coeffRef(Index row, Index col)
     {
-      return m_expression.coeff(index);
+        return m_expression.const_cast_derived().coeffRef(row, col);
     }
 
-    EIGEN_DEVICE_FUNC inline Scalar& coeffRef(Index index)
+    EIGEN_DEVICE_FUNC inline const CoeffReturnType
+    coeff(Index index) const
     {
-      return m_expression.const_cast_derived().coeffRef(index);
+        return m_expression.coeff(index);
+    }
+
+    EIGEN_DEVICE_FUNC inline Scalar&
+    coeffRef(Index index)
+    {
+        return m_expression.const_cast_derived().coeffRef(index);
     }
 
     template<int LoadMode>
-    inline const PacketScalar packet(Index row, Index col) const
+    inline const PacketScalar
+    packet(Index row, Index col) const
     {
-      return m_expression.template packet<Aligned>(row, col);
+        return m_expression.template packet<Aligned>(row, col);
     }
 
     template<int LoadMode>
-    inline void writePacket(Index row, Index col, const PacketScalar& x)
+    inline void
+    writePacket(Index row, Index col, const PacketScalar& x)
     {
-      m_expression.const_cast_derived().template writePacket<Aligned>(row, col, x);
+        m_expression.const_cast_derived().template writePacket<Aligned>(row, col, x);
     }
 
     template<int LoadMode>
-    inline const PacketScalar packet(Index index) const
+    inline const PacketScalar
+    packet(Index index) const
     {
-      return m_expression.template packet<Aligned>(index);
+        return m_expression.template packet<Aligned>(index);
     }
 
     template<int LoadMode>
-    inline void writePacket(Index index, const PacketScalar& x)
+    inline void
+    writePacket(Index index, const PacketScalar& x)
     {
-      m_expression.const_cast_derived().template writePacket<Aligned>(index, x);
+        m_expression.const_cast_derived().template writePacket<Aligned>(index, x);
     }
 
-    EIGEN_DEVICE_FUNC operator const ExpressionType&() const { return m_expression; }
+    EIGEN_DEVICE_FUNC
+    operator const ExpressionType&() const
+    {
+        return m_expression;
+    }
 
   protected:
     const ExpressionType& m_expression;
 
   private:
-    ForceAlignedAccess& operator=(const ForceAlignedAccess&);
+    ForceAlignedAccess&
+    operator=(const ForceAlignedAccess&);
 };
 
 /** \returns an expression of *this with forced aligned access
@@ -106,7 +135,7 @@ template<typename Derived>
 inline const ForceAlignedAccess<Derived>
 MatrixBase<Derived>::forceAlignedAccess() const
 {
-  return ForceAlignedAccess<Derived>(derived());
+    return ForceAlignedAccess<Derived>(derived());
 }
 
 /** \returns an expression of *this with forced aligned access
@@ -116,7 +145,7 @@ template<typename Derived>
 inline ForceAlignedAccess<Derived>
 MatrixBase<Derived>::forceAlignedAccess()
 {
-  return ForceAlignedAccess<Derived>(derived());
+    return ForceAlignedAccess<Derived>(derived());
 }
 
 /** \returns an expression of *this with forced aligned access if \a Enable is true.
@@ -127,7 +156,7 @@ template<bool Enable>
 inline typename internal::add_const_on_value_type<typename internal::conditional<Enable,ForceAlignedAccess<Derived>,Derived&>::type>::type
 MatrixBase<Derived>::forceAlignedAccessIf() const
 {
-  return derived();  // FIXME This should not work but apparently is never used
+    return derived();  // FIXME This should not work but apparently is never used
 }
 
 /** \returns an expression of *this with forced aligned access if \a Enable is true.
@@ -138,7 +167,7 @@ template<bool Enable>
 inline typename internal::conditional<Enable,ForceAlignedAccess<Derived>,Derived&>::type
 MatrixBase<Derived>::forceAlignedAccessIf()
 {
-  return derived();  // FIXME This should not work but apparently is never used
+    return derived();  // FIXME This should not work but apparently is never used
 }
 
 } // end namespace Eigen

@@ -27,10 +27,10 @@ template<typename Derived,typename ExponentDerived>
 inline const Eigen::CwiseBinaryOp<Eigen::internal::scalar_igamma_op<typename Derived::Scalar>, const Derived, const ExponentDerived>
 igamma(const Eigen::ArrayBase<Derived>& a, const Eigen::ArrayBase<ExponentDerived>& x)
 {
-  return Eigen::CwiseBinaryOp<Eigen::internal::scalar_igamma_op<typename Derived::Scalar>, const Derived, const ExponentDerived>(
-    a.derived(),
-    x.derived()
-  );
+    return Eigen::CwiseBinaryOp<Eigen::internal::scalar_igamma_op<typename Derived::Scalar>, const Derived, const ExponentDerived>(
+               a.derived(),
+               x.derived()
+           );
 }
 
 /** \cpp11 \returns an expression of the coefficient-wise igammac(\a a, \a x) to the given arrays.
@@ -47,10 +47,10 @@ template<typename Derived,typename ExponentDerived>
 inline const Eigen::CwiseBinaryOp<Eigen::internal::scalar_igammac_op<typename Derived::Scalar>, const Derived, const ExponentDerived>
 igammac(const Eigen::ArrayBase<Derived>& a, const Eigen::ArrayBase<ExponentDerived>& x)
 {
-  return Eigen::CwiseBinaryOp<Eigen::internal::scalar_igammac_op<typename Derived::Scalar>, const Derived, const ExponentDerived>(
-    a.derived(),
-    x.derived()
-  );
+    return Eigen::CwiseBinaryOp<Eigen::internal::scalar_igammac_op<typename Derived::Scalar>, const Derived, const ExponentDerived>(
+               a.derived(),
+               x.derived()
+           );
 }
 
 /** \cpp11 \returns an expression of the coefficient-wise polygamma(\a n, \a x) to the given arrays.
@@ -69,10 +69,10 @@ template<typename DerivedN,typename DerivedX>
 inline const Eigen::CwiseBinaryOp<Eigen::internal::scalar_polygamma_op<typename DerivedX::Scalar>, const DerivedN, const DerivedX>
 polygamma(const Eigen::ArrayBase<DerivedN>& n, const Eigen::ArrayBase<DerivedX>& x)
 {
-  return Eigen::CwiseBinaryOp<Eigen::internal::scalar_polygamma_op<typename DerivedX::Scalar>, const DerivedN, const DerivedX>(
-    n.derived(),
-    x.derived()
-  );
+    return Eigen::CwiseBinaryOp<Eigen::internal::scalar_polygamma_op<typename DerivedX::Scalar>, const DerivedN, const DerivedX>(
+               n.derived(),
+               x.derived()
+           );
 }
 
 /** \cpp11 \returns an expression of the coefficient-wise betainc(\a x, \a a, \a b) to the given arrays.
@@ -89,11 +89,11 @@ template<typename ArgADerived, typename ArgBDerived, typename ArgXDerived>
 inline const Eigen::CwiseTernaryOp<Eigen::internal::scalar_betainc_op<typename ArgXDerived::Scalar>, const ArgADerived, const ArgBDerived, const ArgXDerived>
 betainc(const Eigen::ArrayBase<ArgADerived>& a, const Eigen::ArrayBase<ArgBDerived>& b, const Eigen::ArrayBase<ArgXDerived>& x)
 {
-  return Eigen::CwiseTernaryOp<Eigen::internal::scalar_betainc_op<typename ArgXDerived::Scalar>, const ArgADerived, const ArgBDerived, const ArgXDerived>(
-    a.derived(),
-    b.derived(),
-    x.derived()
-  );
+    return Eigen::CwiseTernaryOp<Eigen::internal::scalar_betainc_op<typename ArgXDerived::Scalar>, const ArgADerived, const ArgBDerived, const ArgXDerived>(
+               a.derived(),
+               b.derived(),
+               x.derived()
+           );
 }
 
 
@@ -113,10 +113,10 @@ template<typename DerivedX,typename DerivedQ>
 inline const Eigen::CwiseBinaryOp<Eigen::internal::scalar_zeta_op<typename DerivedX::Scalar>, const DerivedX, const DerivedQ>
 zeta(const Eigen::ArrayBase<DerivedX>& x, const Eigen::ArrayBase<DerivedQ>& q)
 {
-  return Eigen::CwiseBinaryOp<Eigen::internal::scalar_zeta_op<typename DerivedX::Scalar>, const DerivedX, const DerivedQ>(
-    x.derived(),
-    q.derived()
-  );
+    return Eigen::CwiseBinaryOp<Eigen::internal::scalar_zeta_op<typename DerivedX::Scalar>, const DerivedX, const DerivedQ>(
+               x.derived(),
+               q.derived()
+           );
 }
 
 } // end namespace Eigen

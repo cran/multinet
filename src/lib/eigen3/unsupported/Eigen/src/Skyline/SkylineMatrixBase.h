@@ -12,7 +12,7 @@
 
 #include "SkylineUtil.h"
 
-namespace Eigen { 
+namespace Eigen {
 
 /** \ingroup Skyline_Module
  *
@@ -23,14 +23,16 @@ namespace Eigen {
  * \param Derived
  *
  */
-template<typename Derived> class SkylineMatrixBase : public EigenBase<Derived> {
-public:
+template<typename Derived> class SkylineMatrixBase : public EigenBase<Derived>
+{
+  public:
 
     typedef typename internal::traits<Derived>::Scalar Scalar;
     typedef typename internal::traits<Derived>::StorageKind StorageKind;
     typedef typename internal::index<StorageKind>::type Index;
 
-    enum {
+    enum
+    {
         RowsAtCompileTime = internal::traits<Derived>::RowsAtCompileTime,
         /**< The number of rows at compile-time. This is just a copy of the value provided
          * by the \a Derived type. If a value is not known at compile-time,
@@ -45,7 +47,7 @@ public:
 
 
         SizeAtCompileTime = (internal::size_at_compile_time<internal::traits<Derived>::RowsAtCompileTime,
-        internal::traits<Derived>::ColsAtCompileTime>::ret),
+                             internal::traits<Derived>::ColsAtCompileTime>::ret),
         /**< This is equal to the number of coefficients, i.e. the number of
          * rows times the number of columns, or to \a Dynamic if this is not
          * known at compile-time. \sa RowsAtCompileTime, ColsAtCompileTime */
@@ -54,7 +56,7 @@ public:
         MaxColsAtCompileTime = ColsAtCompileTime,
 
         MaxSizeAtCompileTime = (internal::size_at_compile_time<MaxRowsAtCompileTime,
-        MaxColsAtCompileTime>::ret),
+                                MaxColsAtCompileTime>::ret),
 
         IsVectorAtCompileTime = RowsAtCompileTime == 1 || ColsAtCompileTime == 1,
         /**< This is set to true if either the number of rows or the number of
@@ -86,93 +88,130 @@ public:
 
     /** type of the equivalent square matrix */
     typedef Matrix<Scalar, EIGEN_SIZE_MAX(RowsAtCompileTime, ColsAtCompileTime),
-                           EIGEN_SIZE_MAX(RowsAtCompileTime, ColsAtCompileTime) > SquareMatrixType;
+            EIGEN_SIZE_MAX(RowsAtCompileTime, ColsAtCompileTime) > SquareMatrixType;
 
-    inline const Derived& derived() const {
+    inline const Derived&
+    derived() const
+    {
         return *static_cast<const Derived*> (this);
     }
 
-    inline Derived& derived() {
+    inline Derived&
+    derived()
+    {
         return *static_cast<Derived*> (this);
     }
 
-    inline Derived& const_cast_derived() const {
+    inline Derived&
+    const_cast_derived() const
+    {
         return *static_cast<Derived*> (const_cast<SkylineMatrixBase*> (this));
     }
 #endif // not EIGEN_PARSED_BY_DOXYGEN
 
     /** \returns the number of rows. \sa cols(), RowsAtCompileTime */
-    inline Index rows() const {
+    inline Index
+    rows() const
+    {
         return derived().rows();
     }
 
     /** \returns the number of columns. \sa rows(), ColsAtCompileTime*/
-    inline Index cols() const {
+    inline Index
+    cols() const
+    {
         return derived().cols();
     }
 
     /** \returns the number of coefficients, which is \a rows()*cols().
      * \sa rows(), cols(), SizeAtCompileTime. */
-    inline Index size() const {
+    inline Index
+    size() const
+    {
         return rows() * cols();
     }
 
     /** \returns the number of nonzero coefficients which is in practice the number
      * of stored coefficients. */
-    inline Index nonZeros() const {
+    inline Index
+    nonZeros() const
+    {
         return derived().nonZeros();
     }
 
     /** \returns the size of the storage major dimension,
      * i.e., the number of columns for a columns major matrix, and the number of rows otherwise */
-    Index outerSize() const {
+    Index
+    outerSize() const
+    {
         return (int(Flags) & RowMajorBit) ? this->rows() : this->cols();
     }
 
     /** \returns the size of the inner dimension according to the storage order,
      * i.e., the number of rows for a columns major matrix, and the number of cols otherwise */
-    Index innerSize() const {
+    Index
+    innerSize() const
+    {
         return (int(Flags) & RowMajorBit) ? this->cols() : this->rows();
     }
 
-    bool isRValue() const {
+    bool
+    isRValue() const
+    {
         return m_isRValue;
     }
 
-    Derived& markAsRValue() {
+    Derived&
+    markAsRValue()
+    {
         m_isRValue = true;
         return derived();
     }
 
-    SkylineMatrixBase() : m_isRValue(false) {
+    SkylineMatrixBase() : m_isRValue(false)
+    {
         /* TODO check flags */
     }
 
-    inline Derived & operator=(const Derived& other) {
+    inline Derived &
+    operator=(const Derived& other)
+    {
         this->operator=<Derived > (other);
         return derived();
     }
 
     template<typename OtherDerived>
-    inline void assignGeneric(const OtherDerived& other) {
+    inline void
+    assignGeneric(const OtherDerived& other)
+    {
         derived().resize(other.rows(), other.cols());
+
         for (Index row = 0; row < rows(); row++)
-            for (Index col = 0; col < cols(); col++) {
+            for (Index col = 0; col < cols(); col++)
+            {
                 if (other.coeff(row, col) != Scalar(0))
+                {
                     derived().insert(row, col) = other.coeff(row, col);
+                }
             }
+
         derived().finalize();
     }
 
     template<typename OtherDerived>
-            inline Derived & operator=(const SkylineMatrixBase<OtherDerived>& other) {
+    inline Derived &
+    operator=(const SkylineMatrixBase<OtherDerived>& other)
+    {
         //TODO
     }
 
     template<typename Lhs, typename Rhs>
-            inline Derived & operator=(const SkylineProduct<Lhs, Rhs, SkylineTimeSkylineProduct>& product);
+    inline Derived &
+    operator=(const SkylineProduct<Lhs, Rhs, SkylineTimeSkylineProduct>& product);
 
-    friend std::ostream & operator <<(std::ostream & s, const SkylineMatrixBase& m) {
+    friend std::ostream &
+    operator <<(std::ostream & s, const SkylineMatrixBase& m)
+    {
         s << m.derived();
         return s;
     }
@@ -183,14 +222,21 @@ public:
 
     /** \internal use operator= */
     template<typename DenseDerived>
-    void evalTo(MatrixBase<DenseDerived>& dst) const {
+    void
+    evalTo(MatrixBase<DenseDerived>& dst) const
+    {
         dst.setZero();
+
         for (Index i = 0; i < rows(); i++)
             for (Index j = 0; j < rows(); j++)
+            {
                 dst(i, j) = derived().coeff(i, j);
+            }
     }
 
-    Matrix<Scalar, RowsAtCompileTime, ColsAtCompileTime> toDense() const {
+    Matrix<Scalar, RowsAtCompileTime, ColsAtCompileTime>
+    toDense() const
+    {
         return derived();
     }
 
@@ -199,11 +245,13 @@ public:
      * Notice that in the case of a plain matrix or vector (not an expression) this function just returns
      * a const reference, in order to avoid a useless copy.
      */
-    EIGEN_STRONG_INLINE const typename internal::eval<Derived, IsSkyline>::type eval() const {
+    EIGEN_STRONG_INLINE const typename internal::eval<Derived, IsSkyline>::type
+    eval() const
+    {
         return typename internal::eval<Derived>::type(derived());
     }
 
-protected:
+  protected:
     bool m_isRValue;
 };
 

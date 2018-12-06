@@ -1,18 +1,19 @@
-namespace Eigen { 
+namespace Eigen {
 
 namespace internal {
 
 template <typename Scalar>
-void dogleg(
-        const Matrix< Scalar, Dynamic, Dynamic >  &qrfac,
-        const Matrix< Scalar, Dynamic, 1 >  &diag,
-        const Matrix< Scalar, Dynamic, 1 >  &qtb,
-        Scalar delta,
-        Matrix< Scalar, Dynamic, 1 >  &x)
+void
+dogleg(
+    const Matrix< Scalar, Dynamic, Dynamic >  &qrfac,
+    const Matrix< Scalar, Dynamic, 1 >  &diag,
+    const Matrix< Scalar, Dynamic, 1 >  &qtb,
+    Scalar delta,
+    Matrix< Scalar, Dynamic, 1 >  &x)
 {
     using std::abs;
     using std::sqrt;
-    
+
     typedef DenseIndex Index;
 
     /* Local variables */
@@ -30,23 +31,38 @@ void dogleg(
     Matrix< Scalar, Dynamic, 1 >  wa1(n), wa2(n);
 
     /* first, calculate the gauss-newton direction. */
-    for (j = n-1; j >=0; --j) {
+    for (j = n-1; j >=0; --j)
+    {
         temp = qrfac(j,j);
-        if (temp == 0.) {
+
+        if (temp == 0.)
+        {
             temp = epsmch * qrfac.col(j).head(j+1).maxCoeff();
+
             if (temp == 0.)
+            {
                 temp = epsmch;
+            }
         }
+
         if (j==n-1)
+        {
             x[j] = qtb[j] / temp;
+        }
+
         else
+        {
             x[j] = (qtb[j] - qrfac.row(j).tail(n-j-1).dot(x.tail(n-j-1))) / temp;
+        }
     }
 
     /* test whether the gauss-newton direction is acceptable. */
     qnorm = diag.cwiseProduct(x).stableNorm();
+
     if (qnorm <= delta)
+    {
         return;
+    }
 
     // TODO : this path is not tested by Eigen unit tests
 
@@ -54,7 +70,9 @@ void dogleg(
     /* next, calculate the scaled gradient direction. */
 
     wa1.fill(0.);
-    for (j = 0; j < n; ++j) {
+
+    for (j = 0; j < n; ++j)
+    {
         wa1.tail(n-j) += qrfac.row(j).tail(n-j) * qtb[j];
         wa1[j] /= diag[j];
     }
@@ -64,28 +82,40 @@ void dogleg(
     gnorm = wa1.stableNorm();
     sgnorm = 0.;
     alpha = delta / qnorm;
+
     if (gnorm == 0.)
+    {
         goto algo_end;
+    }
 
     /* calculate the point along the scaled gradient */
     /* at which the quadratic is minimized. */
     wa1.array() /= (diag*gnorm).array();
+
     // TODO : once unit tests cover this part,:
     // wa2 = qrfac.template triangularView<Upper>() * wa1;
-    for (j = 0; j < n; ++j) {
+    for (j = 0; j < n; ++j)
+    {
         sum = 0.;
-        for (i = j; i < n; ++i) {
+
+        for (i = j; i < n; ++i)
+        {
             sum += qrfac(j,i) * wa1[i];
         }
+
         wa2[j] = sum;
     }
+
     temp = wa2.stableNorm();
     sgnorm = gnorm / temp / temp;
 
     /* test whether the scaled gradient direction is acceptable. */
     alpha = 0.;
+
     if (sgnorm >= delta)
+    {
         goto algo_end;
+    }
 
     /* the scaled gradient direction is not acceptable. */
     /* finally, calculate the point along the dogleg */

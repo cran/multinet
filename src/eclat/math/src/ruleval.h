@@ -47,36 +47,62 @@
 /*----------------------------------------------------------------------
   Type Definitions
 ----------------------------------------------------------------------*/
-typedef double RULEVALFN (SUPP supp, SUPP body, SUPP head, SUPP base);
+typedef double
+RULEVALFN (SUPP supp, SUPP body, SUPP head, SUPP base);
 
 /*----------------------------------------------------------------------
   Rule Evaluation Functions
 ----------------------------------------------------------------------*/
-extern double re_none      (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_supp      (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_conf      (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_confdiff  (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_lift      (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_liftdiff  (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_liftquot  (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_cvct      (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_cvctdiff  (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_cvctquot  (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_cprob     (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_import    (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_cert      (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_chi2      (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_chi2pval  (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_yates     (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_yatespval (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_info      (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_infopval  (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_fetprob   (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_fetchi2   (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_fetinfo   (SUPP supp, SUPP body, SUPP head, SUPP base);
-extern double re_fetsupp   (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_none      (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_supp      (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_conf      (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_confdiff  (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_lift      (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_liftdiff  (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_liftquot  (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_cvct      (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_cvctdiff  (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_cvctquot  (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_cprob     (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_import    (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_cert      (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_chi2      (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_chi2pval  (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_yates     (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_yatespval (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_info      (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_infopval  (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_fetprob   (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_fetchi2   (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_fetinfo   (SUPP supp, SUPP body, SUPP head, SUPP base);
+extern double
+re_fetsupp   (SUPP supp, SUPP body, SUPP head, SUPP base);
 
-extern RULEVALFN* re_function (int id);
-extern int        re_dir      (int id);
+extern RULEVALFN*
+re_function (int id);
+extern int
+re_dir      (int id);
 
 #endif

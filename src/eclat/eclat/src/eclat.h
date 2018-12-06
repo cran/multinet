@@ -80,19 +80,24 @@
   Type Definitions
 ----------------------------------------------------------------------*/
 typedef struct _eclat           /* eclat miner */
-ECLAT;                          /* (opaque structure) */
+    ECLAT;                          /* (opaque structure) */
 
 /*----------------------------------------------------------------------
   Functions
 ----------------------------------------------------------------------*/
 
-extern ECLAT* eclat_create (int target, double smin, double smax,
-                            double conf, ITEM zmin, ITEM zmax,
-                            int eval, int agg, double thresh,
-                            int algo, int mode);
-extern void   eclat_delete (ECLAT *eclat, int deldar);
-extern int    eclat_data   (ECLAT *eclat, TABAG *tabag,
-                            int mode, int sort);
-extern int    eclat_report (ECLAT *eclat, ISREPORT *report);
-extern int    eclat_mine   (ECLAT *eclat, ITEM prune, int order);
+extern ECLAT*
+eclat_create (int target, double smin, double smax,
+              double conf, ITEM zmin, ITEM zmax,
+              int eval, int agg, double thresh,
+              int algo, int mode);
+extern void
+eclat_delete (ECLAT *eclat, int deldar);
+extern int
+eclat_data   (ECLAT *eclat, TABAG *tabag,
+              int mode, int sort);
+extern int
+eclat_report (ECLAT *eclat, ISREPORT *report);
+extern int
+eclat_mine   (ECLAT *eclat, ITEM prune, int order);
 #endif

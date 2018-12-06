@@ -28,8 +28,9 @@ namespace tuple {
 template <bool, typename T = void> struct StaticIf;
 /// \brief specialisation of the \ref StaticIf when the condition is true
 template <typename T>
-struct StaticIf<true, T> {
-  typedef T type;
+struct StaticIf<true, T>
+{
+    typedef T type;
 };
 
 /// \struct Tuple
@@ -44,10 +45,11 @@ struct Tuple {};
 /// \tparam T : the type of the first element in the tuple.
 /// \tparam Ts... the rest of the elements in the tuple. Ts... can be empty.
 template <class T, class... Ts>
-struct Tuple<T, Ts...> {
-  Tuple(T t, Ts... ts) : head(t), tail(ts...) {}
-  T head;
-  Tuple<Ts...> tail;
+struct Tuple<T, Ts...>
+{
+    Tuple(T t, Ts... ts) : head(t), tail(ts...) {}
+    T head;
+    Tuple<Ts...> tail;
 };
 
 ///\ struct ElemTypeHolder
@@ -61,8 +63,9 @@ struct ElemTypeHolder;
 /// \brief specialisation of the \ref ElemTypeHolder class when the number of
 /// elements inside the tuple is 1
 template <class T, class... Ts>
-struct ElemTypeHolder<0, Tuple<T, Ts...> > {
-  typedef T type;
+struct ElemTypeHolder<0, Tuple<T, Ts...> >
+{
+    typedef T type;
 };
 
 /// \brief specialisation of the \ref ElemTypeHolder class when the number of
@@ -72,8 +75,9 @@ struct ElemTypeHolder<0, Tuple<T, Ts...> > {
 /// \tparam Ts... the rest of the elements in the tuple. Ts... can be empty.
 /// \tparam K is the Kth element in the tuple
 template <size_t k, class T, class... Ts>
-struct ElemTypeHolder<k, Tuple<T, Ts...> > {
-  typedef typename ElemTypeHolder<k - 1, Tuple<Ts...> >::type type;
+struct ElemTypeHolder<k, Tuple<T, Ts...> >
+{
+    typedef typename ElemTypeHolder<k - 1, Tuple<Ts...> >::type type;
 };
 
 /// get
@@ -118,8 +122,9 @@ RECURSIVE_TUPLE_GET()
 /// \param args zero or more arguments to construct the tuple from
 /// \return Tuple<Args...>
 template <typename... Args>
-Tuple<Args...> make_tuple(Args... args) {
-  return Tuple<Args...>(args...);
+Tuple<Args...> make_tuple(Args... args)
+{
+    return Tuple<Args...>(args...);
 }
 
 /// size
@@ -128,8 +133,10 @@ Tuple<Args...> make_tuple(Args... args) {
 /// \tparam Args the type of the arguments to construct the tuple from
 /// \return size_t
 template <typename... Args>
-static constexpr size_t size(Tuple<Args...> &) {
-  return sizeof...(Args);
+static constexpr size_t
+size(Tuple<Args...> &)
+{
+    return sizeof...(Args);
 }
 
 /// \struct IndexList
@@ -152,8 +159,9 @@ struct RangeBuilder;
 /// \tparam MIN is the starting index of the tuple
 /// \tparam Is is [0 to sizeof...(tuple elements))
 template <size_t MIN, size_t... Is>
-struct RangeBuilder<MIN, MIN, Is...> {
-  typedef IndexList<Is...> type;
+struct RangeBuilder<MIN, MIN, Is...>
+{
+    typedef IndexList<Is...> type;
 };
 
 /// Induction step: Specialisation of the RangeBuilder class when N!=MIN
@@ -181,8 +189,10 @@ struct IndexRange: RangeBuilder<MIN, MAX>::type {};
 /// \param a the new elements going to be added to the tuple
 /// \return Tuple<Args..., T>
 template <typename... Args, typename T, size_t... I>
-Tuple<Args..., T> append_base(Tuple<Args...> t, T a,IndexList<I...>) {
-  return utility::tuple::make_tuple(get<I>(t)..., a);
+Tuple<Args..., T>
+append_base(Tuple<Args...> t, T a,IndexList<I...>)
+{
+    return utility::tuple::make_tuple(get<I>(t)..., a);
 }
 
 /// append
@@ -194,8 +204,10 @@ Tuple<Args..., T> append_base(Tuple<Args...> t, T a,IndexList<I...>) {
 /// \param a the new elements going to be added to the tuple
 /// \return Tuple<Args..., T>
 template <typename... Args, typename T>
-Tuple<Args..., T> append(Tuple<Args...> t, T a) {
-  return utility::tuple::append_base(t, a,  IndexRange<0, sizeof...(Args)>());
+Tuple<Args..., T>
+append(Tuple<Args...> t, T a)
+{
+    return utility::tuple::append_base(t, a,  IndexRange<0, sizeof...(Args)>());
 }
 
 /// append_base
@@ -212,8 +224,10 @@ Tuple<Args..., T> append(Tuple<Args...> t, T a) {
 /// \param t2 is the tuple that is going to be added on t1.
 /// \return Tuple<Args1..., Args2...>
 template <typename... Args1, typename... Args2, size_t... I1, size_t... I2>
-Tuple<Args1..., Args2...> append_base(Tuple<Args1...> t1, Tuple<Args2...> t2, IndexList<I1...>, IndexList<I2...>) {
-  return utility::tuple::make_tuple(get<I1>(t1)...,get<I2>(t2)...);
+Tuple<Args1..., Args2...>
+append_base(Tuple<Args1...> t1, Tuple<Args2...> t2, IndexList<I1...>, IndexList<I2...>)
+{
+    return utility::tuple::make_tuple(get<I1>(t1)...,get<I2>(t2)...);
 }
 
 /// append
@@ -226,8 +240,10 @@ Tuple<Args1..., Args2...> append_base(Tuple<Args1...> t1, Tuple<Args2...> t2, In
 /// \param t2 is the tuple that is going to be added on t1.
 /// \return Tuple<Args1..., Args2...>
 template <typename... Args1, typename... Args2>
-Tuple<Args1..., Args2...> append(Tuple<Args1...> t1,Tuple<Args2...> t2) {
-  return utility::tuple::append_base(t1, t2, IndexRange<0, sizeof...(Args1)>(), IndexRange<0, sizeof...(Args2)>());
+Tuple<Args1..., Args2...>
+append(Tuple<Args1...> t1,Tuple<Args2...> t2)
+{
+    return utility::tuple::append_base(t1, t2, IndexRange<0, sizeof...(Args1)>(), IndexRange<0, sizeof...(Args2)>());
 }
 }  // tuple
 }  // utility

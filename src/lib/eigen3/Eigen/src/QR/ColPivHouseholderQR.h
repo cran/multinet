@@ -15,9 +15,9 @@ namespace Eigen {
 
 namespace internal {
 template<typename _MatrixType> struct traits<ColPivHouseholderQR<_MatrixType> >
- : traits<_MatrixType>
+    : traits<_MatrixType>
 {
-  enum { Flags = 0 };
+    enum { Flags = 0 };
 };
 
 } // end namespace internal
@@ -42,7 +42,7 @@ template<typename _MatrixType> struct traits<ColPivHouseholderQR<_MatrixType> >
   * numerical stability. It is slower than HouseholderQR, and faster than FullPivHouseholderQR.
   *
   * This class supports the \link InplaceDecomposition inplace decomposition \endlink mechanism.
-  * 
+  *
   * \sa MatrixBase::colPivHouseholderQr()
   */
 template<typename _MatrixType> class ColPivHouseholderQR
@@ -50,11 +50,12 @@ template<typename _MatrixType> class ColPivHouseholderQR
   public:
 
     typedef _MatrixType MatrixType;
-    enum {
-      RowsAtCompileTime = MatrixType::RowsAtCompileTime,
-      ColsAtCompileTime = MatrixType::ColsAtCompileTime,
-      MaxRowsAtCompileTime = MatrixType::MaxRowsAtCompileTime,
-      MaxColsAtCompileTime = MatrixType::MaxColsAtCompileTime
+    enum
+    {
+        RowsAtCompileTime = MatrixType::RowsAtCompileTime,
+        ColsAtCompileTime = MatrixType::ColsAtCompileTime,
+        MaxRowsAtCompileTime = MatrixType::MaxRowsAtCompileTime,
+        MaxColsAtCompileTime = MatrixType::MaxColsAtCompileTime
     };
     typedef typename MatrixType::Scalar Scalar;
     typedef typename MatrixType::RealScalar RealScalar;
@@ -81,15 +82,15 @@ template<typename _MatrixType> class ColPivHouseholderQR
     * perform decompositions via ColPivHouseholderQR::compute(const MatrixType&).
     */
     ColPivHouseholderQR()
-      : m_qr(),
-        m_hCoeffs(),
-        m_colsPermutation(),
-        m_colsTranspositions(),
-        m_temp(),
-        m_colNormsUpdated(),
-        m_colNormsDirect(),
-        m_isInitialized(false),
-        m_usePrescribedThreshold(false) {}
+        : m_qr(),
+          m_hCoeffs(),
+          m_colsPermutation(),
+          m_colsTranspositions(),
+          m_temp(),
+          m_colNormsUpdated(),
+          m_colNormsDirect(),
+          m_isInitialized(false),
+          m_usePrescribedThreshold(false) {}
 
     /** \brief Default Constructor with memory preallocation
       *
@@ -98,15 +99,15 @@ template<typename _MatrixType> class ColPivHouseholderQR
       * \sa ColPivHouseholderQR()
       */
     ColPivHouseholderQR(Index rows, Index cols)
-      : m_qr(rows, cols),
-        m_hCoeffs((std::min)(rows,cols)),
-        m_colsPermutation(PermIndexType(cols)),
-        m_colsTranspositions(cols),
-        m_temp(cols),
-        m_colNormsUpdated(cols),
-        m_colNormsDirect(cols),
-        m_isInitialized(false),
-        m_usePrescribedThreshold(false) {}
+        : m_qr(rows, cols),
+          m_hCoeffs((std::min)(rows,cols)),
+          m_colsPermutation(PermIndexType(cols)),
+          m_colsTranspositions(cols),
+          m_temp(cols),
+          m_colNormsUpdated(cols),
+          m_colNormsDirect(cols),
+          m_isInitialized(false),
+          m_usePrescribedThreshold(false) {}
 
     /** \brief Constructs a QR factorization from a given matrix
       *
@@ -121,18 +122,19 @@ template<typename _MatrixType> class ColPivHouseholderQR
       * \sa compute()
       */
     template<typename InputType>
-    explicit ColPivHouseholderQR(const EigenBase<InputType>& matrix)
-      : m_qr(matrix.rows(), matrix.cols()),
-        m_hCoeffs((std::min)(matrix.rows(),matrix.cols())),
-        m_colsPermutation(PermIndexType(matrix.cols())),
-        m_colsTranspositions(matrix.cols()),
-        m_temp(matrix.cols()),
-        m_colNormsUpdated(matrix.cols()),
-        m_colNormsDirect(matrix.cols()),
-        m_isInitialized(false),
-        m_usePrescribedThreshold(false)
+    explicit
+    ColPivHouseholderQR(const EigenBase<InputType>& matrix)
+        : m_qr(matrix.rows(), matrix.cols()),
+          m_hCoeffs((std::min)(matrix.rows(),matrix.cols())),
+          m_colsPermutation(PermIndexType(matrix.cols())),
+          m_colsTranspositions(matrix.cols()),
+          m_temp(matrix.cols()),
+          m_colNormsUpdated(matrix.cols()),
+          m_colNormsDirect(matrix.cols()),
+          m_isInitialized(false),
+          m_usePrescribedThreshold(false)
     {
-      compute(matrix.derived());
+        compute(matrix.derived());
     }
 
     /** \brief Constructs a QR factorization from a given matrix
@@ -142,18 +144,19 @@ template<typename _MatrixType> class ColPivHouseholderQR
       * \sa ColPivHouseholderQR(const EigenBase&)
       */
     template<typename InputType>
-    explicit ColPivHouseholderQR(EigenBase<InputType>& matrix)
-      : m_qr(matrix.derived()),
-        m_hCoeffs((std::min)(matrix.rows(),matrix.cols())),
-        m_colsPermutation(PermIndexType(matrix.cols())),
-        m_colsTranspositions(matrix.cols()),
-        m_temp(matrix.cols()),
-        m_colNormsUpdated(matrix.cols()),
-        m_colNormsDirect(matrix.cols()),
-        m_isInitialized(false),
-        m_usePrescribedThreshold(false)
+    explicit
+    ColPivHouseholderQR(EigenBase<InputType>& matrix)
+        : m_qr(matrix.derived()),
+          m_hCoeffs((std::min)(matrix.rows(),matrix.cols())),
+          m_colsPermutation(PermIndexType(matrix.cols())),
+          m_colsTranspositions(matrix.cols()),
+          m_temp(matrix.cols()),
+          m_colNormsUpdated(matrix.cols()),
+          m_colNormsDirect(matrix.cols()),
+          m_isInitialized(false),
+          m_usePrescribedThreshold(false)
     {
-      computeInPlace();
+        computeInPlace();
     }
 
     /** This method finds a solution x to the equation Ax=b, where A is the matrix of which
@@ -174,22 +177,25 @@ template<typename _MatrixType> class ColPivHouseholderQR
     inline const Solve<ColPivHouseholderQR, Rhs>
     solve(const MatrixBase<Rhs>& b) const
     {
-      eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-      return Solve<ColPivHouseholderQR, Rhs>(*this, b.derived());
+        eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+        return Solve<ColPivHouseholderQR, Rhs>(*this, b.derived());
     }
 
-    HouseholderSequenceType householderQ() const;
-    HouseholderSequenceType matrixQ() const
+    HouseholderSequenceType
+    householderQ() const;
+    HouseholderSequenceType
+    matrixQ() const
     {
-      return householderQ();
+        return householderQ();
     }
 
     /** \returns a reference to the matrix where the Householder QR decomposition is stored
       */
-    const MatrixType& matrixQR() const
+    const MatrixType&
+    matrixQR() const
     {
-      eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-      return m_qr;
+        eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+        return m_qr;
     }
 
     /** \returns a reference to the matrix where the result Householder QR is stored
@@ -201,20 +207,23 @@ template<typename _MatrixType> class ColPivHouseholderQR
      * matrixR().topLeftCorner(rank(), rank()).template triangularView<Upper>()
      * \endcode
      */
-    const MatrixType& matrixR() const
+    const MatrixType&
+    matrixR() const
     {
-      eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-      return m_qr;
+        eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+        return m_qr;
     }
 
     template<typename InputType>
-    ColPivHouseholderQR& compute(const EigenBase<InputType>& matrix);
+    ColPivHouseholderQR&
+    compute(const EigenBase<InputType>& matrix);
 
     /** \returns a const reference to the column permutation matrix */
-    const PermutationType& colsPermutation() const
+    const PermutationType&
+    colsPermutation() const
     {
-      eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-      return m_colsPermutation;
+        eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+        return m_colsPermutation;
     }
 
     /** \returns the absolute value of the determinant of the matrix of which
@@ -230,7 +239,8 @@ template<typename _MatrixType> class ColPivHouseholderQR
       *
       * \sa logAbsDeterminant(), MatrixBase::determinant()
       */
-    typename MatrixType::RealScalar absDeterminant() const;
+    typename MatrixType::RealScalar
+    absDeterminant() const;
 
     /** \returns the natural log of the absolute value of the determinant of the matrix of which
       * *this is the QR decomposition. It has only linear complexity
@@ -244,7 +254,8 @@ template<typename _MatrixType> class ColPivHouseholderQR
       *
       * \sa absDeterminant(), MatrixBase::determinant()
       */
-    typename MatrixType::RealScalar logAbsDeterminant() const;
+    typename MatrixType::RealScalar
+    logAbsDeterminant() const;
 
     /** \returns the rank of the matrix of which *this is the QR decomposition.
       *
@@ -252,15 +263,20 @@ template<typename _MatrixType> class ColPivHouseholderQR
       *       For that, it uses the threshold value that you can control by calling
       *       setThreshold(const RealScalar&).
       */
-    inline Index rank() const
+    inline Index
+    rank() const
     {
-      using std::abs;
-      eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-      RealScalar premultiplied_threshold = abs(m_maxpivot) * threshold();
-      Index result = 0;
-      for(Index i = 0; i < m_nonzero_pivots; ++i)
-        result += (abs(m_qr.coeff(i,i)) > premultiplied_threshold);
-      return result;
+        using std::abs;
+        eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+        RealScalar premultiplied_threshold = abs(m_maxpivot) * threshold();
+        Index result = 0;
+
+        for (Index i = 0; i < m_nonzero_pivots; ++i)
+        {
+            result += (abs(m_qr.coeff(i,i)) > premultiplied_threshold);
+        }
+
+        return result;
     }
 
     /** \returns the dimension of the kernel of the matrix of which *this is the QR decomposition.
@@ -269,10 +285,11 @@ template<typename _MatrixType> class ColPivHouseholderQR
       *       For that, it uses the threshold value that you can control by calling
       *       setThreshold(const RealScalar&).
       */
-    inline Index dimensionOfKernel() const
+    inline Index
+    dimensionOfKernel() const
     {
-      eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-      return cols() - rank();
+        eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+        return cols() - rank();
     }
 
     /** \returns true if the matrix of which *this is the QR decomposition represents an injective
@@ -282,10 +299,11 @@ template<typename _MatrixType> class ColPivHouseholderQR
       *       For that, it uses the threshold value that you can control by calling
       *       setThreshold(const RealScalar&).
       */
-    inline bool isInjective() const
+    inline bool
+    isInjective() const
     {
-      eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-      return rank() == cols();
+        eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+        return rank() == cols();
     }
 
     /** \returns true if the matrix of which *this is the QR decomposition represents a surjective
@@ -295,10 +313,11 @@ template<typename _MatrixType> class ColPivHouseholderQR
       *       For that, it uses the threshold value that you can control by calling
       *       setThreshold(const RealScalar&).
       */
-    inline bool isSurjective() const
+    inline bool
+    isSurjective() const
     {
-      eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-      return rank() == rows();
+        eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+        return rank() == rows();
     }
 
     /** \returns true if the matrix of which *this is the QR decomposition is invertible.
@@ -307,10 +326,11 @@ template<typename _MatrixType> class ColPivHouseholderQR
       *       For that, it uses the threshold value that you can control by calling
       *       setThreshold(const RealScalar&).
       */
-    inline bool isInvertible() const
+    inline bool
+    isInvertible() const
     {
-      eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-      return isInjective() && isSurjective();
+        eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+        return isInjective() && isSurjective();
     }
 
     /** \returns the inverse of the matrix of which *this is the QR decomposition.
@@ -318,20 +338,33 @@ template<typename _MatrixType> class ColPivHouseholderQR
       * \note If this matrix is not invertible, the returned matrix has undefined coefficients.
       *       Use isInvertible() to first determine whether this matrix is invertible.
       */
-    inline const Inverse<ColPivHouseholderQR> inverse() const
+    inline const Inverse<ColPivHouseholderQR>
+    inverse() const
     {
-      eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-      return Inverse<ColPivHouseholderQR>(*this);
+        eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+        return Inverse<ColPivHouseholderQR>(*this);
     }
 
-    inline Index rows() const { return m_qr.rows(); }
-    inline Index cols() const { return m_qr.cols(); }
+    inline Index
+    rows() const
+    {
+        return m_qr.rows();
+    }
+    inline Index
+    cols() const
+    {
+        return m_qr.cols();
+    }
 
     /** \returns a const reference to the vector of Householder coefficients used to represent the factor \c Q.
       *
       * For advanced uses only.
       */
-    const HCoeffsType& hCoeffs() const { return m_hCoeffs; }
+    const HCoeffsType&
+    hCoeffs() const
+    {
+        return m_hCoeffs;
+    }
 
     /** Allows to prescribe a threshold to be used by certain methods, such as rank(),
       * who need to determine when pivots are to be considered nonzero. This is not used for the
@@ -350,11 +383,12 @@ template<typename _MatrixType> class ColPivHouseholderQR
       *
       * If you want to come back to the default behavior, call setThreshold(Default_t)
       */
-    ColPivHouseholderQR& setThreshold(const RealScalar& threshold)
+    ColPivHouseholderQR&
+    setThreshold(const RealScalar& threshold)
     {
-      m_usePrescribedThreshold = true;
-      m_prescribedThreshold = threshold;
-      return *this;
+        m_usePrescribedThreshold = true;
+        m_prescribedThreshold = threshold;
+        return *this;
     }
 
     /** Allows to come back to the default behavior, letting Eigen use its default formula for
@@ -365,23 +399,25 @@ template<typename _MatrixType> class ColPivHouseholderQR
       *
       * See the documentation of setThreshold(const RealScalar&).
       */
-    ColPivHouseholderQR& setThreshold(Default_t)
+    ColPivHouseholderQR&
+    setThreshold(Default_t)
     {
-      m_usePrescribedThreshold = false;
-      return *this;
+        m_usePrescribedThreshold = false;
+        return *this;
     }
 
     /** Returns the threshold that will be used by certain methods such as rank().
       *
       * See the documentation of setThreshold(const RealScalar&).
       */
-    RealScalar threshold() const
+    RealScalar
+    threshold() const
     {
-      eigen_assert(m_isInitialized || m_usePrescribedThreshold);
-      return m_usePrescribedThreshold ? m_prescribedThreshold
-      // this formula comes from experimenting (see "LU precision tuning" thread on the list)
-      // and turns out to be identical to Higham's formula used already in LDLt.
-                                      : NumTraits<Scalar>::epsilon() * RealScalar(m_qr.diagonalSize());
+        eigen_assert(m_isInitialized || m_usePrescribedThreshold);
+        return m_usePrescribedThreshold ? m_prescribedThreshold
+               // this formula comes from experimenting (see "LU precision tuning" thread on the list)
+               // and turns out to be identical to Higham's formula used already in LDLt.
+               : NumTraits<Scalar>::epsilon() * RealScalar(m_qr.diagonalSize());
     }
 
     /** \returns the number of nonzero pivots in the QR decomposition.
@@ -391,16 +427,21 @@ template<typename _MatrixType> class ColPivHouseholderQR
       *
       * \sa rank()
       */
-    inline Index nonzeroPivots() const
+    inline Index
+    nonzeroPivots() const
     {
-      eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-      return m_nonzero_pivots;
+        eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+        return m_nonzero_pivots;
     }
 
     /** \returns the absolute value of the biggest pivot, i.e. the biggest
       *          diagonal coefficient of R.
       */
-    RealScalar maxPivot() const { return m_maxpivot; }
+    RealScalar
+    maxPivot() const
+    {
+        return m_maxpivot;
+    }
 
     /** \brief Reports whether the QR factorization was succesful.
       *
@@ -408,28 +449,32 @@ template<typename _MatrixType> class ColPivHouseholderQR
       * with other factorization routines.
       * \returns \c Success
       */
-    ComputationInfo info() const
+    ComputationInfo
+    info() const
     {
-      eigen_assert(m_isInitialized && "Decomposition is not initialized.");
-      return Success;
+        eigen_assert(m_isInitialized && "Decomposition is not initialized.");
+        return Success;
     }
 
-    #ifndef EIGEN_PARSED_BY_DOXYGEN
+#ifndef EIGEN_PARSED_BY_DOXYGEN
     template<typename RhsType, typename DstType>
     EIGEN_DEVICE_FUNC
-    void _solve_impl(const RhsType &rhs, DstType &dst) const;
-    #endif
+    void
+    _solve_impl(const RhsType &rhs, DstType &dst) const;
+#endif
 
   protected:
 
     friend class CompleteOrthogonalDecomposition<MatrixType>;
 
-    static void check_template_parameters()
+    static void
+    check_template_parameters()
     {
-      EIGEN_STATIC_ASSERT_NON_INTEGER(Scalar);
+        EIGEN_STATIC_ASSERT_NON_INTEGER(Scalar);
     }
 
-    void computeInPlace();
+    void
+    computeInPlace();
 
     MatrixType m_qr;
     HCoeffsType m_hCoeffs;
@@ -445,20 +490,22 @@ template<typename _MatrixType> class ColPivHouseholderQR
 };
 
 template<typename MatrixType>
-typename MatrixType::RealScalar ColPivHouseholderQR<MatrixType>::absDeterminant() const
+typename MatrixType::RealScalar
+ColPivHouseholderQR<MatrixType>::absDeterminant() const
 {
-  using std::abs;
-  eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-  eigen_assert(m_qr.rows() == m_qr.cols() && "You can't take the determinant of a non-square matrix!");
-  return abs(m_qr.diagonal().prod());
+    using std::abs;
+    eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+    eigen_assert(m_qr.rows() == m_qr.cols() && "You can't take the determinant of a non-square matrix!");
+    return abs(m_qr.diagonal().prod());
 }
 
 template<typename MatrixType>
-typename MatrixType::RealScalar ColPivHouseholderQR<MatrixType>::logAbsDeterminant() const
+typename MatrixType::RealScalar
+ColPivHouseholderQR<MatrixType>::logAbsDeterminant() const
 {
-  eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-  eigen_assert(m_qr.rows() == m_qr.cols() && "You can't take the determinant of a non-square matrix!");
-  return m_qr.diagonal().cwiseAbs().array().log().sum();
+    eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+    eigen_assert(m_qr.rows() == m_qr.cols() && "You can't take the determinant of a non-square matrix!");
+    return m_qr.diagonal().cwiseAbs().array().log().sum();
 }
 
 /** Performs the QR factorization of the given matrix \a matrix. The result of
@@ -469,145 +516,174 @@ typename MatrixType::RealScalar ColPivHouseholderQR<MatrixType>::logAbsDetermina
   */
 template<typename MatrixType>
 template<typename InputType>
-ColPivHouseholderQR<MatrixType>& ColPivHouseholderQR<MatrixType>::compute(const EigenBase<InputType>& matrix)
+ColPivHouseholderQR<MatrixType>&
+ColPivHouseholderQR<MatrixType>::compute(const EigenBase<InputType>& matrix)
 {
-  m_qr = matrix.derived();
-  computeInPlace();
-  return *this;
+    m_qr = matrix.derived();
+    computeInPlace();
+    return *this;
 }
 
 template<typename MatrixType>
-void ColPivHouseholderQR<MatrixType>::computeInPlace()
+void
+ColPivHouseholderQR<MatrixType>::computeInPlace()
 {
-  check_template_parameters();
+    check_template_parameters();
 
-  // the column permutation is stored as int indices, so just to be sure:
-  eigen_assert(m_qr.cols()<=NumTraits<int>::highest());
+    // the column permutation is stored as int indices, so just to be sure:
+    eigen_assert(m_qr.cols()<=NumTraits<int>::highest());
 
-  using std::abs;
+    using std::abs;
 
-  Index rows = m_qr.rows();
-  Index cols = m_qr.cols();
-  Index size = m_qr.diagonalSize();
+    Index rows = m_qr.rows();
+    Index cols = m_qr.cols();
+    Index size = m_qr.diagonalSize();
 
-  m_hCoeffs.resize(size);
+    m_hCoeffs.resize(size);
 
-  m_temp.resize(cols);
+    m_temp.resize(cols);
 
-  m_colsTranspositions.resize(m_qr.cols());
-  Index number_of_transpositions = 0;
+    m_colsTranspositions.resize(m_qr.cols());
+    Index number_of_transpositions = 0;
 
-  m_colNormsUpdated.resize(cols);
-  m_colNormsDirect.resize(cols);
-  for (Index k = 0; k < cols; ++k) {
-    // colNormsDirect(k) caches the most recent directly computed norm of
-    // column k.
-    m_colNormsDirect.coeffRef(k) = m_qr.col(k).norm();
-    m_colNormsUpdated.coeffRef(k) = m_colNormsDirect.coeffRef(k);
-  }
+    m_colNormsUpdated.resize(cols);
+    m_colNormsDirect.resize(cols);
 
-  RealScalar threshold_helper =  numext::abs2<Scalar>(m_colNormsUpdated.maxCoeff() * NumTraits<Scalar>::epsilon()) / RealScalar(rows);
-  RealScalar norm_downdate_threshold = numext::sqrt(NumTraits<Scalar>::epsilon());
-
-  m_nonzero_pivots = size; // the generic case is that in which all pivots are nonzero (invertible case)
-  m_maxpivot = RealScalar(0);
-
-  for(Index k = 0; k < size; ++k)
-  {
-    // first, we look up in our table m_colNormsUpdated which column has the biggest norm
-    Index biggest_col_index;
-    RealScalar biggest_col_sq_norm = numext::abs2(m_colNormsUpdated.tail(cols-k).maxCoeff(&biggest_col_index));
-    biggest_col_index += k;
-
-    // Track the number of meaningful pivots but do not stop the decomposition to make
-    // sure that the initial matrix is properly reproduced. See bug 941.
-    if(m_nonzero_pivots==size && biggest_col_sq_norm < threshold_helper * RealScalar(rows-k))
-      m_nonzero_pivots = k;
-
-    // apply the transposition to the columns
-    m_colsTranspositions.coeffRef(k) = biggest_col_index;
-    if(k != biggest_col_index) {
-      m_qr.col(k).swap(m_qr.col(biggest_col_index));
-      std::swap(m_colNormsUpdated.coeffRef(k), m_colNormsUpdated.coeffRef(biggest_col_index));
-      std::swap(m_colNormsDirect.coeffRef(k), m_colNormsDirect.coeffRef(biggest_col_index));
-      ++number_of_transpositions;
+    for (Index k = 0; k < cols; ++k)
+    {
+        // colNormsDirect(k) caches the most recent directly computed norm of
+        // column k.
+        m_colNormsDirect.coeffRef(k) = m_qr.col(k).norm();
+        m_colNormsUpdated.coeffRef(k) = m_colNormsDirect.coeffRef(k);
     }
 
-    // generate the householder vector, store it below the diagonal
-    RealScalar beta;
-    m_qr.col(k).tail(rows-k).makeHouseholderInPlace(m_hCoeffs.coeffRef(k), beta);
+    RealScalar threshold_helper =  numext::abs2<Scalar>(m_colNormsUpdated.maxCoeff() * NumTraits<Scalar>::epsilon()) / RealScalar(rows);
+    RealScalar norm_downdate_threshold = numext::sqrt(NumTraits<Scalar>::epsilon());
 
-    // apply the householder transformation to the diagonal coefficient
-    m_qr.coeffRef(k,k) = beta;
+    m_nonzero_pivots = size; // the generic case is that in which all pivots are nonzero (invertible case)
+    m_maxpivot = RealScalar(0);
 
-    // remember the maximum absolute value of diagonal coefficients
-    if(abs(beta) > m_maxpivot) m_maxpivot = abs(beta);
+    for (Index k = 0; k < size; ++k)
+    {
+        // first, we look up in our table m_colNormsUpdated which column has the biggest norm
+        Index biggest_col_index;
+        RealScalar biggest_col_sq_norm = numext::abs2(m_colNormsUpdated.tail(cols-k).maxCoeff(&biggest_col_index));
+        biggest_col_index += k;
 
-    // apply the householder transformation
-    m_qr.bottomRightCorner(rows-k, cols-k-1)
+        // Track the number of meaningful pivots but do not stop the decomposition to make
+        // sure that the initial matrix is properly reproduced. See bug 941.
+        if (m_nonzero_pivots==size && biggest_col_sq_norm < threshold_helper * RealScalar(rows-k))
+        {
+            m_nonzero_pivots = k;
+        }
+
+        // apply the transposition to the columns
+        m_colsTranspositions.coeffRef(k) = biggest_col_index;
+
+        if (k != biggest_col_index)
+        {
+            m_qr.col(k).swap(m_qr.col(biggest_col_index));
+            std::swap(m_colNormsUpdated.coeffRef(k), m_colNormsUpdated.coeffRef(biggest_col_index));
+            std::swap(m_colNormsDirect.coeffRef(k), m_colNormsDirect.coeffRef(biggest_col_index));
+            ++number_of_transpositions;
+        }
+
+        // generate the householder vector, store it below the diagonal
+        RealScalar beta;
+        m_qr.col(k).tail(rows-k).makeHouseholderInPlace(m_hCoeffs.coeffRef(k), beta);
+
+        // apply the householder transformation to the diagonal coefficient
+        m_qr.coeffRef(k,k) = beta;
+
+        // remember the maximum absolute value of diagonal coefficients
+        if (abs(beta) > m_maxpivot)
+        {
+            m_maxpivot = abs(beta);
+        }
+
+        // apply the householder transformation
+        m_qr.bottomRightCorner(rows-k, cols-k-1)
         .applyHouseholderOnTheLeft(m_qr.col(k).tail(rows-k-1), m_hCoeffs.coeffRef(k), &m_temp.coeffRef(k+1));
 
-    // update our table of norms of the columns
-    for (Index j = k + 1; j < cols; ++j) {
-      // The following implements the stable norm downgrade step discussed in
-      // http://www.netlib.org/lapack/lawnspdf/lawn176.pdf
-      // and used in LAPACK routines xGEQPF and xGEQP3.
-      // See lines 278-297 in http://www.netlib.org/lapack/explore-html/dc/df4/sgeqpf_8f_source.html
-      if (m_colNormsUpdated.coeffRef(j) != 0) {
-        RealScalar temp = abs(m_qr.coeffRef(k, j)) / m_colNormsUpdated.coeffRef(j);
-        temp = (RealScalar(1) + temp) * (RealScalar(1) - temp);
-        temp = temp < 0 ? 0 : temp;
-        RealScalar temp2 = temp * numext::abs2<Scalar>(m_colNormsUpdated.coeffRef(j) /
-                                                       m_colNormsDirect.coeffRef(j));
-        if (temp2 <= norm_downdate_threshold) {
-          // The updated norm has become too inaccurate so re-compute the column
-          // norm directly.
-          m_colNormsDirect.coeffRef(j) = m_qr.col(j).tail(rows - k - 1).norm();
-          m_colNormsUpdated.coeffRef(j) = m_colNormsDirect.coeffRef(j);
-        } else {
-          m_colNormsUpdated.coeffRef(j) *= numext::sqrt(temp);
+        // update our table of norms of the columns
+        for (Index j = k + 1; j < cols; ++j)
+        {
+            // The following implements the stable norm downgrade step discussed in
+            // http://www.netlib.org/lapack/lawnspdf/lawn176.pdf
+            // and used in LAPACK routines xGEQPF and xGEQP3.
+            // See lines 278-297 in http://www.netlib.org/lapack/explore-html/dc/df4/sgeqpf_8f_source.html
+            if (m_colNormsUpdated.coeffRef(j) != 0)
+            {
+                RealScalar temp = abs(m_qr.coeffRef(k, j)) / m_colNormsUpdated.coeffRef(j);
+                temp = (RealScalar(1) + temp) * (RealScalar(1) - temp);
+                temp = temp < 0 ? 0 : temp;
+                RealScalar temp2 = temp * numext::abs2<Scalar>(m_colNormsUpdated.coeffRef(j) /
+                                   m_colNormsDirect.coeffRef(j));
+
+                if (temp2 <= norm_downdate_threshold)
+                {
+                    // The updated norm has become too inaccurate so re-compute the column
+                    // norm directly.
+                    m_colNormsDirect.coeffRef(j) = m_qr.col(j).tail(rows - k - 1).norm();
+                    m_colNormsUpdated.coeffRef(j) = m_colNormsDirect.coeffRef(j);
+                }
+
+                else
+                {
+                    m_colNormsUpdated.coeffRef(j) *= numext::sqrt(temp);
+                }
+            }
         }
-      }
     }
-  }
 
-  m_colsPermutation.setIdentity(PermIndexType(cols));
-  for(PermIndexType k = 0; k < size/*m_nonzero_pivots*/; ++k)
-    m_colsPermutation.applyTranspositionOnTheRight(k, PermIndexType(m_colsTranspositions.coeff(k)));
+    m_colsPermutation.setIdentity(PermIndexType(cols));
 
-  m_det_pq = (number_of_transpositions%2) ? -1 : 1;
-  m_isInitialized = true;
+    for (PermIndexType k = 0; k < size/*m_nonzero_pivots*/; ++k)
+    {
+        m_colsPermutation.applyTranspositionOnTheRight(k, PermIndexType(m_colsTranspositions.coeff(k)));
+    }
+
+    m_det_pq = (number_of_transpositions%2) ? -1 : 1;
+    m_isInitialized = true;
 }
 
 #ifndef EIGEN_PARSED_BY_DOXYGEN
 template<typename _MatrixType>
 template<typename RhsType, typename DstType>
-void ColPivHouseholderQR<_MatrixType>::_solve_impl(const RhsType &rhs, DstType &dst) const
+void
+ColPivHouseholderQR<_MatrixType>::_solve_impl(const RhsType &rhs, DstType &dst) const
 {
-  eigen_assert(rhs.rows() == rows());
+    eigen_assert(rhs.rows() == rows());
 
-  const Index nonzero_pivots = nonzeroPivots();
+    const Index nonzero_pivots = nonzeroPivots();
 
-  if(nonzero_pivots == 0)
-  {
-    dst.setZero();
-    return;
-  }
+    if (nonzero_pivots == 0)
+    {
+        dst.setZero();
+        return;
+    }
 
-  typename RhsType::PlainObject c(rhs);
+    typename RhsType::PlainObject c(rhs);
 
-  // Note that the matrix Q = H_0^* H_1^*... so its inverse is Q^* = (H_0 H_1 ...)^T
-  c.applyOnTheLeft(householderSequence(m_qr, m_hCoeffs)
-                    .setLength(nonzero_pivots)
-                    .transpose()
-    );
+    // Note that the matrix Q = H_0^* H_1^*... so its inverse is Q^* = (H_0 H_1 ...)^T
+    c.applyOnTheLeft(householderSequence(m_qr, m_hCoeffs)
+                     .setLength(nonzero_pivots)
+                     .transpose()
+                    );
 
-  m_qr.topLeftCorner(nonzero_pivots, nonzero_pivots)
-      .template triangularView<Upper>()
-      .solveInPlace(c.topRows(nonzero_pivots));
+    m_qr.topLeftCorner(nonzero_pivots, nonzero_pivots)
+    .template triangularView<Upper>()
+    .solveInPlace(c.topRows(nonzero_pivots));
 
-  for(Index i = 0; i < nonzero_pivots; ++i) dst.row(m_colsPermutation.indices().coeff(i)) = c.row(i);
-  for(Index i = nonzero_pivots; i < cols(); ++i) dst.row(m_colsPermutation.indices().coeff(i)).setZero();
+    for (Index i = 0; i < nonzero_pivots; ++i)
+    {
+        dst.row(m_colsPermutation.indices().coeff(i)) = c.row(i);
+    }
+
+    for (Index i = nonzero_pivots; i < cols(); ++i)
+    {
+        dst.row(m_colsPermutation.indices().coeff(i)).setZero();
+    }
 }
 #endif
 
@@ -616,12 +692,13 @@ namespace internal {
 template<typename DstXprType, typename MatrixType>
 struct Assignment<DstXprType, Inverse<ColPivHouseholderQR<MatrixType> >, internal::assign_op<typename DstXprType::Scalar,typename ColPivHouseholderQR<MatrixType>::Scalar>, Dense2Dense>
 {
-  typedef ColPivHouseholderQR<MatrixType> QrType;
-  typedef Inverse<QrType> SrcXprType;
-  static void run(DstXprType &dst, const SrcXprType &src, const internal::assign_op<typename DstXprType::Scalar,typename QrType::Scalar> &)
-  {
-    dst = src.nestedExpression().solve(MatrixType::Identity(src.rows(), src.cols()));
-  }
+    typedef ColPivHouseholderQR<MatrixType> QrType;
+    typedef Inverse<QrType> SrcXprType;
+    static void
+    run(DstXprType &dst, const SrcXprType &src, const internal::assign_op<typename DstXprType::Scalar,typename QrType::Scalar> &)
+    {
+        dst = src.nestedExpression().solve(MatrixType::Identity(src.rows(), src.cols()));
+    }
 };
 
 } // end namespace internal
@@ -631,10 +708,11 @@ struct Assignment<DstXprType, Inverse<ColPivHouseholderQR<MatrixType> >, interna
   * \code qr.householderQ().setLength(qr.nonzeroPivots()) \endcode*/
 template<typename MatrixType>
 typename ColPivHouseholderQR<MatrixType>::HouseholderSequenceType ColPivHouseholderQR<MatrixType>
-  ::householderQ() const
+::
+householderQ() const
 {
-  eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
-  return HouseholderSequenceType(m_qr, m_hCoeffs.conjugate());
+    eigen_assert(m_isInitialized && "ColPivHouseholderQR is not initialized.");
+    return HouseholderSequenceType(m_qr, m_hCoeffs.conjugate());
 }
 
 /** \return the column-pivoting Householder QR decomposition of \c *this.
@@ -645,7 +723,7 @@ template<typename Derived>
 const ColPivHouseholderQR<typename MatrixBase<Derived>::PlainObject>
 MatrixBase<Derived>::colPivHouseholderQr() const
 {
-  return ColPivHouseholderQR<PlainObject>(eval());
+    return ColPivHouseholderQR<PlainObject>(eval());
 }
 
 } // end namespace Eigen

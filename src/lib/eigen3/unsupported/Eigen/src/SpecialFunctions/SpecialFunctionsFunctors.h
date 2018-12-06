@@ -23,22 +23,28 @@ namespace internal {
   */
 template<typename Scalar> struct scalar_igamma_op : binary_op_base<Scalar,Scalar>
 {
-  EIGEN_EMPTY_STRUCT_CTOR(scalar_igamma_op)
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const Scalar operator() (const Scalar& a, const Scalar& x) const {
-    using numext::igamma; return igamma(a, x);
-  }
-  template<typename Packet>
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const Packet packetOp(const Packet& a, const Packet& x) const {
-    return internal::pigamma(a, x);
-  }
+    EIGEN_EMPTY_STRUCT_CTOR(scalar_igamma_op)
+    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const Scalar operator() (const Scalar& a, const Scalar& x) const
+    {
+        using numext::igamma;
+        return igamma(a, x);
+    }
+    template<typename Packet>
+    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const Packet
+    packetOp(const Packet& a, const Packet& x) const
+    {
+        return internal::pigamma(a, x);
+    }
 };
 template<typename Scalar>
-struct functor_traits<scalar_igamma_op<Scalar> > {
-  enum {
-    // Guesstimate
-    Cost = 20 * NumTraits<Scalar>::MulCost + 10 * NumTraits<Scalar>::AddCost,
-    PacketAccess = packet_traits<Scalar>::HasIGamma
-  };
+struct functor_traits<scalar_igamma_op<Scalar> >
+{
+    enum
+    {
+        // Guesstimate
+        Cost = 20 * NumTraits<Scalar>::MulCost + 10 * NumTraits<Scalar>::AddCost,
+        PacketAccess = packet_traits<Scalar>::HasIGamma
+    };
 };
 
 
@@ -49,23 +55,28 @@ struct functor_traits<scalar_igamma_op<Scalar> > {
   */
 template<typename Scalar> struct scalar_igammac_op : binary_op_base<Scalar,Scalar>
 {
-  EIGEN_EMPTY_STRUCT_CTOR(scalar_igammac_op)
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const Scalar operator() (const Scalar& a, const Scalar& x) const {
-    using numext::igammac; return igammac(a, x);
-  }
-  template<typename Packet>
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const Packet packetOp(const Packet& a, const Packet& x) const
-  {
-    return internal::pigammac(a, x);
-  }
+    EIGEN_EMPTY_STRUCT_CTOR(scalar_igammac_op)
+    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const Scalar operator() (const Scalar& a, const Scalar& x) const
+    {
+        using numext::igammac;
+        return igammac(a, x);
+    }
+    template<typename Packet>
+    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const Packet
+    packetOp(const Packet& a, const Packet& x) const
+    {
+        return internal::pigammac(a, x);
+    }
 };
 template<typename Scalar>
-struct functor_traits<scalar_igammac_op<Scalar> > {
-  enum {
-    // Guesstimate
-    Cost = 20 * NumTraits<Scalar>::MulCost + 10 * NumTraits<Scalar>::AddCost,
-    PacketAccess = packet_traits<Scalar>::HasIGammac
-  };
+struct functor_traits<scalar_igammac_op<Scalar> >
+{
+    enum
+    {
+        // Guesstimate
+        Cost = 20 * NumTraits<Scalar>::MulCost + 10 * NumTraits<Scalar>::AddCost,
+        PacketAccess = packet_traits<Scalar>::HasIGammac
+    };
 };
 
 
@@ -73,24 +84,30 @@ struct functor_traits<scalar_igammac_op<Scalar> > {
   * \brief Template functor to compute the incomplete beta integral betainc(a, b, x)
   *
   */
-template<typename Scalar> struct scalar_betainc_op {
-  EIGEN_EMPTY_STRUCT_CTOR(scalar_betainc_op)
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const Scalar operator() (const Scalar& x, const Scalar& a, const Scalar& b) const {
-    using numext::betainc; return betainc(x, a, b);
-  }
-  template<typename Packet>
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const Packet packetOp(const Packet& x, const Packet& a, const Packet& b) const
-  {
-    return internal::pbetainc(x, a, b);
-  }
+template<typename Scalar> struct scalar_betainc_op
+{
+    EIGEN_EMPTY_STRUCT_CTOR(scalar_betainc_op)
+    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const Scalar operator() (const Scalar& x, const Scalar& a, const Scalar& b) const
+    {
+        using numext::betainc;
+        return betainc(x, a, b);
+    }
+    template<typename Packet>
+    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const Packet
+    packetOp(const Packet& x, const Packet& a, const Packet& b) const
+    {
+        return internal::pbetainc(x, a, b);
+    }
 };
 template<typename Scalar>
-struct functor_traits<scalar_betainc_op<Scalar> > {
-  enum {
-    // Guesstimate
-    Cost = 400 * NumTraits<Scalar>::MulCost + 400 * NumTraits<Scalar>::AddCost,
-    PacketAccess = packet_traits<Scalar>::HasBetaInc
-  };
+struct functor_traits<scalar_betainc_op<Scalar> >
+{
+    enum
+    {
+        // Guesstimate
+        Cost = 400 * NumTraits<Scalar>::MulCost + 400 * NumTraits<Scalar>::AddCost,
+        PacketAccess = packet_traits<Scalar>::HasBetaInc
+    };
 };
 
 
@@ -99,62 +116,86 @@ struct functor_traits<scalar_betainc_op<Scalar> > {
  * value of Gamma of a scalar
  * \sa class CwiseUnaryOp, Cwise::lgamma()
  */
-template<typename Scalar> struct scalar_lgamma_op {
-  EIGEN_EMPTY_STRUCT_CTOR(scalar_lgamma_op)
-  EIGEN_DEVICE_FUNC inline const Scalar operator() (const Scalar& a) const {
-    using numext::lgamma; return lgamma(a);
-  }
-  typedef typename packet_traits<Scalar>::type Packet;
-  EIGEN_DEVICE_FUNC inline Packet packetOp(const Packet& a) const { return internal::plgamma(a); }
+template<typename Scalar> struct scalar_lgamma_op
+{
+    EIGEN_EMPTY_STRUCT_CTOR(scalar_lgamma_op)
+    EIGEN_DEVICE_FUNC inline const Scalar operator() (const Scalar& a) const
+    {
+        using numext::lgamma;
+        return lgamma(a);
+    }
+    typedef typename packet_traits<Scalar>::type Packet;
+    EIGEN_DEVICE_FUNC inline Packet
+    packetOp(const Packet& a) const
+    {
+        return internal::plgamma(a);
+    }
 };
 template<typename Scalar>
 struct functor_traits<scalar_lgamma_op<Scalar> >
 {
-  enum {
-    // Guesstimate
-    Cost = 10 * NumTraits<Scalar>::MulCost + 5 * NumTraits<Scalar>::AddCost,
-    PacketAccess = packet_traits<Scalar>::HasLGamma
-  };
+    enum
+    {
+        // Guesstimate
+        Cost = 10 * NumTraits<Scalar>::MulCost + 5 * NumTraits<Scalar>::AddCost,
+        PacketAccess = packet_traits<Scalar>::HasLGamma
+    };
 };
 
 /** \internal
  * \brief Template functor to compute psi, the derivative of lgamma of a scalar.
  * \sa class CwiseUnaryOp, Cwise::digamma()
  */
-template<typename Scalar> struct scalar_digamma_op {
-  EIGEN_EMPTY_STRUCT_CTOR(scalar_digamma_op)
-  EIGEN_DEVICE_FUNC inline const Scalar operator() (const Scalar& a) const {
-    using numext::digamma; return digamma(a);
-  }
-  typedef typename packet_traits<Scalar>::type Packet;
-  EIGEN_DEVICE_FUNC inline Packet packetOp(const Packet& a) const { return internal::pdigamma(a); }
+template<typename Scalar> struct scalar_digamma_op
+{
+    EIGEN_EMPTY_STRUCT_CTOR(scalar_digamma_op)
+    EIGEN_DEVICE_FUNC inline const Scalar operator() (const Scalar& a) const
+    {
+        using numext::digamma;
+        return digamma(a);
+    }
+    typedef typename packet_traits<Scalar>::type Packet;
+    EIGEN_DEVICE_FUNC inline Packet
+    packetOp(const Packet& a) const
+    {
+        return internal::pdigamma(a);
+    }
 };
 template<typename Scalar>
 struct functor_traits<scalar_digamma_op<Scalar> >
 {
-  enum {
-    // Guesstimate
-    Cost = 10 * NumTraits<Scalar>::MulCost + 5 * NumTraits<Scalar>::AddCost,
-    PacketAccess = packet_traits<Scalar>::HasDiGamma
-  };
+    enum
+    {
+        // Guesstimate
+        Cost = 10 * NumTraits<Scalar>::MulCost + 5 * NumTraits<Scalar>::AddCost,
+        PacketAccess = packet_traits<Scalar>::HasDiGamma
+    };
 };
 
 /** \internal
  * \brief Template functor to compute the Riemann Zeta function of two arguments.
  * \sa class CwiseUnaryOp, Cwise::zeta()
  */
-template<typename Scalar> struct scalar_zeta_op {
+template<typename Scalar> struct scalar_zeta_op
+{
     EIGEN_EMPTY_STRUCT_CTOR(scalar_zeta_op)
-    EIGEN_DEVICE_FUNC inline const Scalar operator() (const Scalar& x, const Scalar& q) const {
-        using numext::zeta; return zeta(x, q);
+    EIGEN_DEVICE_FUNC inline const Scalar operator() (const Scalar& x, const Scalar& q) const
+    {
+        using numext::zeta;
+        return zeta(x, q);
     }
     typedef typename packet_traits<Scalar>::type Packet;
-    EIGEN_DEVICE_FUNC inline Packet packetOp(const Packet& x, const Packet& q) const { return internal::pzeta(x, q); }
+    EIGEN_DEVICE_FUNC inline Packet
+    packetOp(const Packet& x, const Packet& q) const
+    {
+        return internal::pzeta(x, q);
+    }
 };
 template<typename Scalar>
 struct functor_traits<scalar_zeta_op<Scalar> >
 {
-    enum {
+    enum
+    {
         // Guesstimate
         Cost = 10 * NumTraits<Scalar>::MulCost + 5 * NumTraits<Scalar>::AddCost,
         PacketAccess = packet_traits<Scalar>::HasZeta
@@ -165,18 +206,26 @@ struct functor_traits<scalar_zeta_op<Scalar> >
  * \brief Template functor to compute the polygamma function.
  * \sa class CwiseUnaryOp, Cwise::polygamma()
  */
-template<typename Scalar> struct scalar_polygamma_op {
+template<typename Scalar> struct scalar_polygamma_op
+{
     EIGEN_EMPTY_STRUCT_CTOR(scalar_polygamma_op)
-    EIGEN_DEVICE_FUNC inline const Scalar operator() (const Scalar& n, const Scalar& x) const {
-        using numext::polygamma; return polygamma(n, x);
+    EIGEN_DEVICE_FUNC inline const Scalar operator() (const Scalar& n, const Scalar& x) const
+    {
+        using numext::polygamma;
+        return polygamma(n, x);
     }
     typedef typename packet_traits<Scalar>::type Packet;
-    EIGEN_DEVICE_FUNC inline Packet packetOp(const Packet& n, const Packet& x) const { return internal::ppolygamma(n, x); }
+    EIGEN_DEVICE_FUNC inline Packet
+    packetOp(const Packet& n, const Packet& x) const
+    {
+        return internal::ppolygamma(n, x);
+    }
 };
 template<typename Scalar>
 struct functor_traits<scalar_polygamma_op<Scalar> >
 {
-    enum {
+    enum
+    {
         // Guesstimate
         Cost = 10 * NumTraits<Scalar>::MulCost + 5 * NumTraits<Scalar>::AddCost,
         PacketAccess = packet_traits<Scalar>::HasPolygamma
@@ -188,22 +237,30 @@ struct functor_traits<scalar_polygamma_op<Scalar> >
  * scalar
  * \sa class CwiseUnaryOp, Cwise::erf()
  */
-template<typename Scalar> struct scalar_erf_op {
-  EIGEN_EMPTY_STRUCT_CTOR(scalar_erf_op)
-  EIGEN_DEVICE_FUNC inline const Scalar operator() (const Scalar& a) const {
-    using numext::erf; return erf(a);
-  }
-  typedef typename packet_traits<Scalar>::type Packet;
-  EIGEN_DEVICE_FUNC inline Packet packetOp(const Packet& a) const { return internal::perf(a); }
+template<typename Scalar> struct scalar_erf_op
+{
+    EIGEN_EMPTY_STRUCT_CTOR(scalar_erf_op)
+    EIGEN_DEVICE_FUNC inline const Scalar operator() (const Scalar& a) const
+    {
+        using numext::erf;
+        return erf(a);
+    }
+    typedef typename packet_traits<Scalar>::type Packet;
+    EIGEN_DEVICE_FUNC inline Packet
+    packetOp(const Packet& a) const
+    {
+        return internal::perf(a);
+    }
 };
 template<typename Scalar>
 struct functor_traits<scalar_erf_op<Scalar> >
 {
-  enum {
-    // Guesstimate
-    Cost = 10 * NumTraits<Scalar>::MulCost + 5 * NumTraits<Scalar>::AddCost,
-    PacketAccess = packet_traits<Scalar>::HasErf
-  };
+    enum
+    {
+        // Guesstimate
+        Cost = 10 * NumTraits<Scalar>::MulCost + 5 * NumTraits<Scalar>::AddCost,
+        PacketAccess = packet_traits<Scalar>::HasErf
+    };
 };
 
 /** \internal
@@ -211,22 +268,30 @@ struct functor_traits<scalar_erf_op<Scalar> >
  * of a scalar
  * \sa class CwiseUnaryOp, Cwise::erfc()
  */
-template<typename Scalar> struct scalar_erfc_op {
-  EIGEN_EMPTY_STRUCT_CTOR(scalar_erfc_op)
-  EIGEN_DEVICE_FUNC inline const Scalar operator() (const Scalar& a) const {
-    using numext::erfc; return erfc(a);
-  }
-  typedef typename packet_traits<Scalar>::type Packet;
-  EIGEN_DEVICE_FUNC inline Packet packetOp(const Packet& a) const { return internal::perfc(a); }
+template<typename Scalar> struct scalar_erfc_op
+{
+    EIGEN_EMPTY_STRUCT_CTOR(scalar_erfc_op)
+    EIGEN_DEVICE_FUNC inline const Scalar operator() (const Scalar& a) const
+    {
+        using numext::erfc;
+        return erfc(a);
+    }
+    typedef typename packet_traits<Scalar>::type Packet;
+    EIGEN_DEVICE_FUNC inline Packet
+    packetOp(const Packet& a) const
+    {
+        return internal::perfc(a);
+    }
 };
 template<typename Scalar>
 struct functor_traits<scalar_erfc_op<Scalar> >
 {
-  enum {
-    // Guesstimate
-    Cost = 10 * NumTraits<Scalar>::MulCost + 5 * NumTraits<Scalar>::AddCost,
-    PacketAccess = packet_traits<Scalar>::HasErfc
-  };
+    enum
+    {
+        // Guesstimate
+        Cost = 10 * NumTraits<Scalar>::MulCost + 5 * NumTraits<Scalar>::AddCost,
+        PacketAccess = packet_traits<Scalar>::HasErfc
+    };
 };
 
 } // end namespace internal

@@ -18,8 +18,9 @@ namespace Eigen {
 // T* m_data on the host. It is always called on the device.
 // Specialisation of MakePointer class for creating the sycl buffer with
 // map_allocator.
-template<typename T> struct MakePointer {
-  typedef T* Type;
+template<typename T> struct MakePointer
+{
+    typedef T* Type;
 };
 
 template<typename PlainObjectType, int Options_ = Unaligned, template <class> class MakePointer_ = MakePointer> class TensorMap;
@@ -73,13 +74,15 @@ struct ThreadPoolDevice;
 struct GpuDevice;
 struct SyclDevice;
 
-enum FFTResultType {
-  RealPart = 0,
-  ImagPart = 1,
-  BothParts = 2
+enum FFTResultType
+{
+    RealPart = 0,
+    ImagPart = 1,
+    BothParts = 2
 };
 
-enum FFTDirection {
+enum FFTDirection
+{
     FFT_FORWARD = 0,
     FFT_REVERSE = 1
 };
@@ -88,14 +91,16 @@ enum FFTDirection {
 namespace internal {
 
 template <typename Device, typename Expression>
-struct IsVectorizable {
-  static const bool value = TensorEvaluator<Expression, Device>::PacketAccess;
+struct IsVectorizable
+{
+    static const bool value = TensorEvaluator<Expression, Device>::PacketAccess;
 };
 
 template <typename Expression>
-struct IsVectorizable<GpuDevice, Expression> {
-  static const bool value = TensorEvaluator<Expression, GpuDevice>::PacketAccess &&
-                            TensorEvaluator<Expression, GpuDevice>::IsAligned;
+struct IsVectorizable<GpuDevice, Expression>
+{
+    static const bool value = TensorEvaluator<Expression, GpuDevice>::PacketAccess &&
+                              TensorEvaluator<Expression, GpuDevice>::IsAligned;
 };
 
 template <typename Expression, typename Device,

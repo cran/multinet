@@ -58,49 +58,70 @@
 /*----------------------------------------------------------------------
   Type Definitions
 ----------------------------------------------------------------------*/
-typedef struct {                /* --- table reader --- */
-  FILE   *file;                 /* file to read from */
-  CCHAR  *name;                 /* name of the input file */
-  int    last;                  /* last character read */
-  int    delim;                 /* last delimiter read */
-  size_t len;                   /* number of characters read */
-  size_t rec;                   /* number of current record */
-  size_t pos;                   /* number of current field */
-  char   *next;                 /* next character to read */
-  char   *end;                  /* current end of the buffer */
-  int    flags[256];            /* character flags */
-  char   field[TRD_MAXLEN+4];   /* current field */
-  char   buf  [TRD_BUFSIZE];    /* read buffer */
+typedef struct                  /* --- table reader --- */
+{
+    FILE   *file;                 /* file to read from */
+    CCHAR  *name;                 /* name of the input file */
+    int    last;                  /* last character read */
+    int    delim;                 /* last delimiter read */
+    size_t len;                   /* number of characters read */
+    size_t rec;                   /* number of current record */
+    size_t pos;                   /* number of current field */
+    char   *next;                 /* next character to read */
+    char   *end;                  /* current end of the buffer */
+    int    flags[256];            /* character flags */
+    char   field[TRD_MAXLEN+4];   /* current field */
+    char   buf  [TRD_BUFSIZE];    /* read buffer */
 } TABREAD;                      /* (table reader) */
 
 /*----------------------------------------------------------------------
   Functions
 ----------------------------------------------------------------------*/
-extern TABREAD* trd_create (void);
-extern int      trd_delete (TABREAD *trd, int close);
-extern int      trd_open   (TABREAD *trd, FILE *file, CCHAR *name);
-extern int      trd_close  (TABREAD *trd);
-extern FILE*    trd_file   (TABREAD *trd);
-extern CCHAR*   trd_name   (TABREAD *trd);
+extern TABREAD*
+trd_create (void);
+extern int
+trd_delete (TABREAD *trd, int close);
+extern int
+trd_open   (TABREAD *trd, FILE *file, CCHAR *name);
+extern int
+trd_close  (TABREAD *trd);
+extern FILE*
+trd_file   (TABREAD *trd);
+extern CCHAR*
+trd_name   (TABREAD *trd);
 
-extern void     trd_chars  (TABREAD *trd, int type, const char *chars);
-extern void     trd_allchs (TABREAD *trd,        const char *recseps,
-                            const char *fldseps, const char *blanks,
-                            const char *nullchs, const char *comment);
-extern void     trd_copy   (TABREAD *dst, const TABREAD *src);
-extern int      trd_istype (const TABREAD *trd, int c, int type);
-extern int      trd_type   (const TABREAD *trd, int c);
+extern void
+trd_chars  (TABREAD *trd, int type, const char *chars);
+extern void
+trd_allchs (TABREAD *trd,        const char *recseps,
+            const char *fldseps, const char *blanks,
+            const char *nullchs, const char *comment);
+extern void
+trd_copy   (TABREAD *dst, const TABREAD *src);
+extern int
+trd_istype (const TABREAD *trd, int c, int type);
+extern int
+trd_type   (const TABREAD *trd, int c);
 
-extern int      trd_getc   (TABREAD *trd);
-extern int      trd_ungetc (TABREAD *trd, int c);
+extern int
+trd_getc   (TABREAD *trd);
+extern int
+trd_ungetc (TABREAD *trd, int c);
 
-extern int      trd_read   (TABREAD *trd);
-extern char*    trd_field  (TABREAD *trd);
-extern size_t   trd_len    (TABREAD *trd);
-extern int      trd_last   (TABREAD *trd);
-extern int      trd_delim  (TABREAD *trd);
-extern size_t   trd_rec    (TABREAD *trd);
-extern size_t   trd_pos    (TABREAD *trd);
+extern int
+trd_read   (TABREAD *trd);
+extern char*
+trd_field  (TABREAD *trd);
+extern size_t
+trd_len    (TABREAD *trd);
+extern int
+trd_last   (TABREAD *trd);
+extern int
+trd_delim  (TABREAD *trd);
+extern size_t
+trd_rec    (TABREAD *trd);
+extern size_t
+trd_pos    (TABREAD *trd);
 
 /*----------------------------------------------------------------------
   Preprocessor Definitions

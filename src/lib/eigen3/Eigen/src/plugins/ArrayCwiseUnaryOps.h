@@ -1,5 +1,3 @@
-
-
 typedef CwiseUnaryOp<internal::scalar_abs_op<Scalar>, const Derived> AbsReturnType;
 typedef CwiseUnaryOp<internal::scalar_arg_op<Scalar>, const Derived> ArgReturnType;
 typedef CwiseUnaryOp<internal::scalar_abs2_op<Scalar>, const Derived> Abs2ReturnType;
@@ -42,7 +40,7 @@ EIGEN_DEVICE_FUNC
 EIGEN_STRONG_INLINE const AbsReturnType
 abs() const
 {
-  return AbsReturnType(derived());
+    return AbsReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise phase angle of \c *this
@@ -56,7 +54,7 @@ EIGEN_DEVICE_FUNC
 EIGEN_STRONG_INLINE const ArgReturnType
 arg() const
 {
-  return ArgReturnType(derived());
+    return ArgReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise squared absolute value of \c *this
@@ -70,7 +68,7 @@ EIGEN_DEVICE_FUNC
 EIGEN_STRONG_INLINE const Abs2ReturnType
 abs2() const
 {
-  return Abs2ReturnType(derived());
+    return Abs2ReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise exponential of *this.
@@ -87,7 +85,7 @@ EIGEN_DEVICE_FUNC
 inline const ExpReturnType
 exp() const
 {
-  return ExpReturnType(derived());
+    return ExpReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise logarithm of *this.
@@ -104,7 +102,7 @@ EIGEN_DEVICE_FUNC
 inline const LogReturnType
 log() const
 {
-  return LogReturnType(derived());
+    return LogReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise logarithm of 1 plus \c *this.
@@ -118,7 +116,7 @@ EIGEN_DEVICE_FUNC
 inline const Log1pReturnType
 log1p() const
 {
-  return Log1pReturnType(derived());
+    return Log1pReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise base-10 logarithm of *this.
@@ -134,7 +132,7 @@ EIGEN_DEVICE_FUNC
 inline const Log10ReturnType
 log10() const
 {
-  return Log10ReturnType(derived());
+    return Log10ReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise square root of *this.
@@ -151,7 +149,7 @@ EIGEN_DEVICE_FUNC
 inline const SqrtReturnType
 sqrt() const
 {
-  return SqrtReturnType(derived());
+    return SqrtReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise inverse square root of *this.
@@ -167,7 +165,7 @@ EIGEN_DEVICE_FUNC
 inline const RsqrtReturnType
 rsqrt() const
 {
-  return RsqrtReturnType(derived());
+    return RsqrtReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise signum of *this.
@@ -183,7 +181,7 @@ EIGEN_DEVICE_FUNC
 inline const SignReturnType
 sign() const
 {
-  return SignReturnType(derived());
+    return SignReturnType(derived());
 }
 
 
@@ -201,7 +199,7 @@ EIGEN_DEVICE_FUNC
 inline const CosReturnType
 cos() const
 {
-  return CosReturnType(derived());
+    return CosReturnType(derived());
 }
 
 
@@ -219,7 +217,7 @@ EIGEN_DEVICE_FUNC
 inline const SinReturnType
 sin() const
 {
-  return SinReturnType(derived());
+    return SinReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise tan of *this.
@@ -233,7 +231,7 @@ EIGEN_DEVICE_FUNC
 inline const TanReturnType
 tan() const
 {
-  return TanReturnType(derived());
+    return TanReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise arc tan of *this.
@@ -247,7 +245,7 @@ EIGEN_DEVICE_FUNC
 inline const AtanReturnType
 atan() const
 {
-  return AtanReturnType(derived());
+    return AtanReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise arc cosine of *this.
@@ -261,7 +259,7 @@ EIGEN_DEVICE_FUNC
 inline const AcosReturnType
 acos() const
 {
-  return AcosReturnType(derived());
+    return AcosReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise arc sine of *this.
@@ -275,7 +273,7 @@ EIGEN_DEVICE_FUNC
 inline const AsinReturnType
 asin() const
 {
-  return AsinReturnType(derived());
+    return AsinReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise hyperbolic tan of *this.
@@ -289,7 +287,7 @@ EIGEN_DEVICE_FUNC
 inline const TanhReturnType
 tanh() const
 {
-  return TanhReturnType(derived());
+    return TanhReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise hyperbolic sin of *this.
@@ -303,7 +301,7 @@ EIGEN_DEVICE_FUNC
 inline const SinhReturnType
 sinh() const
 {
-  return SinhReturnType(derived());
+    return SinhReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise hyperbolic cos of *this.
@@ -317,7 +315,7 @@ EIGEN_DEVICE_FUNC
 inline const CoshReturnType
 cosh() const
 {
-  return CoshReturnType(derived());
+    return CoshReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise inverse of *this.
@@ -331,7 +329,7 @@ EIGEN_DEVICE_FUNC
 inline const InverseReturnType
 inverse() const
 {
-  return InverseReturnType(derived());
+    return InverseReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise square of *this.
@@ -345,7 +343,7 @@ EIGEN_DEVICE_FUNC
 inline const SquareReturnType
 square() const
 {
-  return SquareReturnType(derived());
+    return SquareReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise cube of *this.
@@ -359,7 +357,7 @@ EIGEN_DEVICE_FUNC
 inline const CubeReturnType
 cube() const
 {
-  return CubeReturnType(derived());
+    return CubeReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise round of *this.
@@ -373,7 +371,7 @@ EIGEN_DEVICE_FUNC
 inline const RoundReturnType
 round() const
 {
-  return RoundReturnType(derived());
+    return RoundReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise floor of *this.
@@ -387,7 +385,7 @@ EIGEN_DEVICE_FUNC
 inline const FloorReturnType
 floor() const
 {
-  return FloorReturnType(derived());
+    return FloorReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise ceil of *this.
@@ -401,7 +399,7 @@ EIGEN_DEVICE_FUNC
 inline const CeilReturnType
 ceil() const
 {
-  return CeilReturnType(derived());
+    return CeilReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise isnan of *this.
@@ -415,7 +413,7 @@ EIGEN_DEVICE_FUNC
 inline const IsNaNReturnType
 isNaN() const
 {
-  return IsNaNReturnType(derived());
+    return IsNaNReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise isinf of *this.
@@ -429,7 +427,7 @@ EIGEN_DEVICE_FUNC
 inline const IsInfReturnType
 isInf() const
 {
-  return IsInfReturnType(derived());
+    return IsInfReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise isfinite of *this.
@@ -443,7 +441,7 @@ EIGEN_DEVICE_FUNC
 inline const IsFiniteReturnType
 isFinite() const
 {
-  return IsFiniteReturnType(derived());
+    return IsFiniteReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise ! operator of *this
@@ -459,9 +457,9 @@ EIGEN_DEVICE_FUNC
 inline const BooleanNotReturnType
 operator!() const
 {
-  EIGEN_STATIC_ASSERT((internal::is_same<bool,Scalar>::value),
-                      THIS_METHOD_IS_ONLY_FOR_EXPRESSIONS_OF_BOOL);
-  return BooleanNotReturnType(derived());
+    EIGEN_STATIC_ASSERT((internal::is_same<bool,Scalar>::value),
+                        THIS_METHOD_IS_ONLY_FOR_EXPRESSIONS_OF_BOOL);
+    return BooleanNotReturnType(derived());
 }
 
 
@@ -489,7 +487,7 @@ EIGEN_DEVICE_FUNC
 inline const LgammaReturnType
 lgamma() const
 {
-  return LgammaReturnType(derived());
+    return LgammaReturnType(derived());
 }
 
 /** \returns an expression of the coefficient-wise digamma (psi, derivative of lgamma).
@@ -506,7 +504,7 @@ EIGEN_DEVICE_FUNC
 inline const DigammaReturnType
 digamma() const
 {
-  return DigammaReturnType(derived());
+    return DigammaReturnType(derived());
 }
 
 /** \cpp11 \returns an expression of the coefficient-wise Gauss error
@@ -527,7 +525,7 @@ EIGEN_DEVICE_FUNC
 inline const ErfReturnType
 erf() const
 {
-  return ErfReturnType(derived());
+    return ErfReturnType(derived());
 }
 
 /** \cpp11 \returns an expression of the coefficient-wise Complementary error
@@ -548,5 +546,5 @@ EIGEN_DEVICE_FUNC
 inline const ErfcReturnType
 erfc() const
 {
-  return ErfcReturnType(derived());
+    return ErfcReturnType(derived());
 }

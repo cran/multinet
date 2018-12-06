@@ -33,7 +33,7 @@
 #ifndef EIGEN_SELFADJOINT_MATRIX_VECTOR_BLAS_H
 #define EIGEN_SELFADJOINT_MATRIX_VECTOR_BLAS_H
 
-namespace Eigen { 
+namespace Eigen {
 
 namespace internal {
 
@@ -45,7 +45,7 @@ namespace internal {
 
 template<typename Scalar, typename Index, int StorageOrder, int UpLo, bool ConjugateLhs, bool ConjugateRhs>
 struct selfadjoint_matrix_vector_product_symv :
-  selfadjoint_matrix_vector_product<Scalar,Index,StorageOrder,UpLo,ConjugateLhs,ConjugateRhs,BuiltIn> {};
+    selfadjoint_matrix_vector_product<Scalar,Index,StorageOrder,UpLo,ConjugateLhs,ConjugateRhs,BuiltIn> {};
 
 #define EIGEN_BLAS_SYMV_SPECIALIZE(Scalar) \
 template<typename Index, int StorageOrder, int UpLo, bool ConjugateLhs, bool ConjugateRhs> \

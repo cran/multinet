@@ -10,7 +10,7 @@
 #ifndef EIGEN_SKYLINE_STORAGE_H
 #define EIGEN_SKYLINE_STORAGE_H
 
-namespace Eigen { 
+namespace Eigen {
 
 /** Stores a skyline set of values in three structures :
  * The diagonal elements
@@ -19,41 +19,46 @@ namespace Eigen {
  *
  */
 template<typename Scalar>
-class SkylineStorage {
+class SkylineStorage
+{
     typedef typename NumTraits<Scalar>::Real RealScalar;
     typedef SparseIndex Index;
-public:
+  public:
 
     SkylineStorage()
-    : m_diag(0),
-    m_lower(0),
-    m_upper(0),
-    m_lowerProfile(0),
-    m_upperProfile(0),
-    m_diagSize(0),
-    m_upperSize(0),
-    m_lowerSize(0),
-    m_upperProfileSize(0),
-    m_lowerProfileSize(0),
-    m_allocatedSize(0) {
+        : m_diag(0),
+          m_lower(0),
+          m_upper(0),
+          m_lowerProfile(0),
+          m_upperProfile(0),
+          m_diagSize(0),
+          m_upperSize(0),
+          m_lowerSize(0),
+          m_upperProfileSize(0),
+          m_lowerProfileSize(0),
+          m_allocatedSize(0)
+    {
     }
 
     SkylineStorage(const SkylineStorage& other)
-    : m_diag(0),
-    m_lower(0),
-    m_upper(0),
-    m_lowerProfile(0),
-    m_upperProfile(0),
-    m_diagSize(0),
-    m_upperSize(0),
-    m_lowerSize(0),
-    m_upperProfileSize(0),
-    m_lowerProfileSize(0),
-    m_allocatedSize(0) {
+        : m_diag(0),
+          m_lower(0),
+          m_upper(0),
+          m_lowerProfile(0),
+          m_upperProfile(0),
+          m_diagSize(0),
+          m_upperSize(0),
+          m_lowerSize(0),
+          m_upperProfileSize(0),
+          m_lowerProfileSize(0),
+          m_allocatedSize(0)
+    {
         *this = other;
     }
 
-    SkylineStorage & operator=(const SkylineStorage& other) {
+    SkylineStorage &
+    operator=(const SkylineStorage& other)
+    {
         resize(other.diagSize(), other.m_upperProfileSize, other.m_lowerProfileSize, other.upperSize(), other.lowerSize());
         memcpy(m_diag, other.m_diag, m_diagSize * sizeof (Scalar));
         memcpy(m_upper, other.m_upper, other.upperSize() * sizeof (Scalar));
@@ -63,7 +68,9 @@ public:
         return *this;
     }
 
-    void swap(SkylineStorage& other) {
+    void
+    swap(SkylineStorage& other)
+    {
         std::swap(m_diag, other.m_diag);
         std::swap(m_upper, other.m_upper);
         std::swap(m_lower, other.m_lower);
@@ -75,29 +82,48 @@ public:
         std::swap(m_allocatedSize, other.m_allocatedSize);
     }
 
-    ~SkylineStorage() {
+    ~SkylineStorage()
+    {
         delete[] m_diag;
         delete[] m_upper;
+
         if (m_upper != m_lower)
+        {
             delete[] m_lower;
+        }
+
         delete[] m_upperProfile;
         delete[] m_lowerProfile;
     }
 
-    void reserve(Index size, Index upperProfileSize, Index lowerProfileSize, Index upperSize, Index lowerSize) {
+    void
+    reserve(Index size, Index upperProfileSize, Index lowerProfileSize, Index upperSize, Index lowerSize)
+    {
         Index newAllocatedSize = size + upperSize + lowerSize;
+
         if (newAllocatedSize > m_allocatedSize)
+        {
             reallocate(size, upperProfileSize, lowerProfileSize, upperSize, lowerSize);
+        }
     }
 
-    void squeeze() {
+    void
+    squeeze()
+    {
         if (m_allocatedSize > m_diagSize + m_upperSize + m_lowerSize)
+        {
             reallocate(m_diagSize, m_upperProfileSize, m_lowerProfileSize, m_upperSize, m_lowerSize);
+        }
     }
 
-    void resize(Index diagSize, Index upperProfileSize, Index lowerProfileSize, Index upperSize, Index lowerSize, float reserveSizeFactor = 0) {
+    void
+    resize(Index diagSize, Index upperProfileSize, Index lowerProfileSize, Index upperSize, Index lowerSize, float reserveSizeFactor = 0)
+    {
         if (m_allocatedSize < diagSize + upperSize + lowerSize)
+        {
             reallocate(diagSize, upperProfileSize, lowerProfileSize, upperSize + Index(reserveSizeFactor * upperSize), lowerSize + Index(reserveSizeFactor * lowerSize));
+        }
+
         m_diagSize = diagSize;
         m_upperSize = upperSize;
         m_lowerSize = lowerSize;
@@ -105,75 +131,111 @@ public:
         m_lowerProfileSize = lowerProfileSize;
     }
 
-    inline Index diagSize() const {
+    inline Index
+    diagSize() const
+    {
         return m_diagSize;
     }
 
-    inline Index upperSize() const {
+    inline Index
+    upperSize() const
+    {
         return m_upperSize;
     }
 
-    inline Index lowerSize() const {
+    inline Index
+    lowerSize() const
+    {
         return m_lowerSize;
     }
 
-    inline Index upperProfileSize() const {
+    inline Index
+    upperProfileSize() const
+    {
         return m_upperProfileSize;
     }
 
-    inline Index lowerProfileSize() const {
+    inline Index
+    lowerProfileSize() const
+    {
         return m_lowerProfileSize;
     }
 
-    inline Index allocatedSize() const {
+    inline Index
+    allocatedSize() const
+    {
         return m_allocatedSize;
     }
 
-    inline void clear() {
+    inline void
+    clear()
+    {
         m_diagSize = 0;
     }
 
-    inline Scalar& diag(Index i) {
+    inline Scalar&
+    diag(Index i)
+    {
         return m_diag[i];
     }
 
-    inline const Scalar& diag(Index i) const {
+    inline const Scalar&
+    diag(Index i) const
+    {
         return m_diag[i];
     }
 
-    inline Scalar& upper(Index i) {
+    inline Scalar&
+    upper(Index i)
+    {
         return m_upper[i];
     }
 
-    inline const Scalar& upper(Index i) const {
+    inline const Scalar&
+    upper(Index i) const
+    {
         return m_upper[i];
     }
 
-    inline Scalar& lower(Index i) {
+    inline Scalar&
+    lower(Index i)
+    {
         return m_lower[i];
     }
 
-    inline const Scalar& lower(Index i) const {
+    inline const Scalar&
+    lower(Index i) const
+    {
         return m_lower[i];
     }
 
-    inline Index& upperProfile(Index i) {
+    inline Index&
+    upperProfile(Index i)
+    {
         return m_upperProfile[i];
     }
 
-    inline const Index& upperProfile(Index i) const {
+    inline const Index&
+    upperProfile(Index i) const
+    {
         return m_upperProfile[i];
     }
 
-    inline Index& lowerProfile(Index i) {
+    inline Index&
+    lowerProfile(Index i)
+    {
         return m_lowerProfile[i];
     }
 
-    inline const Index& lowerProfile(Index i) const {
+    inline const Index&
+    lowerProfile(Index i) const
+    {
         return m_lowerProfile[i];
     }
 
-    static SkylineStorage Map(Index* upperProfile, Index* lowerProfile, Scalar* diag, Scalar* upper, Scalar* lower, Index size, Index upperSize, Index lowerSize) {
+    static SkylineStorage
+    Map(Index* upperProfile, Index* lowerProfile, Scalar* diag, Scalar* upper, Scalar* lower, Index size, Index upperSize, Index lowerSize)
+    {
         SkylineStorage res;
         res.m_upperProfile = upperProfile;
         res.m_lowerProfile = lowerProfile;
@@ -186,7 +248,9 @@ public:
         return res;
     }
 
-    inline void reset() {
+    inline void
+    reset()
+    {
         memset(m_diag, 0, m_diagSize * sizeof (Scalar));
         memset(m_upper, 0, m_upperSize * sizeof (Scalar));
         memset(m_lower, 0, m_lowerSize * sizeof (Scalar));
@@ -194,13 +258,17 @@ public:
         memset(m_lowerProfile, 0, m_diagSize * sizeof (Index));
     }
 
-    void prune(Scalar reference, RealScalar epsilon = dummy_precision<RealScalar>()) {
+    void
+    prune(Scalar reference, RealScalar epsilon = dummy_precision<RealScalar>())
+    {
         //TODO
     }
 
-protected:
+  protected:
 
-    inline void reallocate(Index diagSize, Index upperProfileSize, Index lowerProfileSize, Index upperSize, Index lowerSize) {
+    inline void
+    reallocate(Index diagSize, Index upperProfileSize, Index lowerProfileSize, Index upperSize, Index lowerSize)
+    {
 
         Scalar* diag = new Scalar[diagSize];
         Scalar* upper = new Scalar[upperSize];
@@ -239,7 +307,7 @@ protected:
         m_lowerSize = lowerSize;
     }
 
-public:
+  public:
     Scalar* m_diag;
     Scalar* m_upper;
     Scalar* m_lower;

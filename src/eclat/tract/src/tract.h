@@ -477,329 +477,477 @@
 /*----------------------------------------------------------------------
   Type Definitions
 ----------------------------------------------------------------------*/
-typedef struct {                /* --- item data --- */
-  ITEM     id;                  /* item identifier */
-  int      app;                 /* appearance indicator */
-  double   pen;                 /* insertion penalty */
-  SUPP     frq;                 /* standard frequency (trans. weight) */
-  SUPP     xfq;                 /* extended frequency (trans. sizes) */
-  TID      idx;                 /* index of counted last transaction */
+typedef struct                  /* --- item data --- */
+{
+    ITEM     id;                  /* item identifier */
+    int      app;                 /* appearance indicator */
+    double   pen;                 /* insertion penalty */
+    SUPP     frq;                 /* standard frequency (trans. weight) */
+    SUPP     xfq;                 /* extended frequency (trans. sizes) */
+    TID      idx;                 /* index of counted last transaction */
 } ITEMDATA;                     /* (item data) */
 
-typedef struct {                /* --- item base --- */
-  IDMAP    *idmap;              /* key/name to identifier map */
-  SUPP     wgt;                 /* total weight of transactions */
-  SUPP     max;                 /* maximum support of an item */
-  int      mode;                /* mode (IB_WEIGHTS, IB_OBJNAMES) */
-  int      app;                 /* default appearance indicator */
-  double   pen;                 /* default insertion penalty */
-  TID      idx;                 /* index of current transaction */
-  ITEM     size;                /* size of the transaction buffer */
-  void     *tract;              /* buffer for a transaction */
-  int      err;                 /* error code (file reading) */
-  #ifdef TA_READ                /* if transaction reading capability */
-  TABREAD  *trd;                /* table/transaction reader */
-  #else                         /* if no transaction reading */
-  void     *trd;                /* placeholder (for fixed size) */
-  #endif
+typedef struct                  /* --- item base --- */
+{
+    IDMAP    *idmap;              /* key/name to identifier map */
+    SUPP     wgt;                 /* total weight of transactions */
+    SUPP     max;                 /* maximum support of an item */
+    int      mode;                /* mode (IB_WEIGHTS, IB_OBJNAMES) */
+    int      app;                 /* default appearance indicator */
+    double   pen;                 /* default insertion penalty */
+    TID      idx;                 /* index of current transaction */
+    ITEM     size;                /* size of the transaction buffer */
+    void     *tract;              /* buffer for a transaction */
+    int      err;                 /* error code (file reading) */
+#ifdef TA_READ                /* if transaction reading capability */
+    TABREAD  *trd;                /* table/transaction reader */
+#else                         /* if no transaction reading */
+    void     *trd;                /* placeholder (for fixed size) */
+#endif
 } ITEMBASE;                     /* (item base) */
 
-typedef struct {                /* --- transaction --- */
-  SUPP     wgt;                 /* weight (number of occurrences) */
-  ITEM     size;                /* size   (number of items) */
-  TID      mark;                /* mark   (e.g. bit coded items) */
-  ITEM     items[1];            /* items in the transaction */
+typedef struct                  /* --- transaction --- */
+{
+    SUPP     wgt;                 /* weight (number of occurrences) */
+    ITEM     size;                /* size   (number of items) */
+    TID      mark;                /* mark   (e.g. bit coded items) */
+    ITEM     items[1];            /* items in the transaction */
 } TRACT;                        /* (transaction) */
 
-typedef struct {                /* --- weighted item instance --- */
-  ITEM     item;                /* item identifier */
-  float    wgt;                 /* item weight (transaction-specific) */
+typedef struct                  /* --- weighted item instance --- */
+{
+    ITEM     item;                /* item identifier */
+    float    wgt;                 /* item weight (transaction-specific) */
 } WITEM;                        /* (weighted item instance) */
 
-typedef struct {                /* --- trans. with weighted items --- */
-  SUPP     wgt;                 /* weight (number of occurrences) */
-  ITEM     size;                /* size   (number of items) */
-  int      mark;                /* mark   (e.g. bit coded items) */
-  WITEM    items[1];            /* items in the transaction */
+typedef struct                  /* --- trans. with weighted items --- */
+{
+    SUPP     wgt;                 /* weight (number of occurrences) */
+    ITEM     size;                /* size   (number of items) */
+    int      mark;                /* mark   (e.g. bit coded items) */
+    WITEM    items[1];            /* items in the transaction */
 } WTRACT;                       /* (transaction with weighted items) */
 
-typedef struct {                /* --- transaction bag/multiset --- */
-  ITEMBASE *base;               /* underlying item base */
-  int      mode;                /* mode (IB_OBJNAMES, IB_WEIGHT) */
-  ITEM     max;                 /* number of items in largest trans. */
-  SUPP     wgt;                 /* total weight of transactions */
-  size_t   extent;              /* total number of item instances */
-  TID      size;                /* size of the transaction array */
-  TID      cnt;                 /* number of transactions */
-  void     **tracts;            /* array  of transactions */
-  TID      *icnts;              /* number of transactions per item */
-  SUPP     *ifrqs;              /* frequency of the items (weight) */
-  void     *buf;                /* buffer for surrogate generation */
+typedef struct                  /* --- transaction bag/multiset --- */
+{
+    ITEMBASE *base;               /* underlying item base */
+    int      mode;                /* mode (IB_OBJNAMES, IB_WEIGHT) */
+    ITEM     max;                 /* number of items in largest trans. */
+    SUPP     wgt;                 /* total weight of transactions */
+    size_t   extent;              /* total number of item instances */
+    TID      size;                /* size of the transaction array */
+    TID      cnt;                 /* number of transactions */
+    void     **tracts;            /* array  of transactions */
+    TID      *icnts;              /* number of transactions per item */
+    SUPP     *ifrqs;              /* frequency of the items (weight) */
+    void     *buf;                /* buffer for surrogate generation */
 } TABAG;                        /* (transaction bag/multiset) */
 
 #ifdef TATREEFN
 #ifdef TATCOMPACT
 
-typedef struct {                /* --- transaction tree node --- */
-  ITEM     item;                /* next item in transaction */
-  ITEM     max;                 /* number of items in largest trans. */
-  SUPP     wgt;                 /* weight of trans. with this prefix */
-  void     *data;               /* data depending on node type */
+typedef struct                  /* --- transaction tree node --- */
+{
+    ITEM     item;                /* next item in transaction */
+    ITEM     max;                 /* number of items in largest trans. */
+    SUPP     wgt;                 /* weight of trans. with this prefix */
+    void     *data;               /* data depending on node type */
 } TANODE;                       /* (transaction tree node) */
 
-typedef struct {                /* --- transaction tree --- */
-  TABAG    *bag;                /* underlying transaction bag */
-  TANODE   root;                /* root of the transaction tree */
-  ITEM     suffix[1];           /* empty transaction suffix */
+typedef struct                  /* --- transaction tree --- */
+{
+    TABAG    *bag;                /* underlying transaction bag */
+    TANODE   root;                /* root of the transaction tree */
+    ITEM     suffix[1];           /* empty transaction suffix */
 } TATREE;                       /* (transaction tree) */
 
 #else
 
-typedef struct {                /* --- transaction tree node --- */
-  SUPP     wgt;                 /* weight (number of transactions) */
-  ITEM     max;                 /* number of items in largest trans. */
-  ITEM     size;                /* node size (number of children) */
-  ITEM     items[1];            /* next items in rep. transactions */
+typedef struct                  /* --- transaction tree node --- */
+{
+    SUPP     wgt;                 /* weight (number of transactions) */
+    ITEM     max;                 /* number of items in largest trans. */
+    ITEM     size;                /* node size (number of children) */
+    ITEM     items[1];            /* next items in rep. transactions */
 } TANODE;                       /* (transaction tree node) */
 
-typedef struct {                /* --- transaction tree --- */
-  TABAG    *bag;                /* underlying transaction bag */
-  TANODE   *root;               /* root of the transaction tree */
-  TANODE   empty;               /* empty transaction node */
+typedef struct                  /* --- transaction tree --- */
+{
+    TABAG    *bag;                /* underlying transaction bag */
+    TANODE   *root;               /* root of the transaction tree */
+    TANODE   empty;               /* empty transaction node */
 } TATREE;                       /* (transaction tree) */
 
 #endif
 #endif
 
 #ifdef TA_SURR
-typedef TABAG* TBGSURRFN (TABAG *src, RNG *rng, TABAG *dst);
+typedef TABAG*
+TBGSURRFN (TABAG *src, RNG *rng, TABAG *dst);
 #endif
 /*----------------------------------------------------------------------
   Item Base Functions
 ----------------------------------------------------------------------*/
-extern ITEMBASE*    ib_create   (int mode, ITEM size, ...);
-extern void         ib_delete   (ITEMBASE *base);
+extern ITEMBASE*
+ib_create   (int mode, ITEM size, ...);
+extern void
+ib_delete   (ITEMBASE *base);
 
-extern int          ib_mode     (ITEMBASE *base);
-extern ITEM         ib_cnt      (ITEMBASE *base);
-extern ITEM         ib_add      (ITEMBASE *base, const void *name);
-extern ITEM         ib_item     (ITEMBASE *base, const void *name);
-extern const char*  ib_name     (ITEMBASE *base, ITEM item);
-extern const void*  ib_key      (ITEMBASE *base, ITEM item);
-extern const void*  ib_obj      (ITEMBASE *base, ITEM item);
-extern const char*  ib_xname    (ITEMBASE *base, ITEM item);
-extern void         ib_clear    (ITEMBASE *base);
-extern ITEM         ib_add2ta   (ITEMBASE *base, const void *name);
-extern void         ib_finta    (ITEMBASE *base, SUPP wgt);
+extern int
+ib_mode     (ITEMBASE *base);
+extern ITEM
+ib_cnt      (ITEMBASE *base);
+extern ITEM
+ib_add      (ITEMBASE *base, const void *name);
+extern ITEM
+ib_item     (ITEMBASE *base, const void *name);
+extern const char*
+ib_name     (ITEMBASE *base, ITEM item);
+extern const void*
+ib_key      (ITEMBASE *base, ITEM item);
+extern const void*
+ib_obj      (ITEMBASE *base, ITEM item);
+extern const char*
+ib_xname    (ITEMBASE *base, ITEM item);
+extern void
+ib_clear    (ITEMBASE *base);
+extern ITEM
+ib_add2ta   (ITEMBASE *base, const void *name);
+extern void
+ib_finta    (ITEMBASE *base, SUPP wgt);
 
-extern SUPP         ib_getwgt   (ITEMBASE *base);
-extern SUPP         ib_setwgt   (ITEMBASE *base, SUPP wgt);
-extern SUPP         ib_incwgt   (ITEMBASE *base, SUPP wgt);
+extern SUPP
+ib_getwgt   (ITEMBASE *base);
+extern SUPP
+ib_setwgt   (ITEMBASE *base, SUPP wgt);
+extern SUPP
+ib_incwgt   (ITEMBASE *base, SUPP wgt);
 
-extern int          ib_getapp   (ITEMBASE *base, ITEM item);
-extern int          ib_setapp   (ITEMBASE *base, ITEM item, int app);
-extern SUPP         ib_getfrq   (ITEMBASE *base, ITEM item);
-extern SUPP         ib_setfrq   (ITEMBASE *base, ITEM item, SUPP frq);
-extern SUPP         ib_incfrq   (ITEMBASE *base, ITEM item, SUPP frq);
-extern SUPP         ib_getxfq   (ITEMBASE *base, ITEM item);
-extern SUPP         ib_setxfq   (ITEMBASE *base, ITEM item, SUPP xfq);
-extern SUPP         ib_incxfq   (ITEMBASE *base, ITEM item, SUPP xfq);
-extern double       ib_getpen   (ITEMBASE *base, ITEM item);
-extern double       ib_setpen   (ITEMBASE *base, ITEM item, double pen);
-extern SUPP         ib_maxfrq   (ITEMBASE *base);
-extern ITEM         ib_frqcnt   (ITEMBASE *base, SUPP smin);
+extern int
+ib_getapp   (ITEMBASE *base, ITEM item);
+extern int
+ib_setapp   (ITEMBASE *base, ITEM item, int app);
+extern SUPP
+ib_getfrq   (ITEMBASE *base, ITEM item);
+extern SUPP
+ib_setfrq   (ITEMBASE *base, ITEM item, SUPP frq);
+extern SUPP
+ib_incfrq   (ITEMBASE *base, ITEM item, SUPP frq);
+extern SUPP
+ib_getxfq   (ITEMBASE *base, ITEM item);
+extern SUPP
+ib_setxfq   (ITEMBASE *base, ITEM item, SUPP xfq);
+extern SUPP
+ib_incxfq   (ITEMBASE *base, ITEM item, SUPP xfq);
+extern double
+ib_getpen   (ITEMBASE *base, ITEM item);
+extern double
+ib_setpen   (ITEMBASE *base, ITEM item, double pen);
+extern SUPP
+ib_maxfrq   (ITEMBASE *base);
+extern ITEM
+ib_frqcnt   (ITEMBASE *base, SUPP smin);
 
 #ifdef TA_READ
-extern int          ib_readsel  (ITEMBASE *base, TABREAD *trd);
-extern int          ib_readapp  (ITEMBASE *base, TABREAD *trd);
-extern int          ib_readpen  (ITEMBASE *base, TABREAD *trd);
-extern int          ib_read     (ITEMBASE *base, TABREAD *trd,int mode);
-extern const char*  ib_errmsg   (ITEMBASE *base, char *buf,size_t size);
+extern int
+ib_readsel  (ITEMBASE *base, TABREAD *trd);
+extern int
+ib_readapp  (ITEMBASE *base, TABREAD *trd);
+extern int
+ib_readpen  (ITEMBASE *base, TABREAD *trd);
+extern int
+ib_read     (ITEMBASE *base, TABREAD *trd,int mode);
+extern const char*
+ib_errmsg   (ITEMBASE *base, char *buf,size_t size);
 #endif
 #ifdef TA_WRITE
-extern int          ib_write    (ITEMBASE *base, TABWRITE *twr,
-                                 const char *wgtfmt, ...);
+extern int
+ib_write    (ITEMBASE *base, TABWRITE *twr,
+             const char *wgtfmt, ...);
 #endif
 
-extern ITEM         ib_recode   (ITEMBASE *base, SUPP min, SUPP max,
-                                 ITEM cnt, int dir, ITEM *map);
-extern void         ib_trunc    (ITEMBASE *base, ITEM n);
+extern ITEM
+ib_recode   (ITEMBASE *base, SUPP min, SUPP max,
+             ITEM cnt, int dir, ITEM *map);
+extern void
+ib_trunc    (ITEMBASE *base, ITEM n);
 
-extern TRACT*       ib_tract    (ITEMBASE *base);
-extern WTRACT*      ib_wtract   (ITEMBASE *base);
+extern TRACT*
+ib_tract    (ITEMBASE *base);
+extern WTRACT*
+ib_wtract   (ITEMBASE *base);
 #ifndef NDEBUG
-extern void         ib_show     (ITEMBASE *base);
+extern void
+ib_show     (ITEMBASE *base);
 #endif
 
 /*----------------------------------------------------------------------
   Transaction Functions
 ----------------------------------------------------------------------*/
-extern TRACT*       ta_create   (const ITEM *items, ITEM n, SUPP wgt);
-extern void         ta_delete   (TRACT *t);
-extern TRACT*       ta_clone    (const TRACT *t);
-extern TRACT*       ta_copy     (TRACT *dst, const TRACT *src);
+extern TRACT*
+ta_create   (const ITEM *items, ITEM n, SUPP wgt);
+extern void
+ta_delete   (TRACT *t);
+extern TRACT*
+ta_clone    (const TRACT *t);
+extern TRACT*
+ta_copy     (TRACT *dst, const TRACT *src);
 
-extern const ITEM*  ta_items    (const TRACT *t);
-extern ITEM         ta_size     (const TRACT *t);
-extern SUPP         ta_wgt      (const TRACT *t);
-extern int          ta_setmark  (TRACT *t, int mark);
-extern int          ta_getmark  (const TRACT *t);
-extern int          ta_bitmark  (TRACT *t);
+extern const ITEM*
+ta_items    (const TRACT *t);
+extern ITEM
+ta_size     (const TRACT *t);
+extern SUPP
+ta_wgt      (const TRACT *t);
+extern int
+ta_setmark  (TRACT *t, int mark);
+extern int
+ta_getmark  (const TRACT *t);
+extern int
+ta_bitmark  (TRACT *t);
 
-extern void         ta_sort     (TRACT *t, int dir);
-extern void         ta_reverse  (TRACT *t);
-extern ITEM         ta_unique   (TRACT *t);
-extern ITEM         ta_pack     (TRACT *t, int n);
-extern ITEM         ta_unpack   (TRACT *t, int dir);
+extern void
+ta_sort     (TRACT *t, int dir);
+extern void
+ta_reverse  (TRACT *t);
+extern ITEM
+ta_unique   (TRACT *t);
+extern ITEM
+ta_pack     (TRACT *t, int n);
+extern ITEM
+ta_unpack   (TRACT *t, int dir);
 
-extern int          ta_equal    (const TRACT *t1, const TRACT *t2);
-extern int          ta_cmp      (const void *p1,
-                                 const void *p2, void *data);
-extern int          ta_cmpep    (const void *p1,
-                                 const void *p2, void *data);
-extern int          ta_cmpoff   (const void *p1,
-                                 const void *p2, void *data);
-extern int          ta_cmplim   (const void *p1,
-                                 const void *p2, void *data);
-extern int          ta_cmpsfx   (const void *p1,
-                                 const void *p2, void *data);
-extern int          ta_cmpx     (const TRACT *t,
-                                 const ITEM *items, ITEM n);
-extern int          ta_cmpsz    (const void *p1,
-                                 const void *p2, void *data);
-extern ITEM         ta_subset   (const TRACT *t1,
-                                 const TRACT *t2, ITEM off);
-extern ITEM         ta_subwog   (const TRACT *t1,
-                                 const TRACT *t2, ITEM off);
+extern int
+ta_equal    (const TRACT *t1, const TRACT *t2);
+extern int
+ta_cmp      (const void *p1,
+             const void *p2, void *data);
+extern int
+ta_cmpep    (const void *p1,
+             const void *p2, void *data);
+extern int
+ta_cmpoff   (const void *p1,
+             const void *p2, void *data);
+extern int
+ta_cmplim   (const void *p1,
+             const void *p2, void *data);
+extern int
+ta_cmpsfx   (const void *p1,
+             const void *p2, void *data);
+extern int
+ta_cmpx     (const TRACT *t,
+             const ITEM *items, ITEM n);
+extern int
+ta_cmpsz    (const void *p1,
+             const void *p2, void *data);
+extern ITEM
+ta_subset   (const TRACT *t1,
+             const TRACT *t2, ITEM off);
+extern ITEM
+ta_subwog   (const TRACT *t1,
+             const TRACT *t2, ITEM off);
 #ifdef TA_WRITE
-extern int          ta_write    (const TRACT *t, const ITEMBASE *base,
-                                 TABWRITE *twr, const char *wgtfmt);
+extern int
+ta_write    (const TRACT *t, const ITEMBASE *base,
+             TABWRITE *twr, const char *wgtfmt);
 #endif
 #ifndef NDEBUG
-extern void         ta_show     (TRACT *t, ITEMBASE *base);
+extern void
+ta_show     (TRACT *t, ITEMBASE *base);
 #endif
 
 /*----------------------------------------------------------------------
   Weighted Item Instance Functions
 ----------------------------------------------------------------------*/
-extern int          wi_cmp      (const WITEM *a, const WITEM *b);
-extern int          wi_cmpw     (const WITEM *a, const WITEM *b);
-extern void         wi_sort     (WITEM *wia, ITEM n, int dir);
-extern void         wi_reverse  (WITEM *wia, ITEM n);
-extern ITEM         wi_unique   (WITEM *wia, ITEM n);
+extern int
+wi_cmp      (const WITEM *a, const WITEM *b);
+extern int
+wi_cmpw     (const WITEM *a, const WITEM *b);
+extern void
+wi_sort     (WITEM *wia, ITEM n, int dir);
+extern void
+wi_reverse  (WITEM *wia, ITEM n);
+extern ITEM
+wi_unique   (WITEM *wia, ITEM n);
 
 /*----------------------------------------------------------------------
   Extended Transaction Functions
 ----------------------------------------------------------------------*/
-extern WTRACT*      wta_create  (ITEM size, SUPP wgt);
-extern void         wta_delete  (WTRACT *t);
-extern WTRACT*      wta_clone   (const WTRACT *t);
-extern WTRACT*      wta_copy    (WTRACT *dst, const WTRACT *src);
+extern WTRACT*
+wta_create  (ITEM size, SUPP wgt);
+extern void
+wta_delete  (WTRACT *t);
+extern WTRACT*
+wta_clone   (const WTRACT *t);
+extern WTRACT*
+wta_copy    (WTRACT *dst, const WTRACT *src);
 
-extern void         wta_add     (WTRACT *t, ITEM item, float wgt);
-extern const WITEM* wta_items   (const WTRACT *t);
-extern ITEM         wta_size    (const WTRACT *t);
-extern SUPP         wta_wgt     (const WTRACT *t);
+extern void
+wta_add     (WTRACT *t, ITEM item, float wgt);
+extern const WITEM*
+wta_items   (const WTRACT *t);
+extern ITEM
+wta_size    (const WTRACT *t);
+extern SUPP
+wta_wgt     (const WTRACT *t);
 
-extern void         wta_sort    (WTRACT *t, int dir);
-extern void         wta_reverse (WTRACT *t);
-extern ITEM         wta_unique  (WTRACT *t);
+extern void
+wta_sort    (WTRACT *t, int dir);
+extern void
+wta_reverse (WTRACT *t);
+extern ITEM
+wta_unique  (WTRACT *t);
 
-extern int          wta_cmp     (const void *p1,
-                                 const void *p2, void *data);
-extern int          wta_cmpsz   (const void *p1,
-                                 const void *p2, void *data);
-extern ITEM         wta_subset  (const WTRACT *t1,
-                                 const WTRACT *t2, ITEM off);
-extern ITEM         wta_subwog  (const WTRACT *t1,
-                                 const WTRACT *t2, ITEM off);
+extern int
+wta_cmp     (const void *p1,
+             const void *p2, void *data);
+extern int
+wta_cmpsz   (const void *p1,
+             const void *p2, void *data);
+extern ITEM
+wta_subset  (const WTRACT *t1,
+             const WTRACT *t2, ITEM off);
+extern ITEM
+wta_subwog  (const WTRACT *t1,
+             const WTRACT *t2, ITEM off);
 #ifdef TA_WRITE
-extern int          wta_write   (const WTRACT *t, const ITEMBASE *base,
-                                 TABWRITE *twr, const char *wgtfmt,
-                                 const char *iwfmt);
+extern int
+wta_write   (const WTRACT *t, const ITEMBASE *base,
+             TABWRITE *twr, const char *wgtfmt,
+             const char *iwfmt);
 #endif
 #ifndef NDEBUG
-extern void         wta_show    (WTRACT *t, ITEMBASE *base);
+extern void
+wta_show    (WTRACT *t, ITEMBASE *base);
 #endif
 
 /*----------------------------------------------------------------------
   Transaction Bag/Multiset Functions
 ----------------------------------------------------------------------*/
-extern TABAG*       tbg_create  (ITEMBASE *base);
-extern void         tbg_delete  (TABAG *bag, int delib);
-extern ITEMBASE*    tbg_base    (TABAG *bag);
-extern TABAG*       tbg_clone   (TABAG *bag);
-extern TABAG*       tbg_copy    (TABAG *dst, TABAG *src);
+extern TABAG*
+tbg_create  (ITEMBASE *base);
+extern void
+tbg_delete  (TABAG *bag, int delib);
+extern ITEMBASE*
+tbg_base    (TABAG *bag);
+extern TABAG*
+tbg_clone   (TABAG *bag);
+extern TABAG*
+tbg_copy    (TABAG *dst, TABAG *src);
 
-extern int          tbg_mode    (const TABAG *bag);
-extern ITEM         tbg_itemcnt (const TABAG *bag);
-extern TID          tbg_cnt     (const TABAG *bag);
-extern SUPP         tbg_wgt     (const TABAG *bag);
-extern ITEM         tbg_max     (const TABAG *bag);
-extern size_t       tbg_extent  (const TABAG *bag);
-extern const TID*   tbg_icnts   (TABAG *bag, int recnt);
-extern const SUPP*  tbg_ifrqs   (TABAG *bag, int recnt);
+extern int
+tbg_mode    (const TABAG *bag);
+extern ITEM
+tbg_itemcnt (const TABAG *bag);
+extern TID
+tbg_cnt     (const TABAG *bag);
+extern SUPP
+tbg_wgt     (const TABAG *bag);
+extern ITEM
+tbg_max     (const TABAG *bag);
+extern size_t
+tbg_extent  (const TABAG *bag);
+extern const TID*
+tbg_icnts   (TABAG *bag, int recnt);
+extern const SUPP*
+tbg_ifrqs   (TABAG *bag, int recnt);
 
-extern int          tbg_add     (TABAG *bag,  TRACT *t);
-extern int          tbg_addw    (TABAG *bag, WTRACT *t);
-extern int          tbg_addib   (TABAG *bag);
-extern TRACT*       tbg_tract   (TABAG *bag, TID index);
-extern WTRACT*      tbg_wtract  (TABAG *bag, TID index);
+extern int
+tbg_add     (TABAG *bag,  TRACT *t);
+extern int
+tbg_addw    (TABAG *bag, WTRACT *t);
+extern int
+tbg_addib   (TABAG *bag);
+extern TRACT*
+tbg_tract   (TABAG *bag, TID index);
+extern WTRACT*
+tbg_wtract  (TABAG *bag, TID index);
 #ifdef TA_READ
-extern int          tbg_read    (TABAG *bag, TABREAD *trd, int mode);
+extern int
+tbg_read    (TABAG *bag, TABREAD *trd, int mode);
 #endif
-extern const char*  tbg_errmsg  (TABAG *bag, char *buf, size_t size);
+extern const char*
+tbg_errmsg  (TABAG *bag, char *buf, size_t size);
 #ifdef TA_WRITE
-extern int          tbg_write   (TABAG *bag, TABWRITE *twr,
-                                 const char *wgtfmt, ...);
+extern int
+tbg_write   (TABAG *bag, TABWRITE *twr,
+             const char *wgtfmt, ...);
 #endif
 
-extern int          tbg_istab   (TABAG *bag);
-extern ITEM         tbg_recode  (TABAG *bag, SUPP min, SUPP max,
-                                 ITEM cnt, int dir);
-extern void         tbg_filter  (TABAG *bag, ITEM min,
-                                 const int *marks, double wgt);
-extern void         tbg_trim    (TABAG *bag, ITEM min,
-                                 const int *marks, double wgt);
-extern void         tbg_itsort  (TABAG *bag, int dir, int heap);
-extern void         tbg_mirror  (TABAG *bag);
-extern void         tbg_sort    (TABAG *bag, int dir, int heap);
-extern void         tbg_sortsz  (TABAG *bag, int dir, int heap);
-extern void         tbg_reverse (TABAG *bag);
-extern TID          tbg_reduce  (TABAG *bag, int keep0);
-extern void         tbg_setmark (TABAG *bag, int mark);
-extern void         tbg_bitmark (TABAG *bag);
-extern void         tbg_pack    (TABAG *bag, int n);
-extern void         tbg_unpack  (TABAG *bag, int dir);
-extern int          tbg_packcnt (TABAG *bag);
-extern SUPP         tbg_occur   (TABAG *bag, const ITEM *items, ITEM n);
-extern int          tbg_ipwgt   (TABAG *bag, int mode);
+extern int
+tbg_istab   (TABAG *bag);
+extern ITEM
+tbg_recode  (TABAG *bag, SUPP min, SUPP max,
+             ITEM cnt, int dir);
+extern void
+tbg_filter  (TABAG *bag, ITEM min,
+             const int *marks, double wgt);
+extern void
+tbg_trim    (TABAG *bag, ITEM min,
+             const int *marks, double wgt);
+extern void
+tbg_itsort  (TABAG *bag, int dir, int heap);
+extern void
+tbg_mirror  (TABAG *bag);
+extern void
+tbg_sort    (TABAG *bag, int dir, int heap);
+extern void
+tbg_sortsz  (TABAG *bag, int dir, int heap);
+extern void
+tbg_reverse (TABAG *bag);
+extern TID
+tbg_reduce  (TABAG *bag, int keep0);
+extern void
+tbg_setmark (TABAG *bag, int mark);
+extern void
+tbg_bitmark (TABAG *bag);
+extern void
+tbg_pack    (TABAG *bag, int n);
+extern void
+tbg_unpack  (TABAG *bag, int dir);
+extern int
+tbg_packcnt (TABAG *bag);
+extern SUPP
+tbg_occur   (TABAG *bag, const ITEM *items, ITEM n);
+extern int
+tbg_ipwgt   (TABAG *bag, int mode);
 
 #ifndef NDEBUG
-extern void         tbg_show    (TABAG *bag);
+extern void
+tbg_show    (TABAG *bag);
 #endif
 
 /*----------------------------------------------------------------------
   Surrogate Generation Functions
 ----------------------------------------------------------------------*/
 #ifdef TA_SURR
-extern TABAG*       tbg_ident  (TABAG *src, RNG *rng, TABAG *dst);
-extern TABAG*       tbg_random (TABAG *src, RNG *rng, TABAG *dst);
-extern TABAG*       tbg_swap   (TABAG *src, RNG *rng, TABAG *dst);
-extern TABAG*       tbg_shuffle(TABAG *src, RNG *rng, TABAG *dst);
+extern TABAG*
+tbg_ident  (TABAG *src, RNG *rng, TABAG *dst);
+extern TABAG*
+tbg_random (TABAG *src, RNG *rng, TABAG *dst);
+extern TABAG*
+tbg_swap   (TABAG *src, RNG *rng, TABAG *dst);
+extern TABAG*
+tbg_shuffle(TABAG *src, RNG *rng, TABAG *dst);
 #endif
 /*----------------------------------------------------------------------
   Transaction Array Functions
 ----------------------------------------------------------------------*/
-extern void         taa_collate (TRACT **taa, TID n, ITEM k);
-extern void         taa_uncoll  (TRACT **taa, TID n);
-extern TID          taa_tabsize (TID n);
-extern size_t       taa_dstsize (TID n, size_t x);
-extern TID          taa_reduce  (TRACT **taa, TID n, ITEM end,
-                                 const ITEM *map, void *buf,void **dst);
+extern void
+taa_collate (TRACT **taa, TID n, ITEM k);
+extern void
+taa_uncoll  (TRACT **taa, TID n);
+extern TID
+taa_tabsize (TID n);
+extern size_t
+taa_dstsize (TID n, size_t x);
+extern TID
+taa_reduce  (TRACT **taa, TID n, ITEM end,
+             const ITEM *map, void *buf,void **dst);
 
 #ifndef NDEBUG
-extern void         taa_show    (TRACT **taa, TID n, ITEMBASE *base);
+extern void
+taa_show    (TRACT **taa, TID n, ITEMBASE *base);
 #endif
 
 /*----------------------------------------------------------------------
@@ -807,19 +955,31 @@ extern void         taa_show    (TRACT **taa, TID n, ITEMBASE *base);
 ----------------------------------------------------------------------*/
 #ifdef TATREEFN
 #ifdef TATCOMPACT
-extern ITEM         tan_item    (const TANODE *node);
-extern SUPP         tan_wgt     (const TANODE *node);
-extern ITEM         tan_max     (const TANODE *node);
-extern TANODE*      tan_sibling (const TANODE *node);
-extern TANODE*      tan_children(const TANODE *node);
-extern const ITEM*  tan_suffix  (const TANODE *node);
+extern ITEM
+tan_item    (const TANODE *node);
+extern SUPP
+tan_wgt     (const TANODE *node);
+extern ITEM
+tan_max     (const TANODE *node);
+extern TANODE*
+tan_sibling (const TANODE *node);
+extern TANODE*
+tan_children(const TANODE *node);
+extern const ITEM*
+tan_suffix  (const TANODE *node);
 #else
-extern SUPP         tan_wgt     (const TANODE *node);
-extern ITEM         tan_max     (const TANODE *node);
-extern ITEM         tan_size    (const TANODE *node);
-extern ITEM*        tan_items   (TANODE *node);
-extern ITEM         tan_item    (const TANODE *node, ITEM index);
-extern TANODE*      tan_child   (const TANODE *node, ITEM index);
+extern SUPP
+tan_wgt     (const TANODE *node);
+extern ITEM
+tan_max     (const TANODE *node);
+extern ITEM
+tan_size    (const TANODE *node);
+extern ITEM*
+tan_items   (TANODE *node);
+extern ITEM
+tan_item    (const TANODE *node, ITEM index);
+extern TANODE*
+tan_child   (const TANODE *node, ITEM index);
 #endif
 #endif
 /*----------------------------------------------------------------------
@@ -827,22 +987,34 @@ extern TANODE*      tan_child   (const TANODE *node, ITEM index);
 ----------------------------------------------------------------------*/
 #ifdef TATREEFN
 #ifdef TATCOMPACT
-extern TATREE*      tat_create  (TABAG *bag);
-extern void         tat_delete  (TATREE *tree, int del);
-extern TABAG*       tat_tabag   (const TATREE *tree);
-extern TANODE*      tat_root    (const TATREE *tree);
-extern size_t       tat_size    (const TATREE *tree);
+extern TATREE*
+tat_create  (TABAG *bag);
+extern void
+tat_delete  (TATREE *tree, int del);
+extern TABAG*
+tat_tabag   (const TATREE *tree);
+extern TANODE*
+tat_root    (const TATREE *tree);
+extern size_t
+tat_size    (const TATREE *tree);
 #else
-extern TATREE*      tat_create  (TABAG *bag);
-extern void         tat_delete  (TATREE *tree, int del);
-extern TABAG*       tat_tabag   (const TATREE *tree);
-extern TANODE*      tat_root    (const TATREE *tree);
-extern size_t       tat_size    (const TATREE *tree);
+extern TATREE*
+tat_create  (TABAG *bag);
+extern void
+tat_delete  (TATREE *tree, int del);
+extern TABAG*
+tat_tabag   (const TATREE *tree);
+extern TANODE*
+tat_root    (const TATREE *tree);
+extern size_t
+tat_size    (const TATREE *tree);
 #endif
-extern int          tat_filter  (TATREE *tree, ITEM min,
-                                 const int *marks, int heap);
+extern int
+tat_filter  (TATREE *tree, ITEM min,
+             const int *marks, int heap);
 #ifndef NDEBUG
-extern void         tat_show    (TATREE *tree);
+extern void
+tat_show    (TATREE *tree);
 #endif
 #endif
 

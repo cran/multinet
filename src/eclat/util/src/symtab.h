@@ -111,93 +111,136 @@
 /*----------------------------------------------------------------------
   Type Definitions
 ----------------------------------------------------------------------*/
-typedef size_t HASHFN (const void *key, int type);
+typedef size_t
+HASHFN (const void *key, int type);
 
-typedef struct ste {            /* --- symbol table element --- */
-  struct ste *succ;             /* successor in hash bin */
-  void       *key;              /* symbol name/key */
-  int        type;              /* symbol type */
-  size_t     level;             /* visibility level */
+typedef struct ste              /* --- symbol table element --- */
+{
+    struct ste *succ;             /* successor in hash bin */
+    void       *key;              /* symbol name/key */
+    int        type;              /* symbol type */
+    size_t     level;             /* visibility level */
 } STE;                          /* (symbol table element) */
 
-typedef struct {                /* --- symbol table --- */
-  size_t     cnt;               /* current number of symbols */
-  size_t     level;             /* current visibility level */
-  size_t     size;              /* current hash table size */
-  size_t     max;               /* maximal hash table size */
-  HASHFN     *hashfn;           /* hash function */
-  CMPFN      *cmpfn;            /* comparison function */
-  void       *data;             /* comparison data */
-  OBJFN      *delfn;            /* symbol deletion function */
-  STE        **bins;            /* array of hash bins */
-  size_t     idsize;            /* size of identifier array */
-  IDENT      **ids;             /* identifier array */
+typedef struct                  /* --- symbol table --- */
+{
+    size_t     cnt;               /* current number of symbols */
+    size_t     level;             /* current visibility level */
+    size_t     size;              /* current hash table size */
+    size_t     max;               /* maximal hash table size */
+    HASHFN     *hashfn;           /* hash function */
+    CMPFN      *cmpfn;            /* comparison function */
+    void       *data;             /* comparison data */
+    OBJFN      *delfn;            /* symbol deletion function */
+    STE        **bins;            /* array of hash bins */
+    size_t     idsize;            /* size of identifier array */
+    IDENT      **ids;             /* identifier array */
 } SYMTAB;                       /* (symbol table) */
 
 /*----------------------------------------------------------------------
   Name/Key Functions
 ----------------------------------------------------------------------*/
-extern int         st_strcmp  (const void *a, const void *b, void *d);
-extern size_t      st_strhash (const void *s, int type);
-extern size_t      st_strsize (const void *s);
+extern int
+st_strcmp  (const void *a, const void *b, void *d);
+extern size_t
+st_strhash (const void *s, int type);
+extern size_t
+st_strsize (const void *s);
 
-extern int         st_intcmp  (const void *a, const void *b, void *d);
-extern size_t      st_inthash (const void *i, int type);
-extern size_t      st_intsize (const void *i);
+extern int
+st_intcmp  (const void *a, const void *b, void *d);
+extern size_t
+st_inthash (const void *i, int type);
+extern size_t
+st_intsize (const void *i);
 
-extern int         st_lngcmp  (const void *a, const void *b, void *d);
-extern size_t      st_lnghash (const void *i, int type);
-extern size_t      st_lngsize (const void *i);
+extern int
+st_lngcmp  (const void *a, const void *b, void *d);
+extern size_t
+st_lnghash (const void *i, int type);
+extern size_t
+st_lngsize (const void *i);
 
-extern int         st_difcmp  (const void *a, const void *b, void *d);
-extern size_t      st_difhash (const void *i, int type);
-extern size_t      st_difsize (const void *i);
+extern int
+st_difcmp  (const void *a, const void *b, void *d);
+extern size_t
+st_difhash (const void *i, int type);
+extern size_t
+st_difsize (const void *i);
 
-extern int         st_ptrcmp  (const void *a, const void *b, void *d);
-extern size_t      st_ptrhash (const void *p, int type);
-extern size_t      st_ptrsize (const void *p);
+extern int
+st_ptrcmp  (const void *a, const void *b, void *d);
+extern size_t
+st_ptrhash (const void *p, int type);
+extern size_t
+st_ptrsize (const void *p);
 
 /*----------------------------------------------------------------------
   Symbol Table Functions
 ----------------------------------------------------------------------*/
-extern SYMTAB*     st_create  (size_t init, size_t max, HASHFN hashfn,
-                               CMPFN cmpfn, void *data, OBJFN delfn);
-extern void        st_delete  (SYMTAB *tab);
-extern void*       st_insert  (SYMTAB *tab, const void *key, int type,
-                               size_t keysize, size_t datasize);
-extern int         st_remove  (SYMTAB *tab, const void *key, int type);
-extern void*       st_lookup  (SYMTAB *tab, const void *key, int type);
-extern void        st_begblk  (SYMTAB *tab);
-extern void        st_endblk  (SYMTAB *tab);
-extern size_t      st_symcnt  (const SYMTAB *tab);
-extern const char* st_name    (const void *data);
-extern const void* st_key     (const void *data);
-extern int         st_type    (const void *data);
+extern SYMTAB*
+st_create  (size_t init, size_t max, HASHFN hashfn,
+            CMPFN cmpfn, void *data, OBJFN delfn);
+extern void
+st_delete  (SYMTAB *tab);
+extern void*
+st_insert  (SYMTAB *tab, const void *key, int type,
+            size_t keysize, size_t datasize);
+extern int
+st_remove  (SYMTAB *tab, const void *key, int type);
+extern void*
+st_lookup  (SYMTAB *tab, const void *key, int type);
+extern void
+st_begblk  (SYMTAB *tab);
+extern void
+st_endblk  (SYMTAB *tab);
+extern size_t
+st_symcnt  (const SYMTAB *tab);
+extern const char*
+st_name    (const void *data);
+extern const void*
+st_key     (const void *data);
+extern int
+st_type    (const void *data);
 #ifndef NDEBUG
-extern void        st_stats   (const SYMTAB *tab);
+extern void
+st_stats   (const SYMTAB *tab);
 #endif
 
 /*----------------------------------------------------------------------
   Identifier Map Functions
 ----------------------------------------------------------------------*/
 #ifdef IDMAPFN
-extern IDMAP*      idm_create (size_t init, size_t max, HASHFN hashfn,
-                               CMPFN cmpfn, void *data, OBJFN delfn);
-extern void        idm_delete (IDMAP* idm);
-extern void*       idm_add    (IDMAP* idm, const void *key,
-                               size_t keysize, size_t datasize);
-extern void*       idm_byname (IDMAP* idm, const char *name);
-extern void*       idm_bykey  (IDMAP* idm, const void *key);
-extern void*       idm_byid   (IDMAP* idm, IDENT id);
-extern IDENT       idm_getid  (IDMAP* idm, const void *name);
-extern const char* idm_name   (const void *data);
-extern const void* idm_key    (const void *data);
-extern IDENT       idm_cnt    (const IDMAP *idm);
-extern void        idm_sort   (IDMAP *idm, CMPFN cmpfn, void *data,
-                               IDENT *map, int dir);
-extern void        idm_trunc  (IDMAP *idm, size_t n);
+extern IDMAP*
+idm_create (size_t init, size_t max, HASHFN hashfn,
+            CMPFN cmpfn, void *data, OBJFN delfn);
+extern void
+idm_delete (IDMAP* idm);
+extern void*
+idm_add    (IDMAP* idm, const void *key,
+            size_t keysize, size_t datasize);
+extern void*
+idm_byname (IDMAP* idm, const char *name);
+extern void*
+idm_bykey  (IDMAP* idm, const void *key);
+extern void*
+idm_byid   (IDMAP* idm, IDENT id);
+extern IDENT
+idm_getid  (IDMAP* idm, const void *name);
+extern const char*
+idm_name   (const void *data);
+extern const void*
+idm_key    (const void *data);
+extern IDENT
+idm_cnt    (const IDMAP *idm);
+extern void
+idm_sort   (IDMAP *idm, CMPFN cmpfn, void *data,
+            IDENT *map, int dir);
+extern void
+idm_trunc  (IDMAP *idm, size_t n);
 #ifndef NDEBUG
-extern void        idm_stats  (const IDMAP *idm);
+extern void
+idm_stats  (const IDMAP *idm);
 #endif
 #endif
 /*----------------------------------------------------------------------

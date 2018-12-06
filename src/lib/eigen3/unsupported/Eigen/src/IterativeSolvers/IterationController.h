@@ -9,14 +9,14 @@
 
 //=======================================================================
 // Copyright (C) 1997-2001
-// Authors: Andrew Lumsdaine <lums@osl.iu.edu> 
+// Authors: Andrew Lumsdaine <lums@osl.iu.edu>
 //          Lie-Quan Lee     <llee@osl.iu.edu>
 //
 // This file is part of the Iterative Template Library
 //
 // You should have received a copy of the License Agreement for the
 // Iterative Template Library along with the software;  see the
-// file LICENSE.  
+// file LICENSE.
 //
 // Permission to modify the code and to distribute modified code is
 // granted, provided the text of this NOTICE is retained, a notice that
@@ -58,7 +58,7 @@
 #ifndef EIGEN_ITERATION_CONTROLLER_H
 #define EIGEN_ITERATION_CONTROLLER_H
 
-namespace Eigen { 
+namespace Eigen {
 
 /** \ingroup IterativeSolvers_Module
   * \class IterationController
@@ -82,70 +82,160 @@ class IterationController
     void (*m_callback)(const IterationController&);
   public :
 
-    void init()
+    void
+    init()
     {
-      m_nit = 0; m_res = 0.0; m_written = false;
-      m_resminreach = 1E50; m_resadd = 0.0;
-      m_callback = 0;
+        m_nit = 0;
+        m_res = 0.0;
+        m_written = false;
+        m_resminreach = 1E50;
+        m_resadd = 0.0;
+        m_callback = 0;
     }
 
     IterationController(double r = 1.0E-8, int noi = 0, size_t mit = size_t(-1))
-      : m_rhsn(1.0), m_maxiter(mit), m_noise(noi), m_resmax(r) { init(); }
+        : m_rhsn(1.0), m_maxiter(mit), m_noise(noi), m_resmax(r)
+    {
+        init();
+    }
 
-    void operator ++(int) { m_nit++; m_written = false; m_resadd += m_res; }
-    void operator ++() { (*this)++; }
+    void
+    operator ++(int)
+    {
+        m_nit++;
+        m_written = false;
+        m_resadd += m_res;
+    }
+    void
+    operator ++()
+    {
+        (*this)++;
+    }
 
-    bool first() { return m_nit == 0; }
+    bool
+    first()
+    {
+        return m_nit == 0;
+    }
 
     /* get/set the "noisyness" (verbosity) of the solvers */
-    int noiseLevel() const { return m_noise; }
-    void setNoiseLevel(int n) { m_noise = n; }
-    void reduceNoiseLevel() { if (m_noise > 0) m_noise--; }
+    int
+    noiseLevel() const
+    {
+        return m_noise;
+    }
+    void
+    setNoiseLevel(int n)
+    {
+        m_noise = n;
+    }
+    void
+    reduceNoiseLevel()
+    {
+        if (m_noise > 0)
+        {
+            m_noise--;
+        }
+    }
 
-    double maxResidual() const { return m_resmax; }
-    void setMaxResidual(double r) { m_resmax = r; }
+    double
+    maxResidual() const
+    {
+        return m_resmax;
+    }
+    void
+    setMaxResidual(double r)
+    {
+        m_resmax = r;
+    }
 
-    double residual() const { return m_res; }
+    double
+    residual() const
+    {
+        return m_res;
+    }
 
     /* change the user-definable callback, called after each iteration */
-    void setCallback(void (*t)(const IterationController&))
+    void
+    setCallback(void (*t)(const IterationController&))
     {
-      m_callback = t;
+        m_callback = t;
     }
 
-    size_t iteration() const { return m_nit; }
-    void setIteration(size_t i) { m_nit = i; }
-
-    size_t maxIterarions() const { return m_maxiter; }
-    void setMaxIterations(size_t i) { m_maxiter = i; }
-
-    double rhsNorm() const { return m_rhsn; }
-    void setRhsNorm(double r) { m_rhsn = r; }
-
-    bool converged() const { return m_res <= m_rhsn * m_resmax; }
-    bool converged(double nr)
+    size_t
+    iteration() const
     {
-      using std::abs;
-      m_res = abs(nr); 
-      m_resminreach = (std::min)(m_resminreach, m_res);
-      return converged();
+        return m_nit;
     }
-    template<typename VectorType> bool converged(const VectorType &v)
-    { return converged(v.squaredNorm()); }
-
-    bool finished(double nr)
+    void
+    setIteration(size_t i)
     {
-      if (m_callback) m_callback(*this);
-      if (m_noise > 0 && !m_written)
-      {
-        converged(nr);
-        m_written = true;
-      }
-      return (m_nit >= m_maxiter || converged(nr));
+        m_nit = i;
+    }
+
+    size_t
+    maxIterarions() const
+    {
+        return m_maxiter;
+    }
+    void
+    setMaxIterations(size_t i)
+    {
+        m_maxiter = i;
+    }
+
+    double
+    rhsNorm() const
+    {
+        return m_rhsn;
+    }
+    void
+    setRhsNorm(double r)
+    {
+        m_rhsn = r;
+    }
+
+    bool
+    converged() const
+    {
+        return m_res <= m_rhsn * m_resmax;
+    }
+    bool
+    converged(double nr)
+    {
+        using std::abs;
+        m_res = abs(nr);
+        m_resminreach = (std::min)(m_resminreach, m_res);
+        return converged();
+    }
+    template<typename VectorType> bool
+    converged(const VectorType &v)
+    {
+        return converged(v.squaredNorm());
+    }
+
+    bool
+    finished(double nr)
+    {
+        if (m_callback)
+        {
+            m_callback(*this);
+        }
+
+        if (m_noise > 0 && !m_written)
+        {
+            converged(nr);
+            m_written = true;
+        }
+
+        return (m_nit >= m_maxiter || converged(nr));
     }
     template <typename VectorType>
-    bool finished(const MatrixBase<VectorType> &v)
-    { return finished(double(v.squaredNorm())); }
+    bool
+    finished(const MatrixBase<VectorType> &v)
+    {
+        return finished(double(v.squaredNorm()));
+    }
 
 };
 

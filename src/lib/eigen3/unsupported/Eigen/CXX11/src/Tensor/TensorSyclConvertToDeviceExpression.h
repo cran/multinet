@@ -35,14 +35,16 @@ template <typename Expr>
 struct ConvertToDeviceExpression;
 
 template<template<class...> class NonOpCategory, bool IsConst, typename... Args>
-struct NonOpConversion{
-  typedef typename GetType<IsConst, NonOpCategory<typename ConvertToDeviceExpression<Args>::Type...> >::Type Type;
+struct NonOpConversion
+{
+    typedef typename GetType<IsConst, NonOpCategory<typename ConvertToDeviceExpression<Args>::Type...> >::Type Type;
 };
 
 
 template<template<class, template <class> class > class NonOpCategory, bool IsConst, typename Args>
-struct DeviceConvertor{
-  typedef typename GetType<IsConst, NonOpCategory<typename ConvertToDeviceExpression<Args>::Type, MakeGlobalPointer> >::Type Type;
+struct DeviceConvertor
+{
+    typedef typename GetType<IsConst, NonOpCategory<typename ConvertToDeviceExpression<Args>::Type, MakeGlobalPointer> >::Type Type;
 };
 
 /// specialisation of the \ref ConvertToDeviceExpression struct when the node

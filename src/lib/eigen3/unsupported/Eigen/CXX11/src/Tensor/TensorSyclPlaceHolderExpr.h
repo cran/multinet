@@ -31,9 +31,10 @@ namespace internal {
 /// tree.
 /// PlaceHolder contains the order of the leaf node in the expression tree.
 template <typename Scalar, size_t N>
-struct PlaceHolder {
-  static constexpr size_t I = N;
-  typedef Scalar Type;
+struct PlaceHolder
+{
+    static constexpr size_t I = N;
+    typedef Scalar Type;
 };
 
 /// \sttruct PlaceHolderExpression
@@ -47,40 +48,45 @@ template<size_t N, typename... Args>
 struct CalculateIndex;
 
 template<size_t N, typename Arg>
-struct CalculateIndex<N, Arg>{
-  typedef typename PlaceHolderExpression<Arg, N>::Type ArgType;
-  typedef utility::tuple::Tuple<ArgType> ArgsTuple;
+struct CalculateIndex<N, Arg>
+{
+    typedef typename PlaceHolderExpression<Arg, N>::Type ArgType;
+    typedef utility::tuple::Tuple<ArgType> ArgsTuple;
 };
 
 template<size_t N, typename Arg1, typename Arg2>
-struct CalculateIndex<N, Arg1, Arg2>{
-  static const size_t Arg2LeafCount = LeafCount<Arg2>::Count;
-  typedef typename PlaceHolderExpression<Arg1, N - Arg2LeafCount>::Type Arg1Type;
-  typedef typename PlaceHolderExpression<Arg2, N>::Type Arg2Type;
-  typedef utility::tuple::Tuple<Arg1Type, Arg2Type> ArgsTuple;
+struct CalculateIndex<N, Arg1, Arg2>
+{
+    static const size_t Arg2LeafCount = LeafCount<Arg2>::Count;
+    typedef typename PlaceHolderExpression<Arg1, N - Arg2LeafCount>::Type Arg1Type;
+    typedef typename PlaceHolderExpression<Arg2, N>::Type Arg2Type;
+    typedef utility::tuple::Tuple<Arg1Type, Arg2Type> ArgsTuple;
 };
 
 template<size_t N, typename Arg1, typename Arg2, typename Arg3>
-struct CalculateIndex<N, Arg1, Arg2, Arg3> {
-  static const size_t Arg3LeafCount = LeafCount<Arg3>::Count;
-  static const size_t Arg2LeafCount = LeafCount<Arg2>::Count;
-  typedef typename PlaceHolderExpression<Arg1, N - Arg3LeafCount - Arg2LeafCount>::Type Arg1Type;
-  typedef typename PlaceHolderExpression<Arg2, N - Arg3LeafCount>::Type Arg2Type;
-  typedef typename PlaceHolderExpression<Arg3, N>::Type Arg3Type;
-  typedef utility::tuple::Tuple<Arg1Type, Arg2Type, Arg3Type> ArgsTuple;
+struct CalculateIndex<N, Arg1, Arg2, Arg3>
+{
+    static const size_t Arg3LeafCount = LeafCount<Arg3>::Count;
+    static const size_t Arg2LeafCount = LeafCount<Arg2>::Count;
+    typedef typename PlaceHolderExpression<Arg1, N - Arg3LeafCount - Arg2LeafCount>::Type Arg1Type;
+    typedef typename PlaceHolderExpression<Arg2, N - Arg3LeafCount>::Type Arg2Type;
+    typedef typename PlaceHolderExpression<Arg3, N>::Type Arg3Type;
+    typedef utility::tuple::Tuple<Arg1Type, Arg2Type, Arg3Type> ArgsTuple;
 };
 
-template<template<class...> class Category , class OP, class TPL>
+template<template<class...> class Category, class OP, class TPL>
 struct CategoryHelper;
 
-template<template<class...> class Category , class OP, class ...T >
-struct CategoryHelper<Category, OP, utility::tuple::Tuple<T...> > {
-  typedef Category<OP, T... > Type;
+template<template<class...> class Category, class OP, class ...T >
+struct CategoryHelper<Category, OP, utility::tuple::Tuple<T...> >
+{
+    typedef Category<OP, T... > Type;
 };
 
-template<template<class...> class Category , class ...T >
-struct CategoryHelper<Category, NoOP, utility::tuple::Tuple<T...> > {
-  typedef Category<T... > Type;
+template<template<class...> class Category, class ...T >
+struct CategoryHelper<Category, NoOP, utility::tuple::Tuple<T...> >
+{
+    typedef Category<T... > Type;
 };
 
 /// specialisation of the \ref PlaceHolderExpression when the node is
@@ -169,9 +175,10 @@ SYCLREDUCTION()
 
 /// template deduction for \ref PlaceHolderExpression struct
 template <typename Expr>
-struct createPlaceHolderExpression {
-  static const size_t TotalLeaves = LeafCount<Expr>::Count;
-  typedef typename PlaceHolderExpression<Expr, TotalLeaves - 1>::Type Type;
+struct createPlaceHolderExpression
+{
+    static const size_t TotalLeaves = LeafCount<Expr>::Count;
+    typedef typename PlaceHolderExpression<Expr, TotalLeaves - 1>::Type Type;
 };
 
 }  // internal

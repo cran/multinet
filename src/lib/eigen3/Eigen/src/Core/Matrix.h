@@ -17,38 +17,40 @@ namespace internal {
 template<typename _Scalar, int _Rows, int _Cols, int _Options, int _MaxRows, int _MaxCols>
 struct traits<Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols> >
 {
-private:
-  enum { size = internal::size_at_compile_time<_Rows,_Cols>::ret };
-  typedef typename find_best_packet<_Scalar,size>::type PacketScalar;
-  enum {
-      row_major_bit = _Options&RowMajor ? RowMajorBit : 0,
-      is_dynamic_size_storage = _MaxRows==Dynamic || _MaxCols==Dynamic,
-      max_size = is_dynamic_size_storage ? Dynamic : _MaxRows*_MaxCols,
-      default_alignment = compute_default_alignment<_Scalar,max_size>::value,
-      actual_alignment = ((_Options&DontAlign)==0) ? default_alignment : 0,
-      required_alignment = unpacket_traits<PacketScalar>::alignment,
-      packet_access_bit = (packet_traits<_Scalar>::Vectorizable && (EIGEN_UNALIGNED_VECTORIZE || (actual_alignment>=required_alignment))) ? PacketAccessBit : 0
+  private:
+    enum { size = internal::size_at_compile_time<_Rows,_Cols>::ret };
+    typedef typename find_best_packet<_Scalar,size>::type PacketScalar;
+    enum
+    {
+        row_major_bit = _Options&RowMajor ? RowMajorBit : 0,
+        is_dynamic_size_storage = _MaxRows==Dynamic || _MaxCols==Dynamic,
+        max_size = is_dynamic_size_storage ? Dynamic : _MaxRows*_MaxCols,
+        default_alignment = compute_default_alignment<_Scalar,max_size>::value,
+        actual_alignment = ((_Options&DontAlign)==0) ? default_alignment : 0,
+        required_alignment = unpacket_traits<PacketScalar>::alignment,
+        packet_access_bit = (packet_traits<_Scalar>::Vectorizable && (EIGEN_UNALIGNED_VECTORIZE || (actual_alignment>=required_alignment))) ? PacketAccessBit : 0
     };
-    
-public:
-  typedef _Scalar Scalar;
-  typedef Dense StorageKind;
-  typedef Eigen::Index StorageIndex;
-  typedef MatrixXpr XprKind;
-  enum {
-    RowsAtCompileTime = _Rows,
-    ColsAtCompileTime = _Cols,
-    MaxRowsAtCompileTime = _MaxRows,
-    MaxColsAtCompileTime = _MaxCols,
-    Flags = compute_matrix_flags<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols>::ret,
-    Options = _Options,
-    InnerStrideAtCompileTime = 1,
-    OuterStrideAtCompileTime = (Options&RowMajor) ? ColsAtCompileTime : RowsAtCompileTime,
-    
-    // FIXME, the following flag in only used to define NeedsToAlign in PlainObjectBase
-    EvaluatorFlags = LinearAccessBit | DirectAccessBit | packet_access_bit | row_major_bit,
-    Alignment = actual_alignment
-  };
+
+  public:
+    typedef _Scalar Scalar;
+    typedef Dense StorageKind;
+    typedef Eigen::Index StorageIndex;
+    typedef MatrixXpr XprKind;
+    enum
+    {
+        RowsAtCompileTime = _Rows,
+        ColsAtCompileTime = _Cols,
+        MaxRowsAtCompileTime = _MaxRows,
+        MaxColsAtCompileTime = _MaxCols,
+        Flags = compute_matrix_flags<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols>::ret,
+        Options = _Options,
+        InnerStrideAtCompileTime = 1,
+        OuterStrideAtCompileTime = (Options&RowMajor) ? ColsAtCompileTime : RowsAtCompileTime,
+
+        // FIXME, the following flag in only used to define NeedsToAlign in PlainObjectBase
+        EvaluatorFlags = LinearAccessBit | DirectAccessBit | packet_access_bit | row_major_bit,
+        Alignment = actual_alignment
+    };
 };
 }
 
@@ -176,7 +178,7 @@ public:
 
 template<typename _Scalar, int _Rows, int _Cols, int _Options, int _MaxRows, int _MaxCols>
 class Matrix
-  : public PlainObjectBase<Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols> >
+    : public PlainObjectBase<Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols> >
 {
   public:
 
@@ -203,9 +205,10 @@ class Matrix
       * \callgraph
       */
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Matrix& operator=(const Matrix& other)
+    EIGEN_STRONG_INLINE Matrix&
+    operator=(const Matrix& other)
     {
-      return Base::_set(other);
+        return Base::_set(other);
     }
 
     /** \internal
@@ -220,9 +223,10 @@ class Matrix
       */
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Matrix& operator=(const DenseBase<OtherDerived>& other)
+    EIGEN_STRONG_INLINE Matrix&
+    operator=(const DenseBase<OtherDerived>& other)
     {
-      return Base::_set(other);
+        return Base::_set(other);
     }
 
     /* Here, doxygen failed to copy the brief information when using \copydoc */
@@ -233,16 +237,18 @@ class Matrix
       */
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Matrix& operator=(const EigenBase<OtherDerived> &other)
+    EIGEN_STRONG_INLINE Matrix&
+    operator=(const EigenBase<OtherDerived> &other)
     {
-      return Base::operator=(other);
+        return Base::operator=(other);
     }
 
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Matrix& operator=(const ReturnByValue<OtherDerived>& func)
+    EIGEN_STRONG_INLINE Matrix&
+    operator=(const ReturnByValue<OtherDerived>& func)
     {
-      return Base::operator=(func);
+        return Base::operator=(func);
     }
 
     /** \brief Default constructor.
@@ -256,71 +262,84 @@ class Matrix
       * \sa resize(Index,Index)
       */
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Matrix() : Base()
+    EIGEN_STRONG_INLINE
+    Matrix() : Base()
     {
-      Base::_check_template_params();
-      EIGEN_INITIALIZE_COEFFS_IF_THAT_OPTION_IS_ENABLED
+        Base::_check_template_params();
+        EIGEN_INITIALIZE_COEFFS_IF_THAT_OPTION_IS_ENABLED
     }
 
     // FIXME is it still needed
     EIGEN_DEVICE_FUNC
-    explicit Matrix(internal::constructor_without_unaligned_array_assert)
-      : Base(internal::constructor_without_unaligned_array_assert())
-    { Base::_check_template_params(); EIGEN_INITIALIZE_COEFFS_IF_THAT_OPTION_IS_ENABLED }
+    explicit
+    Matrix(internal::constructor_without_unaligned_array_assert)
+        : Base(internal::constructor_without_unaligned_array_assert())
+    {
+        Base::_check_template_params();
+        EIGEN_INITIALIZE_COEFFS_IF_THAT_OPTION_IS_ENABLED
+    }
 
 #if EIGEN_HAS_RVALUE_REFERENCES
     EIGEN_DEVICE_FUNC
     Matrix(Matrix&& other) EIGEN_NOEXCEPT_IF(std::is_nothrow_move_constructible<Scalar>::value)
-      : Base(std::move(other))
+        : Base(std::move(other))
     {
-      Base::_check_template_params();
-      if (RowsAtCompileTime!=Dynamic && ColsAtCompileTime!=Dynamic)
-        Base::_set_noalias(other);
+        Base::_check_template_params();
+
+        if (RowsAtCompileTime!=Dynamic && ColsAtCompileTime!=Dynamic)
+        {
+            Base::_set_noalias(other);
+        }
     }
     EIGEN_DEVICE_FUNC
-    Matrix& operator=(Matrix&& other) EIGEN_NOEXCEPT_IF(std::is_nothrow_move_assignable<Scalar>::value)
+    Matrix&
+    operator=(Matrix&& other) EIGEN_NOEXCEPT_IF(std::is_nothrow_move_assignable<Scalar>::value)
     {
-      other.swap(*this);
-      return *this;
+        other.swap(*this);
+        return *this;
     }
 #endif
 
-    #ifndef EIGEN_PARSED_BY_DOXYGEN
+#ifndef EIGEN_PARSED_BY_DOXYGEN
 
     // This constructor is for both 1x1 matrices and dynamic vectors
     template<typename T>
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE explicit Matrix(const T& x)
+    EIGEN_STRONG_INLINE explicit
+    Matrix(const T& x)
     {
-      Base::_check_template_params();
-      Base::template _init1<T>(x);
+        Base::_check_template_params();
+        Base::template _init1<T>(x);
     }
 
     template<typename T0, typename T1>
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Matrix(const T0& x, const T1& y)
+    EIGEN_STRONG_INLINE
+    Matrix(const T0& x, const T1& y)
     {
-      Base::_check_template_params();
-      Base::template _init2<T0,T1>(x, y);
+        Base::_check_template_params();
+        Base::template _init2<T0,T1>(x, y);
     }
-    #else
+#else
     /** \brief Constructs a fixed-sized matrix initialized with coefficients starting at \a data */
     EIGEN_DEVICE_FUNC
-    explicit Matrix(const Scalar *data);
+    explicit
+    Matrix(const Scalar *data);
 
     /** \brief Constructs a vector or row-vector with given dimension. \only_for_vectors
       *
       * This is useful for dynamic-size vectors. For fixed-size vectors,
       * it is redundant to pass these parameters, so one should use the default constructor
       * Matrix() instead.
-      * 
+      *
       * \warning This constructor is disabled for fixed-size \c 1x1 matrices. For instance,
       * calling Matrix<double,1,1>(1) will call the initialization constructor: Matrix(const Scalar&).
       * For fixed-size \c 1x1 matrices it is therefore recommended to use the default
       * constructor Matrix() instead, especially when using one of the non standard
       * \c EIGEN_INITIALIZE_MATRICES_BY_{ZERO,\c NAN} macros (see \ref TopicPreprocessorDirectives).
       */
-    EIGEN_STRONG_INLINE explicit Matrix(Index dim);
+    EIGEN_STRONG_INLINE explicit
+    Matrix(Index dim);
     /** \brief Constructs an initialized 1x1 matrix with the given coefficient */
     Matrix(const Scalar& x);
     /** \brief Constructs an uninitialized matrix with \a rows rows and \a cols columns.
@@ -328,7 +347,7 @@ class Matrix
       * This is useful for dynamic-size matrices. For fixed-size matrices,
       * it is redundant to pass these parameters, so one should use the default constructor
       * Matrix() instead.
-      * 
+      *
       * \warning This constructor is disabled for fixed-size \c 1x2 and \c 2x1 vectors. For instance,
       * calling Matrix2f(2,1) will call the initialization constructor: Matrix(const Scalar& x, const Scalar& y).
       * For fixed-size \c 1x2 or \c 2x1 vectors it is therefore recommended to use the default
@@ -337,37 +356,40 @@ class Matrix
       */
     EIGEN_DEVICE_FUNC
     Matrix(Index rows, Index cols);
-    
+
     /** \brief Constructs an initialized 2D vector with given coefficients */
     Matrix(const Scalar& x, const Scalar& y);
-    #endif
+#endif
 
     /** \brief Constructs an initialized 3D vector with given coefficients */
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Matrix(const Scalar& x, const Scalar& y, const Scalar& z)
+    EIGEN_STRONG_INLINE
+    Matrix(const Scalar& x, const Scalar& y, const Scalar& z)
     {
-      Base::_check_template_params();
-      EIGEN_STATIC_ASSERT_VECTOR_SPECIFIC_SIZE(Matrix, 3)
-      m_storage.data()[0] = x;
-      m_storage.data()[1] = y;
-      m_storage.data()[2] = z;
+        Base::_check_template_params();
+        EIGEN_STATIC_ASSERT_VECTOR_SPECIFIC_SIZE(Matrix, 3)
+        m_storage.data()[0] = x;
+        m_storage.data()[1] = y;
+        m_storage.data()[2] = z;
     }
     /** \brief Constructs an initialized 4D vector with given coefficients */
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Matrix(const Scalar& x, const Scalar& y, const Scalar& z, const Scalar& w)
+    EIGEN_STRONG_INLINE
+    Matrix(const Scalar& x, const Scalar& y, const Scalar& z, const Scalar& w)
     {
-      Base::_check_template_params();
-      EIGEN_STATIC_ASSERT_VECTOR_SPECIFIC_SIZE(Matrix, 4)
-      m_storage.data()[0] = x;
-      m_storage.data()[1] = y;
-      m_storage.data()[2] = z;
-      m_storage.data()[3] = w;
+        Base::_check_template_params();
+        EIGEN_STATIC_ASSERT_VECTOR_SPECIFIC_SIZE(Matrix, 4)
+        m_storage.data()[0] = x;
+        m_storage.data()[1] = y;
+        m_storage.data()[2] = z;
+        m_storage.data()[3] = w;
     }
 
 
     /** \brief Copy constructor */
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Matrix(const Matrix& other) : Base(other)
+    EIGEN_STRONG_INLINE
+    Matrix(const Matrix& other) : Base(other)
     { }
 
     /** \brief Copy constructor for generic expressions.
@@ -375,26 +397,37 @@ class Matrix
       */
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Matrix(const EigenBase<OtherDerived> &other)
-      : Base(other.derived())
+    EIGEN_STRONG_INLINE
+    Matrix(const EigenBase<OtherDerived> &other)
+        : Base(other.derived())
     { }
 
-    EIGEN_DEVICE_FUNC inline Index innerStride() const { return 1; }
-    EIGEN_DEVICE_FUNC inline Index outerStride() const { return this->innerSize(); }
+    EIGEN_DEVICE_FUNC inline Index
+    innerStride() const
+    {
+        return 1;
+    }
+    EIGEN_DEVICE_FUNC inline Index
+    outerStride() const
+    {
+        return this->innerSize();
+    }
 
     /////////// Geometry module ///////////
 
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC
-    explicit Matrix(const RotationBase<OtherDerived,ColsAtCompileTime>& r);
+    explicit
+    Matrix(const RotationBase<OtherDerived,ColsAtCompileTime>& r);
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC
-    Matrix& operator=(const RotationBase<OtherDerived,ColsAtCompileTime>& r);
+    Matrix&
+    operator=(const RotationBase<OtherDerived,ColsAtCompileTime>& r);
 
     // allow to extend Matrix outside Eigen
-    #ifdef EIGEN_MATRIX_PLUGIN
-    #include EIGEN_MATRIX_PLUGIN
-    #endif
+#ifdef EIGEN_MATRIX_PLUGIN
+#include EIGEN_MATRIX_PLUGIN
+#endif
 
   protected:
     template <typename Derived, typename OtherDerived, bool IsVector>

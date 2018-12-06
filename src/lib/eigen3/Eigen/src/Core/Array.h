@@ -16,8 +16,8 @@ namespace internal {
 template<typename _Scalar, int _Rows, int _Cols, int _Options, int _MaxRows, int _MaxCols>
 struct traits<Array<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols> > : traits<Matrix<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols> >
 {
-  typedef ArrayXpr XprKind;
-  typedef ArrayBase<Array<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols> > XprBase;
+    typedef ArrayXpr XprKind;
+    typedef ArrayBase<Array<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols> > XprBase;
 };
 }
 
@@ -43,7 +43,7 @@ struct traits<Array<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols> > : tra
   */
 template<typename _Scalar, int _Rows, int _Cols, int _Options, int _MaxRows, int _MaxCols>
 class Array
-  : public PlainObjectBase<Array<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols> >
+    : public PlainObjectBase<Array<_Scalar, _Rows, _Cols, _Options, _MaxRows, _MaxCols> >
 {
   public:
 
@@ -73,9 +73,10 @@ class Array
       */
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Array& operator=(const EigenBase<OtherDerived> &other)
+    EIGEN_STRONG_INLINE Array&
+    operator=(const EigenBase<OtherDerived> &other)
     {
-      return Base::operator=(other);
+        return Base::operator=(other);
     }
 
     /** Set all the entries to \a value.
@@ -87,10 +88,11 @@ class Array
       * the usage of 'using'. This should be done only for operator=.
       */
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Array& operator=(const Scalar &value)
+    EIGEN_STRONG_INLINE Array&
+    operator=(const Scalar &value)
     {
-      Base::setConstant(value);
-      return *this;
+        Base::setConstant(value);
+        return *this;
     }
 
     /** Copies the value of the expression \a other into \c *this with automatic resizing.
@@ -104,20 +106,22 @@ class Array
       */
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Array& operator=(const DenseBase<OtherDerived>& other)
+    EIGEN_STRONG_INLINE Array&
+    operator=(const DenseBase<OtherDerived>& other)
     {
-      return Base::_set(other);
+        return Base::_set(other);
     }
 
     /** This is a special case of the templated operator=. Its purpose is to
       * prevent a default operator= from hiding the templated operator=.
       */
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Array& operator=(const Array& other)
+    EIGEN_STRONG_INLINE Array&
+    operator=(const Array& other)
     {
-      return Base::_set(other);
+        return Base::_set(other);
     }
-    
+
     /** Default constructor.
       *
       * For fixed-size matrices, does nothing.
@@ -129,10 +133,11 @@ class Array
       * \sa resize(Index,Index)
       */
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Array() : Base()
+    EIGEN_STRONG_INLINE
+    Array() : Base()
     {
-      Base::_check_template_params();
-      EIGEN_INITIALIZE_COEFFS_IF_THAT_OPTION_IS_ENABLED
+        Base::_check_template_params();
+        EIGEN_INITIALIZE_COEFFS_IF_THAT_OPTION_IS_ENABLED
     }
 
 #ifndef EIGEN_PARSED_BY_DOXYGEN
@@ -140,49 +145,56 @@ class Array
     /** \internal */
     EIGEN_DEVICE_FUNC
     Array(internal::constructor_without_unaligned_array_assert)
-      : Base(internal::constructor_without_unaligned_array_assert())
+        : Base(internal::constructor_without_unaligned_array_assert())
     {
-      Base::_check_template_params();
-      EIGEN_INITIALIZE_COEFFS_IF_THAT_OPTION_IS_ENABLED
+        Base::_check_template_params();
+        EIGEN_INITIALIZE_COEFFS_IF_THAT_OPTION_IS_ENABLED
     }
 #endif
 
 #if EIGEN_HAS_RVALUE_REFERENCES
     EIGEN_DEVICE_FUNC
     Array(Array&& other) EIGEN_NOEXCEPT_IF(std::is_nothrow_move_constructible<Scalar>::value)
-      : Base(std::move(other))
+        : Base(std::move(other))
     {
-      Base::_check_template_params();
-      if (RowsAtCompileTime!=Dynamic && ColsAtCompileTime!=Dynamic)
-        Base::_set_noalias(other);
+        Base::_check_template_params();
+
+        if (RowsAtCompileTime!=Dynamic && ColsAtCompileTime!=Dynamic)
+        {
+            Base::_set_noalias(other);
+        }
     }
     EIGEN_DEVICE_FUNC
-    Array& operator=(Array&& other) EIGEN_NOEXCEPT_IF(std::is_nothrow_move_assignable<Scalar>::value)
+    Array&
+    operator=(Array&& other) EIGEN_NOEXCEPT_IF(std::is_nothrow_move_assignable<Scalar>::value)
     {
-      other.swap(*this);
-      return *this;
+        other.swap(*this);
+        return *this;
     }
 #endif
 
-    #ifndef EIGEN_PARSED_BY_DOXYGEN
+#ifndef EIGEN_PARSED_BY_DOXYGEN
     template<typename T>
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE explicit Array(const T& x)
+    EIGEN_STRONG_INLINE explicit
+    Array(const T& x)
     {
-      Base::_check_template_params();
-      Base::template _init1<T>(x);
+        Base::_check_template_params();
+        Base::template _init1<T>(x);
     }
 
     template<typename T0, typename T1>
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Array(const T0& val0, const T1& val1)
+    EIGEN_STRONG_INLINE
+    Array(const T0& val0, const T1& val1)
     {
-      Base::_check_template_params();
-      this->template _init2<T0,T1>(val0, val1);
+        Base::_check_template_params();
+        this->template _init2<T0,T1>(val0, val1);
     }
-    #else
+#else
     /** \brief Constructs a fixed-sized array initialized with coefficients starting at \a data */
-    EIGEN_DEVICE_FUNC explicit Array(const Scalar *data);
+    EIGEN_DEVICE_FUNC explicit
+    Array(const Scalar *data);
     /** Constructs a vector or row-vector with given dimension. \only_for_vectors
       *
       * Note that this is only useful for dynamic-size vectors. For fixed-size vectors,
@@ -190,7 +202,8 @@ class Array
       * constructor Array() instead.
       */
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE explicit Array(Index dim);
+    EIGEN_STRONG_INLINE explicit
+    Array(Index dim);
     /** constructs an initialized 1x1 Array with the given coefficient */
     Array(const Scalar& value);
     /** constructs an uninitialized array with \a rows rows and \a cols columns.
@@ -201,49 +214,61 @@ class Array
     Array(Index rows, Index cols);
     /** constructs an initialized 2D vector with given coefficients */
     Array(const Scalar& val0, const Scalar& val1);
-    #endif
+#endif
 
     /** constructs an initialized 3D vector with given coefficients */
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Array(const Scalar& val0, const Scalar& val1, const Scalar& val2)
+    EIGEN_STRONG_INLINE
+    Array(const Scalar& val0, const Scalar& val1, const Scalar& val2)
     {
-      Base::_check_template_params();
-      EIGEN_STATIC_ASSERT_VECTOR_SPECIFIC_SIZE(Array, 3)
-      m_storage.data()[0] = val0;
-      m_storage.data()[1] = val1;
-      m_storage.data()[2] = val2;
+        Base::_check_template_params();
+        EIGEN_STATIC_ASSERT_VECTOR_SPECIFIC_SIZE(Array, 3)
+        m_storage.data()[0] = val0;
+        m_storage.data()[1] = val1;
+        m_storage.data()[2] = val2;
     }
     /** constructs an initialized 4D vector with given coefficients */
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Array(const Scalar& val0, const Scalar& val1, const Scalar& val2, const Scalar& val3)
+    EIGEN_STRONG_INLINE
+    Array(const Scalar& val0, const Scalar& val1, const Scalar& val2, const Scalar& val3)
     {
-      Base::_check_template_params();
-      EIGEN_STATIC_ASSERT_VECTOR_SPECIFIC_SIZE(Array, 4)
-      m_storage.data()[0] = val0;
-      m_storage.data()[1] = val1;
-      m_storage.data()[2] = val2;
-      m_storage.data()[3] = val3;
+        Base::_check_template_params();
+        EIGEN_STATIC_ASSERT_VECTOR_SPECIFIC_SIZE(Array, 4)
+        m_storage.data()[0] = val0;
+        m_storage.data()[1] = val1;
+        m_storage.data()[2] = val2;
+        m_storage.data()[3] = val3;
     }
 
     /** Copy constructor */
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Array(const Array& other)
-            : Base(other)
+    EIGEN_STRONG_INLINE
+    Array(const Array& other)
+        : Base(other)
     { }
 
     /** \sa MatrixBase::operator=(const EigenBase<OtherDerived>&) */
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC
-    EIGEN_STRONG_INLINE Array(const EigenBase<OtherDerived> &other)
-      : Base(other.derived())
+    EIGEN_STRONG_INLINE
+    Array(const EigenBase<OtherDerived> &other)
+        : Base(other.derived())
     { }
 
-    EIGEN_DEVICE_FUNC inline Index innerStride() const { return 1; }
-    EIGEN_DEVICE_FUNC inline Index outerStride() const { return this->innerSize(); }
+    EIGEN_DEVICE_FUNC inline Index
+    innerStride() const
+    {
+        return 1;
+    }
+    EIGEN_DEVICE_FUNC inline Index
+    outerStride() const
+    {
+        return this->innerSize();
+    }
 
-    #ifdef EIGEN_ARRAY_PLUGIN
-    #include EIGEN_ARRAY_PLUGIN
-    #endif
+#ifdef EIGEN_ARRAY_PLUGIN
+#include EIGEN_ARRAY_PLUGIN
+#endif
 
   private:
 

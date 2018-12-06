@@ -375,267 +375,551 @@ BISECT(dbl, double)
 ----------------------------------------------------------------------*/
 
 void ptr_move (void *array, size_t off, size_t n, size_t pos)
-{                               /* --- move a pointer array section */
-  size_t end;                   /* end index of affected section */
-  void   *fxd[BUFSIZE], **buf;  /* buffer for copying */
-  void   **a = (void**)array;   /* typed array */
+{
+    /* --- move a pointer array section */
+    size_t end;                   /* end index of affected section */
+    void   *fxd[BUFSIZE], **buf;  /* buffer for copying */
+    void   **a = (void**)array;   /* typed array */
 
-  assert(array);                /* check the function arguments */
-  if ((pos >= off) && (pos < off +n))
-    return;                     /* check whether moving is necessary */
-  if (pos < off) { end = off +n; off = pos; pos = end -n; }
-  else           { end = pos +1;            pos = off +n; }
-  buf = fxd;                    /* normalize the indices */
-  if (pos +pos < end +off) {    /* if first section is smaller */
-/*if (pos -off < end -pos) { */
-    n = pos -off;               /* get the number of elements */
-    if (n > BUFSIZE) {          /* if the fixed buffer is too small */
-      buf = (void**)malloc(n *sizeof(void*));
-      if (!buf) { buf = fxd; n = BUFSIZE; }
-    }                           /* try to allocate a fitting buffer */
-    while (pos > off) {         /* while there are elements to shift */
-      memcpy (buf,       a +pos -n, n         *sizeof(void*));
-      memmove(a +pos -n, a +pos,    (end-pos) *sizeof(void*));
-      memcpy (a +end -n, buf,       n         *sizeof(void*));
-      pos -= n; end -= n;       /* shift section down/left and */
-    } }                         /* adapt the section boundaries */
-  else {                        /* if second section is smaller */
-    n = end -pos;               /* get the number of elements */
-    if (n > BUFSIZE) {          /* if the fixed buffer is too small */
-      buf = (void**)malloc(n *sizeof(void*));
-      if (!buf) { buf = fxd; n = BUFSIZE; }
-    }                           /* try to allocate a fitting buffer */
-    while (end > pos) {         /* while there are elements to shift */
-      memcpy (buf,       a +pos,    n         *sizeof(void*));
-      memmove(a +off +n, a +off,    (pos-off) *sizeof(void*));
-      memcpy (a +off,    buf,       n         *sizeof(void*));
-      pos += n; off += n;       /* shift section up/right and */
-    }                           /* adapt the section boundaries */
-  }
-  if (buf != fxd) free(buf);    /* delete an allocated buffer */
+    assert(array);                /* check the function arguments */
+
+    if ((pos >= off) && (pos < off +n))
+    {
+        return;    /* check whether moving is necessary */
+    }
+
+    if (pos < off)
+    {
+        end = off +n;
+        off = pos;
+        pos = end -n;
+    }
+
+    else
+    {
+        end = pos +1;
+        pos = off +n;
+    }
+
+    buf = fxd;                    /* normalize the indices */
+
+    if (pos +pos < end +off)      /* if first section is smaller */
+    {
+        /*if (pos -off < end -pos) { */
+        n = pos -off;               /* get the number of elements */
+
+        if (n > BUFSIZE)            /* if the fixed buffer is too small */
+        {
+            buf = (void**)malloc(n *sizeof(void*));
+
+            if (!buf)
+            {
+                buf = fxd;
+                n = BUFSIZE;
+            }
+        }                           /* try to allocate a fitting buffer */
+
+        while (pos > off)           /* while there are elements to shift */
+        {
+            memcpy (buf,       a +pos -n, n         *sizeof(void*));
+            memmove(a +pos -n, a +pos,    (end-pos) *sizeof(void*));
+            memcpy (a +end -n, buf,       n         *sizeof(void*));
+            pos -= n;
+            end -= n;       /* shift section down/left and */
+        }
+    }                         /* adapt the section boundaries */
+
+    else                          /* if second section is smaller */
+    {
+        n = end -pos;               /* get the number of elements */
+
+        if (n > BUFSIZE)            /* if the fixed buffer is too small */
+        {
+            buf = (void**)malloc(n *sizeof(void*));
+
+            if (!buf)
+            {
+                buf = fxd;
+                n = BUFSIZE;
+            }
+        }                           /* try to allocate a fitting buffer */
+
+        while (end > pos)           /* while there are elements to shift */
+        {
+            memcpy (buf,       a +pos,    n         *sizeof(void*));
+            memmove(a +off +n, a +off,    (pos-off) *sizeof(void*));
+            memcpy (a +off,    buf,       n         *sizeof(void*));
+            pos += n;
+            off += n;       /* shift section up/right and */
+        }                           /* adapt the section boundaries */
+    }
+
+    if (buf != fxd)
+    {
+        free(buf);    /* delete an allocated buffer */
+    }
 }  /* ptr_move() */
 
 /*--------------------------------------------------------------------*/
 
-void ptr_select (void *array, size_t n, size_t k, RANDFN *rand)
-{                               /* --- select random array entries */
-  size_t i;                     /* array index */
-  void   **a = (void**)array;   /* array to sort */
-  void   *t;                    /* exchange buffer */
+void
+ptr_select (void *array, size_t n, size_t k, RANDFN *rand)
+{
+    /* --- select random array entries */
+    size_t i;                     /* array index */
+    void   **a = (void**)array;   /* array to sort */
+    void   *t;                    /* exchange buffer */
 
-  assert(array && rand && (n >= k));  /* check the function arguments */
-  k = (k < n) ? k+1 : n;        /* adapt the number of selections */
-  while (--k > 0) {             /* shuffle loop (k selections) */
-    i = (size_t)(rand() *(double)n); /* compute a random index */
-    if (i > --n) i = n;         /* and clamp it to a valid range */
-    t = a[i]; a[i] = *a; *a++ = t;
-  }                             /* exchange the array elements */
+    assert(array && rand && (n >= k));  /* check the function arguments */
+    k = (k < n) ? k+1 : n;        /* adapt the number of selections */
+
+    while (--k > 0)               /* shuffle loop (k selections) */
+    {
+        i = (size_t)(rand() *(double)n); /* compute a random index */
+
+        if (i > --n)
+        {
+            i = n;    /* and clamp it to a valid range */
+        }
+
+        t = a[i];
+        a[i] = *a;
+        *a++ = t;
+    }                             /* exchange the array elements */
 }  /* ptr_select() */
 
 /*--------------------------------------------------------------------*/
 
-void ptr_shuffle (void *array, size_t n, RANDFN *rand)
-{ ptr_select(array, n, n-1, rand); }
+void
+ptr_shuffle (void *array, size_t n, RANDFN *rand)
+{
+    ptr_select(array, n, n-1, rand);
+}
 
 /*--------------------------------------------------------------------*/
 
-void ptr_reverse (void *array, size_t n)
-{                               /* --- reverse a pointer array */
-  void **a = (void**)array;     /* array to reverse */
-  void **e = a +n;              /* end of array to reverse */
-  void *t;                      /* exchange buffer */
+void
+ptr_reverse (void *array, size_t n)
+{
+    /* --- reverse a pointer array */
+    void **a = (void**)array;     /* array to reverse */
+    void **e = a +n;              /* end of array to reverse */
+    void *t;                      /* exchange buffer */
 
-  assert(array);                /* check the function arguments */
-  while (--e > a) {             /* reverse the order of the elements */
-    t = *e; *e = *a; *a++ = t; }
+    assert(array);                /* check the function arguments */
+
+    while (--e > a)               /* reverse the order of the elements */
+    {
+        t = *e;
+        *e = *a;
+        *a++ = t;
+    }
 }  /* ptr_reverse() */
 
 /*--------------------------------------------------------------------*/
 
-static void ptr_qrec (void **a, size_t n, CMPFN *cmp, void *data)
-{                               /* --- recursive part of quicksort */
-  void   **l, **r;              /* pointers to exchange positions */
-  void   *x, *t;                /* pivot element and exchange buffer */
-  size_t m;                     /* number of elements in 2nd section */
+static void
+ptr_qrec (void **a, size_t n, CMPFN *cmp, void *data)
+{
+    /* --- recursive part of quicksort */
+    void   **l, **r;              /* pointers to exchange positions */
+    void   *x, *t;                /* pivot element and exchange buffer */
+    size_t m;                     /* number of elements in 2nd section */
 
-  do {                          /* sections sort loop */
-    l = a; r = l +n -1;         /* start at left and right boundary */
-    if (cmp(*l, *r, data) > 0){ /* bring the first and last */
-      t = *l; *l = *r; *r = t;} /* element into proper order */
-    x = a[n/2];                 /* get the middle element as pivot */
-    if      (cmp(x, *l, data) < 0) x = *l;  /* try to find a */
-    else if (cmp(x, *r, data) > 0) x = *r;  /* better pivot */
-    while (1) {                 /* split and exchange loop */
-      while (cmp(*++l, x, data) < 0)      /* skip left  elements that */
-        ;                       /* are smaller than the pivot element */
-      while (cmp(*--r, x, data) > 0)      /* skip right elements that */
-        ;                       /* are greater than the pivot element */
-      if (l >= r) {             /* if at most one element left, */
-        if (l <= r) { l++; r--; } break; }    /* abort the loop */
-      t = *l; *l = *r; *r = t;  /* otherwise exchange elements */
+    do                            /* sections sort loop */
+    {
+        l = a;
+        r = l +n -1;         /* start at left and right boundary */
+
+        if (cmp(*l, *r, data) > 0)  /* bring the first and last */
+        {
+            t = *l;
+            *l = *r;
+            *r = t;
+        } /* element into proper order */
+
+        x = a[n/2];                 /* get the middle element as pivot */
+
+        if      (cmp(x, *l, data) < 0)
+        {
+            x = *l;    /* try to find a */
+        }
+
+        else if (cmp(x, *r, data) > 0)
+        {
+            x = *r;    /* better pivot */
+        }
+
+        while (1)                   /* split and exchange loop */
+        {
+            while (cmp(*++l, x, data) < 0)      /* skip left  elements that */
+                ;                       /* are smaller than the pivot element */
+
+            while (cmp(*--r, x, data) > 0)      /* skip right elements that */
+                ;                       /* are greater than the pivot element */
+
+            if (l >= r)               /* if at most one element left, */
+            {
+                if (l <= r)
+                {
+                    l++;    /* abort the loop */
+                    r--;
+                }
+
+                break;
+            }
+
+            t = *l;
+            *l = *r;
+            *r = t;  /* otherwise exchange elements */
+        }
+
+        m = n -(size_t)(l-a);       /* compute the number of elements */
+        n = 1 +(size_t)(r-a);       /* right and left of the split */
+
+        if (n > m)                  /* if right section is smaller, */
+        {
+            if (m >= TH_INSERT)       /* but larger than the threshold, */
+            {
+                ptr_qrec(l,m,cmp,data);    /* sort it by a recursive call, */
+            }
+        }
+
+        else                        /* if the left section is smaller, */
+        {
+            if (n >= TH_INSERT)       /* but larger than the threshold, */
+            {
+                ptr_qrec(a,n,cmp,data);    /* sort it by a recursive call, */
+            }
+
+            a = l;
+            n = m;             /* then switch to the right section */
+        }                           /* keeping its size m in variable n */
     }
-    m = n -(size_t)(l-a);       /* compute the number of elements */
-    n = 1 +(size_t)(r-a);       /* right and left of the split */
-    if (n > m) {                /* if right section is smaller, */
-      if (m >= TH_INSERT)       /* but larger than the threshold, */
-        ptr_qrec(l,m,cmp,data);}/* sort it by a recursive call, */
-    else {                      /* if the left section is smaller, */
-      if (n >= TH_INSERT)       /* but larger than the threshold, */
-        ptr_qrec(a,n,cmp,data); /* sort it by a recursive call, */
-      a = l; n = m;             /* then switch to the right section */
-    }                           /* keeping its size m in variable n */
-  } while (n >= TH_INSERT);     /* while greater than threshold */
+    while (n >= TH_INSERT);       /* while greater than threshold */
 }  /* ptr_qrec() */
 
 /*--------------------------------------------------------------------*/
 
-void ptr_qsort (void *array, size_t n, int dir, CMPFN *cmp, void *data)
-{                               /* --- quicksort for pointer arrays */
-  size_t i, k;                  /* loop variable, first section */
-  void   **l, **r;              /* to traverse the array */
-  void   *t;                    /* exchange buffer */
+void
+ptr_qsort (void *array, size_t n, int dir, CMPFN *cmp, void *data)
+{
+    /* --- quicksort for pointer arrays */
+    size_t i, k;                  /* loop variable, first section */
+    void   **l, **r;              /* to traverse the array */
+    void   *t;                    /* exchange buffer */
 
-  assert(array && cmp);         /* check the function arguments */
-  if (n < 2) return;            /* do not sort less than two elements */
-  if (n < TH_INSERT)            /* if fewer elements than threshold */
-    k = n;                      /* for insertion sort, note the */
-  else {                        /* number of elements, otherwise */
-    ptr_qrec((void**)array, n, cmp, data);
-    k = TH_INSERT -1;           /* call the recursive function and */
-  }                             /* get size of first array section */
-  for (l = r = (void**)array; --k > 0; )
-    if (cmp(*++r, *l, data) < 0)
-      l = r;                    /* find smallest of first k elements */
-  r = (void**)array;            /* swap the smallest element */
-  t = *l; *l = *r; *r = t;      /* to the front as a sentinel */
-  for (i = n; --i > 0; ) {      /* standard insertion sort */
-    t = *++r;                   /* note the element to insert */
-    for (l = r; cmp(*--l, t, data) > 0; ) /* shift right elements */
-      l[1] = *l;                /* that are greater than the one */
-    l[1] = t;                   /* to insert and store this element */
-  }                             /* in the place thus found */
-  if (dir < 0)                  /* if descending order requested, */
-    ptr_reverse(array, n);      /* reverse the element order */
+    assert(array && cmp);         /* check the function arguments */
+
+    if (n < 2)
+    {
+        return;    /* do not sort less than two elements */
+    }
+
+    if (n < TH_INSERT)            /* if fewer elements than threshold */
+    {
+        k = n;    /* for insertion sort, note the */
+    }
+
+    else                          /* number of elements, otherwise */
+    {
+        ptr_qrec((void**)array, n, cmp, data);
+        k = TH_INSERT -1;           /* call the recursive function and */
+    }                             /* get size of first array section */
+
+    for (l = r = (void**)array; --k > 0; )
+        if (cmp(*++r, *l, data) < 0)
+        {
+            l = r;    /* find smallest of first k elements */
+        }
+
+    r = (void**)array;            /* swap the smallest element */
+    t = *l;
+    *l = *r;
+    *r = t;      /* to the front as a sentinel */
+
+    for (i = n; --i > 0; )        /* standard insertion sort */
+    {
+        t = *++r;                   /* note the element to insert */
+
+        for (l = r; cmp(*--l, t, data) > 0; ) /* shift right elements */
+        {
+            l[1] = *l;    /* that are greater than the one */
+        }
+
+        l[1] = t;                   /* to insert and store this element */
+    }                             /* in the place thus found */
+
+    if (dir < 0)                  /* if descending order requested, */
+    {
+        ptr_reverse(array, n);    /* reverse the element order */
+    }
 }  /* ptr_qsort() */
 
 /*--------------------------------------------------------------------*/
 
-static void ptr_sift (void **array, size_t l, size_t r,
-                      CMPFN *cmp, void *data)
-{                               /* --- let element sift down in heap */
-  size_t i;                     /* index of first successor in heap */
-  void   *t;                    /* buffer for an array element */
+static void
+ptr_sift (void **array, size_t l, size_t r,
+          CMPFN *cmp, void *data)
+{
+    /* --- let element sift down in heap */
+    size_t i;                     /* index of first successor in heap */
+    void   *t;                    /* buffer for an array element */
 
-  t = array[l];                 /* note the sift element */
-  i = l +l +1;                  /* compute index of first successor */
-  do {                          /* sift loop */
-    if ((i < r)                 /* if second successor is greater */
-    &&  (cmp(array[i], array[i+1], data) < 0))
-      i++;                      /* go to the second successor */
-    if (cmp(t, array[i], data) >= 0) /* if the successor is greater */
-      break;                         /* than the sift element, */
-    array[l] = array[i];        /* let the successor ascend in heap */
-    l = i; i += i +1;           /* compute index of first successor */
-  } while (i <= r);             /* while still within heap */
-  array[l] = t;                 /* store the sift element */
+    t = array[l];                 /* note the sift element */
+    i = l +l +1;                  /* compute index of first successor */
+
+    do                            /* sift loop */
+    {
+        if ((i < r)                 /* if second successor is greater */
+                &&  (cmp(array[i], array[i+1], data) < 0))
+        {
+            i++;    /* go to the second successor */
+        }
+
+        if (cmp(t, array[i], data) >= 0) /* if the successor is greater */
+        {
+            break;    /* than the sift element, */
+        }
+
+        array[l] = array[i];        /* let the successor ascend in heap */
+        l = i;
+        i += i +1;           /* compute index of first successor */
+    }
+    while (i <= r);               /* while still within heap */
+
+    array[l] = t;                 /* store the sift element */
 }  /* ptr_sift() */
 
 /*--------------------------------------------------------------------*/
 
-void ptr_heapsort (void *array, size_t n, int dir,
-                   CMPFN *cmp, void *data)
-{                               /* --- heap sort for pointer arrays */
-  size_t l, r;                  /* boundaries of heap section */
-  void   *t;                    /* exchange buffer */
-  void   **a = (void**)array;   /* typed array */
+void
+ptr_heapsort (void *array, size_t n, int dir,
+              CMPFN *cmp, void *data)
+{
+    /* --- heap sort for pointer arrays */
+    size_t l, r;                  /* boundaries of heap section */
+    void   *t;                    /* exchange buffer */
+    void   **a = (void**)array;   /* typed array */
 
-  assert(array && cmp);         /* check the function arguments */
-  if (n < 2) return;            /* do not sort less than two elements */
-  l = n /2;                     /* at start, only the second half */
-  r = n -1;                     /* of the array has heap structure */
-  while (l > 0)                 /* while the heap is not complete, */
-    ptr_sift(a,--l,r,cmp,data); /* extend it by one element */
-  while (1) {                   /* heap reduction loop */
-    t = a[0]; a[0] = a[r];      /* swap the greatest element */
-    a[r] = t;                   /* to the end of the array */
-    if (--r <= 0) break;        /* if the heap is empty, abort */
-    ptr_sift(a,0,r,cmp,data);   /* let the element that has been */
-  }                             /* swapped to front sift down */
-  if (dir < 0)                  /* if descending order requested, */
-    ptr_reverse(array, n);      /* reverse the element order */
+    assert(array && cmp);         /* check the function arguments */
+
+    if (n < 2)
+    {
+        return;    /* do not sort less than two elements */
+    }
+
+    l = n /2;                     /* at start, only the second half */
+    r = n -1;                     /* of the array has heap structure */
+
+    while (l > 0)                 /* while the heap is not complete, */
+    {
+        ptr_sift(a,--l,r,cmp,data);    /* extend it by one element */
+    }
+
+    while (1)                     /* heap reduction loop */
+    {
+        t = a[0];
+        a[0] = a[r];      /* swap the greatest element */
+        a[r] = t;                   /* to the end of the array */
+
+        if (--r <= 0)
+        {
+            break;    /* if the heap is empty, abort */
+        }
+
+        ptr_sift(a,0,r,cmp,data);   /* let the element that has been */
+    }                             /* swapped to front sift down */
+
+    if (dir < 0)                  /* if descending order requested, */
+    {
+        ptr_reverse(array, n);    /* reverse the element order */
+    }
 }  /* ptr_heapsort() */
 
 /*--------------------------------------------------------------------*/
 
-static void mrgsort (void **array, void **buf, size_t n,
-                     CMPFN *cmp, void *data)
-{                               /* --- merge sort for pointer arrays */
-  size_t k, a, b;               /* numbers of objects in sections */
-  void   **sa, **sb, **ea, **eb;/* starts and ends of sorted sections */
-  void   **d, *t;               /* merge destination, exchange buffer */
+static void
+mrgsort (void **array, void **buf, size_t n,
+         CMPFN *cmp, void *data)
+{
+    /* --- merge sort for pointer arrays */
+    size_t k, a, b;               /* numbers of objects in sections */
+    void   **sa, **sb, **ea, **eb;/* starts and ends of sorted sections */
+    void   **d, *t;               /* merge destination, exchange buffer */
 
-  assert(array && buf && cmp);  /* check the function arguments */
-  if (n <= 8) {                 /* if only few elements to sort */
-    for (sa = array; --n > 0;){ /* insertion sort loop */
-      t = *(d = ++sa);          /* note the element to insert */
-      while ((--d >= array)     /* while not at the array start, */
-      &&     (cmp(*d, t, data) > 0))     /* shift right elements */
-        d[1] = *d;              /* that are greater than the one */
-      d[1] = t;                 /* to insert and store the element */
-    } return;                   /* to insert in the place thus found */
-  }                             /* aftwards sorting is done, so abort */
-  /* Using insertion sort for less than eight elements is not only */
-  /* slightly faster, but also ensures that all subsections sorted */
-  /* recursively in the code below contain at least two elements.  */
+    assert(array && buf && cmp);  /* check the function arguments */
 
-  k = n/2; d = buf;             /* sort two subsections recursively */
-  mrgsort(sa = array,   d,   a = k/2, cmp, data);
-  mrgsort(sb = sa+a,    d+a, b = k-a, cmp, data);
-  for (ea = sb, eb = sb+b; 1;){ /* traverse the sorted sections */
-    if (cmp(*sa, *sb, data) <= 0)
-         { *d++ = *sa++; if (sa >= ea) break; }
-    else { *d++ = *sb++; if (sb >= eb) break; }
-  }                             /* copy smaller element to dest. */
-  while (sa < ea) *d++ = *sa++; /* copy remaining elements */
-  while (sb < eb) *d++ = *sb++; /* from source to destination */
+    if (n <= 8)                   /* if only few elements to sort */
+    {
+        for (sa = array; --n > 0;)  /* insertion sort loop */
+        {
+            t = *(d = ++sa);          /* note the element to insert */
 
-  n -= k; d = buf+k;            /* sort two subsections recursively */
-  mrgsort(sa = array+k, d,   a = n/2, cmp, data);
-  mrgsort(sb = sa+a,    d+a, b = n-a, cmp, data);
-  for (ea = sb, eb = sb+b; 1;){ /* traverse the sorted sections */
-    if (cmp(*sa, *sb, data) <= 0)
-         { *d++ = *sa++; if (sa >= ea) break; }
-    else { *d++ = *sb++; if (sb >= eb) break; }
-  }                             /* copy smaller element to dest. */
-  while (sa < ea) *d++ = *sa++; /* copy remaining elements */
-  while (sb < eb) *d++ = *sb++; /* from source to destination */
+            while ((--d >= array)     /* while not at the array start, */
+                    &&     (cmp(*d, t, data) > 0))     /* shift right elements */
+            {
+                d[1] = *d;    /* that are greater than the one */
+            }
 
-  sa = buf; sb = sa+k; d = array;
-  for (ea = sb, eb = sb+n; 1;){ /* traverse the sorted sections */
-    if (cmp(*sa, *sb, data) <= 0)
-         { *d++ = *sa++; if (sa >= ea) break; }
-    else { *d++ = *sb++; if (sb >= eb) break; }
-  }                             /* copy smaller element to dest. */
-  while (sa < ea) *d++ = *sa++; /* copy remaining elements */
-  while (sb < eb) *d++ = *sb++; /* from source to destination */
+            d[1] = t;                 /* to insert and store the element */
+        }
+
+        return;                   /* to insert in the place thus found */
+    }                             /* aftwards sorting is done, so abort */
+
+    /* Using insertion sort for less than eight elements is not only */
+    /* slightly faster, but also ensures that all subsections sorted */
+    /* recursively in the code below contain at least two elements.  */
+
+    k = n/2;
+    d = buf;             /* sort two subsections recursively */
+    mrgsort(sa = array,   d,   a = k/2, cmp, data);
+    mrgsort(sb = sa+a,    d+a, b = k-a, cmp, data);
+
+    for (ea = sb, eb = sb+b; 1;)  /* traverse the sorted sections */
+    {
+        if (cmp(*sa, *sb, data) <= 0)
+        {
+            *d++ = *sa++;
+
+            if (sa >= ea)
+            {
+                break;
+            }
+        }
+
+        else
+        {
+            *d++ = *sb++;
+
+            if (sb >= eb)
+            {
+                break;
+            }
+        }
+    }                             /* copy smaller element to dest. */
+
+    while (sa < ea)
+    {
+        *d++ = *sa++;    /* copy remaining elements */
+    }
+
+    while (sb < eb)
+    {
+        *d++ = *sb++;    /* from source to destination */
+    }
+
+    n -= k;
+    d = buf+k;            /* sort two subsections recursively */
+    mrgsort(sa = array+k, d,   a = n/2, cmp, data);
+    mrgsort(sb = sa+a,    d+a, b = n-a, cmp, data);
+
+    for (ea = sb, eb = sb+b; 1;)  /* traverse the sorted sections */
+    {
+        if (cmp(*sa, *sb, data) <= 0)
+        {
+            *d++ = *sa++;
+
+            if (sa >= ea)
+            {
+                break;
+            }
+        }
+
+        else
+        {
+            *d++ = *sb++;
+
+            if (sb >= eb)
+            {
+                break;
+            }
+        }
+    }                             /* copy smaller element to dest. */
+
+    while (sa < ea)
+    {
+        *d++ = *sa++;    /* copy remaining elements */
+    }
+
+    while (sb < eb)
+    {
+        *d++ = *sb++;    /* from source to destination */
+    }
+
+    sa = buf;
+    sb = sa+k;
+    d = array;
+
+    for (ea = sb, eb = sb+n; 1;)  /* traverse the sorted sections */
+    {
+        if (cmp(*sa, *sb, data) <= 0)
+        {
+            *d++ = *sa++;
+
+            if (sa >= ea)
+            {
+                break;
+            }
+        }
+
+        else
+        {
+            *d++ = *sb++;
+
+            if (sb >= eb)
+            {
+                break;
+            }
+        }
+    }                             /* copy smaller element to dest. */
+
+    while (sa < ea)
+    {
+        *d++ = *sa++;    /* copy remaining elements */
+    }
+
+    while (sb < eb)
+    {
+        *d++ = *sb++;    /* from source to destination */
+    }
 }  /* mrgsort() */
 
 /*--------------------------------------------------------------------*/
 
-int ptr_mrgsort (void *array, size_t n, int dir,
-                 CMPFN *cmp, void *data, void *buf)
-{                               /* --- merge sort for pointer arrays */
-  void **b;                     /* (allocated) buffer */
+int
+ptr_mrgsort (void *array, size_t n, int dir,
+             CMPFN *cmp, void *data, void *buf)
+{
+    /* --- merge sort for pointer arrays */
+    void **b;                     /* (allocated) buffer */
 
-  assert(array && cmp);         /* check the function arguments */
-  if (n < 2) return 0;          /* do not sort less than two objects */
-  if (!(b = (void**)buf) && !(b = (void**)malloc(n *sizeof(void*))))
-    return -1;                  /* allocate a buffer if not given */
-  mrgsort(array, buf, n, cmp, data);
-  if (!buf) free(b);            /* sort the array recursively */
-  if (dir < 0)                  /* if descending order requested, */
-    ptr_reverse(array, n);      /* reverse the element order */
-  return 0;                     /* return 'ok' */
+    assert(array && cmp);         /* check the function arguments */
+
+    if (n < 2)
+    {
+        return 0;    /* do not sort less than two objects */
+    }
+
+    if (!(b = (void**)buf) && !(b = (void**)malloc(n *sizeof(void*))))
+    {
+        return -1;    /* allocate a buffer if not given */
+    }
+
+    mrgsort(array, buf, n, cmp, data);
+
+    if (!buf)
+    {
+        free(b);    /* sort the array recursively */
+    }
+
+    if (dir < 0)                  /* if descending order requested, */
+    {
+        ptr_reverse(array, n);    /* reverse the element order */
+    }
+
+    return 0;                     /* return 'ok' */
 }  /* ptr_mrgsort() */
 
 /* This implementation of merge sort is stable, that is, it does not  */
@@ -646,329 +930,591 @@ int ptr_mrgsort (void *array, size_t n, int dir,
 
 /*--------------------------------------------------------------------*/
 
-size_t ptr_unique (void *array, size_t n,
-                   CMPFN *cmp, void *data, OBJFN *del)
-{                               /* --- remove duplicate elements */
-  void **s, **d;                /* to traverse the pointer array */
+size_t
+ptr_unique (void *array, size_t n,
+            CMPFN *cmp, void *data, OBJFN *del)
+{
+    /* --- remove duplicate elements */
+    void **s, **d;                /* to traverse the pointer array */
 
-  assert(array && cmp);         /* check the function arguments */
-  if (n <= 1) return n;         /* check for 0 or 1 element */
-  for (d = s = (void**)array; --n > 0; ) {
-    if (cmp(*++s, *d, data) != 0) *++d = *s;
-    else if (del) del(*s);      /* traverse the (sorted) array */
-  }                             /* and collect unique elements */
-  return (size_t)(++d -(void**)array);
+    assert(array && cmp);         /* check the function arguments */
+
+    if (n <= 1)
+    {
+        return n;    /* check for 0 or 1 element */
+    }
+
+    for (d = s = (void**)array; --n > 0; )
+    {
+        if (cmp(*++s, *d, data) != 0)
+        {
+            *++d = *s;
+        }
+
+        else if (del)
+        {
+            del(*s);    /* traverse the (sorted) array */
+        }
+    }                             /* and collect unique elements */
+
+    return (size_t)(++d -(void**)array);
 }  /* ptr_unique() */           /* return the new number of elements */
 
 /*--------------------------------------------------------------------*/
 
-diff_t ptr_bsearch (const void *key, const void *array, size_t n,
-                    CMPFN *cmp, void *data)
-{                               /* --- do a binary search */
-  size_t l, r, m;               /* array indices */
-  int    c;                     /* comparison result */
-  void   **a = (void**)array;   /* typed array */
+diff_t
+ptr_bsearch (const void *key, const void *array, size_t n,
+             CMPFN *cmp, void *data)
+{
+    /* --- do a binary search */
+    size_t l, r, m;               /* array indices */
+    int    c;                     /* comparison result */
+    void   **a = (void**)array;   /* typed array */
 
-  assert(key && array && cmp);  /* check the function arguments */
-  for (l = 0, r = n; l < r; ) { /* while search range is not empty */
-    m = (l+r)/2;                /* compare the given key */
-    c = cmp(key, a[m], data);   /* to the middle element */
-    if      (c > 0) l = m+1;    /* adapt the search range */
-    else if (c < 0) r = m;      /* according to the result */
-    else return (diff_t)m;      /* if match found, return index */
-  }
-  return (diff_t)-1;            /* return 'not found' */
+    assert(key && array && cmp);  /* check the function arguments */
+
+    for (l = 0, r = n; l < r; )   /* while search range is not empty */
+    {
+        m = (l+r)/2;                /* compare the given key */
+        c = cmp(key, a[m], data);   /* to the middle element */
+
+        if      (c > 0)
+        {
+            l = m+1;    /* adapt the search range */
+        }
+
+        else if (c < 0)
+        {
+            r = m;    /* according to the result */
+        }
+
+        else
+        {
+            return (diff_t)m;    /* if match found, return index */
+        }
+    }
+
+    return (diff_t)-1;            /* return 'not found' */
 }  /* ptr_bsearch() */
 
 /*--------------------------------------------------------------------*/
 
-size_t ptr_bisect (const void *key, const void *array, size_t n,
-                   CMPFN *cmp, void *data)
-{                               /* --- do a binary search */
-  size_t l, r, m;               /* array indices */
-  int    c;                     /* comparison result */
-  void   **a = (void**)array;   /* typed array */
+size_t
+ptr_bisect (const void *key, const void *array, size_t n,
+            CMPFN *cmp, void *data)
+{
+    /* --- do a binary search */
+    size_t l, r, m;               /* array indices */
+    int    c;                     /* comparison result */
+    void   **a = (void**)array;   /* typed array */
 
-  assert(key && array && cmp);  /* check the function arguments */
-  for (l = 0, r = n; l < r; ) { /* while search range is not empty */
-    m = (l+r)/2;                /* compare the given key */
-    c = cmp(key, a[m], data);   /* to the middle element */
-    if      (c > 0) l = m+1;    /* adapt the search range */
-    else if (c < 0) r = m;      /* according to the result */
-    else return m;              /* if match found, return index */
-  }
-  return l;                     /* return the insertion position */
+    assert(key && array && cmp);  /* check the function arguments */
+
+    for (l = 0, r = n; l < r; )   /* while search range is not empty */
+    {
+        m = (l+r)/2;                /* compare the given key */
+        c = cmp(key, a[m], data);   /* to the middle element */
+
+        if      (c > 0)
+        {
+            l = m+1;    /* adapt the search range */
+        }
+
+        else if (c < 0)
+        {
+            r = m;    /* according to the result */
+        }
+
+        else
+        {
+            return m;    /* if match found, return index */
+        }
+    }
+
+    return l;                     /* return the insertion position */
 }  /* ptr_bisect() */
 
 /*----------------------------------------------------------------------
   Functions for Object Arrays
 ----------------------------------------------------------------------*/
 
-void obj_move (void *array, size_t off, size_t n, size_t pos,
-               size_t size)
-{                               /* --- move an object array section */
-  size_t end;                   /* end index of affected section */
-  size_t fxd[BUFSIZE];          /* buffer for copying */
-  size_t *buf;                  /* to access the buffer */
-  char   *a = (char*)array;     /* typed array */
+void
+obj_move (void *array, size_t off, size_t n, size_t pos,
+          size_t size)
+{
+    /* --- move an object array section */
+    size_t end;                   /* end index of affected section */
+    size_t fxd[BUFSIZE];          /* buffer for copying */
+    size_t *buf;                  /* to access the buffer */
+    char   *a = (char*)array;     /* typed array */
 
-  assert(array && (size < OBJ_MAXSIZE)); /* check function arguments */
-  if ((pos >= off) && (pos < off +n))
-    return;                     /* check whether moving is necessary */
-  if (pos < off) { end = off +n; off = pos; pos = end -n; }
-  else           { end = pos +1;            pos = off +n; }
-  buf = fxd;                    /* normalize the indices */
-  if (pos +pos < end +off) {    /* if first section is smaller */
-/*if (pos -off < end -pos) { */
-    n = pos -off;               /* get the number of elements */
-    if (n*size > BUFSIZE) {     /* if the fixed buffer is too small */
-      buf = (size_t*)malloc(n *size);
-      if (!buf) { buf = fxd; n = BUFSIZE/size; }
-    }                           /* try to allocate a fitting buffer */
-    while (pos > off) {         /* while there are elements to shift */
-      memcpy (buf,              a +(pos-n)*size, n         *size);
-      memmove(a +(pos-n) *size, a + pos   *size, (end-pos) *size);
-      memcpy (a +(end-n) *size, buf,             n         *size);
-      pos -= n; end -= n;       /* second section has been shifted */
-    } }                         /* down/left cnt elements */
-  else {                        /* if second section is smaller */
-    n = end -pos;               /* get the number of elements */
-    if (n*size > BUFSIZE) {     /* if the fixed buffer is too small */
-      buf = (size_t*)malloc(n *size);
-      if (!buf) { buf = fxd; n = BUFSIZE/size; }
-    }                           /* try to allocate a fitting buffer */
-    while (end > pos) {         /* while there are elements to shift */
-      memcpy (buf,             a +pos*size, n         *size);
-      memmove(a +(off+n)*size, a +off*size, (pos-off) *size);
-      memcpy (a + off   *size, buf,         n         *size);
-      pos += n; off += n;       /* first section has been shifted */
-    }                           /* up/right cnt elements */
-  }
-  if (buf != fxd) free(buf);    /* delete an allocated buffer */
+    assert(array && (size < OBJ_MAXSIZE)); /* check function arguments */
+
+    if ((pos >= off) && (pos < off +n))
+    {
+        return;    /* check whether moving is necessary */
+    }
+
+    if (pos < off)
+    {
+        end = off +n;
+        off = pos;
+        pos = end -n;
+    }
+
+    else
+    {
+        end = pos +1;
+        pos = off +n;
+    }
+
+    buf = fxd;                    /* normalize the indices */
+
+    if (pos +pos < end +off)      /* if first section is smaller */
+    {
+        /*if (pos -off < end -pos) { */
+        n = pos -off;               /* get the number of elements */
+
+        if (n*size > BUFSIZE)       /* if the fixed buffer is too small */
+        {
+            buf = (size_t*)malloc(n *size);
+
+            if (!buf)
+            {
+                buf = fxd;
+                n = BUFSIZE/size;
+            }
+        }                           /* try to allocate a fitting buffer */
+
+        while (pos > off)           /* while there are elements to shift */
+        {
+            memcpy (buf,              a +(pos-n)*size, n         *size);
+            memmove(a +(pos-n) *size, a + pos   *size, (end-pos) *size);
+            memcpy (a +(end-n) *size, buf,             n         *size);
+            pos -= n;
+            end -= n;       /* second section has been shifted */
+        }
+    }                         /* down/left cnt elements */
+
+    else                          /* if second section is smaller */
+    {
+        n = end -pos;               /* get the number of elements */
+
+        if (n*size > BUFSIZE)       /* if the fixed buffer is too small */
+        {
+            buf = (size_t*)malloc(n *size);
+
+            if (!buf)
+            {
+                buf = fxd;
+                n = BUFSIZE/size;
+            }
+        }                           /* try to allocate a fitting buffer */
+
+        while (end > pos)           /* while there are elements to shift */
+        {
+            memcpy (buf,             a +pos*size, n         *size);
+            memmove(a +(off+n)*size, a +off*size, (pos-off) *size);
+            memcpy (a + off   *size, buf,         n         *size);
+            pos += n;
+            off += n;       /* first section has been shifted */
+        }                           /* up/right cnt elements */
+    }
+
+    if (buf != fxd)
+    {
+        free(buf);    /* delete an allocated buffer */
+    }
 }  /* obj_move() */
 
 /*--------------------------------------------------------------------*/
 
-void obj_select (void *array, size_t n, size_t size,
-                              size_t k, RANDFN *rand)
-{                               /* --- select random array entries */
-  size_t i;                     /* array index */
-  char   *a = (char*)array;     /* array to sort */
-  size_t t[OBJSIZE];            /* exchange buffer */
+void
+obj_select (void *array, size_t n, size_t size,
+            size_t k, RANDFN *rand)
+{
+    /* --- select random array entries */
+    size_t i;                     /* array index */
+    char   *a = (char*)array;     /* array to sort */
+    size_t t[OBJSIZE];            /* exchange buffer */
 
-  assert(array                  /* check the function arguments */
-  &&     rand && (n >= k) && (size < OBJ_MAXSIZE));
-  k = (k < n) ? k+1 : n;        /* adapt the number of selections */
-  while (--k > 0) {             /* shuffle loop (k selections) */
-    i = (size_t)(rand() *(double)n); /* compute a random index */
-    if (i > --n) i = n;         /* and clamp it to a valid range */
-    memcpy(t, a +i*size, size);
-    memcpy(a +i*size, a, size);
-    memcpy(a, t, size); a += size;
-  }                             /* exchange the array elements */
+    assert(array                  /* check the function arguments */
+           &&     rand && (n >= k) && (size < OBJ_MAXSIZE));
+    k = (k < n) ? k+1 : n;        /* adapt the number of selections */
+
+    while (--k > 0)               /* shuffle loop (k selections) */
+    {
+        i = (size_t)(rand() *(double)n); /* compute a random index */
+
+        if (i > --n)
+        {
+            i = n;    /* and clamp it to a valid range */
+        }
+
+        memcpy(t, a +i*size, size);
+        memcpy(a +i*size, a, size);
+        memcpy(a, t, size);
+        a += size;
+    }                             /* exchange the array elements */
 }  /* obj_select() */
 
 /*--------------------------------------------------------------------*/
 
-void obj_shuffle (void *array, size_t n, size_t size, RANDFN *rand)
-{ obj_select(array, n, size, n-1, rand); }
+void
+obj_shuffle (void *array, size_t n, size_t size, RANDFN *rand)
+{
+    obj_select(array, n, size, n-1, rand);
+}
 
 /*--------------------------------------------------------------------*/
 
-void obj_reverse (void *array, size_t n, size_t size)
-{                               /* --- reverse an object array */
-  char   *a = (char*)array;     /* array to reverse */
-  char   *e = a +n*size;        /* end of array to reverse */
-  size_t t[OBJSIZE];            /* exchange buffer */
+void
+obj_reverse (void *array, size_t n, size_t size)
+{
+    /* --- reverse an object array */
+    char   *a = (char*)array;     /* array to reverse */
+    char   *e = a +n*size;        /* end of array to reverse */
+    size_t t[OBJSIZE];            /* exchange buffer */
 
-  assert(array && (size < OBJ_MAXSIZE)); /* check function arguments */
-  while ((e -= size) > a) {     /* reverse the order of the elements */
-    memcpy(t,e,size); memcpy(e,a,size); memcpy(a,t,size); a += size; }
+    assert(array && (size < OBJ_MAXSIZE)); /* check function arguments */
+
+    while ((e -= size) > a)       /* reverse the order of the elements */
+    {
+        memcpy(t,e,size);
+        memcpy(e,a,size);
+        memcpy(a,t,size);
+        a += size;
+    }
 }  /* obj_reverse() */
 
 /*--------------------------------------------------------------------*/
 
-static void obj_qrec (char *a, size_t n, size_t size,
-                      CMPFN *cmp, void *data)
-{                               /* --- recursive part of quicksort */
-  char   *l, *r;                /* pointers to exchange positions */
-  size_t x[OBJSIZE],t[OBJSIZE]; /* pivot element and exchange buffer */
-  size_t m;                     /* number of elements in 2nd section */
+static void
+obj_qrec (char *a, size_t n, size_t size,
+          CMPFN *cmp, void *data)
+{
+    /* --- recursive part of quicksort */
+    char   *l, *r;                /* pointers to exchange positions */
+    size_t x[OBJSIZE],t[OBJSIZE]; /* pivot element and exchange buffer */
+    size_t m;                     /* number of elements in 2nd section */
 
-  do {                          /* sections sort loop */
-    l = a; r = l +(n-1) *size;  /* start at left and right boundary */
-    if (cmp(l, r, data) > 0) {  /* bring the first and last */
-      memcpy(t, l, size);       /* element into proper order */
-      memcpy(l, r, size); memcpy(r, t, size);
+    do                            /* sections sort loop */
+    {
+        l = a;
+        r = l +(n-1) *size;  /* start at left and right boundary */
+
+        if (cmp(l, r, data) > 0)    /* bring the first and last */
+        {
+            memcpy(t, l, size);       /* element into proper order */
+            memcpy(l, r, size);
+            memcpy(r, t, size);
+        }
+
+        memcpy(x,a+(n/2)*size,size);/* get the middle element as pivot */
+
+        if      (cmp(x, l, data) < 0)
+        {
+            memcpy(x, l, size);    /* try to find */
+        }
+
+        else if (cmp(x, r, data) > 0)
+        {
+            memcpy(x, r, size);    /* better pivot */
+        }
+
+        while (1)                   /* split and exchange loop */
+        {
+            while (cmp(l += size, x, data) < 0) /* skip left  elements that */
+                ;                       /* are smaller than the pivot element */
+
+            while (cmp(r -= size, x, data) > 0) /* skip right elements that */
+                ;                       /* are greater than the pivot element */
+
+            if (l >= r)               /* if at most one element left */
+            {
+                if (l <= r)
+                {
+                    l += size;
+                    r -= size;
+                }
+
+                break;                  /* skip pivot and abort the loop */
+            }                         /* otherwise exchange elements */
+
+            memcpy(t, l, size);
+            memcpy(l, r, size);
+            memcpy(r, t, size);
+        }
+
+        m = n -(size_t)(l-a) /size; /* compute the number of elements */
+        n = 1 +(size_t)(r-a) /size; /* right and left of the split */
+
+        if (n > m)                  /* if right section is smaller, */
+        {
+            if (m >= TH_INSERT)       /* sort it by a recursive call */
+            {
+                obj_qrec(l, m, size, cmp, data);
+            }
+        }
+
+        else                        /* if the left section is smaller, */
+        {
+            if (n >= TH_INSERT)       /* but larger than the threshold, */
+            {
+                obj_qrec(a, n, size, cmp, data);
+            }
+
+            a = l;
+            n = m;             /* sort it by a recursive call, */
+        }                           /* then switch to the right section */
     }
-    memcpy(x,a+(n/2)*size,size);/* get the middle element as pivot */
-    if      (cmp(x, l, data) < 0) memcpy(x, l, size); /* try to find */
-    else if (cmp(x, r, data) > 0) memcpy(x, r, size); /* better pivot */
-    while (1) {                 /* split and exchange loop */
-      while (cmp(l += size, x, data) < 0) /* skip left  elements that */
-        ;                       /* are smaller than the pivot element */
-      while (cmp(r -= size, x, data) > 0) /* skip right elements that */
-        ;                       /* are greater than the pivot element */
-      if (l >= r) {             /* if at most one element left */
-        if (l <= r) { l += size; r -= size; }
-        break;                  /* skip pivot and abort the loop */
-      }                         /* otherwise exchange elements */
-      memcpy(t, l, size); memcpy(l, r, size); memcpy(r, t, size);
-    }
-    m = n -(size_t)(l-a) /size; /* compute the number of elements */
-    n = 1 +(size_t)(r-a) /size; /* right and left of the split */
-    if (n > m) {                /* if right section is smaller, */
-      if (m >= TH_INSERT)       /* sort it by a recursive call */
-        obj_qrec(l, m, size, cmp, data); }
-    else {                      /* if the left section is smaller, */
-      if (n >= TH_INSERT)       /* but larger than the threshold, */
-        obj_qrec(a, n, size, cmp, data);
-      a = l; n = m;             /* sort it by a recursive call, */
-    }                           /* then switch to the right section */
-  } while (n >= TH_INSERT);     /* while greater than threshold */
+    while (n >= TH_INSERT);       /* while greater than threshold */
 }  /* obj_qrec() */
 
 /*--------------------------------------------------------------------*/
 
-void obj_qsort (void *array, size_t n, size_t size,
-                int dir, CMPFN *cmp, void *data)
-{                               /* --- quicksort for object arrays */
-  size_t i, k;                  /* loop variable, first section */
-  char   *l, *r;                /* to traverse the array */
-  size_t t[OBJSIZE];            /* exchange buffer */
+void
+obj_qsort (void *array, size_t n, size_t size,
+           int dir, CMPFN *cmp, void *data)
+{
+    /* --- quicksort for object arrays */
+    size_t i, k;                  /* loop variable, first section */
+    char   *l, *r;                /* to traverse the array */
+    size_t t[OBJSIZE];            /* exchange buffer */
 
-  assert(array                  /* check the function arguments */
-  &&     cmp && (size < OBJ_MAXSIZE));
-  if (n < 2) return;            /* do not sort less than two elements */
-  if (n < TH_INSERT)            /* if fewer elements than threshold */
-    k = n;                      /* for insertion sort, note the */
-  else {                        /* number of elements, otherwise */
-    obj_qrec((char*)array, n, size, cmp, data);
-    k = TH_INSERT -1;           /* call the recursive function and */
-  }                             /* get size of first array section */
-  for (l = r = (char*)array; --k > 0; )
-    if (cmp(r += size, l, data) < 0)
-      l = r;                    /* find smallest of first k elements */
-  r = (char*)array;             /* swap the smallest element */
-  memcpy(t, l, size);           /* to the front as a sentinel */
-  memcpy(l, r, size); memcpy(r, t, size);
-  for (i = n; --i > 0; ) {      /* standard insertion sort */
-    memcpy(t, r += size, size); /* note the element to insert */
-    for (l = r; cmp(l -= size, t, data) > 0; )
-      memcpy(l +size, l, size); /* shift right elements greater than */
-    memcpy(l +size, t, size);   /* the one to insert and store this */
-  }                             /* element in the place thus found */
-  if (dir < 0)                  /* if descending order requested, */
-    obj_reverse(array, n,size); /* reverse the element order */
+    assert(array                  /* check the function arguments */
+           &&     cmp && (size < OBJ_MAXSIZE));
+
+    if (n < 2)
+    {
+        return;    /* do not sort less than two elements */
+    }
+
+    if (n < TH_INSERT)            /* if fewer elements than threshold */
+    {
+        k = n;    /* for insertion sort, note the */
+    }
+
+    else                          /* number of elements, otherwise */
+    {
+        obj_qrec((char*)array, n, size, cmp, data);
+        k = TH_INSERT -1;           /* call the recursive function and */
+    }                             /* get size of first array section */
+
+    for (l = r = (char*)array; --k > 0; )
+        if (cmp(r += size, l, data) < 0)
+        {
+            l = r;    /* find smallest of first k elements */
+        }
+
+    r = (char*)array;             /* swap the smallest element */
+    memcpy(t, l, size);           /* to the front as a sentinel */
+    memcpy(l, r, size);
+    memcpy(r, t, size);
+
+    for (i = n; --i > 0; )        /* standard insertion sort */
+    {
+        memcpy(t, r += size, size); /* note the element to insert */
+
+        for (l = r; cmp(l -= size, t, data) > 0; )
+        {
+            memcpy(l +size, l, size);    /* shift right elements greater than */
+        }
+
+        memcpy(l +size, t, size);   /* the one to insert and store this */
+    }                             /* element in the place thus found */
+
+    if (dir < 0)                  /* if descending order requested, */
+    {
+        obj_reverse(array, n,size);    /* reverse the element order */
+    }
 }  /* obj_qsort() */
 
 /*--------------------------------------------------------------------*/
 
-static void obj_sift (char *array, size_t l, size_t r, size_t size,
-                      CMPFN *cmp, void *data)
-{                               /* --- let element sift down in heap */
-  size_t i;                     /* index of first successor in heap */
-  size_t t[OBJSIZE];            /* buffer for the sift element */
+static void
+obj_sift (char *array, size_t l, size_t r, size_t size,
+          CMPFN *cmp, void *data)
+{
+    /* --- let element sift down in heap */
+    size_t i;                     /* index of first successor in heap */
+    size_t t[OBJSIZE];            /* buffer for the sift element */
 
-  memcpy(t,array+l*size,size);  /* note the sift element */
-  i = l +l +1;                  /* compute index of first successor */
-  do {                          /* sift loop */
-    if ((i < r)                 /* if second successor is greater */
-    &&  (cmp(array +i*size, array +(i+1)*size, data) < 0))
-      i++;                      /* go to the second successor */
-    if (cmp(t, array +i*size, data) >= 0)
-      break;                    /* if successor > sift element, */
-    memcpy(array +l*size, array +i*size, size);
-    l  = i;                     /* let the successor ascend in heap */
-    i += i +1;                  /* compute index of first successor */
-  } while (i <= r);             /* while still within heap */
-  memcpy(array+l*size,t,size);  /* store the sift element */
+    memcpy(t,array+l*size,size);  /* note the sift element */
+    i = l +l +1;                  /* compute index of first successor */
+
+    do                            /* sift loop */
+    {
+        if ((i < r)                 /* if second successor is greater */
+                &&  (cmp(array +i*size, array +(i+1)*size, data) < 0))
+        {
+            i++;    /* go to the second successor */
+        }
+
+        if (cmp(t, array +i*size, data) >= 0)
+        {
+            break;    /* if successor > sift element, */
+        }
+
+        memcpy(array +l*size, array +i*size, size);
+        l  = i;                     /* let the successor ascend in heap */
+        i += i +1;                  /* compute index of first successor */
+    }
+    while (i <= r);               /* while still within heap */
+
+    memcpy(array+l*size,t,size);  /* store the sift element */
 }  /* obj_sift() */
 
 /*--------------------------------------------------------------------*/
 
-void obj_heapsort (void *array, size_t n, size_t size,
-                   int dir, CMPFN *cmp, void *data)
-{                               /* --- heapsort for object arrays */
-  size_t l, r;                  /* boundaries of heap section */
-  size_t t[OBJSIZE];            /* exchange buffer */
-  char   *a = (char*)array;     /* typed array */
+void
+obj_heapsort (void *array, size_t n, size_t size,
+              int dir, CMPFN *cmp, void *data)
+{
+    /* --- heapsort for object arrays */
+    size_t l, r;                  /* boundaries of heap section */
+    size_t t[OBJSIZE];            /* exchange buffer */
+    char   *a = (char*)array;     /* typed array */
 
-  assert(array                  /* check the function arguments */
-  &&     cmp && (size < OBJ_MAXSIZE));
-  if (n < 2) return;            /* do not sort less than two elements */
-  l = n /2;                     /* at start, only the second half */
-  r = n -1;                     /* of the array has heap structure */
-  while (l > 0)                 /* build the initial heap */
-    obj_sift(a, --l, r, size, cmp, data);
-  while (1) {                   /* heap reduction loop */
-    memcpy(t, a, size);         /* swap the greatest element */
-    memcpy(a, a +r*size, size); /* (root of the heap) */
-    memcpy(a +r*size, t, size); /* to the end of the array */
-    if (--r <= 0) break;        /* if the heap is empty, abort */
-    obj_sift(a, 0, r, size, cmp, data);
-  }                             /* let new root sift down in heap */
-  if (dir < 0)                  /* if descending order requested, */
-    obj_reverse(array,n,size);  /* reverse the element order */
+    assert(array                  /* check the function arguments */
+           &&     cmp && (size < OBJ_MAXSIZE));
+
+    if (n < 2)
+    {
+        return;    /* do not sort less than two elements */
+    }
+
+    l = n /2;                     /* at start, only the second half */
+    r = n -1;                     /* of the array has heap structure */
+
+    while (l > 0)                 /* build the initial heap */
+    {
+        obj_sift(a, --l, r, size, cmp, data);
+    }
+
+    while (1)                     /* heap reduction loop */
+    {
+        memcpy(t, a, size);         /* swap the greatest element */
+        memcpy(a, a +r*size, size); /* (root of the heap) */
+        memcpy(a +r*size, t, size); /* to the end of the array */
+
+        if (--r <= 0)
+        {
+            break;    /* if the heap is empty, abort */
+        }
+
+        obj_sift(a, 0, r, size, cmp, data);
+    }                             /* let new root sift down in heap */
+
+    if (dir < 0)                  /* if descending order requested, */
+    {
+        obj_reverse(array,n,size);    /* reverse the element order */
+    }
 }  /* obj_heapsort() */
 
 /*--------------------------------------------------------------------*/
 
-size_t obj_unique (void *array, size_t n, size_t size,
-                   CMPFN *cmp, void *data)
-{                               /* --- remove duplicate elements */
-  char *s, *d;                  /* to traverse the object array */
+size_t
+obj_unique (void *array, size_t n, size_t size,
+            CMPFN *cmp, void *data)
+{
+    /* --- remove duplicate elements */
+    char *s, *d;                  /* to traverse the object array */
 
-  assert(array                  /* check the function arguments */
-  &&     cmp && (size < OBJ_MAXSIZE));
-  if (n <= 1) return n;         /* check for 0 or 1 element */
-  for (d = s = (char*)array; --n > 0; ) {
-    if (cmp(s += size, d, data) != 0) {
-      d += size; memcpy(d, s, size); }
-  }                             /* collect unique elements */
-  return (size_t)(d +size -(char*)array) /size;
+    assert(array                  /* check the function arguments */
+           &&     cmp && (size < OBJ_MAXSIZE));
+
+    if (n <= 1)
+    {
+        return n;    /* check for 0 or 1 element */
+    }
+
+    for (d = s = (char*)array; --n > 0; )
+    {
+        if (cmp(s += size, d, data) != 0)
+        {
+            d += size;
+            memcpy(d, s, size);
+        }
+    }                             /* collect unique elements */
+
+    return (size_t)(d +size -(char*)array) /size;
 }  /* obj_unique() */
 
 /*--------------------------------------------------------------------*/
 
-diff_t obj_bsearch (const void *key, const void *array, size_t n,
-                    size_t size, CMPFN *cmp, void *data)
-{                               /* --- do a binary search */
-  size_t l, r, m;               /* array indices */
-  int    c;                     /* comparison result */
-  char   *a = (char*)array;     /* typed array */
+diff_t
+obj_bsearch (const void *key, const void *array, size_t n,
+             size_t size, CMPFN *cmp, void *data)
+{
+    /* --- do a binary search */
+    size_t l, r, m;               /* array indices */
+    int    c;                     /* comparison result */
+    char   *a = (char*)array;     /* typed array */
 
-  assert(key                    /* check the function arguments */
-  &&     array && cmp && (size < OBJ_MAXSIZE));
-  for (l = 0, r = n; l < r; ) { /* while search range is not empty */
-    m = (l+r)/2;                /* compare the given key */
-    c = cmp(key,a+m*size,data); /* to the middle element */
-    if      (c > 0) l = m+1;    /* adapt the search range */
-    else if (c < 0) r = m;      /* according to the result */
-    else return (diff_t)m;      /* if match found, return index */
-  }
-  return (diff_t)-1;            /* return 'not found' */
+    assert(key                    /* check the function arguments */
+           &&     array && cmp && (size < OBJ_MAXSIZE));
+
+    for (l = 0, r = n; l < r; )   /* while search range is not empty */
+    {
+        m = (l+r)/2;                /* compare the given key */
+        c = cmp(key,a+m*size,data); /* to the middle element */
+
+        if      (c > 0)
+        {
+            l = m+1;    /* adapt the search range */
+        }
+
+        else if (c < 0)
+        {
+            r = m;    /* according to the result */
+        }
+
+        else
+        {
+            return (diff_t)m;    /* if match found, return index */
+        }
+    }
+
+    return (diff_t)-1;            /* return 'not found' */
 }  /* obj_bsearch() */
 
 /*--------------------------------------------------------------------*/
 
-size_t obj_bisect (const void *key, const void *array, size_t n,
-                   size_t size, CMPFN *cmp, void *data)
-{                               /* --- do a binary search */
-  size_t l, r, m;               /* array indices */
-  int    c;                     /* comparison result */
-  char   *a = (char*)array;     /* typed array */
+size_t
+obj_bisect (const void *key, const void *array, size_t n,
+            size_t size, CMPFN *cmp, void *data)
+{
+    /* --- do a binary search */
+    size_t l, r, m;               /* array indices */
+    int    c;                     /* comparison result */
+    char   *a = (char*)array;     /* typed array */
 
-  assert(key                    /* check the function arguments */
-  &&     array && cmp && (size < OBJ_MAXSIZE));
-  for (l = 0, r = n; l < r; ) { /* while search range is not empty */
-    m = (l+r)/2;                /* compare the given key */
-    c = cmp(key,a+m*size,data); /* to the middle element */
-    if      (c > 0) l = m+1;    /* adapt the search range */
-    else if (c < 0) r = m;      /* according to the result */
-    else return m;              /* if match found, return index */
-  }
-  return l;                     /* return the insertion position */
+    assert(key                    /* check the function arguments */
+           &&     array && cmp && (size < OBJ_MAXSIZE));
+
+    for (l = 0, r = n; l < r; )   /* while search range is not empty */
+    {
+        m = (l+r)/2;                /* compare the given key */
+        c = cmp(key,a+m*size,data); /* to the middle element */
+
+        if      (c > 0)
+        {
+            l = m+1;    /* adapt the search range */
+        }
+
+        else if (c < 0)
+        {
+            r = m;    /* according to the result */
+        }
+
+        else
+        {
+            return m;    /* if match found, return index */
+        }
+    }
+
+    return l;                     /* return the insertion position */
 }  /* obj_bisect() */
 
 /*----------------------------------------------------------------------
@@ -1410,49 +1956,86 @@ I2C_HEAPSORT(x2c, dif, diff_t)
 #ifdef ARRAYS_MAIN
 
 static int lexcmp (const void *p1, const void *p2, void *data)
-{                               /* --- compare lexicographically */
-  return strcmp(p1, p2);        /* use standard string comparison */
+{
+    /* --- compare lexicographically */
+    return strcmp(p1, p2);        /* use standard string comparison */
 }  /* lexcmp() */
 
 /*--------------------------------------------------------------------*/
 
-static int numcmp (const void *p1, const void *p2, void *data)
-{                               /* --- compare strings numerically */
-  double d1 = strtod((const char*)p1, NULL);
-  double d2 = strtod((const char*)p2, NULL);
-  if (d1 < d2) return -1;       /* convert to numbers and */
-  if (d1 > d2) return +1;       /* compare numerically */
-  return strcmp(p1, p2);        /* if the numbers are equal, */
+static int
+numcmp (const void *p1, const void *p2, void *data)
+{
+    /* --- compare strings numerically */
+    double d1 = strtod((const char*)p1, NULL);
+    double d2 = strtod((const char*)p2, NULL);
+
+    if (d1 < d2)
+    {
+        return -1;    /* convert to numbers and */
+    }
+
+    if (d1 > d2)
+    {
+        return +1;    /* compare numerically */
+    }
+
+    return strcmp(p1, p2);        /* if the numbers are equal, */
 }  /* numcmp() */               /* compare strings lexicographically */
 
 /*--------------------------------------------------------------------*/
 
-int main (int argc, char *argv[])
-{                               /* --- sort program arguments */
-  int   i, n;                   /* loop variables */
-  char  *s;                     /* to traverse the arguments */
-  CMPFN *cmp = lexcmp;          /* comparison function */
+int
+main (int argc, char *argv[])
+{
+    /* --- sort program arguments */
+    int   i, n;                   /* loop variables */
+    char  *s;                     /* to traverse the arguments */
+    CMPFN *cmp = lexcmp;          /* comparison function */
 
-  if (argc < 2) {               /* if no arguments are given */
-    printf("usage: %s [arg [arg ...]]\n", argv[0]);
-    printf("sort the list of program arguments\n");
-    return 0;                   /* print a usage message */
-  }                             /* and abort the program */
-  for (i = n = 0; ++i < argc; ) {
-    s = argv[i];                /* traverse the arguments */
-    if (*s != '-') { argv[n++] = s; continue; }
-    s++;                        /* store the arguments to sort */
-    while (*s) {                /* traverse the options */
-      switch (*s++) {           /* evaluate the options */
-        case 'n': cmp = numcmp; break;
-        default : printf("unknown option -%c\n", *--s); return -1;
-      }                         /* set the option variables */
-    }                           /* and check for known options */
-  }
-  ptr_qsort(argv, (size_t)n, +1, cmp, NULL);
-  for (i = 0; i < n; i++) {     /* sort and print program arguments */
-    fputs(argv[i], stdout); fputc('\n', stdout); }
-  return 0;                     /* return 'ok' */
+    if (argc < 2)                 /* if no arguments are given */
+    {
+        printf("usage: %s [arg [arg ...]]\n", argv[0]);
+        printf("sort the list of program arguments\n");
+        return 0;                   /* print a usage message */
+    }                             /* and abort the program */
+
+    for (i = n = 0; ++i < argc; )
+    {
+        s = argv[i];                /* traverse the arguments */
+
+        if (*s != '-')
+        {
+            argv[n++] = s;
+            continue;
+        }
+
+        s++;                        /* store the arguments to sort */
+
+        while (*s)                  /* traverse the options */
+        {
+            switch (*s++)             /* evaluate the options */
+            {
+            case 'n':
+                cmp = numcmp;
+                break;
+
+            default :
+                printf("unknown option -%c\n", *--s);
+                return -1;
+            }                         /* set the option variables */
+        }                           /* and check for known options */
+    }
+
+    ptr_qsort(argv, (size_t)n, +1, cmp, NULL);
+
+    for (i = 0; i < n; i++)       /* sort and print program arguments */
+    {
+        fputs(argv[i], stdout);
+        fputc('\n', stdout);
+    }
+
+    return 0;                     /* return 'ok' */
 }  /* main() */
 
 #endif

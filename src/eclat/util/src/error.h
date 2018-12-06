@@ -19,9 +19,9 @@
 ----------------------------------------------------------------------*/
 
 #ifdef QUIET                    /* if quiet version */
-  #define REPORT                /* do not add reporting code */
+#define REPORT                /* do not add reporting code */
 #else                           /* if verbose version */
-  #define REPORT                /* add error reporting code */         \
+#define REPORT                /* add error reporting code */         \
   int        k;                 /* maximal error code */               \
   va_list    args;              /* list of variable arguments */       \
   const char *msg;              /* error message */                    \
@@ -44,8 +44,9 @@
 #endif
 
 #if 0
-    fprintf(stderr, "Call the program without any arguments "          \
-                    "for a usage message.\n");                         \
+fprintf(stderr, "Call the program without any arguments "          \
+        "for a usage message.\n");
+\
 
 #endif
 /*--------------------------------------------------------------------*/

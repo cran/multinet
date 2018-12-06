@@ -12,25 +12,43 @@
 
 namespace Eigen {
 
-struct StlThreadEnvironment {
-  struct Task {
-    std::function<void()> f;
-  };
+struct StlThreadEnvironment
+{
+    struct Task
+    {
+        std::function<void()> f;
+    };
 
-  // EnvThread constructor must start the thread,
-  // destructor must join the thread.
-  class EnvThread {
-   public:
-    EnvThread(std::function<void()> f) : thr_(std::move(f)) {}
-    ~EnvThread() { thr_.join(); }
+    // EnvThread constructor must start the thread,
+    // destructor must join the thread.
+    class EnvThread
+    {
+      public:
+        EnvThread(std::function<void()> f) : thr_(std::move(f)) {}
+        ~EnvThread()
+        {
+            thr_.join();
+        }
 
-   private:
-    std::thread thr_;
-  };
+      private:
+        std::thread thr_;
+    };
 
-  EnvThread* CreateThread(std::function<void()> f) { return new EnvThread(std::move(f)); }
-  Task CreateTask(std::function<void()> f) { return Task{std::move(f)}; }
-  void ExecuteTask(const Task& t) { t.f(); }
+    EnvThread*
+    CreateThread(std::function<void()> f)
+    {
+        return new EnvThread(std::move(f));
+    }
+    Task
+    CreateTask(std::function<void()> f)
+    {
+        return Task{std::move(f)};
+    }
+    void
+    ExecuteTask(const Task& t)
+    {
+        t.f();
+    }
 };
 
 }  // namespace Eigen

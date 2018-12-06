@@ -3,7 +3,7 @@
 \alias{abacus.ml}
 \alias{clique.percolation.ml}
 \alias{glouvain.ml}
-\alias{lart.ml}
+\alias{infomap.ml}
 \alias{get.community.list.ml}
 \title{
 Community detection algorithms
@@ -14,7 +14,7 @@ Various algorithms to compute communities in multiplex networks, based on freque
 abacus.ml(mlnetwork, min.actors=3, min.layers=1)
 clique.percolation.ml(mlnetwork, k=3, m=1)
 glouvain.ml(mlnetwork, gamma=1, omega=1, limit=0)
-lart.ml(mlnetwork, t=-1, eps=1, gamma=1)
+infomap.ml(mlnetwork, overlapping=FALSE, directed=FALSE, self.links=TRUE)
 
 get.community.list.ml(comm.struct, mlnetwork)
 }
@@ -27,8 +27,9 @@ get.community.list.ml(comm.struct, mlnetwork)
 \item{gamma}{Resolution parameter for modularity in the generalized louvain and lart methods.}
 \item{omega}{Inter-layer weight parameter in the generalized louvain method.}
 \item{limit}{Limit parameter in the generalized louvain method: if the number of nodes exceeds this limit, then the modularity is computed on the fly without keeping the full data in memory.}
-\item{t}{t parameter in the lart method. If a negative value is provided, then the number of layers times three is used.}
-\item{eps}{Eps parameter in the lart method.}
+\item{overlapping}{Specifies if overlapping clusters can be returned.}
+\item{directed}{Specifies whether the edges should be considered as directed.}
+\item{self.links}{Specifies whether self links should be considered or not.}
 \item{comm.struct}{The result of a community detection method.}
 }
 \value{
@@ -38,9 +39,10 @@ All community detection algorithms return a data frame where each row contains a
 }
 \references{
 Berlingerio, Michele, Pinelli, Fabio, and Calabrese, Francesco (2013). ABACUS: frequent pAttern mining-BAsed Community discovery in mUltidimensional networkS. Data Mining and Knowledge Discovery, 27(3), 294-320. (for abacus.ml())
-Afsarmanesh, Nazanin, and Magnani, Matteo (2016). Finding overlapping communities in multiplex networks. Retrieved  arXiv 1602.03746 (for clique.percolation.ml())
+Afsarmanesh, Nazanin, and Magnani, Matteo (2018). Partial and overlapping community detection in multiplex social networks. Social informatics (for clique.percolation.ml())
 Mucha, Peter J., Richardson, Thomas, Macon, Kevin, Porter, Mason A., and Onnela, Jukka-Pekka (2010). Community structure in time-dependent, multiscale, and multiplex networks. Science (New York, N.Y.), 328(5980), 876-8. Data Analysis, Statistics and Probability; Physics and Society. (for glouvain.ml())
-Kuncheva, Zhana, and Montana, Giovanni (2015). Community detection in multiplex networks using locally adaptive random walks. Physics and Society; Machine Learning. (for lart.ml())
+De Domenico, M., Lancichinetti, A., Arenas, A., and Rosvall, M. (2015)
+Identifying Modular Flows on Multilayer Networks Reveals Highly Overlapping Organization in Interconnected Systems. PHYSICAL REVIEW X 5, 011027 (for infomap.ml())
 }
 \seealso{\link{Plotting}}
 \examples{
@@ -48,5 +50,5 @@ net <- ml.florentine()
 abacus.ml(net)
 clique.percolation.ml(net)
 glouvain.ml(net)
-lart.ml(net)
+infomap.ml(net)
 }

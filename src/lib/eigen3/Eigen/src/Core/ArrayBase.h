@@ -10,7 +10,7 @@
 #ifndef EIGEN_ARRAYBASE_H
 #define EIGEN_ARRAYBASE_H
 
-namespace Eigen { 
+namespace Eigen {
 
 template<typename ExpressionType> class MatrixWrapper;
 
@@ -37,7 +37,7 @@ template<typename ExpressionType> class MatrixWrapper;
   * \sa class MatrixBase, \ref TopicClassHierarchy
   */
 template<typename Derived> class ArrayBase
-  : public DenseBase<Derived>
+    : public DenseBase<Derived>
 {
   public:
 #ifndef EIGEN_PARSED_BY_DOXYGEN
@@ -60,7 +60,7 @@ template<typename Derived> class ArrayBase
     using Base::MaxSizeAtCompileTime;
     using Base::IsVectorAtCompileTime;
     using Base::Flags;
-    
+
     using Base::derived;
     using Base::const_cast_derived;
     using Base::rows;
@@ -104,69 +104,106 @@ template<typename Derived> class ArrayBase
       * from generating a default operator= (issue hit with g++ 4.1)
       */
     EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
-    Derived& operator=(const ArrayBase& other)
+    Derived&
+    operator=(const ArrayBase& other)
     {
-      internal::call_assignment(derived(), other.derived());
-      return derived();
+        internal::call_assignment(derived(), other.derived());
+        return derived();
     }
-    
+
     /** Set all the entries to \a value.
       * \sa DenseBase::setConstant(), DenseBase::fill() */
     EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
-    Derived& operator=(const Scalar &value)
-    { Base::setConstant(value); return derived(); }
+    Derived&
+    operator=(const Scalar &value)
+    {
+        Base::setConstant(value);
+        return derived();
+    }
 
     EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
-    Derived& operator+=(const Scalar& scalar);
+    Derived&
+    operator+=(const Scalar& scalar);
     EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
-    Derived& operator-=(const Scalar& scalar);
-
-    template<typename OtherDerived>
-    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
-    Derived& operator+=(const ArrayBase<OtherDerived>& other);
-    template<typename OtherDerived>
-    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
-    Derived& operator-=(const ArrayBase<OtherDerived>& other);
-
-    template<typename OtherDerived>
-    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
-    Derived& operator*=(const ArrayBase<OtherDerived>& other);
+    Derived&
+    operator-=(const Scalar& scalar);
 
     template<typename OtherDerived>
     EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
-    Derived& operator/=(const ArrayBase<OtherDerived>& other);
+    Derived&
+    operator+=(const ArrayBase<OtherDerived>& other);
+    template<typename OtherDerived>
+    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
+    Derived&
+    operator-=(const ArrayBase<OtherDerived>& other);
+
+    template<typename OtherDerived>
+    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
+    Derived&
+    operator*=(const ArrayBase<OtherDerived>& other);
+
+    template<typename OtherDerived>
+    EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
+    Derived&
+    operator/=(const ArrayBase<OtherDerived>& other);
 
   public:
     EIGEN_DEVICE_FUNC
-    ArrayBase<Derived>& array() { return *this; }
+    ArrayBase<Derived>&
+    array()
+    {
+        return *this;
+    }
     EIGEN_DEVICE_FUNC
-    const ArrayBase<Derived>& array() const { return *this; }
+    const ArrayBase<Derived>&
+    array() const
+    {
+        return *this;
+    }
 
     /** \returns an \link Eigen::MatrixBase Matrix \endlink expression of this array
       * \sa MatrixBase::array() */
     EIGEN_DEVICE_FUNC
-    MatrixWrapper<Derived> matrix() { return MatrixWrapper<Derived>(derived()); }
+    MatrixWrapper<Derived>
+    matrix()
+    {
+        return MatrixWrapper<Derived>(derived());
+    }
     EIGEN_DEVICE_FUNC
-    const MatrixWrapper<const Derived> matrix() const { return MatrixWrapper<const Derived>(derived()); }
+    const MatrixWrapper<const Derived>
+    matrix() const
+    {
+        return MatrixWrapper<const Derived>(derived());
+    }
 
-//     template<typename Dest>
-//     inline void evalTo(Dest& dst) const { dst = matrix(); }
+    //     template<typename Dest>
+    //     inline void evalTo(Dest& dst) const { dst = matrix(); }
 
   protected:
     EIGEN_DEVICE_FUNC
     ArrayBase() : Base() {}
 
   private:
-    explicit ArrayBase(Index);
+    explicit
+    ArrayBase(Index);
     ArrayBase(Index,Index);
-    template<typename OtherDerived> explicit ArrayBase(const ArrayBase<OtherDerived>&);
+    template<typename OtherDerived> explicit
+    ArrayBase(const ArrayBase<OtherDerived>&);
   protected:
     // mixing arrays and matrices is not legal
-    template<typename OtherDerived> Derived& operator+=(const MatrixBase<OtherDerived>& )
-    {EIGEN_STATIC_ASSERT(std::ptrdiff_t(sizeof(typename OtherDerived::Scalar))==-1,YOU_CANNOT_MIX_ARRAYS_AND_MATRICES); return *this;}
+    template<typename OtherDerived> Derived&
+    operator+=(const MatrixBase<OtherDerived>& )
+    {
+        EIGEN_STATIC_ASSERT(std::ptrdiff_t(sizeof(typename OtherDerived::Scalar))==-1,YOU_CANNOT_MIX_ARRAYS_AND_MATRICES);
+        return *this;
+    }
     // mixing arrays and matrices is not legal
-    template<typename OtherDerived> Derived& operator-=(const MatrixBase<OtherDerived>& )
-    {EIGEN_STATIC_ASSERT(std::ptrdiff_t(sizeof(typename OtherDerived::Scalar))==-1,YOU_CANNOT_MIX_ARRAYS_AND_MATRICES); return *this;}
+    template<typename OtherDerived> Derived&
+    operator-=(const MatrixBase<OtherDerived>& )
+    {
+        EIGEN_STATIC_ASSERT(std::ptrdiff_t(sizeof(typename OtherDerived::Scalar))==-1,YOU_CANNOT_MIX_ARRAYS_AND_MATRICES);
+        return *this;
+    }
 };
 
 /** replaces \c *this by \c *this - \a other.
@@ -178,8 +215,8 @@ template<typename OtherDerived>
 EIGEN_STRONG_INLINE Derived &
 ArrayBase<Derived>::operator-=(const ArrayBase<OtherDerived> &other)
 {
-  call_assignment(derived(), other.derived(), internal::sub_assign_op<Scalar,typename OtherDerived::Scalar>());
-  return derived();
+    call_assignment(derived(), other.derived(), internal::sub_assign_op<Scalar,typename OtherDerived::Scalar>());
+    return derived();
 }
 
 /** replaces \c *this by \c *this + \a other.
@@ -191,8 +228,8 @@ template<typename OtherDerived>
 EIGEN_STRONG_INLINE Derived &
 ArrayBase<Derived>::operator+=(const ArrayBase<OtherDerived>& other)
 {
-  call_assignment(derived(), other.derived(), internal::add_assign_op<Scalar,typename OtherDerived::Scalar>());
-  return derived();
+    call_assignment(derived(), other.derived(), internal::add_assign_op<Scalar,typename OtherDerived::Scalar>());
+    return derived();
 }
 
 /** replaces \c *this by \c *this * \a other coefficient wise.
@@ -204,8 +241,8 @@ template<typename OtherDerived>
 EIGEN_STRONG_INLINE Derived &
 ArrayBase<Derived>::operator*=(const ArrayBase<OtherDerived>& other)
 {
-  call_assignment(derived(), other.derived(), internal::mul_assign_op<Scalar,typename OtherDerived::Scalar>());
-  return derived();
+    call_assignment(derived(), other.derived(), internal::mul_assign_op<Scalar,typename OtherDerived::Scalar>());
+    return derived();
 }
 
 /** replaces \c *this by \c *this / \a other coefficient wise.
@@ -217,8 +254,8 @@ template<typename OtherDerived>
 EIGEN_STRONG_INLINE Derived &
 ArrayBase<Derived>::operator/=(const ArrayBase<OtherDerived>& other)
 {
-  call_assignment(derived(), other.derived(), internal::div_assign_op<Scalar,typename OtherDerived::Scalar>());
-  return derived();
+    call_assignment(derived(), other.derived(), internal::div_assign_op<Scalar,typename OtherDerived::Scalar>());
+    return derived();
 }
 
 } // end namespace Eigen
