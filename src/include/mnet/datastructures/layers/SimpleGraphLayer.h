@@ -36,14 +36,14 @@ class
     typedef IntralayerVertex<Vertex,SimpleGraph> V;
     typedef InterlayerEdge<Vertex,SimpleGraph> E;
     typedef GenericVertexStore<V> VS;
-    typedef GenericSimpleEdgeStore<E, V> ES;
-    typedef Graph<VS,ES> super;
+    typedef GenericSimpleEdgeStore<E, V> EStore;
+    typedef Graph<VS,EStore> super;
 
     SimpleGraphLayer(
         const std::string& name,
         GraphType t,
         std::unique_ptr<VS> vs,
-        std::unique_ptr<ES> es
+        std::unique_ptr<EStore> es
     );
 };
 

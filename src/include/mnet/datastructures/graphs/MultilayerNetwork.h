@@ -45,6 +45,9 @@ class MultilayerNetwork
         std::unique_ptr<E> e
     );
 
+    
+    virtual ~MultilayerNetwork() = default;
+    
     /**
      * Returns a pointer to the network's vertex store.
      */

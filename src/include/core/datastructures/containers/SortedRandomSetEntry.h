@@ -35,7 +35,7 @@ class
  */
 template <class ELEMENT_TYPE>
 class
-    SortedRandomSetEntry
+    SortedRandomSetEntry final
 {
 
     friend class SortedRandomSet<ELEMENT_TYPE>;

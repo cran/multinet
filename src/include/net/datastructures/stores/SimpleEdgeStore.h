@@ -23,6 +23,8 @@ class
 
   public:
 
+    virtual ~SimpleEdgeStore() = default;
+    
     using super::super;
 
     using super::add;

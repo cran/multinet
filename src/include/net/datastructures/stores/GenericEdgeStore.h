@@ -47,6 +47,8 @@ class GenericEdgeStore :
 
   public:
 
+    virtual ~GenericEdgeStore() = default;
+    
     using super::add;
     using super::erase;
     using super::size;

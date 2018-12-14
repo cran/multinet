@@ -27,6 +27,8 @@ class MainMemoryAttributeStore :
 
     MainMemoryAttributeStore();
 
+    virtual ~MainMemoryAttributeStore() = default;
+    
     using super::add;
     using super::erase;
     using super::get;

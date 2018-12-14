@@ -21,7 +21,7 @@ namespace core {
  */
 template <typename A>
 class
-    Attributed
+    Attributed final
 {
   public:
 

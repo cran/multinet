@@ -19,6 +19,7 @@ namespace uu {
 namespace core {
 
 class Text
+    final
 {
   public:
 

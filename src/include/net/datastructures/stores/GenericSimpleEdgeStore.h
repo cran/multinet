@@ -22,6 +22,8 @@ class GenericSimpleEdgeStore :
 
   public:
 
+    virtual ~GenericSimpleEdgeStore() = default;
+    
     /**
      * Constructor.
      */

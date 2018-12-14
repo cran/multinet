@@ -24,6 +24,8 @@ class
         const std::string& name
     );
 
+    virtual ~NamedObject() = default;
+    
   public:
 
     /** Returns a complete description of the object. */

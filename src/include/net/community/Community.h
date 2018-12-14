@@ -16,7 +16,10 @@ template <typename Element>
 class
     Community :
     public core::SortedRandomSet<Element>
-{};
+{
+public:
+    virtual ~Community() = default;
+};
 
 }
 }

@@ -174,7 +174,7 @@ InfomapBase::run(HierarchicalNetwork& output)
             topPerplexity += -infomath::plogp(getNodeData(*moduleIt).flow);
         }
 
-        topPerplexity = std::pow(2, topPerplexity);
+        topPerplexity = std::pow(2.0, topPerplexity);
 
         for (InfomapIterator it(root(), 1); !it.isEnd(); ++it)
         {
@@ -184,7 +184,7 @@ InfomapBase::run(HierarchicalNetwork& output)
             }
         }
 
-        bottomPerplexity = std::pow(2, bottomPerplexity);
+        bottomPerplexity = std::pow(2.0, bottomPerplexity);
 
         // physicalId -> (moduleId -> flow)
         std::map<unsigned int, std::map<unsigned int, double> > topModulesPerPhysicalNode;
@@ -221,7 +221,7 @@ InfomapBase::run(HierarchicalNetwork& output)
                 topOverlapPerplexityPerNode += -infomath::plogp(itModuleFlow->second / flow);
             }
 
-            topOverlapPerplexityPerNode = std::pow(2, topOverlapPerplexityPerNode);
+            topOverlapPerplexityPerNode = std::pow(2.0, topOverlapPerplexityPerNode);
             topOverlap += flow * topOverlapPerplexityPerNode;
         }
 
@@ -238,7 +238,7 @@ InfomapBase::run(HierarchicalNetwork& output)
                 bottomOverlapPerplexityPerNode += -infomath::plogp(itModuleFlow->second / flow);
             }
 
-            bottomOverlapPerplexityPerNode = std::pow(2, bottomOverlapPerplexityPerNode);
+            bottomOverlapPerplexityPerNode = std::pow(2.0, bottomOverlapPerplexityPerNode);
             bottomOverlap += flow * bottomOverlapPerplexityPerNode;
         }
 
@@ -1036,13 +1036,13 @@ InfomapBase::tryIndexingIteratively()
 
         double superIndexCodelength = superInfomap->indexCodelength;
 
-        if (std::abs(superIndexCodelength - indexCodelength) > 1e-10)
+        //if (std::abs(superIndexCodelength - indexCodelength) > 1e-10)
             //std::cout << "*** (" << superIndexCodelength << " / " << indexCodelength << ") ";
 
 
-        {
+        //{
             ++numIndexingCompleted;
-        }
+        //}
 
         tryIndexing = m_numNonTrivialTopModules > 1 && numTopModules() != numLeafNodes();
     }

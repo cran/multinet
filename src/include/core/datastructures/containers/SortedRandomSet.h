@@ -71,7 +71,7 @@ class SortedRandomSet
      * Destructs a sorted set, making sure that this does not result in a long
      * sequence of nested calls to entry destructors that would fill in the stack
      */
-    ~SortedRandomSet()
+    virtual ~SortedRandomSet()
     {
         std::vector<std::shared_ptr<SortedRandomSetEntry<ELEMENT_TYPE>> > tmp(size());
 

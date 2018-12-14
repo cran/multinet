@@ -446,7 +446,7 @@ class metanet
 
         for (size_t i = 0; i < a.size(); i++)
         {
-            Eigen::MatrixXd k = cutils::sparse_sum(a[i], 0);
+            Eigen::MatrixXd k = cutils::sparse_sum(a.at(i), 0);
             k = k.array() / k.array().sum();
 
             for (int j = 0; j < k.rows(); j++)
