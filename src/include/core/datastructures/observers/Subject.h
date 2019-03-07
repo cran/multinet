@@ -35,8 +35,6 @@ class
         core::Observer<T>* observer
     );
 
-    virtual ~Subject() = default;
-    
   protected:
 
     /* A vector of objects to be notified when a vertex is erased, so that

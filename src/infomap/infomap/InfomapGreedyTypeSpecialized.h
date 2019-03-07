@@ -1112,7 +1112,7 @@ InfomapGreedyTypeSpecialized<FlowType, WithMemory>::saveHierarchicalNetwork(Hier
             unsigned int leafModuleIndex = memNodeIndexToLeafModuleIndex[node.originalIndex];
             std::map<unsigned int, IndexedFlow>& condensedNodes = physicalNodes[leafModuleIndex];
             unsigned int sourceNodeIndex = condensedNodes.find(getNode(node).stateNode.physIndex)->second.index;
-            
+
             for (NodeBase::edge_iterator outEdgeIt(node.begin_outEdge()), endIt(node.end_outEdge());
                     outEdgeIt != endIt; ++outEdgeIt)
             {

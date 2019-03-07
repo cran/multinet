@@ -17,7 +17,6 @@ namespace core {
  */
 template <class T>
 struct Value
-    final
 {
     /** The value, which is only valid if member `null` is false. */
     T value;

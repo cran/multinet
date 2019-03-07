@@ -1,7 +1,7 @@
 \name{Getting networks: IO}
 \alias{Getting networks: IO}
-\alias{read.ml}
-\alias{write.ml}
+\alias{read_ml}
+\alias{write_ml}
 \title{
 Reading and writing multilayer networks from/to file
 }
@@ -88,8 +88,8 @@ The format used by the package is the following:
  }
 }
 \usage{
-read.ml(file, name="unnamed", sep=',', aligned=FALSE)
-write.ml(mlnetwork, file, format="multilayer", layers=character(0),
+read_ml(file, name="unnamed", sep=',', aligned=FALSE)
+write_ml(mlnetwork, file, format="multilayer", layers=character(0),
   sep=',', merge.actors=TRUE, all.actors=FALSE)
 }
 \arguments{
@@ -104,7 +104,7 @@ write.ml(mlnetwork, file, format="multilayer", layers=character(0),
 \item{all.actors}{Whether all actors in the multilayer network should be included in the output file (true) or only those present in at least one of the input layers (false), when format="graphml" and merge.actors=TRUE are used.}
 }
 \value{
-\code{read.ml} returns a multilayer network. \code{write.ml} does not return any value.
+\code{read_ml} returns a multilayer network. \code{write_ml} does not return any value.
 }
 \seealso{
 \link{Getting networks: predefined}, \link{Getting networks: generation}
@@ -112,13 +112,13 @@ write.ml(mlnetwork, file, format="multilayer", layers=character(0),
 \examples{
 # writing a network to file...
 file <- tempfile("aucs.mpx")
-net <- ml.aucs()
-write.ml(net,file)
+net <- ml_aucs()
+write_ml(net,file)
 # ...and reading it back into a variable
-net <- read.ml(file,"AUCS")
+net <- read_ml(file,"AUCS")
 net
 # the following network has more nodes, because all
 # actors are replicated to all graphs
-net.aligned <- read.ml(file,"AUCS",aligned=TRUE)
-net.aligned
+net_aligned <- read_ml(file,"AUCS",aligned=TRUE)
+net_aligned
 }

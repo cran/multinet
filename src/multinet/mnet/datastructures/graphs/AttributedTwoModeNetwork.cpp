@@ -99,16 +99,16 @@ create_attributed_twomode_network(
     std::unique_ptr<AttributedEmptyGraph> g2 = create_attributed_empty_graph("bottom");
     auto ls = std::make_unique<LS>(std::move(g1), std::move(g2));
 
-    using EStore = AttributedSimpleEdgeStore<Attributes<Edge, UserDefinedAttrs<Edge>>>;
+    using ES = AttributedSimpleEdgeStore<Attributes<Edge, UserDefinedAttrs<Edge>>>;
 
     using EA = Attributes<Edge, UserDefinedAttrs<Edge>>;
     auto e_attr = std::make_unique<EA>();
     auto aes = std::make_unique<AttributedSimpleEdgeStore<EA>>(dir, std::move(e_attr));
 
-    std::array<std::unique_ptr<EStore>,1> init;
+    std::array<std::unique_ptr<ES>,1> init;
     init.at(0) = std::move(aes);
 
-    auto es = std::make_unique<InterlayerEdgeStore<EStore,2>>(std::move(init));
+    auto es = std::make_unique<InterlayerEdgeStore<ES,2>>(std::move(init));
 
     std::unique_ptr<AttributedTwoModeNetwork> net;
 

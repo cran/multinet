@@ -107,7 +107,7 @@ to_string(
     case EdgeDir::UNDIRECTED:
         return "(" + v1->to_string() + " -- " + v2->to_string() + ")";
     }
-    return "";
+    return "()"; // never here, added to avoid CRAN warning
 }
 
 

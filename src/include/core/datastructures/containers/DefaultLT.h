@@ -18,7 +18,7 @@ namespace core {
  * and uses the < operator.
  */
 template <typename T1, typename T2>
-struct DefaultLT final
+struct DefaultLT
 {
     bool
     operator() (const T1& x, const T2& y) const

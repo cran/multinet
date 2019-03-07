@@ -109,7 +109,6 @@ InfomapBase::run(Network& input, HierarchicalNetwork& output)
 void
 InfomapBase::run(HierarchicalNetwork& output)
 {
-    
     calcOneLevelCodelength();
     calcEntropyRate();
 
@@ -174,7 +173,7 @@ InfomapBase::run(HierarchicalNetwork& output)
             topPerplexity += -infomath::plogp(getNodeData(*moduleIt).flow);
         }
 
-        topPerplexity = std::pow(2.0, topPerplexity);
+        topPerplexity = std::pow(2, topPerplexity);
 
         for (InfomapIterator it(root(), 1); !it.isEnd(); ++it)
         {
@@ -184,7 +183,7 @@ InfomapBase::run(HierarchicalNetwork& output)
             }
         }
 
-        bottomPerplexity = std::pow(2.0, bottomPerplexity);
+        bottomPerplexity = std::pow(2, bottomPerplexity);
 
         // physicalId -> (moduleId -> flow)
         std::map<unsigned int, std::map<unsigned int, double> > topModulesPerPhysicalNode;
@@ -221,7 +220,7 @@ InfomapBase::run(HierarchicalNetwork& output)
                 topOverlapPerplexityPerNode += -infomath::plogp(itModuleFlow->second / flow);
             }
 
-            topOverlapPerplexityPerNode = std::pow(2.0, topOverlapPerplexityPerNode);
+            topOverlapPerplexityPerNode = std::pow(2, topOverlapPerplexityPerNode);
             topOverlap += flow * topOverlapPerplexityPerNode;
         }
 
@@ -238,7 +237,7 @@ InfomapBase::run(HierarchicalNetwork& output)
                 bottomOverlapPerplexityPerNode += -infomath::plogp(itModuleFlow->second / flow);
             }
 
-            bottomOverlapPerplexityPerNode = std::pow(2.0, bottomOverlapPerplexityPerNode);
+            bottomOverlapPerplexityPerNode = std::pow(2, bottomOverlapPerplexityPerNode);
             bottomOverlap += flow * bottomOverlapPerplexityPerNode;
         }
 
@@ -1036,13 +1035,13 @@ InfomapBase::tryIndexingIteratively()
 
         double superIndexCodelength = superInfomap->indexCodelength;
 
-        //if (std::abs(superIndexCodelength - indexCodelength) > 1e-10)
+        if (std::abs(superIndexCodelength - indexCodelength) > 1e-10)
             //std::cout << "*** (" << superIndexCodelength << " / " << indexCodelength << ") ";
 
 
-        //{
+        {
             ++numIndexingCompleted;
-        //}
+        }
 
         tryIndexing = m_numNonTrivialTopModules > 1 && numTopModules() != numLeafNodes();
     }
@@ -2621,9 +2620,7 @@ InfomapBase::printNetworkData(HierarchicalNetwork& output, std::string filename)
         Log() << "\nBuilding output tree" << (writeEdges ? " with links" : "") << "... " << std::flush;
 
         output.clear(m_config);
-        //saveHierarchicalNetwork(output, filename, writeEdges);
-        // UPDATED CODE
-        saveHierarchicalNetwork(output, filename, false);
+        saveHierarchicalNetwork(output, filename, writeEdges);
 
         if (!m_config.noFileOutput)
         {

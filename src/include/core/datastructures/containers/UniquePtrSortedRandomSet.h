@@ -44,8 +44,6 @@ class
     ) : super(start_capacity) {};
 
 
-    virtual ~UniquePtrSortedRandomSet() = default;
-    
     /**
      * Inserts a new object in the collection.
      * @return true if KEY was not already present, false otherwise

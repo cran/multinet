@@ -1,0 +1,24 @@
+# version 3.0.0
+
+- changed style, replacing . with _ in function names (except S3 methods)
+- old functions deprecated
+- changed colors in plotting function
+
+# version 2.0.1
+
+- minor fixes to the code
+
+# version 2.0.0
+
+- added infomap.ml algorithm
+- significantly rewritten the underlying code
+- some functions temporarily removed (pmm.ml, lart.ml, occupation.centrality.ml)
+- custom attributes on interlayer edges temporarily disabled
+
+# version 1.1.5
+
+- introduced "vertex" as a synonim of "node", to later replace it
+- added legend functionality to plotting function
+- updated multiforce layout function (fixed frame borders)
+- added summary and as.list functions
+

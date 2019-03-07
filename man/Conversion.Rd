@@ -21,7 +21,7 @@ Constructs a single graph resulting from merging one or more layers of the netwo
 An object of class iGraph.
 }
 \examples{
-net <- ml.aucs()
+net <- ml_aucs()
 # using the default merge.actors=TRUE we create a multigraph,
 # where each actor corresponds to a node in the result
 multigraph <- as.igraph(net)

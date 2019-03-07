@@ -1,16 +1,16 @@
 \name{Transformation}
 \alias{Transformation}
-\alias{flatten.ml}
+\alias{flatten_ml}
 \title{
 Functions to merge multiple layers into one: flattening
 }
 \description{
 These functions merge multiple layers into one. The new layer is added to the network. If the input layers are no longer necessary, they must be explicitely erased.
 
-\code{flatten.ml} adds a new layer with the actors in the input layers and an edge between A and B if they are connected in any of the merged layers.
+\code{flatten_ml} adds a new layer with the actors in the input layers and an edge between A and B if they are connected in any of the merged layers.
 }
 \usage{
-flatten.ml(mlnetwork, new.layer="flattening", layers=character(0),
+flatten_ml(mlnetwork, new.layer="flattening", layers=character(0),
   method="weighted", force.directed=FALSE, all.actors=FALSE)
 }
 \arguments{
@@ -23,7 +23,7 @@ flatten.ml(mlnetwork, new.layer="flattening", layers=character(0),
 
 }
 \examples{
-net <- ml.aucs()
+net <- ml_aucs()
 # A new layer is added to the network, with a flattening of all the other layers
-flatten.ml(net, layers=layers.ml(net))
+flatten_ml(net, layers=layers_ml(net))
 }

@@ -1,7 +1,7 @@
 \name{Layout}
 \alias{Layout}
-\alias{layout.multiforce.ml}
-\alias{layout.circular.ml}
+\alias{layout_multiforce_ml}
+\alias{layout_circular_ml}
 \title{
 Layouts
 }
@@ -9,8 +9,8 @@ Layouts
 These functions compute xyz coordinates for each node in the network.
 }
 \usage{
-layout.multiforce.ml(mlnetwork, w_in=1, w_inter=1, gravity=0, iterations=100)
-layout.circular.ml(mlnetwork)
+layout_multiforce_ml(mlnetwork, w_in=1, w_inter=1, gravity=0, iterations=100)
+layout_circular_ml(mlnetwork)
 }
 \arguments{
 \item{mlnetwork}{A multilayer network.}
@@ -26,9 +26,9 @@ Fatemi, Zahra, Salehi, Mostafa, & Magnani, Matteo (2018). A generalised force-ba
 \link{Plotting}
 }
 \examples{
-net <- ml.florentine()
-layout.multiforce.ml(net)
-l <- layout.circular.ml(net)
+net <- ml_florentine()
+layout_multiforce_ml(net)
+l <- layout_circular_ml(net)
 \dontrun{
 plot(net,layout=l)}
 }

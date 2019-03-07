@@ -2,6 +2,7 @@
 \alias{Plotting}
 \alias{plot.Rcpp_RMLNetwork}
 \alias{plot.ml}
+\alias{plot.multinet}
 \title{
 Drawing a multilayer network
 }
@@ -11,10 +12,13 @@ This function draws a multilayer network.
 \usage{
 \S3method{plot}{Rcpp_RMLNetwork}(x,
 layout=NULL, grid=NULL, mai=.1,
-vertex.shape=16, vertex.cex=1, vertex.color=NULL,
+vertex.shape=16, vertex.cex=1, vertex.size=vertex.cex, vertex.color=NULL,
 vertex.labels=NULL, vertex.labels.pos=3, vertex.labels.offset=.5, vertex.labels.cex=1,
 edge.type=1, edge.width=1, edge.color=1,
 edge.arrow.length=0.1, edge.arrow.angle=20,
+legend.x = NULL, legend.y = NULL,
+legend.pch = 20, legend.cex = 0.5,
+legend.inset = c(0, 0),
 com=NULL, com.cex=1, ...)
 }
 \arguments{
@@ -26,6 +30,7 @@ com=NULL, com.cex=1, ...)
 \item{vertex.shape}{Symbol to use for nodes, corresponding to the parameter {pch} of the R \code{points} function.  This can either
 be a single character or an integer code for one of a set of
 graphics symbols.  See \code{?points} for more details.}
+\item{vertex.size}{synonim of \code{vertex.cex}.}
 \item{vertex.cex}{Numeric *c*haracter *ex*pansion factor; multiplied by
 \code{par("cex")} yields the final node size.}
 \item{vertex.color}{Color of the vertexes. If NULL, all vertexes in the same layer are plotted using the same color.}
@@ -55,6 +60,10 @@ values which are recycled.}
 \item{edge.arrow.angle}{Angle from the shaft of the arrow to the edge of the arrow
 head - corresponding to the parameter of the R \code{arrows} function with the same name.}
 
+\item{legend.x, legend.y}{the x and y co-ordinates to be used to position the legend. They can be specified by keyword or in any way which is accepted by \link{xy.coords}.}
+\item{legend.pch}{the plotting symbols appearing in the legend, as numeric vector or a vector of 1-character strings}
+\item{legend.cex}{character expansion factor relative to current par("cex"). Used for text.}
+\item{legend.inset}{inset distance(s) from the margins as a fraction of the plot region when legend is placed by keyword.}
 
 \item{com}{The result of a community detection algorithm. When this parameter is set, a colored area is added behind each community.}
 \item{com.cex}{Increases (>1) or decreases (<1) the margin around the nodes when the colored areas are drawn around the communities.}
@@ -65,13 +74,13 @@ head - corresponding to the parameter of the R \code{arrows} function with the s
 \link{Mining: communities}
 }
 \examples{
-net <- ml.florentine()
+net <- ml_florentine()
 \dontrun{
 plot(net)
 c <- clique.percolation.ml(net)
 plot(net,vertex.labels.cex=.5,com=c)
 }
-net <- ml.aucs()
+net <- ml_aucs()
 \dontrun{
 plot(net,vertex.labels=NA)
 title("AUCS network")

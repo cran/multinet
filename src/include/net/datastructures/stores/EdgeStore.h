@@ -32,8 +32,6 @@ class EdgeStore :
 
   public:
 
-    virtual ~EdgeStore() = default;
-    
     using super::add;
 
     /**

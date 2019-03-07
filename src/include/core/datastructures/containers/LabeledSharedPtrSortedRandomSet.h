@@ -31,8 +31,6 @@ class
     LabeledSharedPtrSortedRandomSet(
     );
 
-    virtual ~LabeledSharedPtrSortedRandomSet() = default;
-    
     using super::add;
 
     /**

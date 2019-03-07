@@ -17,10 +17,7 @@ namespace core {
 class
     GenericObserver
 {
-public:
-    
-    virtual ~GenericObserver() = default;
-    
+
   protected:
     GenericObserver() {};
 };

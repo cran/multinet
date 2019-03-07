@@ -22,8 +22,6 @@ class
 
   public:
 
-    virtual ~Observer() = default;
-    
     virtual void
     notify_erase(
         OT* const

@@ -37,8 +37,6 @@ class
     PtrSortedRandomSet(
     );
 
-    virtual ~PtrSortedRandomSet() = default;
-    
     /**
      * Creates a sorted set optimized to store a pre-defined number of entries.
      * @param start_capacity the initial capacity for which the sorted set is optimized

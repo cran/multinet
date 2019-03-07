@@ -24,9 +24,7 @@ class
     VertexStore :
     public GenericVertexStore<Vertex>
 {
-public:
-    
-    virtual ~VertexStore() = default;
+
 };
 
 

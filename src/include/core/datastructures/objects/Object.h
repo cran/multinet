@@ -33,8 +33,6 @@ class
         const ObjectId& oid
     );
 
-    virtual ~Object() = default;
-    
     /** Returns a complete description of the object. */
     std::string
     to_string(

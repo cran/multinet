@@ -31,8 +31,6 @@ class
     LabeledUniquePtrSortedRandomSet(
     );
 
-    virtual ~LabeledUniquePtrSortedRandomSet() = default;
-    
     using super::add;
 
     /**

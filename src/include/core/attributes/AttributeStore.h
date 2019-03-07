@@ -32,8 +32,6 @@ class AttributeStore :
 
   public:
 
-    virtual ~AttributeStore() = default;
-    
     using super::add;
     using super::erase;
     using super::get;

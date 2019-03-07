@@ -28,7 +28,6 @@ class AttributeStoreWrapper
      */
     AttributeStoreWrapper(std::unique_ptr<AttributeStore<OT>>);
 
-    virtual ~AttributeStoreWrapper() = default;
 
   protected:
 

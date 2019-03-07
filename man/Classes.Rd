@@ -1,7 +1,7 @@
 \name{Classes}
 \alias{Classes}
-\alias{RMLNetwork}
-\alias{Rcpp_RMLNetwork-class}
+\alias{RMLNetwork-class}
+%\alias{Rcpp_RMLNetwork-class}
 \alias{REvolutionModel}
 \alias{Rcpp_REvolutionModel-class}
 \title{

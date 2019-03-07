@@ -83,28 +83,21 @@ infomap(const M* net,
 
         // execute infomap
 
-        
-        //std::cout << "creating network" << std::endl;
         infomap::MultiplexNetwork network(config);
 
-        //std::cout << "populating network" << std::endl;
         multinet_to_infomap(net, network);
 
-        //multinet_to_infomap(net, "dummy.net");
 
-        
-        //std::cout << "creating result" << std::endl;
+        multinet_to_infomap(net, "dummy.net");
+
         infomap::HierarchicalNetwork resultNetwork(config);
 
-        //std::cout << "setting up env" << std::endl;
         infomap::InfomapContext context(config);
 
-        //std::cout << "computing clustering" << std::endl;
         context.getInfomap()->run(network, resultNetwork);
 
-        //resultNetwork.writeClu("dummy");
+        resultNetwork.writeClu("dummy");
 
-        //std::cout << "creating communities" << std::endl;
         return to_communities(net, resultNetwork);
     }
 

@@ -16,7 +16,7 @@ namespace core {
  * An object used to look for unique_ptr's inside this set using their raw pointer as a key.
  */
 template<typename T>
-struct UniquePtrEQ final
+struct UniquePtrEQ
 {
     bool
     operator() (const std::unique_ptr<T>& x, const T* const & y) const
