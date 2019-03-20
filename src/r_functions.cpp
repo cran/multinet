@@ -300,21 +300,37 @@ edges_idx(
     auto mnet = rmnet.get_mlnet();
     NumericVector from, to, directed;
 
+    // stores at which index vertices start in a layer
+    std::unordered_map<const G*, size_t> offset;
     size_t num_vertices = 0;
-
+    for (auto layer: *mnet->layers())
+    {
+        offset[layer] = num_vertices;
+        num_vertices += layer->vertices()->size();
+    }
+    
+    // intralayer
+    
     for (auto l: *mnet->layers())
     {
         auto vertices = l->vertices();
 
         for (auto edge: *l->edges())
         {
-            from.push_back(vertices->get_index(edge->v1)+num_vertices+1);
-            to.push_back(vertices->get_index(edge->v2)+num_vertices+1);
-            directed=(edge->dir==uu::net::EdgeDir::DIRECTED)?1:0;
+            from.push_back(vertices->get_index(edge->v1)+offset[l]+1);
+            to.push_back(vertices->get_index(edge->v2)+offset[l]+1);
+            directed.push_back((edge->dir==uu::net::EdgeDir::DIRECTED)?1:0);
         }
-
-        num_vertices += vertices->size();
     }
+
+    // interlayer
+    for (auto edge: *mnet->interlayer_edges())
+    {
+        from.push_back(edge->l1->vertices()->get_index(edge->v1)+offset[edge->l1]+1);
+        to.push_back(edge->l2->vertices()->get_index(edge->v2)+offset[edge->l2]+1);
+        directed.push_back((edge->dir==uu::net::EdgeDir::DIRECTED)?1:0);
+    }
+
 
     return DataFrame::create(_["from"] = from, _["to"] = to, _["dir"] = directed );
 }
@@ -484,7 +500,6 @@ numEdges(
         }
     }
 
-
     for (auto layer1: layers1)
     {
         for (auto layer2: layers2)
@@ -531,7 +546,15 @@ isDirected(
         {
             l1.push_back(layer1->name);
             l2.push_back(layer2->name);
-            directed.push_back((mnet->interlayer_edges()->is_directed(layer1,layer2))?1:0);
+            
+            if (layer1==layer2)
+            {
+                directed.push_back(layer1->is_directed()?1:0);
+            }
+            else
+            {
+                directed.push_back((mnet->interlayer_edges()->is_directed(layer1,layer2))?1:0);
+            }
         }
     }
 
@@ -1564,8 +1587,9 @@ degree_ml(
 
     auto actors = resolve_actors(mnet,actor_names);
     auto layers = resolve_layers_unordered(mnet,layer_names);
-    NumericVector res(0);
+    NumericVector res(actors.size());
 
+    size_t i = 0;
     for (auto actor: actors)
     {
         long deg = 0;
@@ -1587,19 +1611,20 @@ degree_ml(
 
             if (is_missing)
             {
-                res[actor->name] = NA_REAL;
+                res[i] = NA_REAL;
             }
 
             else
             {
-                res[actor->name] = 0;
+                res[i] = 0;
             }
         }
 
         else
         {
-            res[actor->name] = deg;
+            res[i] = deg;
         }
+        i++;
     }
 
     return res;
@@ -1617,8 +1642,9 @@ degree_deviation_ml(
 
     auto actors = resolve_actors(mnet,actor_names);
     auto layers = resolve_layers_unordered(mnet,layer_names);
-    NumericVector res(0);
+    NumericVector res(actors.size());
 
+    size_t i = 0;
     for (auto actor: actors)
     {
         double deg = 0;
@@ -1640,19 +1666,20 @@ degree_deviation_ml(
 
             if (is_missing)
             {
-                res[actor->name] = NA_REAL;
+                res[i] = NA_REAL;
             }
 
             else
             {
-                res[actor->name] = 0;
+                res[i] = 0;
             }
         }
 
         else
         {
-            res[actor->name] = deg;
+            res[i] = deg;
         }
+        i++;
     }
 
     return res;
@@ -1682,7 +1709,7 @@ for (size_t i=0; i<transitions.nrow(); i++) {
     m[i] = row;
 }
 
-NumericVector res(0);
+NumericVector res(actors.size());
 std::unordered_map<const uu::net::Vertex*, int > occ = occupation(mnet,teleportation,m,steps);
 
 for (const auto &p : occ) {
@@ -1705,8 +1732,9 @@ neighborhood_ml(
 
     auto actors = resolve_actors(mnet,actor_names);
     auto layers = resolve_layers_unordered(mnet,layer_names);
-    NumericVector res(0);
+    NumericVector res(actors.size());
 
+    size_t i = 0;
     for (auto actor: actors)
     {
         long neigh = 0;
@@ -1728,19 +1756,20 @@ neighborhood_ml(
 
             if (is_missing)
             {
-                res[actor->name] = NA_REAL;
+                res[i] = NA_REAL;
             }
 
             else
             {
-                res[actor->name] = 0;
+                res[i] = 0;
             }
         }
 
         else
         {
-            res[actor->name] = neigh;
+            res[i] = neigh;
         }
+        i++;
     }
 
     return res;
@@ -1759,8 +1788,9 @@ xneighborhood_ml(
 
     auto actors = resolve_actors(mnet,actor_names);
     auto layers = resolve_layers_unordered(mnet,layer_names);
-    NumericVector res(0);
+    NumericVector res(actors.size());
 
+    size_t i = 0;
     for (auto actor: actors)
     {
         long neigh = 0;
@@ -1782,19 +1812,20 @@ xneighborhood_ml(
 
             if (is_missing)
             {
-                res[actor->name] = NA_REAL;
+                res[i] = NA_REAL;
             }
 
             else
             {
-                res[actor->name] = 0;
+                res[i] = 0;
             }
         }
 
         else
         {
-            res[actor->name] = neigh;
+            res[i] = neigh;
         }
+        i++;
     }
 
     return res;
@@ -1811,9 +1842,10 @@ connective_redundancy_ml(
 
     auto actors = resolve_actors(mnet,actor_names);
     auto layers = resolve_layers_unordered(mnet,layer_names);
-    NumericVector res(0);
+    NumericVector res(actors.size());
     double cr = 0;
 
+    size_t i = 0;
     for (auto actor: actors)
     {
         auto mode = resolve_mode(type);
@@ -1835,19 +1867,20 @@ connective_redundancy_ml(
 
             if (is_missing)
             {
-                res[actor->name] = NA_REAL;
+                res[i] = NA_REAL;
             }
 
             else
             {
-                res[actor->name] = 0;
+                res[i] = 0;
             }
         }
 
         else
         {
-            res[actor->name] = cr;
+            res[i] = cr;
         }
+        i++;
     }
 
     return res;
@@ -1864,8 +1897,9 @@ relevance_ml(
 
     auto actors = resolve_actors(mnet,actor_names);
     auto layers = resolve_layers_unordered(mnet,layer_names);
-    NumericVector res(0);
+    NumericVector res(actors.size());
 
+    size_t i = 0;
     for (auto actor: actors)
     {
         double rel = 0;
@@ -1887,19 +1921,20 @@ relevance_ml(
 
             if (is_missing)
             {
-                res[actor->name] = NA_REAL;
+                res[i] = NA_REAL;
             }
 
             else
             {
-                res[actor->name] = 0;
+                res[i] = 0;
             }
         }
 
         else
         {
-            res[actor->name] = rel;
+            res[i] = rel;
         }
+        i++;
     }
 
     return res;
@@ -1918,8 +1953,9 @@ xrelevance_ml(
     auto actors = resolve_actors(mnet,actor_names);
     auto layers = resolve_layers_unordered(mnet,layer_names);
 
-    NumericVector res(0);
+    NumericVector res(actors.size());
 
+    size_t i = 0;
     for (auto actor: actors)
     {
         double rel = 0;
@@ -1941,19 +1977,20 @@ xrelevance_ml(
 
             if (is_missing)
             {
-                res[actor->name] = NA_REAL;
+                res[i] = NA_REAL;
             }
 
             else
             {
-                res[actor->name] = 0;
+                res[i] = 0;
             }
         }
 
         else
         {
-            res[actor->name] = rel;
+            res[i] = rel;
         }
+        i++;
     }
 
     return res;
@@ -2061,78 +2098,78 @@ comparison_ml(
 
     else if (method=="jaccard.edges")
     {
-        uu::core::PropertyMatrix<uu::net::Dyad, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::edge_existence_property_matrix(mnet);
+        auto P = uu::net::edge_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::jaccard<uu::net::Dyad, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::jaccard<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="coverage.edges")
     {
-        uu::core::PropertyMatrix<uu::net::Dyad, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::edge_existence_property_matrix(mnet);
+        auto P = uu::net::edge_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::coverage<uu::net::Dyad, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::coverage<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="kulczynski2.edges")
     {
-        uu::core::PropertyMatrix<uu::net::Dyad, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::edge_existence_property_matrix(mnet);
+        auto P = uu::net::edge_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::kulczynski2<uu::net::Dyad, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::kulczynski2<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="sm.edges")
     {
-        uu::core::PropertyMatrix<uu::net::Dyad, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::edge_existence_property_matrix(mnet);
+        auto P = uu::net::edge_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::simple_matching<uu::net::Dyad, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::simple_matching<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="rr.edges")
     {
-        uu::core::PropertyMatrix<uu::net::Dyad, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::edge_existence_property_matrix(mnet);
+        auto P = uu::net::edge_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::russell_rao<uu::net::Dyad, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::russell_rao<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="hamann.edges")
     {
-        uu::core::PropertyMatrix<uu::net::Dyad, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::edge_existence_property_matrix(mnet);
+        auto P = uu::net::edge_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::hamann<uu::net::Dyad, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::hamann<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
             }
         }
     }

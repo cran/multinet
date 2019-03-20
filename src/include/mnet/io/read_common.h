@@ -106,7 +106,7 @@ read_multilayer_data(
     csv.set_comment("--");
     csv.open(infile);
 
-    MultilayerIOFileSection section = MultilayerIOFileSection::INTRALAYER_VERTICES;
+    MultilayerIOFileSection section = MultilayerIOFileSection::INTRALAYER_EDGES;
 
     while (csv.has_next())
     {
@@ -126,7 +126,8 @@ read_multilayer_data(
         if (new_multilayer_section_start(line))
         {
             section = get_multilayer_section(line);
-            fields = csv.get_next();
+            //fields = csv.get_next();
+            continue;
         }
 
         switch (section)

@@ -39,7 +39,10 @@ struct FlowUndirected
         flow(flow),
         exitFlow(0.0),
         enterFlow(exitFlow)
-    {}
+    {
+        (void)teleportWeight; // to avoid variable-not-used warning
+
+    }
     FlowUndirected(const FlowUndirected& other) :
         flow(other.flow),
         exitFlow(other.exitFlow),
@@ -86,7 +89,10 @@ struct FlowDirected
         flow(flow),
         exitFlow(0.0),
         enterFlow(exitFlow)
-    {}
+    {
+        (void)teleportWeight; // to avoid variable-not-used warning
+
+    }
     FlowDirected(const FlowDirected& other) :
         flow(other.flow),
         exitFlow(other.exitFlow),
@@ -204,7 +210,10 @@ struct FlowDirectedNonDetailedBalance
         flow(flow),
         enterFlow(0.0),
         exitFlow(0.0)
-    {}
+    {
+        (void)teleportWeight; // to avoid variable-not-used warning
+
+    }
     FlowDirectedNonDetailedBalance(const FlowDirectedNonDetailedBalance& other) :
         flow(other.flow),
         enterFlow(other.enterFlow),
@@ -431,7 +440,12 @@ struct DeltaFlow
         :	module(module),
           deltaExit(deltaExit),
           deltaEnter(deltaEnter),
-          count(0) {}
+          count(0)
+    {
+        (void)sumDeltaPlogpPhysFlow; // to avoid variable-not-used warning
+        (void)sumPlogpPhysFlow; // to avoid variable-not-used warning
+
+    }
 
     DeltaFlow(const DeltaFlow& other) // Copy constructor
         :	module(other.module),

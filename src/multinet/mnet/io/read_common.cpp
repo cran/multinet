@@ -147,11 +147,12 @@ read_multilayer_metadata(
         if (new_multilayer_section_start(line))
         {
             section = get_multilayer_section(line);
-            fields = csv.get_next();
-            line = csv.get_current_raw_line();
+            //fields = csv.get_next();
+            //line = csv.get_current_raw_line();
             // remove trailing spaces
-            line.erase(line.find_last_not_of(" \t")+1);
-            line.erase(0,line.find_first_not_of(" \t"));
+            //line.erase(line.find_last_not_of(" \t")+1);
+            //line.erase(0,line.find_first_not_of(" \t"));
+            continue;
         }
 
 
@@ -167,13 +168,34 @@ read_multilayer_metadata(
         case MultilayerIOFileSection::LAYERS:
         {
             //@todo sanity check
-            std::string layer_name = fields.at(0);
-
-            for (size_t idx = 1; idx<fields.size(); idx++)
+            
+            if (fields.size()==2)
             {
-                read_graph_type(fields.at(idx), meta.layers[layer_name], csv.row_num());
+                std::string layer_name = fields.at(0);
+                meta.layers[layer_name];
+                
+                for (size_t idx = 1; idx<fields.size(); idx++)
+                {
+                    read_graph_type(fields.at(idx), meta.layers[layer_name], csv.row_num());
+                }
             }
-
+            else if (fields.size()>2)
+            {
+                std::string layer_name1 = fields.at(0);
+                meta.layers[layer_name1];
+                std::string layer_name2 = fields.at(1);
+                meta.layers[layer_name2];
+                
+                if (layer_name1!=layer_name2)
+                    continue; //@todo currently not supported
+                
+                for (size_t idx = 2; idx<fields.size(); idx++)
+                {
+                    read_graph_type(fields.at(idx), meta.layers[layer_name1], csv.row_num());
+                }
+                
+            }
+            
             break;
         }
 

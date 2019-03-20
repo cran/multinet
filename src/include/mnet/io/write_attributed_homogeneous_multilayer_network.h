@@ -54,7 +54,8 @@ write_attributed_homogeneous_multilayer_network(
     std::ofstream outfile;
     outfile.open(path.data());
 
-    outfile << "#TYPE multilayer" << std::endl;
+    outfile << "#TYPE" << std::endl;
+    outfile << "multilayer" << std::endl;
     outfile << std::endl;
 
     outfile << "#LAYERS" << std::endl;
@@ -106,10 +107,19 @@ write_attributed_homogeneous_multilayer_network(
     {
         for (auto layer2=begin; layer2!=end; ++layer2)
         {
+            if (layer1==layer2)
+            {
+                for (auto attr: *(*layer1)->edges()->attr())
+                {
+                    outfile << (*layer1)->name << sep << (*layer2)->name << sep << attr->name << sep << core::to_string(attr->type) << std::endl;
+                }
+            }
+                else {
             for (auto attr: *mnet->interlayer_edges()->attr())
             {
                 outfile << (*layer1)->name << sep << (*layer2)->name << sep << attr->name << sep << core::to_string(attr->type) << std::endl;
             }
+                }
         }
     }
 
@@ -182,13 +192,13 @@ write_attributed_homogeneous_multilayer_network(
 
     outfile << std::endl;
 
-    outfile << "#EDGES" << std::endl;
+    outfile << "#INTRALAYER EDGES" << std::endl;
 
     for (auto layer=begin; layer!=end; ++layer)
     {
         for (auto edge: *(*layer)->edges())
         {
-            outfile << edge->v1->name << sep << (*layer)->name << sep << edge->v2->name << sep << (*layer)->name;
+            outfile << edge->v1->name << sep << edge->v2->name << sep << (*layer)->name;
             auto edge_attrs = (*layer)->edges()->attr();
 
             for (auto attr: *edge_attrs)
@@ -215,6 +225,10 @@ write_attributed_homogeneous_multilayer_network(
         }
     }
 
+    outfile << std::endl;
+    
+    outfile << "#INTERLAYER EDGES" << std::endl;
+    
     for (auto layer1=begin; layer1!=end; ++layer1)
     {
         for (auto layer2=begin; layer2!=end; ++layer2)

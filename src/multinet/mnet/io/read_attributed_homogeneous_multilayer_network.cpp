@@ -31,6 +31,7 @@ read_attributed_homogeneous_multilayer_network(
     {
         std::string layer_name = l.first;
         auto layer_type = l.second;
+        //std::cout << "creating layer " << l.first << " " << layer_type.is_directed << std::endl;
         auto dir = layer_type.is_directed?EdgeDir::DIRECTED:EdgeDir::UNDIRECTED;
         auto layer = create_attributed_simple_graph(layer_name, dir, layer_type.allows_loops);
         net->layers()->add(std::move(layer));
@@ -198,7 +199,15 @@ read_interlayer_edge(
     l1->vertices()->add(v1);
     l2->vertices()->add(v2);
 
-    ml->interlayer_edges()->add(v1,l1,v2,l2);
+    if (l1==l2)
+    {
+        l1->edges()->add(v1,v2);
+    }
+    
+    else
+    {
+        ml->interlayer_edges()->add(v1,l1,v2,l2);
+    }
 
 }
 

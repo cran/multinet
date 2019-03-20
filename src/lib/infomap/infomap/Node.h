@@ -404,6 +404,7 @@ class NodeBase
     virtual void
     printData(std::ostream& out)
     {
+        (void)out; // to avoid variable-not-used warning
     }
 
     //debug

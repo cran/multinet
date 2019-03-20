@@ -37,6 +37,7 @@ class
   public:
 
     typedef AttributedSimpleGraph layer_type;
+    typedef Vertex vertex_type;
 
     //using super::super;
 

@@ -88,7 +88,7 @@ infomap(const M* net,
         multinet_to_infomap(net, network);
 
 
-        multinet_to_infomap(net, "dummy.net");
+        //multinet_to_infomap(net, "dummy.net");
 
         infomap::HierarchicalNetwork resultNetwork(config);
 
@@ -96,7 +96,7 @@ infomap(const M* net,
 
         context.getInfomap()->run(network, resultNetwork);
 
-        resultNetwork.writeClu("dummy");
+        //resultNetwork.writeClu("dummy");
 
         return to_communities(net, resultNetwork);
     }

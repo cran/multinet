@@ -109,6 +109,7 @@ InfomapBase::run(Network& input, HierarchicalNetwork& output)
 void
 InfomapBase::run(HierarchicalNetwork& output)
 {
+
     calcOneLevelCodelength();
     calcEntropyRate();
 
@@ -173,7 +174,7 @@ InfomapBase::run(HierarchicalNetwork& output)
             topPerplexity += -infomath::plogp(getNodeData(*moduleIt).flow);
         }
 
-        topPerplexity = std::pow(2, topPerplexity);
+        topPerplexity = std::pow(2.0, topPerplexity);
 
         for (InfomapIterator it(root(), 1); !it.isEnd(); ++it)
         {
@@ -183,7 +184,7 @@ InfomapBase::run(HierarchicalNetwork& output)
             }
         }
 
-        bottomPerplexity = std::pow(2, bottomPerplexity);
+        bottomPerplexity = std::pow(2.0, bottomPerplexity);
 
         // physicalId -> (moduleId -> flow)
         std::map<unsigned int, std::map<unsigned int, double> > topModulesPerPhysicalNode;
@@ -220,7 +221,7 @@ InfomapBase::run(HierarchicalNetwork& output)
                 topOverlapPerplexityPerNode += -infomath::plogp(itModuleFlow->second / flow);
             }
 
-            topOverlapPerplexityPerNode = std::pow(2, topOverlapPerplexityPerNode);
+            topOverlapPerplexityPerNode = std::pow(2.0, topOverlapPerplexityPerNode);
             topOverlap += flow * topOverlapPerplexityPerNode;
         }
 
@@ -237,7 +238,7 @@ InfomapBase::run(HierarchicalNetwork& output)
                 bottomOverlapPerplexityPerNode += -infomath::plogp(itModuleFlow->second / flow);
             }
 
-            bottomOverlapPerplexityPerNode = std::pow(2, bottomOverlapPerplexityPerNode);
+            bottomOverlapPerplexityPerNode = std::pow(2.0, bottomOverlapPerplexityPerNode);
             bottomOverlap += flow * bottomOverlapPerplexityPerNode;
         }
 
@@ -1034,13 +1035,12 @@ InfomapBase::tryIndexingIteratively()
         consolidateModules(replaceExistingModules);
 
         double superIndexCodelength = superInfomap->indexCodelength;
+        // previous line commented to avoid variable-not-used warning
 
         if (std::abs(superIndexCodelength - indexCodelength) > 1e-10)
-            //std::cout << "*** (" << superIndexCodelength << " / " << indexCodelength << ") ";
-
-
+        //std::cout << "*** (" << superIndexCodelength << " / " << indexCodelength << ") ";
         {
-            ++numIndexingCompleted;
+        ++numIndexingCompleted;
         }
 
         tryIndexing = m_numNonTrivialTopModules > 1 && numTopModules() != numLeafNodes();
@@ -1578,6 +1578,8 @@ InfomapBase::partition(unsigned int recursiveCount, bool fast, bool forceConsoli
 void
 InfomapBase::mergeAndConsolidateRepeatedly(bool forceConsolidation, bool fast)
 {
+    (void)fast; // to avoid variable-not-used warning
+    (void)forceConsolidation; // to avoid variable-not-used warning
     m_aggregationLevel = 0;
     unsigned int numLevelsConsolidated = 0;
 
@@ -1700,6 +1702,7 @@ InfomapBase::mergeAndConsolidateRepeatedly(bool forceConsolidation, bool fast)
 void
 InfomapBase::generalTune(unsigned int level)
 {
+    (void)level; // to avoid variable-not-used warning
 
 }
 
@@ -2399,6 +2402,7 @@ InfomapBase::initMemoryNetwork(MemNetwork& network)
 void
 InfomapBase::initSubNetwork(NodeBase& parent, bool recalculateFlow)
 {
+    (void)recalculateFlow; // to avoid variable-not-used warning
     DEBUG_OUT("InfomapBase::initSubNetwork()..." << std::endl);
     root()->owner = &parent;
     cloneFlowData(parent, *root());
@@ -2493,6 +2497,7 @@ InfomapBase::consolidateExternalClusterData(bool printResults)
 bool
 InfomapBase::preClusterMultiplexNetwork(bool printResults)
 {
+    (void)printResults; // to avoid variable-not-used warning
     // overridden
     return false;
 }
@@ -2620,7 +2625,9 @@ InfomapBase::printNetworkData(HierarchicalNetwork& output, std::string filename)
         Log() << "\nBuilding output tree" << (writeEdges ? " with links" : "") << "... " << std::flush;
 
         output.clear(m_config);
-        saveHierarchicalNetwork(output, filename, writeEdges);
+        //saveHierarchicalNetwork(output, filename, writeEdges);
+        // UPDATED CODE
+        saveHierarchicalNetwork(output, filename, false);
 
         if (!m_config.noFileOutput)
         {
@@ -2737,6 +2744,7 @@ InfomapBase::printClusterNumbers(std::ostream& out)
 void
 InfomapBase::printTreeLevelSizes(std::ostream& out, std::string heading)
 {
+    (void)out; // to avoid variable-not-used warning
     Log() << heading << std::endl;
     std::map<unsigned int, unsigned int> levelMap;
 

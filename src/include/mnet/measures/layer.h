@@ -26,7 +26,7 @@ actor_existence_property_matrix(
 );
 
 template <typename M>
-core::PropertyMatrix<Dyad,const typename M::layer_type*,bool>
+core::PropertyMatrix<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>,const typename M::layer_type*,bool>
 edge_existence_property_matrix(
     const M* mnet
 );
@@ -68,28 +68,62 @@ actor_existence_property_matrix(
     return P;
 }
 
-// TODO document: does not consider self edges
-template <typename M>
-core::PropertyMatrix<Dyad,const typename M::layer_type*,bool>
-edge_existence_property_matrix(
-    const M* mnet
-)
-{
-    long n = mnet->vertices()->size();
-    core::PropertyMatrix<Dyad,const typename M::layer_type*,bool> P(n*(n-1)/2,mnet->layers()->size(),false);
-
-    for (auto layer: *mnet->layers())
+    
+    // @todo document: does not consider self edges
+    template <typename M>
+    core::PropertyMatrix<Dyad,const typename M::layer_type*,bool>
+    edge_existence_property_matrix_undirected(
+                                   const M* mnet
+                                   )
     {
-        for (auto e: *layer->edges())
+        long n = mnet->vertices()->size();
+        core::PropertyMatrix<Dyad,const typename M::layer_type*,bool> P(n*(n-1)/2,mnet->layers()->size(),false);
+        
+        for (auto layer: *mnet->layers())
         {
-            Dyad d(e->v1,e->v2);
-            P.set(d,layer,true);
+            for (auto e: *layer->edges())
+            {
+                    Dyad d(e->v1,e->v2);
+                    P.set(d,layer,true);
+            }
         }
+        return P;
     }
-
-    return P;
-}
-
+    
+    // @todo document: does not consider self edges
+    template <typename M>
+    core::PropertyMatrix<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>,const typename M::layer_type*,bool>
+    edge_existence_property_matrix(
+        const M* mnet
+        )
+    {
+        long n = mnet->vertices()->size();
+        core::PropertyMatrix<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>,const typename M::layer_type*,bool> P(n*(n-1),mnet->layers()->size(),false);
+        
+        for (auto layer: *mnet->layers())
+        {
+            if (layer->is_directed())
+            {
+                for (auto e: *layer->edges())
+                {
+                    auto d = std::make_pair(e->v1,e->v2);
+                    P.set(d,layer,true);
+                }
+            }
+            else
+            {
+                for (auto e: *layer->edges())
+                {
+                    auto d1 = std::make_pair(e->v1,e->v2);
+                    auto d2 = std::make_pair(e->v2,e->v1);
+                    P.set(d1,layer,true);
+                    P.set(d2,layer,true);
+                }
+            }
+        }
+        return P;
+    }
+    
 // only works for multiplex networks (no inter-layer edges)
 template <typename M>
 core::PropertyMatrix<Triad,const typename M::layer_type*,bool>
@@ -199,6 +233,26 @@ actor_cc_property_matrix(
 
 
 }
+}
+
+
+    // TODO test collisions
+namespace std {
+    template <>
+    struct hash<std::pair<const uu::net::Vertex*,const uu::net::Vertex*>>
+    {
+        size_t
+        operator()(const std::pair<const uu::net::Vertex*,const uu::net::Vertex*>& d) const
+        {
+            size_t seed = 0;
+            
+            seed ^= hash<const uu::net::Vertex*>()(d.first) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            seed ^= hash<const uu::net::Vertex*>()(d.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            
+            
+            return seed;
+        }
+    };
 }
 
 #endif

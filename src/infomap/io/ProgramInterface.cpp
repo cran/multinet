@@ -157,6 +157,7 @@ ProgramInterface::exitWithError(std::string message)
 {
     Log() << m_programName << " version " << m_programVersion << std::endl;
     //std::cerr << message;
+    (void)message; // replacement to disable messages
     Log() << "\nUsage: " << m_executableName;
 
     for (unsigned int i = 0; i < m_nonOptionArguments.size(); ++i)

@@ -34,6 +34,9 @@ class
 
   public:
 
+    typedef STRUCTURE struct_type;
+    typedef CONTEXT context_type;
+    
     /** number of structures in this matrix (e.g., actors, or edges) */
     const long num_structures;
 

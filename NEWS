@@ -1,3 +1,9 @@
+# version 3.0.1
+
+- minor code fix, to enable compilation on solaris (changed name to typedef ES)
+- actor measures return as many values as the size of the "actors" input parameter
+- fixed bug in reading directed edges from file (introduced in v3.0.0)
+
 # version 3.0.0
 
 - changed style, replacing . with _ in function names (except S3 methods)

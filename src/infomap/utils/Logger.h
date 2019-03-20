@@ -89,6 +89,7 @@ class Log
     Log&
     operator<< (const hideIf& manip)
     {
+        (void)manip; // to avoid variable-not-used warning
         return *this;
     }
 
@@ -99,6 +100,7 @@ class Log
         // silencing the logs
         //if (m_visible)
         //    m_ostream << data;
+        (void)data; // to avoid variable-not-used warning
         return *this;
     }
 
@@ -108,6 +110,7 @@ class Log
         // silencing the logs
         //if (m_visible)
         //	m_ostream << f;
+        (void)f; // to avoid variable-not-used warning
         return *this;
     }
 
@@ -152,6 +155,8 @@ class Log
     static std::ostream&
     getOutputStream(unsigned int level, unsigned int maxLevel)
     {
+        (void)level; // to avoid variable-not-used warning
+        (void)maxLevel; // to avoid variable-not-used warning
         return std::cout;
     }
 

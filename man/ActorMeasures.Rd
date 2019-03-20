@@ -55,15 +55,15 @@ degree_ml(net)
 degree_ml(net,c("U54","U3"),c("work","coauthor"),"in")
 # an indication of whether U54 and U3 are selectively active only on some layers
 degree_deviation_ml(net,c("U54","U3"))
-# co-workers of U54
-neighborhood_ml(net,"U54","work")
-# co-workers of U54 who are not connected to U54 on other layers
-xneighborhood_ml(net,"U54","work")
-# percentage of neighbors of U54 who are also co-workers
-relevance_ml(net,"U54","work")
+# co-workers of U3
+neighborhood_ml(net,"U3","work")
+# co-workers of U3 who are not connected to U3 on other layers
+xneighborhood_ml(net,"U3","work")
+# percentage of neighbors of U3 who are also co-workers
+relevance_ml(net,"U3","work")
 # redundancy between work and lunch
-connective_redundancy_ml(net,"U54",c("work","lunch"))
-# percentage of neighbors of U54 who would no longer
+connective_redundancy_ml(net,"U3",c("work","lunch"))
+# percentage of neighbors of U3 who would no longer
 # be neighbors by removing this layer
-xrelevance_ml(net,"U54","work")
+xrelevance_ml(net,"U3","work")
 }

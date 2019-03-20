@@ -72,16 +72,37 @@ class InfomapGreedySpecialized : public InfomapGreedy<InfomapGreedySpecialized<F
     initEnterExitFlow();
 
     void
-    addTeleportationDeltaFlowOnOldModuleIfMove(NodeType& nodeToMove, DeltaFlow& oldModuleDeltaFlow) {}
+    addTeleportationDeltaFlowOnOldModuleIfMove(NodeType& nodeToMove, DeltaFlow& oldModuleDeltaFlow)
+    {
+        (void)nodeToMove; // to avoid variable-not-used warning
+        (void)oldModuleDeltaFlow; // to avoid variable-not-used warning
+    }
+
     void
-    addTeleportationDeltaFlowOnNewModuleIfMove(NodeType& nodeToMove, DeltaFlow& newModuleDeltaFlow) {}
+    addTeleportationDeltaFlowOnNewModuleIfMove(NodeType& nodeToMove, DeltaFlow& newModuleDeltaFlow)
+    {
+        (void)nodeToMove; // to avoid variable-not-used warning
+        (void)newModuleDeltaFlow; // to avoid variable-not-used warning
+    }
 
     template<typename DeltaFlowType>
     void
-    addTeleportationDeltaFlowIfMove(NodeType& current, std::vector<DeltaFlowType>& moduleDeltaExits, unsigned int numModuleLinks) {}
+    addTeleportationDeltaFlowIfMove(NodeType& current, std::vector<DeltaFlowType>& moduleDeltaExits, unsigned int numModuleLinks)
+    {
+        (void)current; // to avoid variable-not-used warning
+        (void)moduleDeltaExits; // to avoid variable-not-used warning
+        (void)numModuleLinks; // to avoid variable-not-used
+
+    }
+
     template<typename DeltaFlowType>
     void
-    addTeleportationDeltaFlowIfMove(NodeType& current, std::map<unsigned int, DeltaFlowType>& moduleDeltaFlow) {}
+    addTeleportationDeltaFlowIfMove(NodeType& current, std::map<unsigned int, DeltaFlowType>& moduleDeltaFlow)
+    {
+
+        (void)current; // to avoid variable-not-used warning
+        (void)moduleDeltaFlow; // to avoid variable-not-used warning
+    }
 
     double
     getDeltaCodelengthOnMovingNode(NodeType& current, DeltaFlow& oldModuleDelta, DeltaFlow& newModuleDelta);

@@ -114,6 +114,7 @@ TreeDataWriter::writeTree(std::ostream& out, bool collapseLeafs)
 void
 TreeDataWriter::writeTopGraph(std::ostream& out)
 {
+    (void)out; // to avoid compiler warning
     //	const NodeBase& root = *m_tree.root();
     //	for (NodeBase::sibling_iterator childIt(root.begin_child()); childIt != root.end_child(); ++childIt)
     //	{
