@@ -15,6 +15,7 @@
 #include "mnet/community/abacus.h"
 #include "mnet/community/infomap.h"
 #include "mnet/community/ml-cpm.h"
+#include "mnet/community/modularity.h"
 #include "mnet/io/read_attributed_homogeneous_multilayer_network.h"
 #include "mnet/io/write_attributed_homogeneous_multilayer_network.h"
 #include "mnet/measures/degree.h"
@@ -2636,6 +2637,20 @@ return to_dataframe(community_structure);
 
 
 */
+
+double
+modularity_ml(
+              const RMLNetwork& rmnet,
+              const DataFrame& com,
+              double gamma,
+              double omega
+              )
+{
+    auto mnet = rmnet.get_mlnet();
+    auto communities = to_communities(com, mnet);
+    return uu::net::modularity(mnet, communities.get(), omega);
+}
+
 
 List
 to_list(

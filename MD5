@@ -1,6 +1,6 @@
-b7845a207dd09eb99a2a1c381031b5fb *DESCRIPTION
+41cff0398c710c54de653dc8b74040ec *DESCRIPTION
 b7704cc20bf0e2895c523074e93912aa *NAMESPACE
-8d5571660bbfbc7e642790460fb67976 *NEWS
+4c9471d6fab86cd30ed236d72ebcd116 *NEWS
 1d9b2f9a6c5d34d81fd0f004940352a3 *R/datasets.R
 8824d5bebd39f22a3dbae9d649973c35 *R/deprecated.R
 53bc0e9f8493f82f92c58c381318e0cd *R/functions.R
@@ -13,7 +13,7 @@ a9482dfcfbe2aabae2b45b76fdca892f *inst/extdata/florentine.mpx
 fdf586fdffb14e3650ac6bd8d2b2a896 *man/ActorMeasures.Rd
 bcb7875a3678dd6c19164db272d71caa *man/Attributes.Rd
 fb58db4fa168ee99e67d0c11756d820c *man/Classes.Rd
-bcd338b3b648e03d1bb4d728d44cfc1f *man/Communities.Rd
+8b285517cc1cc028e4b31da166b36d51 *man/Communities.Rd
 dda7469f16831714f73439e011d922ae *man/Conversion.Rd
 1927b66a6199c2d0cff0f4084b32f3ce *man/Deprecated.Rd
 3ea79dd97a13f8825a044b9d7b61d27d *man/Directionality.Rd
@@ -959,8 +959,8 @@ c186ea0b3d210f20ffd7fb1bd526d96f *src/multinet/xnet/datastructures/graphs/TextGr
 67226cfc6a5a806ad8fd42e8972e367c *src/multinet/xnet/datastructures/stores/MessageStore.cpp
 e026fbfff0fb8e3c08e4d60462a543ec *src/multinet/xnet/io/read_temporal_text_network.cpp
 b63d1bdcf27645f66b0565392a3d6c5f *src/multinet/xnet/io/read_text_graph.cpp
-02cc52e9ddc2c06ebd75508ab86e7a7b *src/r_functions.cpp
-c74afe4a1176420bc0b3a1f5e87cf184 *src/r_functions.h
-918c3eddc692d90d6b81c38f5aa6e20e *src/rcpp_module_definition.cpp
-de18c40029a4c2872816a2fc5b23ccba *src/rcpp_utils.cpp
-41f24eb594595fec1149c5c44162afe3 *src/rcpp_utils.h
+febec702783f4abf150e6c358200f073 *src/r_functions.cpp
+7fff4de2036dde53a3139083f4227f1f *src/r_functions.h
+b18d6ee7605a52687285263f501c6cb8 *src/rcpp_module_definition.cpp
+f5bb267775d30619b3d29d41900b12a2 *src/rcpp_utils.cpp
+9a7f305e02678287f193f840e1f49a2f *src/rcpp_utils.h

@@ -341,3 +341,48 @@ to_dataframe(
                _("cid")=community_id
            );
 }
+
+std::unique_ptr<uu::net::CommunityStructure<uu::net::VertexLayerCommunity<const uu::net::AttributedSimpleGraph>>>
+to_communities(
+               const DataFrame& com,
+               const uu::net::AttributedHomogeneousMultilayerNetwork* mnet
+               )
+{
+    CharacterVector cs_actor = com["actor"];
+    CharacterVector cs_layer = com["layer"];
+    NumericVector cs_cid = com["cid"];
+    
+    std::unordered_map<int, std::list<std::pair<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>> > result;
+    
+    for (size_t i=0; i<com.nrow(); i++) {
+        int comm_id = cs_cid[i];
+        auto layer = mnet->layers()->get(std::string(cs_layer[i]));
+        if (!layer) stop("cannot find layer " + std::string(cs_layer[i]) + " (community structure not compatible with this network?)");
+        auto actor = mnet->vertices()->get(std::string(cs_actor[i]));
+        if (!actor) stop("cannot find actor " + std::string(cs_actor[i]) + " (community structure not compatible with this network?)");
+        
+        auto iv = std::make_pair(actor, layer);
+        result[comm_id].push_back(iv);
+        
+    }
+    
+    
+        // build community structure
+    
+    auto communities = std::make_unique<uu::net::CommunityStructure<uu::net::VertexLayerCommunity<const uu::net::AttributedSimpleGraph>>>();
+    
+    for (auto pair: result)
+    {
+        auto c = std::make_unique<uu::net::VertexLayerCommunity<const uu::net::AttributedSimpleGraph>>();
+        
+        for (auto vertex_layer_pair: pair.second)
+        {
+            c->add(vertex_layer_pair);
+        }
+        
+        communities->add(std::move(c));
+    }
+    
+    return communities;
+}
+

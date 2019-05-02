@@ -455,9 +455,19 @@ lart_ml(
 
  */
 
+double
+modularity_ml(
+              const RMLNetwork& rmnet,
+              const DataFrame& com, double gamma,
+              double omega
+              );
+
+
 List
-to_list(const DataFrame& cs,
-        const RMLNetwork& mnet);
+to_list(
+        const DataFrame& cs,
+        const RMLNetwork& mnet
+        );
 
 // Layout
 

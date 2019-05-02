@@ -5,6 +5,7 @@
 \alias{glouvain_ml}
 \alias{infomap_ml}
 \alias{get_community_list_ml}
+\alias{modularity_ml}
 \title{
 Community detection algorithms
 }
@@ -16,6 +17,7 @@ clique_percolation_ml(mlnetwork, k=3, m=1)
 glouvain_ml(mlnetwork, gamma=1, omega=1, limit=0)
 infomap_ml(mlnetwork, overlapping=FALSE, directed=FALSE, self.links=TRUE)
 
+modularity_ml(mlnetwork, comm.struct, gamma=1, omega=1)
 get_community_list_ml(comm.struct, mlnetwork)
 }
 \arguments{

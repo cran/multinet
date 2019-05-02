@@ -1,3 +1,7 @@
+# version 3.0.2
+
+- added modularity_ml
+
 # version 3.0.1
 
 - minor code fix, to enable compilation on solaris (changed name to typedef ES)

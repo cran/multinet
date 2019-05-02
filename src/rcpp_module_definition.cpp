@@ -205,6 +205,17 @@ RCPP_MODULE(multinet)
              ),
              "Community extraction based on the flow equation");
 
+    
+    function("modularity_ml",
+             &modularity_ml,
+             List::create(
+                _["mlnetwork"],
+                _["comm.struct"],
+                _["gamma"]=1,
+                _["omega"]=1
+             ),
+             "Generalized modularity");
+    
     /*
     function("lart_ml", &lart_ml, List::create( _["mlnetwork"], _["t"]=-1, _["eps"]=1, _["gamma"]=1), "Community extraction based on locally adaptive random walks");
 

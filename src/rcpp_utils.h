@@ -73,5 +73,10 @@ to_dataframe(
     uu::net::CommunityStructure<uu::net::VertexLayerCommunity<const uu::net::AttributedSimpleGraph>>* cs
 );
 
+std::unique_ptr<uu::net::CommunityStructure<uu::net::VertexLayerCommunity<const uu::net::AttributedSimpleGraph>>>
+to_communities(
+               const DataFrame& com,
+               const uu::net::AttributedHomogeneousMultilayerNetwork* mnet
+               );
 
 #endif
