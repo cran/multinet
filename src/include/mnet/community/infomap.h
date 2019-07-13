@@ -51,7 +51,12 @@ infomap(const M* net,
 
         infomap::Config config;
         config.inputFormat = "multiplex";
-        config.printClu = true;
+        config.printClu = false;
+        config.printTree = false;
+        config.printFlowTree = false;
+        config.printBinaryTree = false;
+        config.printBinaryFlowTree = false;
+        config.printMap = false;
         config.zeroBasedNodeNumbers = false;
         config.silent = true;
 

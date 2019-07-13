@@ -1171,6 +1171,7 @@ template<typename FlowType>
 void
 InfomapGreedyTypeSpecialized<FlowType, WithMemory>::printClusterNumbers(std::ostream& out)
 {
+    /* COMMENTED FOR R VERSION
     unsigned int indexOffset = m_config.zeroBasedNodeNumbers ? 0 : 1;
     out << "# '" << m_config.parsedArgs << "' -> " << Super::numLeafNodes() << " nodes " <<
         "partitioned in " << m_config.elapsedTime() << " from codelength " <<
@@ -1222,6 +1223,7 @@ InfomapGreedyTypeSpecialized<FlowType, WithMemory>::printClusterNumbers(std::ost
             out << "\b\b]\n";
         }
     }
+     */
 }
 
 

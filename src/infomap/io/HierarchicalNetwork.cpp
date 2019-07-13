@@ -303,6 +303,7 @@ HierarchicalNetwork::readStreamableTree(const std::string& fileName)
 void
 HierarchicalNetwork::writeClu(const std::string& fileName, int moduleIndexDepth)
 {
+    /*
     markNodesToSkip();
 
     SafeOutFile out(fileName.c_str());
@@ -371,6 +372,7 @@ HierarchicalNetwork::writeClu(const std::string& fileName, int moduleIndexDepth)
             }
         }
     }
+     */
 }
 
 void
@@ -457,6 +459,7 @@ HierarchicalNetwork::writeMap(const std::string& fileName)
 void
 HierarchicalNetwork::writeHumanReadableTree(const std::string& fileName, bool writeHierarchicalNetworkEdges)
 {
+    /* COMMENTED FOR R VERSION
     markNodesToSkip();
 
     SafeOutFile out(fileName.c_str());
@@ -577,6 +580,7 @@ HierarchicalNetwork::writeHumanReadableTree(const std::string& fileName, bool wr
             out << (edgeIt->second.source + 1) << " " << (edgeIt->second.target + 1) << " " << edgeIt->second.flow << "\n";
         }
     }
+     */
 }
 
 void

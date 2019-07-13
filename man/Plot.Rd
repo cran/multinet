@@ -3,16 +3,17 @@
 \alias{plot.Rcpp_RMLNetwork}
 \alias{plot.ml}
 \alias{plot.multinet}
+\alias{values2graphics}
 \title{
 Drawing a multilayer network
 }
 \description{
-This function draws a multilayer network.
+The plot function draws a multilayer network. values2graphics is a support function translating discrete attribute values to graphical parameters. values2graphics returns an object with fields legend.text, legend.pch, legend.col and color or shape.
 }
 \usage{
 \S3method{plot}{Rcpp_RMLNetwork}(x,
 layout=NULL, grid=NULL, mai=.1,
-vertex.shape=16, vertex.cex=1, vertex.size=vertex.cex, vertex.color=NULL,
+vertex.shape=21, vertex.cex=1, vertex.size=vertex.cex, vertex.color=NULL,
 vertex.labels=NULL, vertex.labels.pos=3, vertex.labels.offset=.5, vertex.labels.cex=1,
 edge.type=1, edge.width=1, edge.color=1,
 edge.arrow.length=0.1, edge.arrow.angle=20,
@@ -20,6 +21,8 @@ legend.x = NULL, legend.y = NULL,
 legend.pch = 20, legend.cex = 0.5,
 legend.inset = c(0, 0),
 com=NULL, com.cex=1, ...)
+
+values2graphics(values, output = "color")
 }
 \arguments{
 \item{x}{A multilayer network.}
@@ -69,6 +72,11 @@ head - corresponding to the parameter of the R \code{arrows} function with the s
 \item{com.cex}{Increases (>1) or decreases (<1) the margin around the nodes when the colored areas are drawn around the communities.}
 
 \item{...}{Other graphical parameters.}
+
+
+\item{values}{A vector with values.}
+
+\item{output}{The type of graphical objects the values should be translated to. It can currently take values "color" and "shape".}
 }
 \seealso{
 \link{Mining: communities}
@@ -85,4 +93,5 @@ net <- ml_aucs()
 plot(net,vertex.labels=NA)
 title("AUCS network")
 }
+values2graphics(c("a", "b", "b", "c"))
 }

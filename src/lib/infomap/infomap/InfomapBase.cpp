@@ -2726,6 +2726,7 @@ InfomapBase::printHierarchicalData(HierarchicalNetwork& hierarchicalNetwork, std
 void
 InfomapBase::printClusterNumbers(std::ostream& out)
 {
+    /* COMMENTED FOR R VERSION
     out << "# '" << m_config.parsedArgs << "' -> " << numLeafNodes() << " nodes " <<
         "partitioned in " << m_config.elapsedTime() << " from codelength " <<
         io::toPrecision(oneLevelCodelength, 9, true) << " in one level to codelength " <<
@@ -2739,6 +2740,7 @@ InfomapBase::printClusterNumbers(std::ostream& out)
         unsigned int index = (*it)->parent->index;
         out <<  (index + 1) << "\n";
     }
+     */
 }
 
 void
