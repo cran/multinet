@@ -32,31 +32,31 @@ as.list.Rcpp_RMLNetwork <- function(x, ...) {
 }
 
 #
-add_igraph_layer_ml <- function(mlnetwork, g, name)
+add_igraph_layer_ml <- function(n, g, name)
 {
     if (is.null(vertex_attr(g)$name))
     {
         stop("igraph object must have a vertex attribute 'name' with vertex names")
     }
     
-    add_layers_ml(mlnetwork, name, is.directed(g))
+    add_layers_ml(n, name, is.directed(g))
     
-    add_actors_ml(mlnetwork, vertex_attr(g)$name)
+    add_actors_ml(n, vertex_attr(g)$name)
     
     vertices = data.frame(actor=vertex_attr(g)$name, layer=name)
-    add_vertices_ml(mlnetwork, vertices)
+    add_vertices_ml(n, vertices)
     
     for (attr in names(vertex_attr(g)))
     {
         if (is.numeric(vertex_attr(g)[[attr]]))
         {
-            add_attributes_ml(mlnetwork, attributes=attr, type="numeric", target="vertex", layer=name)
+            add_attributes_ml(n, attributes=attr, type="numeric", target="vertex", layer=name)
         }
         if (is.character(vertex_attr(g)[[attr]]))
         {
-            add_attributes_ml(mlnetwork, attributes=attr, type="string", target="vertex", layer=name)
+            add_attributes_ml(n, attributes=attr, type="string", target="vertex", layer=name)
         }
-        set_values_ml(mlnetwork, attr, vertices=vertices, values=vertex_attr(g)[[attr]])
+        set_values_ml(n, attr, vertices=vertices, values=vertex_attr(g)[[attr]])
     }
     
     
@@ -64,18 +64,18 @@ add_igraph_layer_ml <- function(mlnetwork, g, name)
     actor1=get.edgelist(g)[,1], layer1=name,
     actor2=get.edgelist(g)[,2], layer2=name)
     
-    add_edges_ml(mlnetwork, edges)
+    add_edges_ml(n, edges)
     
     for (attr in names(edge_attr(g)))
     {
         if (is.numeric(edge_attr(g)[[attr]]))
         {
-            add_attributes_ml(mlnetwork, attributes=attr, type="numeric", target="edge", layer=name)
+            add_attributes_ml(n, attributes=attr, type="numeric", target="edge", layer=name)
         }
         if (is.character(edge_attr(g)[[attr]]))
         {
-            add_attributes_ml(mlnetwork, attributes=attr, type="string", target="edge", layer=name)
+            add_attributes_ml(n, attributes=attr, type="string", target="edge", layer=name)
         }
-        set_values_ml(mlnetwork, attr, edges=edges, values=edge_attr(g)[[attr]])
+        set_values_ml(n, attr, edges=edges, values=edge_attr(g)[[attr]])
     }
 }

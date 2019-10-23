@@ -1,6 +1,12 @@
+# version 3.1.0
+
+- removed auto_ptr from the Infomap external library
+- add_vertices now automatically adds the corresponding actors if they do not exist
+- minor updates to the documentation
+
 # version 3.0.3
 
-- added values2graphics
+- added values2graphics to simplify the plotting of attribute values
 
 # version 3.0.2
 
@@ -15,7 +21,7 @@
 # version 3.0.0
 
 - changed style, replacing . with _ in function names (except S3 methods)
-- old functions deprecated
+- old functions deprecated, they will disappear from version 4.0.0
 - changed colors in plotting function
 
 # version 2.0.1

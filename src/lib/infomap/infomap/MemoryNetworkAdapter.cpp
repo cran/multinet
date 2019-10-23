@@ -222,7 +222,7 @@ MemoryNetworkAdapter::readHumanReadableTree(std::string filename)
     SafeInFile input(filename.c_str());
     Log() << "Parsing memory node tree from '" << filename << "'... " << std::flush;
 
-    std::auto_ptr<NodeBase> root(m_treeData.nodeFactory().createNode("tmpRoot", 1.0, 0.0));
+    std::unique_ptr<NodeBase> root(m_treeData.nodeFactory().createNode("tmpRoot", 1.0, 0.0));
     std::vector<double> flowValues(m_numNodes);
     unsigned int indexOffset = m_config.zeroBasedNodeNumbers ? 0 : 1;
     std::string header = "";

@@ -1,6 +1,6 @@
-#include "core/utils/CSVReader.h"
-#include "core/exceptions/OperationNotSupportedException.h"
-#include "core/exceptions/FileNotFoundException.h"
+#include "core/utils/CSVReader.hpp"
+#include "core/exceptions/OperationNotSupportedException.hpp"
+#include "core/exceptions/FileNotFoundException.hpp"
 #include <string>
 #include <sstream>
 #include <iostream>

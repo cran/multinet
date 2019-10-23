@@ -1,4 +1,4 @@
-#include "core/exceptions/assert_not_null.h"
+#include "core/exceptions/assert_not_null.hpp"
 
 namespace uu {
 namespace core {

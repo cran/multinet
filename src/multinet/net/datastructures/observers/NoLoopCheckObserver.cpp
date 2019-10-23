@@ -4,7 +4,7 @@
  */
 
 
-#include "net/datastructures/observers/NoLoopCheckObserver.h"
+#include "net/datastructures/observers/NoLoopCheckObserver.hpp"
 
 namespace uu {
 namespace net {

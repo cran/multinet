@@ -262,9 +262,9 @@ class InfomapBase
     virtual unsigned int
     consolidateModules(bool replaceExistingStructure = true, bool asSubModules = false) = 0;
 
-    virtual std::auto_ptr<InfomapBase>
+    virtual std::unique_ptr<InfomapBase>
     getNewInfomapInstance() = 0;
-    virtual std::auto_ptr<InfomapBase>
+    virtual std::unique_ptr<InfomapBase>
     getNewInfomapInstanceWithoutMemory() = 0;
 
     virtual unsigned int

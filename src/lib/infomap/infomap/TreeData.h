@@ -174,7 +174,7 @@ class TreeData
 
 
   private:
-    std::auto_ptr<NodeFactoryBase> m_nodeFactory;
+    std::unique_ptr<NodeFactoryBase> m_nodeFactory;
     NodeBase* m_root;
     std::vector<NodeBase*> m_leafNodes;
     unsigned int m_numLeafEdges;

@@ -1,5 +1,5 @@
-#include "core/attributes/Time.h"
-#include "core/attributes/conversion.h"
+#include "core/attributes/Time.hpp"
+#include "core/attributes/conversion.hpp"
 
 namespace uu {
 namespace core {

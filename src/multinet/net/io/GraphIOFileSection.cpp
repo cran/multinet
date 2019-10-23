@@ -4,9 +4,9 @@
  */
 
 #include <iostream>
-#include "net/io/GraphIOFileSection.h"
-#include "core/utils/string.h"
-#include "core/exceptions/WrongParameterException.h"
+#include "net/io/GraphIOFileSection.hpp"
+#include "core/utils/string.hpp"
+#include "core/exceptions/WrongParameterException.hpp"
 
 
 namespace uu {

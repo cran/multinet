@@ -1,5 +1,6 @@
-#include "core/datastructures/observers/ObserverStore.h"
-#include "core/exceptions/NullPtrException.h"
+#include "core/datastructures/observers/ObserverStore.hpp"
+
+#include "core/exceptions/assert_not_null.hpp"
 
 namespace uu {
 namespace core {
@@ -10,11 +11,7 @@ register_observer(
     std::unique_ptr<core::GenericObserver> obs
 )
 {
-    if (!obs.get())
-    {
-        throw NullPtrException("observer");
-    }
-
+    assert_not_null(obs.get(), "ObserverStore::register_observer", "obs");
     observers_.push_back(std::move(obs));
 }
 

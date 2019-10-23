@@ -3,9 +3,10 @@
  * - 2018.03.09 file created, following a restructuring of the previous library.
  */
 
-#include "net/io/read_common.h"
-#include "core/utils/string.h"
-#include "core/exceptions/WrongParameterException.h"
+#include "net/io/read_common.hpp"
+#include "core/utils/string.hpp"
+#include "core/exceptions/WrongParameterException.hpp"
+#include "core/exceptions/WrongFormatException.hpp"
 
 
 namespace uu {

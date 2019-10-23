@@ -1,4 +1,6 @@
 \name{Deprecated functions}
+\alias{add_actors_ml}
+\alias{add_actors_ml_v3}
 \alias{add.attributes.ml}
 \alias{attributes.ml}
 \alias{get.values.ml}
@@ -68,6 +70,8 @@ Deprecated functions
 These functions are deprecated and will be removed at the next major version upgrade.
 }
 \usage{
+add_actors_ml(...)
+add_actors_ml_v3(n, actors)
 add.attributes.ml(...)
 attributes.ml(...)
 get.values.ml(...)
@@ -134,4 +138,6 @@ num.nodes.ml(...)
 }
 \arguments{
 \item{...}{deprecated}
+\item{n}{A multilayer network.}
+\item{actors}{An array of names of actors.}
 }

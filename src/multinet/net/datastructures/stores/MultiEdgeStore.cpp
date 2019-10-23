@@ -2,7 +2,7 @@
 
  */
 
-#include "net/datastructures/stores/MultiEdgeStore.h"
+#include "net/datastructures/stores/MultiEdgeStore.hpp"
 
 namespace uu {
 namespace net {

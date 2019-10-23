@@ -44,7 +44,7 @@ class InfomapContext
     void
     createInfomap();
 
-    const std::auto_ptr<InfomapBase>&
+    const std::unique_ptr<InfomapBase>&
     getInfomap() const
     {
         return m_infomap;
@@ -52,7 +52,7 @@ class InfomapContext
 
   private:
     const Config& m_config;
-    std::auto_ptr<InfomapBase> m_infomap;
+    std::unique_ptr<InfomapBase> m_infomap;
 };
 
 #ifdef NS_INFOMAP

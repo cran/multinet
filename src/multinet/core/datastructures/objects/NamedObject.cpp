@@ -1,18 +1,17 @@
-#include "core/datastructures/objects/NamedObject.h"
+#include "core/datastructures/objects/NamedObject.hpp"
 
 namespace uu {
 namespace core {
 
 NamedObject::
 NamedObject(
-    //const ObjectId& id,
     const std::string& name
 ) :
-    //Object(id),
     name(name)
 {
 
 }
+
 
 std::string
 NamedObject::
@@ -21,6 +20,7 @@ to_string(
 {
     return "obj(" + name + ")";
 }
+
 
 std::ostream&
 operator<<(
@@ -32,5 +32,5 @@ operator<<(
     return os;
 }
 
-} // namespace core
-} // namespace uu
+}
+}

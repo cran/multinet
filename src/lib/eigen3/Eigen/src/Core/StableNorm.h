@@ -78,7 +78,7 @@ blueNorm_impl(const EigenBase<Derived>& _vec)
         // from the "basic" machine-dependent numbers
         // nbig, ibeta, it, iemin, iemax, rbig.
         // The following define the basic machine-dependent constants.
-        // For portability, the PORT subprograms "ilmaeh" and "rlmach"
+        // For portability, the PORT subprograms "ilma.h" and "rlma.h"
         // are used. For any specific computer, each of the assignment
         // statements can be replaced
         ibeta = std::numeric_limits<RealScalar>::radix;                 // base for floating-point numbers

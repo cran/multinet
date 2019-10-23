@@ -281,7 +281,7 @@ asin() const
   * Example: \include Cwise_tanh.cpp
   * Output: \verbinclude Cwise_tanh.out
   *
-  * \sa <a href="group__CoeffwiseMathFunctions.html#cwisetable_tanh">Math functions</a>, tan(), sinh(), cosh()
+  * \sa <a href="group__CoeffwiseMathFunctions.html#cwisetable_ta.h">Math functions</a>, tan(), sinh(), cosh()
   */
 EIGEN_DEVICE_FUNC
 inline const TanhReturnType
@@ -295,7 +295,7 @@ tanh() const
   * Example: \include Cwise_sinh.cpp
   * Output: \verbinclude Cwise_sinh.out
   *
-  * \sa <a href="group__CoeffwiseMathFunctions.html#cwisetable_sinh">Math functions</a>, sin(), tanh(), cosh()
+  * \sa <a href="group__CoeffwiseMathFunctions.html#cwisetable_si.h">Math functions</a>, sin(), tanh(), cosh()
   */
 EIGEN_DEVICE_FUNC
 inline const SinhReturnType
@@ -309,7 +309,7 @@ sinh() const
   * Example: \include Cwise_cosh.cpp
   * Output: \verbinclude Cwise_cosh.out
   *
-  * \sa <a href="group__CoeffwiseMathFunctions.html#cwisetable_cosh">Math functions</a>, tan(), sinh(), cosh()
+  * \sa <a href="group__CoeffwiseMathFunctions.html#cwisetable_co.h">Math functions</a>, tan(), sinh(), cosh()
   */
 EIGEN_DEVICE_FUNC
 inline const CoshReturnType

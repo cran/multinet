@@ -83,7 +83,7 @@ class InfomapGreedyCommon : public InfomapGreedySpecialized<typename derived_tra
   protected:
     using Super::root;
 
-    virtual std::auto_ptr<InfomapBase>
+    virtual std::unique_ptr<InfomapBase>
     getNewInfomapInstance();
 
     NodeType&
@@ -152,10 +152,10 @@ InfomapGreedyCommon<InfomapGreedyDerivedType>::derived()
 
 template<typename InfomapGreedyDerivedType>
 inline
-std::auto_ptr<InfomapBase>
+std::unique_ptr<InfomapBase>
 InfomapGreedyCommon<InfomapGreedyDerivedType>::getNewInfomapInstance()
 {
-    return std::auto_ptr<InfomapBase>(new InfomapGreedyDerivedType(*this));
+    return std::unique_ptr<InfomapBase>(new InfomapGreedyDerivedType(*this));
 }
 
 template<typename InfomapGreedyDerivedType>

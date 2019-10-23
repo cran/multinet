@@ -1,7 +1,8 @@
-#include "mnet/io/read_common.h"
-#include "net/io/read_common.h"
-#include "core/utils/string.h"
+#include "mnet/io/read_common.hpp"
+#include "net/io/read_common.hpp"
+#include "core/utils/string.hpp"
 #include <iostream>
+#include "core/exceptions/WrongFormatException.hpp"
 
 namespace uu {
 namespace net {
@@ -168,34 +169,37 @@ read_multilayer_metadata(
         case MultilayerIOFileSection::LAYERS:
         {
             //@todo sanity check
-            
+
             if (fields.size()==2)
             {
                 std::string layer_name = fields.at(0);
                 meta.layers[layer_name];
-                
+
                 for (size_t idx = 1; idx<fields.size(); idx++)
                 {
                     read_graph_type(fields.at(idx), meta.layers[layer_name], csv.row_num());
                 }
             }
+
             else if (fields.size()>2)
             {
                 std::string layer_name1 = fields.at(0);
                 meta.layers[layer_name1];
                 std::string layer_name2 = fields.at(1);
                 meta.layers[layer_name2];
-                
+
                 if (layer_name1!=layer_name2)
-                    continue; //@todo currently not supported
-                
+                {
+                    continue;    //@todo currently not supported
+                }
+
                 for (size_t idx = 2; idx<fields.size(); idx++)
                 {
                     read_graph_type(fields.at(idx), meta.layers[layer_name1], csv.row_num());
                 }
-                
+
             }
-            
+
             break;
         }
 

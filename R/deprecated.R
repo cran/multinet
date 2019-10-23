@@ -1,5 +1,14 @@
 loadModule("multinet",TRUE)
 
+# Deprecated from version 3.1.0
+
+add_actors_ml <- function(...)
+{
+    .Deprecated(NULL, package="multinet",
+    msg="'add_actors_ml' is deprecated. From version 3.1 add_vertices_ml automatically adds the actors")
+    add_actors_ml_v3(...)
+}
+
 # Deprecated from version 3.0.0
 
 add.igraph.layer.ml <- function(...)

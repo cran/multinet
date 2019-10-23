@@ -1,4 +1,4 @@
-#include "core/exceptions/OperationNotSupportedException.h"
+#include "core/exceptions/OperationNotSupportedException.hpp"
 
 namespace uu {
 namespace core {

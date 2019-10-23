@@ -1,4 +1,4 @@
-#include "core/exceptions/ElementNotFoundException.h"
+#include "core/exceptions/ElementNotFoundException.hpp"
 
 namespace uu {
 namespace core {

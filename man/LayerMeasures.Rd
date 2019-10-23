@@ -1,5 +1,5 @@
-\name{Measures: layer comparison}
-\alias{Measures: layer comparison}
+\name{multinet.layer_comparison}
+\alias{multinet.layer_comparison}
 \alias{layer_summary_ml}
 \alias{layer_comparison_ml}
 \title{
@@ -9,11 +9,12 @@ Network analysis measures
 These functions can be used to compare different layers.
 }
 \usage{
-layer_summary_ml(mlnetwork,layer,method="entropy.degree",mode="all")
-layer_comparison_ml(mlnetwork,layers=character(0),method="jaccard.edges",mode="all",K=0)
+layer_summary_ml(n, layer, method = "entropy.degree", mode = "all")
+layer_comparison_ml(n, layers = character(0),
+method = "jaccard.edges", mode = "all", K = 0)
 }
 \arguments{
-\item{mlnetwork}{A multilayer network.}
+\item{n}{A multilayer network.}
 \item{layer}{The name of a layer.}
 \item{layers}{Names of the layers to be compared. If not specified, all layers are used.}
 \item{method}{This argument can take several values. For layer summary:
@@ -34,7 +35,6 @@ A data frame with layer-by-layer coparisons. For each pair of layers, the data f
 \references{
 Brodka, P., Chmiel, A., Magnani, M., and Ragozini, G. (2018). Qunatifying layer similarity in multiplex networks: a systematic study. Royal Sociwty Open Science 5(8)
 }
-
 \examples{
 net <- ml_aucs()
 

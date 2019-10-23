@@ -4,7 +4,7 @@
  */
 
 #include <memory>
-#include "xnet/datastructures/stores/MessageStore.h"
+#include "xnet/datastructures/stores/MessageStore.hpp"
 
 namespace uu {
 namespace net {
@@ -13,8 +13,7 @@ namespace net {
 
 MessageStore::
 MessageStore(
-) :
-    super(std::make_unique<Attributes<Vertex, Texts<Vertex>>>())
+)
 {
 }
 

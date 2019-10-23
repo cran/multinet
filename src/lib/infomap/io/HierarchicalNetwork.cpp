@@ -303,7 +303,10 @@ HierarchicalNetwork::readStreamableTree(const std::string& fileName)
 void
 HierarchicalNetwork::writeClu(const std::string& fileName, int moduleIndexDepth)
 {
-    /*
+    (void)fileName; // To avoid a warning
+    (void)moduleIndexDepth; // To avoid a warning
+
+    /* COMMENTED FOR R VERSION
     markNodesToSkip();
 
     SafeOutFile out(fileName.c_str());
@@ -459,6 +462,9 @@ HierarchicalNetwork::writeMap(const std::string& fileName)
 void
 HierarchicalNetwork::writeHumanReadableTree(const std::string& fileName, bool writeHierarchicalNetworkEdges)
 {
+    (void)fileName; // To avoid a warning
+    (void)writeHierarchicalNetworkEdges; // To avoid a warning
+
     /* COMMENTED FOR R VERSION
     markNodesToSkip();
 

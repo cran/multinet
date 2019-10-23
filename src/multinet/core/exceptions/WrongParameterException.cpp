@@ -1,4 +1,4 @@
-#include "core/exceptions/WrongParameterException.h"
+#include "core/exceptions/WrongParameterException.hpp"
 
 namespace uu {
 namespace core {

@@ -1,4 +1,4 @@
-#include "core/exceptions/NullPtrException.h"
+#include "core/exceptions/NullPtrException.hpp"
 
 namespace uu {
 namespace core {

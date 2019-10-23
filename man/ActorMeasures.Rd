@@ -1,5 +1,5 @@
-\name{Measures: basic}
-\alias{Measures: basic}
+\name{multinet.actor_measures}
+\alias{multinet.actor_measures}
 \alias{degree_ml}
 \alias{degree_deviation_ml}
 \alias{neighborhood_ml}
@@ -14,18 +14,18 @@ Network analysis measures
 These functions compute network analysis measures providing a basic description of the actors in the network.
 }
 \usage{
-degree_ml(mlnetwork,actors=character(0),layers=character(0),mode="all")
-degree_deviation_ml(mlnetwork,actors=character(0),
-  layers=character(0),mode="all")
-neighborhood_ml(mlnetwork,actors=character(0),layers=character(0),mode="all")
-xneighborhood_ml(mlnetwork,actors=character(0),layers=character(0),mode="all")
-connective_redundancy_ml(mlnetwork,actors=character(0),
-  layers=character(0),mode="all")
-relevance_ml(mlnetwork,actors=character(0),layers=character(0),mode="all")
-xrelevance_ml(mlnetwork,actors=character(0),layers=character(0),mode="all")
+degree_ml(n, actors = character(0), layers = character(0), mode = "all")
+degree_deviation_ml(n, actors = character(0),
+  layers = character(0), mode = "all")
+neighborhood_ml(n, actors = character(0),layers = character(0), mode = "all")
+xneighborhood_ml(n, actors = character(0),layers = character(0), mode = "all")
+connective_redundancy_ml(n, actors = character(0),
+  layers = character(0), mode = "all")
+relevance_ml(n, actors = character(0),layers = character(0), mode = "all")
+xrelevance_ml(n, actors = character(0),layers = character(0), mode = "all")
 }
 \arguments{
-\item{mlnetwork}{A multilayer network.}
+\item{n}{A multilayer network.}
 \item{actors}{An array of names of actors.}
 \item{layers}{An array of names of layers.}
 \item{mode}{This argument can take values "in", "out" or "all" to count respectively incoming edges, outgoing edges or both.}
@@ -43,9 +43,10 @@ a high degree deviation, showing an uneven usage of the layers (or layers with d
 \code{relevance_ml} returns the percentage of neighbors present on the specified layers. \code{xrelevance_ml} returns the percentage of neighbors present on the specified layers and not on others.
 }
 \references{
-Berlingerio, Michele, Michele Coscia, Fosca Giannotti, Anna Monreale, and Dino Pedreschi. 2011. "Foundations of Multidimensional Network Analysis." In International Conference on Social Network Analysis and Mining (ASONAM), 485-89. IEEE Computer Society.
-
-Magnani, Matteo, and Luca Rossi. 2011. "The ML-Model for Multi-Layer Social Networks." In International conference on Social Network Analysis and Mining (ASONAM), 5-12. IEEE Computer Society.
+\itemize{
+\item Berlingerio, Michele, Michele Coscia, Fosca Giannotti, Anna Monreale, and Dino Pedreschi. 2011. "Foundations of Multidimensional Network Analysis." In International Conference on Social Network Analysis and Mining (ASONAM), 485-89. IEEE Computer Society.
+\item Magnani, Matteo, and Luca Rossi. 2011. "The ML-Model for Multi-Layer Social Networks." In International conference on Social Network Analysis and Mining (ASONAM), 5-12. IEEE Computer Society.
+}
 }
 \examples{
 net <- ml_aucs()

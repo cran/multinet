@@ -1,5 +1,5 @@
-\name{Network management: attributes}
-\alias{Network management: attributes}
+\name{multinet.attributes}
+\alias{multinet.attributes}
 \alias{add_attributes_ml}
 \alias{attributes_ml}
 \alias{set_values_ml}
@@ -8,31 +8,32 @@
 Managing attributes
 }
 \description{
-These functions are used to add values to the network components and retrieve them.
+These functions are used to assign and retrieve values to/from actors, vertices.
 }
 \usage{
-add_attributes_ml(mlnetwork, attributes, type="string", target="actor",
+add_attributes_ml(n, attributes, type="string", target="actor",
 	layer="", layer1="", layer2="")
-attributes_ml(mlnetwork, target="actor")
-get_values_ml(mlnetwork, attribute, actors=character(0),
+attributes_ml(n, target="actor")
+get_values_ml(n, attribute, actors=character(0),
 	vertices =character(0), edges=character(0))
-set_values_ml(mlnetwork, attribute, actors=character(0),
+set_values_ml(n, attribute, actors=character(0),
 	vertices=character(0), edges=character(0), values)
 }
 \arguments{
-\item{mlnetwork}{A multilayer network.}
+\item{n}{A multilayer network.}
 \item{attributes}{Name(s) of the attributes to be created.}
 \item{target}{Can be "actor" (attributes attached to actors), "vertex" (attributes attached to vertices) or "edge" (attributes attached to edges). Layer attributes are not available in this version.}
 \item{type}{Can be "string" or "numeric".}
 \item{layer}{This can be specified only for targets "vertex" (so that the attribute exists only for the vertices in that layer) or "edge" (in which case the attribute applies to intra-layer edges in that layer).}
-\item{layer1}{This can be specified only for target "edge", together with layer2, so that the attribute applies to inter-layer edges from layer1 to layer2. If layer1 and layer2 are specified, layer should not.}
+\item{layer1}{This can be specified only for target "edge", together with layer2, so that the attribute applies to inter-layer edges from layer1 to layer2. If \code{layer1} and \code{layer2} are specified, the parameter \code{layer} should not be used.}
 \item{layer2}{See layer1.}
 \item{attribute}{The name of the attribute to be updated.}
 \item{actors}{A vector of actor names. If this is specified, layers, vertices and edges should not.}
 \item{vertices}{A dataframe of vertices to be updated. The first column specifies actor names, the second layer names. If this is specified, actors, layers and edges should not.}
 \item{edges}{A dataframe containing the vertices to be connected. The four columns must contain, in this order: actor1 name, layer1 name, actor2 name, layer2 name. If this is specified, actors, layers and vertices should not.}
-\item{values}{A vector of values to be set for the corresponding actors, layers, vertices or edges.}
+\item{values}{A vector of values to be set for the corresponding actors, vertices or edges.}
 }
+\seealso{\link{multinet.properties}, \link{multinet.edge_directionality}}
 \value{
 \code{attributes_ml} returns a data frame with columns: "name", and "type". If vertex attributes are listed, an additional "layer" column is used. If edge attributes are listed, two columns "layer1" and "layer2" are included.
 \code{get_values_ml} returns a data frame with the values for the requested objects.

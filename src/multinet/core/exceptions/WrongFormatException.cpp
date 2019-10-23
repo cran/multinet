@@ -1,4 +1,4 @@
-#include "core/exceptions/WrongFormatException.h"
+#include "core/exceptions/WrongFormatException.hpp"
 
 namespace uu {
 namespace core {

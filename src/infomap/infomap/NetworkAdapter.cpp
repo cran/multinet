@@ -343,7 +343,7 @@ NetworkAdapter::readHumanReadableTree(std::string filename)
     SafeInFile input(filename.c_str());
     Log() << "Parsing tree '" << filename << "'... " << std::flush;
 
-    std::auto_ptr<NodeBase> root(m_treeData.nodeFactory().createNode("tmpRoot", 1.0, 0.0));
+    std::unique_ptr<NodeBase> root(m_treeData.nodeFactory().createNode("tmpRoot", 1.0, 0.0));
     std::vector<double> flowValues(m_numNodes);
     bool gotOriginalIndex = true;
     unsigned int indexOffset = m_config.zeroBasedNodeNumbers ? 0 : 1;

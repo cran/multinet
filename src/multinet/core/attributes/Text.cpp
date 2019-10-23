@@ -1,4 +1,4 @@
-#include "core/attributes/Text.h"
+#include "core/attributes/Text.hpp"
 
 namespace uu {
 namespace core {

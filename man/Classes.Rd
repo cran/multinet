@@ -1,7 +1,6 @@
-\name{Classes}
-\alias{Classes}
+\name{multinet.classes}
+\alias{multinet.classes}
 \alias{RMLNetwork-class}
-%\alias{Rcpp_RMLNetwork-class}
 \alias{REvolutionModel}
 \alias{Rcpp_REvolutionModel-class}
 \title{

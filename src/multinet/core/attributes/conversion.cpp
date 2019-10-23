@@ -1,5 +1,5 @@
-#include "core/attributes/conversion.h"
-#include "core/exceptions/WrongFormatException.h"
+#include "core/attributes/conversion.hpp"
+#include "core/exceptions/WrongFormatException.hpp"
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -32,7 +32,7 @@ to_string (
     const std::string& format
 )
 {
-    
+
     time_t t = std::chrono::system_clock::to_time_t(v);
     std::tm* time = gmtime(&t);
 
@@ -40,9 +40,9 @@ to_string (
     // std::ostringstream ss;
     // ss << std::put_time(&time, format.data()); ONLY AVAILABLE FROM GCC 5.0
     // return ss.str();
-    
+
     char buffer [100];
-    
+
     strftime (buffer, 100, format.data(), time);
 
     return std::string(buffer);

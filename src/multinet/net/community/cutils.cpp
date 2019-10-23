@@ -3,7 +3,7 @@
  * - 2018.03.09 file created, following a restructuring of the previous library.
  */
 
-#include "net/community/cutils.h"
+#include "net/community/cutils.hpp"
 
 namespace uu {
 namespace net {

@@ -1,7 +1,6 @@
-\name{Network management: updates}
-\alias{Network management: updates}
+\name{multinet.update}
+\alias{multinet.update}
 \alias{add_layers_ml}
-\alias{add_actors_ml}
 \alias{add_vertices_ml}
 \alias{add_edges_ml}
 
@@ -18,30 +17,29 @@
 Manipulation of multilayer networks
 }
 \description{
-Functions to add or remove components of a multilayer network.
+Functions to add or remove objects in a multilayer network.
 
-The functions \code{add_vertices_ml} and \code{delete_vertices_ml} add/remove the input actors to/from the input layers, but do not add/remove the actors from the multilayer network.
+The functions \code{add_vertices_ml} and \code{delete_vertices_ml} add/remove the input actors to/from the input layers. Since version 3.1, the actors in the network correspond to the union of all the actors in the various layers (that is, the vertices).
 
-A layer can also be added from an igraph object, where the vertex attribute \code{name} represents the actor name, using the \code{add_igraph_layer_ml} function. \code{add_vertices_ml} and \code{delete_vertices_ml} add/remove the input actors to/from the input layers, but do not add/remove the actors from the multilayer network.
+A layer can also be added from an igraph object, where the vertex attribute \code{name} represents the actor name, using the \code{add_igraph_layer_ml} function.
 
-The functions \code{add_nodes_ml} and \code{delete_nodes_ml} are deprecated in the current version of the library. Vertex/vertices are now
+The functions \code{add_nodes_ml} and \code{delete_nodes_ml} are deprecated in the current version of the library. The names vertex/vertices are now
 preferentially used over node/nodes.
 }
 \usage{
-add_layers_ml(mlnetwork, layers, directed=FALSE)
-add_actors_ml(mlnetwork, actors)
-add_vertices_ml(mlnetwork, vertices)
-add_edges_ml(mlnetwork, edges)
+add_layers_ml(n, layers, directed=FALSE)
+add_vertices_ml(n, vertices)
+add_edges_ml(n, edges)
 
-add_igraph_layer_ml(mlnetwork, g, name)
+add_igraph_layer_ml(n, g, name)
 
-delete_layers_ml(mlnetwork, layers)
-delete_actors_ml(mlnetwork, actors)
-delete_vertices_ml(mlnetwork, vertices)
-delete_edges_ml(mlnetwork, edges)
+delete_layers_ml(n, layers)
+delete_actors_ml(n, actors)
+delete_vertices_ml(n, vertices)
+delete_edges_ml(n, edges)
 }
 \arguments{
-\item{mlnetwork}{A multilayer network.}
+\item{n}{A multilayer network.}
 \item{layers}{An array of names of layers.}
 \item{actors}{An array of names of actors.}
 \item{g}{An igraph object with simple edges and a vertex attribute called name storing the actor name corresponding to the vertex.}
@@ -51,7 +49,7 @@ delete_edges_ml(mlnetwork, edges)
 \item{edges}{A dataframe containing the vertices to be connected. The four columns must contain, in this order: actor1 name, layer1 name, actor2 name, layer2 name. The directionality of the edge (directed/undirected) is pre-defined depending on the layer(s).}
 }
 \seealso{
-\link{Network management: properties}, \link{Network management: edge directionality}
+\link{multinet.properties}, \link{multinet.edge_directionality}
 }
 \examples{
 net <- ml_empty()
@@ -59,12 +57,6 @@ net <- ml_empty()
 add_layers_ml(net,"l1")
 add_layers_ml(net,c("l2","l3"),c(TRUE,FALSE))
 layers_ml(net)
-# Adding actors A1, A2, A3
-add_actors_ml(net,"A1")
-add_actors_ml(net,c("A2","A3"))
-# Verifying that the actors have been added correctly
-num_actors_ml(net)
-actors_ml(net)
 # Adding some vertices (actor A3 is not present in layer l3: no corresponding vertex there)
 vertices <- data.frame(
     c("A1","A2","A3","A1","A2","A3"),
@@ -75,6 +67,9 @@ vertices <- data.frame(
     c("l3","l3"))
 add_vertices_ml(net,vertices)
 vertices_ml(net)
+# Verifying that the actors have been added correctly
+num_actors_ml(net)
+actors_ml(net)
 # We create a data frame specifying two edges:
 # A2,l2 -- A3,l1
 # A2,l2 -- A3,l2

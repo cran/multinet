@@ -12,7 +12,7 @@
 
 #include "src/Core/util/DisableStupidWarnings.h"
 
-#include "SuiteSparseQR.hpp"
+#include "SuiteSparseQR.h"
 
 /** \ingroup Support_modules
   * \defgroup SPQRSupport_Module SuiteSparseQR module

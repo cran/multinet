@@ -40,7 +40,7 @@ values2graphics <- function(values, output = "color") {
     }
     
     if (is.data.frame(values)) {
-        x <- x[[1]]
+        values <- values[[1]]
     }
     types <- as.factor(values)
     num_types <- length(levels(types))
@@ -72,6 +72,7 @@ values2graphics <- function(values, output = "color") {
     
 plot.Rcpp_RMLNetwork <- function(x,
 layout=NULL, grid=NULL, mai=.1,
+layers=NULL,
 vertex.shape=21, vertex.cex=1, vertex.size=vertex.cex, vertex.color=NULL,
 vertex.labels=NULL, vertex.labels.pos=3, vertex.labels.offset=.5, vertex.labels.cex=1,
 edge.type=1, edge.width=1, edge.color=1,
@@ -84,7 +85,21 @@ com=NULL, com.cex=1, ...) {
         stop("vertex shapes not supported; only values between 21 and 25 allowed")
     }
     
-    num.cols = num_layers_ml(x)
+    if (is.null(layout)) {
+        layout <- layout_multiforce_ml(x)
+    }
+    
+    if (!is.null(layers)) {
+        layer_map <- match(layers_ml(x), layers) - 1
+        layout <- cbind(layout[,1:4], z=layer_map[layout$z+1])
+    }
+    else
+    {
+        layers <- layers_ml(x)
+    }
+    num_layers <- length(layers)
+    
+    num.cols = num_layers
     num.rows = 1
     if (!is.null(grid)) {
         if (!length(grid)==2) stop("argument grid must have two elements")
@@ -92,16 +107,12 @@ com=NULL, com.cex=1, ...) {
         num.cols = grid[2]
     }
     
-    if (is.null(layout)) {
-        layout <- layout_multiforce_ml(x)
-    }
-    
     x_coord <- function(xyz_coord) {
         xyz_coord$x+xyz_coord$z%%num.cols*width
     }
    
    y_coord <- function(xyz_coord) {
-       xyz_coord$y+(num.rows-1-xyz_coord$z%/%num.cols)*height
+       xyz_coord$y+(num.rows-1-xyz_coord$z %/% num.cols)*height
    }
    
     #
@@ -124,11 +135,11 @@ plot(NA,type="n",xlim=c(x.min,x.min+width*num.cols),ylim=c(y.min,y.min+height*nu
     
     # color palette
     if (is.null(vertex.color)) {
-        if (num_layers_ml(x) > 9) {
-            layer_palette <- rainbow(num_layers_ml(x))
+        if (num_layers > 9) {
+            layer_palette <- rainbow(num_layers)
         }
         else {
-            layer_palette <- brewer.pal(max(3,num_layers_ml(x)), "Set1")
+            layer_palette <- brewer.pal(max(3, num_layers), "Set1")
         }
     }
     else layer_palette=1
@@ -136,7 +147,7 @@ plot(NA,type="n",xlim=c(x.min,x.min+width*num.cols),ylim=c(y.min,y.min+height*nu
     # draw legend
     if (!is.null(legend.x))
     {
-        legend(legend.x, legend.y, legend=layers_ml(x), col = layer_palette, bty = "n", pch=legend.pch,
+        legend(legend.x, legend.y, legend=layers, col = layer_palette, bty = "n", pch=legend.pch,
         cex = legend.cex, inset = legend.inset)
     }
     
@@ -178,13 +189,15 @@ plot(NA,type="n",xlim=c(x.min,x.min+width*num.cols),ylim=c(y.min,y.min+height*nu
     }
     apply(e,1,draw_edge)
 
-# draw nodes
-if (is.null(vertex.color)) {
-    vertex.color=layer_palette[layout$z+1]
-}
-points(x_coord(layout),y_coord(layout),pch=vertex.shape,col=vertex.color,cex=vertex.cex,bg=vertex.color)
+    layout <- layout[complete.cases(layout), ]
+    # draw nodes
+    if (is.null(vertex.color)) {
+        vertex.color=layer_palette[layout$z+1]
+    }
+    points(x_coord(layout),y_coord(layout),pch=vertex.shape,col=vertex.color,cex=vertex.cex,bg=vertex.color)
 
-# draw labels
+    # draw labels
     if (is.null(vertex.labels)) vertex.labels=layout$actor
-text(x_coord(layout),y_coord(layout),labels=vertex.labels, pos=vertex.labels.pos, offset=vertex.labels.offset, cex=vertex.labels.cex)
+    
+    text(x_coord(layout),y_coord(layout),labels=vertex.labels, pos=vertex.labels.pos, offset=vertex.labels.offset, cex=vertex.labels.cex)
 }

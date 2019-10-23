@@ -37,7 +37,8 @@ namespace infomap {
 long NodeBase::s_nodeCount = 0;
 unsigned long NodeBase::s_UID = 0;
 
-SubStructure::SubStructure() : subInfomap(0), exploredWithoutImprovement(false) {}
+//SubStructure::SubStructure() : subInfomap(0), exploredWithoutImprovement(false) {}
+SubStructure::SubStructure() : exploredWithoutImprovement(false) {}
 SubStructure::~SubStructure() {}
 
 NodeBase::NodeBase()

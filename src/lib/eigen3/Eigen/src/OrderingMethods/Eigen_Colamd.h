@@ -1195,7 +1195,7 @@ static IndexType find_ordering /* return the number of garbage collections */
         /* === Approximate degree computation =============================== */
 
         /* Here begins the computation of the approximate degree.  The column */
-        /* score is the sum of the pivot row "length", plus the size of the */
+        /* score is the sum of the pivot row "leng.h", plus the size of the */
         /* set differences of each row in the column minus the pattern of the */
         /* pivot row itself.  The column ("thickness") itself is also */
         /* excluded from the column score (we thus use an approximate */
@@ -1206,7 +1206,7 @@ static IndexType find_ordering /* return the number of garbage collections */
         /* being scanned - that is, the sum of the sizes of each column in */
         /* the pivot row.  Thus, the amortized time to compute a column score */
         /* is proportional to the size of that column (where size, in this */
-        /* context, is the column "length", or the number of row indices */
+        /* context, is the column "leng.h", or the number of row indices */
         /* in that column).  The number of row indices in a column is */
         /* monotonically non-decreasing, from the length of the original */
         /* column on input to colamd. */
@@ -1387,7 +1387,7 @@ static IndexType find_ordering /* return the number of garbage collections */
 
                 if (head_column > COLAMD_EMPTY)
                 {
-                    /* degree list "hash" is non-empty, use prev (shared3) of */
+                    /* degree list "ha.h" is non-empty, use prev (shared3) of */
                     /* first column in degree list as head of hash bucket */
                     first_col = Col [head_column].shared3.headhash ;
                     Col [head_column].shared3.headhash = col ;
@@ -1395,7 +1395,7 @@ static IndexType find_ordering /* return the number of garbage collections */
 
                 else
                 {
-                    /* degree list "hash" is empty, use head as hash bucket */
+                    /* degree list "ha.h" is empty, use head as hash bucket */
                     first_col = - (head_column + 2) ;
                     head [hash] = - (col + 2) ;
                 }
@@ -1770,13 +1770,13 @@ static void detect_super_cols
 
         if (head_column > COLAMD_EMPTY)
         {
-            /* corresponding degree list "hash" is not empty */
+            /* corresponding degree list "ha.h" is not empty */
             Col [head_column].shared3.headhash = COLAMD_EMPTY ;
         }
 
         else
         {
-            /* corresponding degree list "hash" is empty */
+            /* corresponding degree list "ha.h" is empty */
             head [hash] = COLAMD_EMPTY ;
         }
     }

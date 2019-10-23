@@ -58,7 +58,7 @@ class InfomapGreedyTypeSpecialized : public InfomapGreedyCommon<InfomapGreedyTyp
 
   protected:
 
-    virtual std::auto_ptr<InfomapBase>
+    virtual std::unique_ptr<InfomapBase>
     getNewInfomapInstanceWithoutMemory();
 
     virtual void
@@ -214,7 +214,7 @@ class InfomapGreedyTypeSpecialized<FlowType, WithMemory> : public InfomapGreedyC
 
   protected:
 
-    virtual std::auto_ptr<InfomapBase>
+    virtual std::unique_ptr<InfomapBase>
     getNewInfomapInstanceWithoutMemory();
 
     virtual bool
@@ -308,18 +308,18 @@ class InfomapGreedyTypeSpecialized<FlowType, WithMemory> : public InfomapGreedyC
 
 template<typename FlowType, typename NetworkType>
 inline
-std::auto_ptr<InfomapBase>
+std::unique_ptr<InfomapBase>
 InfomapGreedyTypeSpecialized<FlowType, NetworkType>::getNewInfomapInstanceWithoutMemory()
 {
-    return std::auto_ptr<InfomapBase>(new InfomapGreedyTypeSpecialized<FlowType, WithoutMemory>(Super::m_config));
+    return std::unique_ptr<InfomapBase>(new InfomapGreedyTypeSpecialized<FlowType, WithoutMemory>(Super::m_config));
 }
 
 template<typename FlowType>
 inline
-std::auto_ptr<InfomapBase>
+std::unique_ptr<InfomapBase>
 InfomapGreedyTypeSpecialized<FlowType, WithMemory>::getNewInfomapInstanceWithoutMemory()
 {
-    return std::auto_ptr<InfomapBase>(new InfomapGreedyTypeSpecialized<FlowType, WithoutMemory>(Super::m_config));
+    return std::unique_ptr<InfomapBase>(new InfomapGreedyTypeSpecialized<FlowType, WithoutMemory>(Super::m_config));
 }
 
 
@@ -1171,6 +1171,8 @@ template<typename FlowType>
 void
 InfomapGreedyTypeSpecialized<FlowType, WithMemory>::printClusterNumbers(std::ostream& out)
 {
+    (void)out; // To avoid warning
+
     /* COMMENTED FOR R VERSION
     unsigned int indexOffset = m_config.zeroBasedNodeNumbers ? 0 : 1;
     out << "# '" << m_config.parsedArgs << "' -> " << Super::numLeafNodes() << " nodes " <<

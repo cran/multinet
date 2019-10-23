@@ -1,4 +1,4 @@
-#include "core/exceptions/DuplicateElementException.h"
+#include "core/exceptions/DuplicateElementException.hpp"
 
 namespace uu {
 namespace core {

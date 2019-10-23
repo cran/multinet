@@ -1,5 +1,5 @@
-\name{Plotting}
-\alias{Plotting}
+\name{multinet.plotting}
+\alias{multinet.plotting}
 \alias{plot.Rcpp_RMLNetwork}
 \alias{plot.ml}
 \alias{plot.multinet}
@@ -12,15 +12,17 @@ The plot function draws a multilayer network. values2graphics is a support funct
 }
 \usage{
 \S3method{plot}{Rcpp_RMLNetwork}(x,
-layout=NULL, grid=NULL, mai=.1,
-vertex.shape=21, vertex.cex=1, vertex.size=vertex.cex, vertex.color=NULL,
-vertex.labels=NULL, vertex.labels.pos=3, vertex.labels.offset=.5, vertex.labels.cex=1,
-edge.type=1, edge.width=1, edge.color=1,
-edge.arrow.length=0.1, edge.arrow.angle=20,
+layout = NULL, grid = NULL, mai = .1,
+layers = NULL,
+vertex.shape = 21, vertex.cex = 1, vertex.size = vertex.cex, vertex.color = NULL,
+vertex.labels = NULL, vertex.labels.pos = 3,
+vertex.labels.offset = .5, vertex.labels.cex = 1,
+edge.type = 1, edge.width = 1, edge.color = 1,
+edge.arrow.length = 0.1, edge.arrow.angle = 20,
 legend.x = NULL, legend.y = NULL,
 legend.pch = 20, legend.cex = 0.5,
 legend.inset = c(0, 0),
-com=NULL, com.cex=1, ...)
+com = NULL, com.cex = 1, ...)
 
 values2graphics(values, output = "color")
 }
@@ -30,13 +32,15 @@ values2graphics(values, output = "color")
 \item{grid}{A vector of size 2 indicating the number of rows and columns where to draw the layers.}
 \item{mai}{Percentage of each frame reserved as internal margin. This only concerns nodes: text labels can be printed inside the margin or even outside the frame depending on their offset.}
 
+\item{layers}{A vector of layer names, that determine which layers and in which order are plotted.}
+
 \item{vertex.shape}{Symbol to use for nodes, corresponding to the parameter {pch} of the R \code{points} function.  This can either
 be a single character or an integer code for one of a set of
 graphics symbols.  See \code{?points} for more details.}
 \item{vertex.size}{synonim of \code{vertex.cex}.}
 \item{vertex.cex}{Numeric *c*haracter *ex*pansion factor; multiplied by
 \code{par("cex")} yields the final node size.}
-\item{vertex.color}{Color of the vertexes. If NULL, all vertexes in the same layer are plotted using the same color.}
+\item{vertex.color}{Color of the vertexes. If \code{NULL}, all vertexes in the same layer are plotted using the same color.}
 
 \item{vertex.labels}{A character vector or expression specifying the text to be
 written besides each node. It corresponds to the parameter \code{labels} of the R \code{text} function.}
@@ -79,18 +83,18 @@ head - corresponding to the parameter of the R \code{arrows} function with the s
 \item{output}{The type of graphical objects the values should be translated to. It can currently take values "color" and "shape".}
 }
 \seealso{
-\link{Mining: communities}
+\link{multinet.layout}, \link{multinet.communities}
 }
 \examples{
 net <- ml_florentine()
 \dontrun{
 plot(net)
-c <- clique.percolation.ml(net)
-plot(net,vertex.labels.cex=.5,com=c)
+c <- clique_percolation_ml(net)
+plot(net, vertex.labels.cex=.5, com=c)
 }
 net <- ml_aucs()
 \dontrun{
-plot(net,vertex.labels=NA)
+plot(net, vertex.labels=NA)
 title("AUCS network")
 }
 values2graphics(c("a", "b", "b", "c"))

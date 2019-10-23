@@ -10,26 +10,26 @@
 #include "r_functions.h"
 #include "rcpp_utils.h"
 
-#include "net/operations/union.h"
-#include "mnet/community/glouvain.h"
-#include "mnet/community/abacus.h"
-#include "mnet/community/infomap.h"
-#include "mnet/community/ml-cpm.h"
-#include "mnet/community/modularity.h"
-#include "mnet/io/read_attributed_homogeneous_multilayer_network.h"
-#include "mnet/io/write_attributed_homogeneous_multilayer_network.h"
-#include "mnet/measures/degree.h"
-#include "mnet/measures/neighborhood.h"
-#include "mnet/measures/relevance.h"
-#include "mnet/measures/redundancy.h"
-#include "mnet/measures/layer.h"
-#include "mnet/measures/distance.h"
-#include "mnet/generation/evolve.h"
-#include "mnet/generation/PAEvolutionModel.h"
-#include "mnet/generation/EREvolutionModel.h"
-#include "core/datastructures/propertymatrix/summarization.h"
-#include "mnet/layout/multiforce.h"
-#include "mnet/layout/circular.h"
+#include "operations/union.hpp"
+#include "mnet/community/glouvain.hpp"
+#include "mnet/community/abacus.hpp"
+#include "mnet/community/infomap.hpp"
+#include "mnet/community/ml-cpm.hpp"
+#include "mnet/community/modularity.hpp"
+#include "io/read_multilayer_network.hpp"
+#include "io/write_multilayer_network.hpp"
+#include "measures/degree_ml.hpp"
+#include "measures/neighborhood.hpp"
+#include "measures/relevance.hpp"
+#include "measures/redundancy.hpp"
+#include "measures/layer.hpp"
+#include "measures/distance.hpp"
+#include "generation/evolve.hpp"
+#include "generation/PAEvolutionModel.hpp"
+#include "generation/EREvolutionModel.hpp"
+#include "core/datastructures/propertymatrix/summarization.hpp"
+#include "layout/multiforce.hpp"
+#include "layout/circular.hpp"
 
 using namespace Rcpp;
 
@@ -37,7 +37,7 @@ RCPP_EXPOSED_CLASS(RMLNetwork)
 RCPP_EXPOSED_CLASS(REvolutionModel)
 
 using M = uu::net::AttributedHomogeneousMultilayerNetwork;
-using G = uu::net::AttributedSimpleGraph;
+using G = uu::net::Network;
 // CREATION AND STORAGE
 
 RMLNetwork
@@ -202,7 +202,7 @@ growMultiplex(
     for (size_t l=0; l<num_layers; l++)
     {
         std::string layer_name = "l"+std::to_string(l);
-        auto layer = create_attributed_simple_graph(layer_name, uu::net::EdgeDir::UNDIRECTED, true);
+        auto layer = std::make_unique<uu::net::Network>(layer_name, uu::net::EdgeDir::UNDIRECTED, true);
         res->layers()->add(std::move(layer));
         layer_names.push_back(layer_name);
     }
@@ -318,8 +318,8 @@ edges_idx(
 
         for (auto edge: *l->edges())
         {
-            from.push_back(vertices->get_index(edge->v1)+offset[l]+1);
-            to.push_back(vertices->get_index(edge->v2)+offset[l]+1);
+            from.push_back(vertices->index_of(edge->v1)+offset[l]+1);
+            to.push_back(vertices->index_of(edge->v2)+offset[l]+1);
             directed.push_back((edge->dir==uu::net::EdgeDir::DIRECTED)?1:0);
         }
     }
@@ -327,8 +327,8 @@ edges_idx(
     // interlayer
     for (auto edge: *mnet->interlayer_edges())
     {
-        from.push_back(edge->l1->vertices()->get_index(edge->v1)+offset[edge->l1]+1);
-        to.push_back(edge->l2->vertices()->get_index(edge->v2)+offset[edge->l2]+1);
+        from.push_back(edge->l1->vertices()->index_of(edge->v1)+offset[edge->l1]+1);
+        to.push_back(edge->l2->vertices()->index_of(edge->v2)+offset[edge->l2]+1);
         directed.push_back((edge->dir==uu::net::EdgeDir::DIRECTED)?1:0);
     }
 
@@ -344,8 +344,8 @@ edges(
 )
 {
     auto mnet = rmnet.get_mlnet();
-    std::vector<uu::net::AttributedSimpleGraph*> layers1 = resolve_layers(mnet,layer_names1);
-    std::vector<uu::net::AttributedSimpleGraph*> layers2;
+    std::vector<uu::net::Network*> layers1 = resolve_layers(mnet,layer_names1);
+    std::vector<uu::net::Network*> layers2;
 
     if (layer_names2.size()==0)
     {
@@ -422,7 +422,7 @@ numActors(
         return mnet->vertices()->size();
     }
 
-    std::vector<uu::net::AttributedSimpleGraph*> layers = resolve_layers(mnet,layer_names);
+    std::vector<uu::net::Network*> layers = resolve_layers(mnet,layer_names);
     std::unordered_set<const uu::net::Vertex*> actors;
 
     for (auto layer: layers)
@@ -443,7 +443,7 @@ numNodes(
 )
 {
     auto mnet = rmnet.get_mlnet();
-    std::vector<uu::net::AttributedSimpleGraph*> layers = resolve_layers(mnet,layer_names);
+    std::vector<uu::net::Network*> layers = resolve_layers(mnet,layer_names);
     size_t num_vertices = 0;
 
     for (auto layer: layers)
@@ -462,8 +462,8 @@ numEdges(
 )
 {
     auto mnet = rmnet.get_mlnet();
-    std::unordered_set<const uu::net::AttributedSimpleGraph*> layers1 = resolve_const_layers_unordered(mnet,layer_names1);
-    std::unordered_set<const uu::net::AttributedSimpleGraph*> layers2;
+    std::unordered_set<const uu::net::Network*> layers1 = resolve_const_layers_unordered(mnet,layer_names1);
+    std::unordered_set<const uu::net::Network*> layers2;
 
     if (layer_names2.size()==0)
     {
@@ -525,8 +525,8 @@ isDirected(
     const CharacterVector& layer_names2)
 {
     auto mnet = rmnet.get_mlnet();
-    std::vector<uu::net::AttributedSimpleGraph*> layers1 = resolve_layers(mnet,layer_names1);
-    std::vector<uu::net::AttributedSimpleGraph*> layers2;
+    std::vector<uu::net::Network*> layers1 = resolve_layers(mnet,layer_names1);
+    std::vector<uu::net::Network*> layers2;
 
     if (layer_names2.size()==0)
     {
@@ -638,7 +638,7 @@ addLayers(
         {
             auto layer_name = std::string(layer_names[i]);
             auto dir = directed[0]?uu::net::EdgeDir::DIRECTED:uu::net::EdgeDir::UNDIRECTED;
-            auto layer = create_attributed_simple_graph(layer_name, dir, true);
+            auto layer = std::make_unique<G>(layer_name, dir, true);
             mnet->layers()->add(std::move(layer));
         }
     }
@@ -654,7 +654,7 @@ addLayers(
         {
             auto layer_name = std::string(layer_names[i]);
             auto dir = directed[i]?uu::net::EdgeDir::DIRECTED:uu::net::EdgeDir::UNDIRECTED;
-            auto layer = create_attributed_simple_graph(layer_name, dir, true);
+            auto layer = std::make_unique<G>(layer_name, dir, true);
             mnet->layers()->add(std::move(layer));
         }
     }
@@ -685,11 +685,19 @@ addNodes(
     CharacterVector a = vertices(0);
     CharacterVector l = vertices(1);
 
+    // New in v3.1: automatically add actors
+    for (size_t i=0; i<a.size(); i++)
+    {
+        auto actor_name = std::string(a[i]);
+        mnet->vertices()->add(actor_name);
+    }
+    // weN
+    
     for (size_t i=0; i<vertices.nrow(); i++)
     {
         auto actor = mnet->vertices()->get(std::string(a(i)));
 
-        if (!actor)
+        if (!actor) // @todo this can no longer happen: we can remove it
         {
             stop("cannot find actor " + std::string(a(i)));
         }
@@ -959,8 +967,8 @@ newAttributes(
             stop("either layers (for intra-layer edges) or layers1 and layers2 (for inter-layer edges) must be specified for target 'edge'");
         }
 
-        uu::net::AttributedSimpleGraph* layer1;
-        uu::net::AttributedSimpleGraph* layer2;
+        uu::net::Network* layer1;
+        uu::net::Network* layer2;
 
         if (layer_name1=="")
         {
@@ -1533,7 +1541,7 @@ flatten(
     auto edge_directionality = directed?uu::net::EdgeDir::DIRECTED:uu::net::EdgeDir::UNDIRECTED;
 
 
-    auto new_layer = create_attributed_simple_graph(new_layer_name, edge_directionality, true);
+    auto new_layer = std::make_unique<G>(new_layer_name, edge_directionality, true);
     new_layer->edges()->attr()->add("weight", uu::core::AttributeType::DOUBLE);
 
     auto target = mnet->layers()->add(std::move(new_layer));
@@ -2008,7 +2016,7 @@ comparison_ml(
 {
 
     auto mnet = rmnet.get_mlnet();
-    std::vector<uu::net::AttributedSimpleGraph*> layers = resolve_layers(mnet,layer_names);
+    std::vector<uu::net::Network*> layers = resolve_layers(mnet,layer_names);
     std::vector<NumericVector> values;
 
     for (size_t i=0; i<layers.size(); i++)
@@ -2021,78 +2029,78 @@ comparison_ml(
 
     if (method=="jaccard.actors")
     {
-        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::actor_existence_property_matrix(mnet);
+        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::Network*,bool> P = uu::net::actor_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::jaccard<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::jaccard<const uu::net::Vertex*, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="coverage.actors")
     {
-        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::actor_existence_property_matrix(mnet);
+        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::Network*,bool> P = uu::net::actor_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::coverage<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::coverage<const uu::net::Vertex*, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="kulczynski2.actors")
     {
-        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::actor_existence_property_matrix(mnet);
+        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::Network*,bool> P = uu::net::actor_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::kulczynski2<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::kulczynski2<const uu::net::Vertex*, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="sm.actors")
     {
-        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::actor_existence_property_matrix(mnet);
+        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::Network*,bool> P = uu::net::actor_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::simple_matching<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::simple_matching<const uu::net::Vertex*, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="rr.actors")
     {
-        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::actor_existence_property_matrix(mnet);
+        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::Network*,bool> P = uu::net::actor_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::russell_rao<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::russell_rao<const uu::net::Vertex*, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="hamann.actors")
     {
-        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::actor_existence_property_matrix(mnet);
+        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::Network*,bool> P = uu::net::actor_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::hamann<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::hamann<const uu::net::Vertex*, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
@@ -2105,7 +2113,7 @@ comparison_ml(
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::jaccard<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::jaccard<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
@@ -2118,7 +2126,7 @@ comparison_ml(
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::coverage<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::coverage<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
@@ -2131,7 +2139,7 @@ comparison_ml(
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::kulczynski2<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::kulczynski2<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
@@ -2144,7 +2152,7 @@ comparison_ml(
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::simple_matching<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::simple_matching<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
@@ -2157,7 +2165,7 @@ comparison_ml(
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::russell_rao<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::russell_rao<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
@@ -2170,85 +2178,85 @@ comparison_ml(
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::hamann<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::hamann<std::pair<const typename M::vertex_type*,const typename M::vertex_type*>, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="jaccard.triangles")
     {
-        uu::core::PropertyMatrix<uu::net::Triad, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::triangle_existence_property_matrix(mnet);
+        uu::core::PropertyMatrix<uu::net::Triad, const uu::net::Network*,bool> P = uu::net::triangle_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::jaccard<uu::net::Triad, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::jaccard<uu::net::Triad, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="coverage.triangles")
     {
-        uu::core::PropertyMatrix<uu::net::Triad, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::triangle_existence_property_matrix(mnet);
+        uu::core::PropertyMatrix<uu::net::Triad, const uu::net::Network*,bool> P = uu::net::triangle_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::coverage<uu::net::Triad, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::coverage<uu::net::Triad, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="kulczynski2.triangles")
     {
-        uu::core::PropertyMatrix<uu::net::Triad, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::triangle_existence_property_matrix(mnet);
+        uu::core::PropertyMatrix<uu::net::Triad, const uu::net::Network*,bool> P = uu::net::triangle_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::kulczynski2<uu::net::Triad, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::kulczynski2<uu::net::Triad, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="sm.triangles")
     {
-        uu::core::PropertyMatrix<uu::net::Triad, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::triangle_existence_property_matrix(mnet);
+        uu::core::PropertyMatrix<uu::net::Triad, const uu::net::Network*,bool> P = uu::net::triangle_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::simple_matching<uu::net::Triad, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::simple_matching<uu::net::Triad, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="rr.triangles")
     {
-        uu::core::PropertyMatrix<uu::net::Triad, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::triangle_existence_property_matrix(mnet);
+        uu::core::PropertyMatrix<uu::net::Triad, const uu::net::Network*,bool> P = uu::net::triangle_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::russell_rao<uu::net::Triad, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::russell_rao<uu::net::Triad, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
 
     else if (method=="hamann.triangles")
     {
-        uu::core::PropertyMatrix<uu::net::Triad, const uu::net::AttributedSimpleGraph*,bool> P = uu::net::triangle_existence_property_matrix(mnet);
+        uu::core::PropertyMatrix<uu::net::Triad, const uu::net::Network*,bool> P = uu::net::triangle_existence_property_matrix(mnet);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::hamann<uu::net::Triad, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::hamann<uu::net::Triad, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
@@ -2256,7 +2264,7 @@ comparison_ml(
     else if (method=="dissimilarity.degree")
     {
         auto mode = resolve_mode(type);
-        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*,double> P = uu::net::actor_degree_property_matrix(mnet,mode);
+        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::Network*,double> P = uu::net::actor_degree_property_matrix(mnet,mode);
 
         if (K<=0)
         {
@@ -2267,7 +2275,7 @@ comparison_ml(
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::dissimilarity_index<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j],K));
+                values[j].push_back(uu::core::dissimilarity_index<const uu::net::Vertex*, const uu::net::Network*>(P,layers[i],layers[j],K));
             }
         }
     }
@@ -2275,7 +2283,7 @@ comparison_ml(
     else if (method=="KL.degree")
     {
         auto mode = resolve_mode(type);
-        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*,double> P = uu::net::actor_degree_property_matrix(mnet,mode);
+        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::Network*,double> P = uu::net::actor_degree_property_matrix(mnet,mode);
 
         if (K<=0)
         {
@@ -2286,7 +2294,7 @@ comparison_ml(
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::KL_divergence<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j],K));
+                values[j].push_back(uu::core::KL_divergence<const uu::net::Vertex*, const uu::net::Network*>(P,layers[i],layers[j],K));
             }
         }
     }
@@ -2294,7 +2302,7 @@ comparison_ml(
     else if (method=="jeffrey.degree")
     {
         auto mode = resolve_mode(type);
-        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*,double> P = uu::net::actor_degree_property_matrix(mnet,mode);
+        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::Network*,double> P = uu::net::actor_degree_property_matrix(mnet,mode);
 
         if (K<=0)
         {
@@ -2305,7 +2313,7 @@ comparison_ml(
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::jeffrey_divergence<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j],K));
+                values[j].push_back(uu::core::jeffrey_divergence<const uu::net::Vertex*, const uu::net::Network*>(P,layers[i],layers[j],K));
             }
         }
     }
@@ -2313,13 +2321,13 @@ comparison_ml(
     else if (method=="pearson.degree")
     {
         auto mode = resolve_mode(type);
-        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*,double> P = uu::net::actor_degree_property_matrix(mnet,mode);
+        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::Network*,double> P = uu::net::actor_degree_property_matrix(mnet,mode);
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::pearson<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::pearson<const uu::net::Vertex*, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
@@ -2327,14 +2335,14 @@ comparison_ml(
     else if (method=="rho.degree")
     {
         auto mode = resolve_mode(type);
-        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*,double> P = uu::net::actor_degree_property_matrix(mnet,mode);
+        uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::Network*,double> P = uu::net::actor_degree_property_matrix(mnet,mode);
         P.rankify();
 
         for (size_t j=0; j<layers.size(); j++)
         {
             for (size_t i=0; i<layers.size(); i++)
             {
-                values[j].push_back(uu::core::pearson<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layers[i],layers[j]));
+                values[j].push_back(uu::core::pearson<const uu::net::Vertex*, const uu::net::Network*>(P,layers[i],layers[j]));
             }
         }
     }
@@ -2394,56 +2402,56 @@ summary_ml(
     }
 
     auto mode = resolve_mode(type);
-    uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*,double> P = uu::net::actor_degree_property_matrix(mnet,mode);
+    uu::core::PropertyMatrix<const uu::net::Vertex*, const uu::net::Network*,double> P = uu::net::actor_degree_property_matrix(mnet,mode);
 
     if (method=="min.degree")
     {
-        return uu::core::min<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layer);
+        return uu::core::min<const uu::net::Vertex*, const uu::net::Network*>(P,layer);
     }
 
     else if (method=="max.degree")
     {
-        return uu::core::max<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layer);
+        return uu::core::max<const uu::net::Vertex*, const uu::net::Network*>(P,layer);
     }
 
     else if (method=="sum.degree")
     {
-        return uu::core::sum<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layer);
+        return uu::core::sum<const uu::net::Vertex*, const uu::net::Network*>(P,layer);
     }
 
     else if (method=="mean.degree")
     {
-        return uu::core::mean<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layer);
+        return uu::core::mean<const uu::net::Vertex*, const uu::net::Network*>(P,layer);
     }
 
     else if (method=="sd.degree")
     {
-        return uu::core::sd<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layer);
+        return uu::core::sd<const uu::net::Vertex*, const uu::net::Network*>(P,layer);
     }
 
     else if (method=="skewness.degree")
     {
-        return uu::core::skew<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layer);
+        return uu::core::skew<const uu::net::Vertex*, const uu::net::Network*>(P,layer);
     }
 
     else if (method=="kurtosis.degree")
     {
-        return uu::core::kurt<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layer);
+        return uu::core::kurt<const uu::net::Vertex*, const uu::net::Network*>(P,layer);
     }
 
     else if (method=="entropy.degree")
     {
-        return uu::core::entropy<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layer);
+        return uu::core::entropy<const uu::net::Vertex*, const uu::net::Network*>(P,layer);
     }
 
     else if (method=="CV.degree")
     {
-        return uu::core::CV<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layer);
+        return uu::core::CV<const uu::net::Vertex*, const uu::net::Network*>(P,layer);
     }
 
     else if (method=="jarque.bera.degree")
     {
-        return uu::core::jarque_bera<const uu::net::Vertex*, const uu::net::AttributedSimpleGraph*>(P,layer);
+        return uu::core::jarque_bera<const uu::net::Vertex*, const uu::net::Network*>(P,layer);
     }
 
     else
@@ -2494,7 +2502,7 @@ distance_ml(
 
                 for (size_t i=0; i<mnet->layers()->size(); i++)
                 {
-                    lengths[i].push_back(d.length(mnet->layers()->get_at_index(i)));
+                    lengths[i].push_back(d.length(mnet->layers()->at(i)));
                 }
             }
         }
@@ -2503,7 +2511,7 @@ distance_ml(
 
         for (size_t i=0; i<mnet->layers()->size(); i++)
         {
-            res.push_back(lengths[i],mnet->layers()->get_at_index(i)->name);
+            res.push_back(lengths[i],mnet->layers()->at(i)->name);
         }
 
         return DataFrame(res);
@@ -2686,7 +2694,7 @@ to_list(
             stop("cannot find layer " + std::string(cs_layer[i]) + " (community structure not compatible with this network?)");
         }
 
-        int l = mnet->layers()->get_index(layer);
+        int l = mnet->layers()->index_of(layer);
         auto actor = mnet->vertices()->get(std::string(cs_actor[i]));
 
         if (!actor)
@@ -2694,7 +2702,7 @@ to_list(
             stop("cannot find actor " + std::string(cs_actor[i]) + " (community structure not compatible with this network?)");
         }
 
-        int vertex_idx = layer->vertices()->get_index(actor);
+        int vertex_idx = layer->vertices()->index_of(actor);
 
         if (vertex_idx==-1)
         {
@@ -2738,7 +2746,7 @@ multiforce_ml(
     {
         for (size_t i=0; i<layers->size(); i++)
         {
-            weight_in[layers->get_at_index(i)] = w_in[0];
+            weight_in[layers->at(i)] = w_in[0];
         }
     }
 
@@ -2746,7 +2754,7 @@ multiforce_ml(
     {
         for (size_t i=0; i<layers->size(); i++)
         {
-            weight_in[layers->get_at_index(i)] = w_in[i];
+            weight_in[layers->at(i)] = w_in[i];
         }
     }
 
@@ -2759,7 +2767,7 @@ multiforce_ml(
     {
         for (size_t i=0; i<layers->size(); i++)
         {
-            weight_inter[layers->get_at_index(i)] = w_inter[0];
+            weight_inter[layers->at(i)] = w_inter[0];
         }
     }
 
@@ -2767,7 +2775,7 @@ multiforce_ml(
     {
         for (size_t i=0; i<layers->size(); i++)
         {
-            weight_inter[layers->get_at_index(i)] = w_inter[i];
+            weight_inter[layers->at(i)] = w_inter[i];
         }
     }
 
@@ -2780,7 +2788,7 @@ multiforce_ml(
     {
         for (size_t i=0; i<layers->size(); i++)
         {
-            weight_gr[layers->get_at_index(i)] = gravity[0];
+            weight_gr[layers->at(i)] = gravity[0];
         }
     }
 
@@ -2788,7 +2796,7 @@ multiforce_ml(
     {
         for (size_t i=0; i<layers->size(); i++)
         {
-            weight_gr[layers->get_at_index(i)] = gravity[i];
+            weight_gr[layers->at(i)] = gravity[i];
         }
     }
 

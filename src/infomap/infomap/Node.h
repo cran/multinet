@@ -47,7 +47,7 @@ struct SubStructure
 {
     SubStructure();
     ~SubStructure();
-    std::auto_ptr<InfomapBase> subInfomap;
+    std::unique_ptr<InfomapBase> subInfomap;
     bool
     haveSubInfomapInstance()
     {

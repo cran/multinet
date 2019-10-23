@@ -1,5 +1,5 @@
-\name{Getting networks: generation}
-\alias{Getting networks: generation}
+\name{multinet.generation}
+\alias{multinet.generation}
 \alias{grow_ml}
 \alias{evolution_pa_ml}
 \alias{evolution_er_ml}
@@ -9,7 +9,7 @@ Generation of multilayer networks
 \description{
 The grow_ml function generates a multilayer network by letting it grow for a number of steps, where for each step three events can happen: (1) evolution according to internal dynamics (in which case a specific internal evolution model is used), (2) evolution importing edges from another layer, and (3) no action.
 
-The functions evolution_pa_ml and evolution_er_ml define, respectively, an evolutionary model based on preferential attachment and an evolutionary model where edges are created by chosing random end points, as in the ER random graph model.
+The functions evolution_pa_ml and evolution_er_ml define, respectively, an evolutionary model based on preferential attachment and an evolutionary model where edges are created by choosing random end points, as in the ER random graph model.
 }
 \usage{
 grow_ml(num.actors, num.steps, models, pr.internal, pr.external, dependency)
@@ -31,7 +31,7 @@ evolution_er_ml(n)
 \code{grow_ml} returns a multilayer network. \code{evolution_*_ml} return evolutionary models that are used by \code{grow_ml} to decide how each layer should grow.
 }
 \seealso{
-\link{Getting networks: predefined}, \link{Getting networks: IO}
+\link{multinet.predefined}, \link{multinet.IO}
 }
 \references{
 Magnani, Matteo, and Luca Rossi. 2013. Formation of Multiple Networks. In Social Computing, Behavioral-Cultural Modeling and Prediction, 257-264. Springer Berlin Heidelberg.

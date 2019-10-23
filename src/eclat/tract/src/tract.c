@@ -187,10 +187,10 @@ static CCHAR* appmap[] =        /* item appearance indicators */
     "1:i",  "1:in",   "1:inp",  "1:input",
     "1:a",  "1:ante", "1:antecedent", "1:b", "1:body",
     "2:o",  "2:out",  "2:output",
-    "2:c",  "2:cons", "2:consequent", "2:h", "2:head",
+    "2:c",  "2:cons", "2:consequent", "2.h", "2:head",
     "3:io", "3:i&o",  "3:inout", "3:in&out",
     "3:ac", "3:a&c",  "3:c&a",   "3:canda",
-    "3:bh", "3:b&h",  "3:h&b",   "3:both",
+    "3:.h", "3:b.h",  "3:h&b",   "3:bo.h",
 };                              /* (code:name) */
 #endif
 

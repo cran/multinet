@@ -1,4 +1,4 @@
-#include "core/attributes/AttributeType.h"
+#include "core/attributes/AttributeType.hpp"
 
 namespace uu {
 namespace core {

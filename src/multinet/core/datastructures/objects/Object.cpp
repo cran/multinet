@@ -1,66 +1,73 @@
-#include "core/datastructures/objects/Object.h"
+#include "core/datastructures/objects/Object.hpp"
+
+#include <sstream>
 
 namespace uu {
 namespace core {
 
-
-ObjectId Object::max_object_id = 0;
-
 Object::
 Object(
-) :
-    id(++Object::max_object_id)
+)
 {
 
 }
 
+bool
 Object::
-Object(
-    const ObjectId& id
-) :
-    id(id)
-{
-
-}
-
-bool
-Object::operator==(
+operator==(
     const Object& comp
 ) const
 {
-    return id==comp.id;
+    return this==&comp;
 }
 
 bool
-Object::operator!=(
+Object::
+operator!=(
     const Object& comp
 ) const
 {
-    return id!=comp.id;
+    return this!=&comp;
 }
 
 bool
-Object::operator<(
+Object::
+operator<(
     const Object& comp
 ) const
 {
-    return id<comp.id;
+    return this<&comp;
 }
 
 bool
-Object::operator>(
+Object::
+operator>(
     const Object& comp
 ) const
 {
-    return id>comp.id;
+    return this>&comp;
 }
 
 std::string
-Object::to_string(
+Object::
+to_string(
 ) const
 {
-    return "obj(" + std::to_string(id) + ")";
+    std::stringstream ss;
+    ss << this;
+    return "obj(" + ss.str() + ")";
 }
 
-} // namespace core
-} // namespace uu
+
+std::ostream&
+operator<<(
+    std::ostream& os,
+    const Object& obj
+)
+{
+    os << "obj(" << (&obj) << ")";
+    return os;
+}
+
+}
+}

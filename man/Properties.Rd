@@ -1,5 +1,5 @@
-\name{Network management: properties}
-\alias{Network management: properties}
+\name{multinet.properties}
+\alias{multinet.properties}
 \alias{actors_ml}
 \alias{layers_ml}
 \alias{vertices_ml}
@@ -10,7 +10,6 @@
 \alias{num_vertices_ml}
 \alias{num_edges_ml}
 
-
 \alias{nodes_ml}
 \alias{num_nodes_ml}
 \title{
@@ -19,23 +18,22 @@ Listing network properties
 \description{
 These functions are used to list basic information about the components of a multilayer network (actors, layers, vertices and edges). 
 
-The functions \code{nodes_ml} and \code{num_nodes_ml} are deprecated in the current version of the library. Vertex/vertices are now
-preferentially used over node/nodes.
+The functions \code{nodes_ml} and \code{num_nodes_ml} are deprecated in the current version of the library. The names vertex/vertices are now preferentially used over node/nodes.
 }
 \usage{
-layers_ml(mlnetwork)
-actors_ml(mlnetwork, layers=character(0))
-vertices_ml(mlnetwork, layers=character(0))
-edges_ml(mlnetwork, layers1=character(0), layers2=character(0))
-edges_idx_ml(mlnetwork)
+layers_ml(n)
+actors_ml(n, layers = character(0))
+vertices_ml(n, layers = character(0))
+edges_ml(n, layers1 = character(0), layers2 = character(0))
+edges_idx_ml(n)
 
-num_layers_ml(mlnetwork)
-num_actors_ml(mlnetwork, layers=character(0))
-num_vertices_ml(mlnetwork, layers=character(0))
-num_edges_ml(mlnetwork, layers1=character(0), layers2=character(0))
+num_layers_ml(n)
+num_actors_ml(n, layers = character(0))
+num_vertices_ml(n, layers = character(0))
+num_edges_ml(n, layers1 = character(0), layers2 = character(0))
 }
 \arguments{
-\item{mlnetwork}{A multilayer network.}
+\item{n}{A multilayer network.}
 \item{layers}{An array of names of layers belonging to the network. Only the actors/vertices in these layers are returned. If the array is empty, all the vertices in the network are returned. Notice that this may not correspond to the list of actors: there can be actors that are not present in any layer. These would be returned only using the \code{actors_ml} function.}
 \item{layers1}{The layer(s) from where the edges to be extracted start. If an empty list of layers is passed (default), all the layers are considered.}
 \item{layers2}{The layer(s) where the edges to be extracted end. If an empty list of layers is passed (default), the ending layers are set as equal to those in parameter layer1.}
@@ -45,9 +43,10 @@ num_edges_ml(mlnetwork, layers1=character(0), layers2=character(0))
 
     \code{edges_idx_ml} returns the index of the vertex as returned by the \code{vertices_ml} function instead of its name - this is used internally by the plotting function.
 
-The functions num_* compute the number of components of the requested type. If the number of actors is requested without specifying any layer, the total number of actors is returned, including those not present in any layer.}
+The functions num_* compute the number of objects of the requested type.}
 \seealso{
-\link{Network management: updates}, \link{Network management: edge directionality}
+\link{multinet.attributes},
+\link{multinet.update}, \link{multinet.edge_directionality}
 }
 \examples{
 net <- ml_aucs()

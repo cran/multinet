@@ -1,4 +1,4 @@
-#include "core/exceptions/FileNotFoundException.h"
+#include "core/exceptions/FileNotFoundException.hpp"
 
 namespace uu {
 namespace core {
