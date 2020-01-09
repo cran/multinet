@@ -10,8 +10,8 @@ namespace net {
 
 AttrMultiEdgeStore::
 AttrMultiEdgeStore(
-                    EdgeDir dir
-                    ) : MultiEdgeStore(dir)
+    EdgeDir dir
+) : MultiEdgeStore(dir)
 {
     attributes_ = std::make_unique<core::AttributeStore<Edge>>();
     attach(attributes_.get());

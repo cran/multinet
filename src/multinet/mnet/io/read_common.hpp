@@ -106,12 +106,13 @@ read_multilayer_data(
     csv.set_comment("--");
     csv.open(infile);
 
-    MultilayerIOFileSection section = MultilayerIOFileSection::INTRALAYER_EDGES;
+    MultilayerIOFileSection section = MultilayerIOFileSection::EDGES;
 
     while (csv.has_next())
     {
         std::vector<std::string> fields = csv.get_next();
         std::string line = csv.get_current_raw_line();
+        // std::cout << line << std::endl;
         // remove trailing spaces
         line.erase(line.find_last_not_of(" \t")+1);
         line.erase(0,line.find_first_not_of(" \t"));
@@ -132,8 +133,9 @@ read_multilayer_data(
 
         switch (section)
         {
-        case MultilayerIOFileSection::VERTICES:
+        case MultilayerIOFileSection::ACTORS:
         {
+
             read_vertex(ml, fields, meta, csv.row_num());
             break;
         }
@@ -144,15 +146,19 @@ read_multilayer_data(
             break;
         }
 
-        case MultilayerIOFileSection::INTRALAYER_EDGES:
+        case MultilayerIOFileSection::EDGES:
         {
-            read_intralayer_edge(ml, fields, meta, csv.row_num());
-            break;
-        }
 
-        case MultilayerIOFileSection::INTERLAYER_EDGES:
-        {
-            read_interlayer_edge(ml, fields, meta, csv.row_num());
+            if (meta.is_multiplex)
+            {
+                read_intralayer_edge(ml, fields, meta, csv.row_num());
+            }
+
+            else
+            {
+                read_interlayer_edge(ml, fields, meta, csv.row_num());
+            }
+
             break;
         }
 

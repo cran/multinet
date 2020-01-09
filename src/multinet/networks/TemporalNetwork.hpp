@@ -21,13 +21,13 @@ class TemporalNetwork
 {
 
   private:
-    
+
     typedef MultiNetwork super;
-    
+
   public:
-    
+
     const std::string KTIME_ATTR_NAME = "t";
-    
+
     /**
      * Creates a network with directed or undirected simple edges and with or without loops.
      */
@@ -59,7 +59,7 @@ class TemporalNetwork
     core::Value<core::Time>
     get_time(
         const Edge* e
-        );
+    );
 
     /**
      * Returns a string providing a summary of the network structure.

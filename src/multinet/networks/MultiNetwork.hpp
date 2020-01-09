@@ -28,7 +28,7 @@ class MultiNetwork
   public:
 
     const std::string name;
-    
+
     /**
      * Creates a graph with directed or undirected simple edges and with or without loops.
      */
@@ -112,7 +112,7 @@ class MultiNetwork
     is_attributed(
     ) const;
 
-    
+
     /**
      * Checks if the graph allows multi-edges. If false, only simple edges are allowed.
      */

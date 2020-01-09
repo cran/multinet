@@ -1,7 +1,22 @@
+# version 3.2
+
+- add_edges_ml now automatically adds the corresponding actors and vertices if they do not exist
+- added support for global edge attributes in addition to local (layer-specific) edge attributes
+- added support for loops in input files
+- updated documentation for IO function: new Input/Output format version 3.0
+- & in actor names and attribute values are escaped (&amp;) when saving to igraph objects.
+  This prevents issues in the functions using igraph, such as summary()
+- added support for igraph logical attributes, now stored as 0s (false) and 1s (true) in multinet
+- removed unnecessary warning from add_igraph_layer function
+- fixed bug in edges_ml, where for interlayer edges the two layers could get swapped
+- fixed bug in get_values_ml, where for vertices the same layer was used even with multiple input layers
+- fixed bug in clique_percolation_ml (returned different results for different executions)
+- minor updates to the documentation
+
 # version 3.1.0
 
 - removed auto_ptr from the Infomap external library
-- add_vertices now automatically adds the corresponding actors if they do not exist
+- add_vertices_ml now automatically adds the corresponding actors if they do not exist
 - minor updates to the documentation
 
 # version 3.0.3

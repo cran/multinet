@@ -14,24 +14,24 @@
 namespace uu {
 namespace net {
 
-    template <typename C>
-    olap::sel::EntryIterator<C>
-    islice(
-           C* cube,
-           const std::vector<std::vector<size_t>>& indexes
-           )
-    {
-        return olap::sel::EntryIterator<C>(cube, indexes);
-    }
+template <typename C>
+olap::sel::EntryIterator<C>
+islice(
+    C* cube,
+    const std::vector<std::vector<size_t>>& indexes
+)
+{
+    return olap::sel::EntryIterator<C>(cube, indexes);
+}
 
-    
-    std::unique_ptr<VCube>
-    vslice(
-           VCube* cube,
-           const std::vector<std::vector<size_t>>& indexes,
-           const std::string& name
-           );
-    
+
+std::unique_ptr<VCube>
+vslice(
+    VCube* cube,
+    const std::vector<std::vector<size_t>>& indexes,
+    const std::string& name
+);
+
 
 }
 }

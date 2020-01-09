@@ -12,35 +12,35 @@ WeightedNetwork(
     const std::string& name,
     EdgeDir dir,
     bool allows_loops
-    ) : super(name, dir, allows_loops)
+) : super(name, dir, allows_loops)
 {
     auto w_attr = core::Attribute::create(KWEIGHT_ATTR_NAME, core::AttributeType::DOUBLE);
-    
+
     edges()->attr()->add(std::move(w_attr));
-    
+
 }
 
-    void
-    WeightedNetwork::
-    set_weight(
-               const Edge* e,
-               double w
-               )
-    {
-        edges()->attr()->set_double(e, KWEIGHT_ATTR_NAME, w);
-    }
-    
-    /**
-     * Sets the weight of an edge.
-     */
-    core::Value<double>
-    WeightedNetwork::
-    get_weight(
-               const Edge* e
-               )
-    {
-        return edges()->attr()->get_double(e, KWEIGHT_ATTR_NAME);
-    }
+void
+WeightedNetwork::
+set_weight(
+    const Edge* e,
+    double w
+)
+{
+    edges()->attr()->set_double(e, KWEIGHT_ATTR_NAME, w);
+}
+
+/**
+ * Sets the weight of an edge.
+ */
+core::Value<double>
+WeightedNetwork::
+get_weight(
+    const Edge* e
+)
+{
+    return edges()->attr()->get_double(e, KWEIGHT_ATTR_NAME);
+}
 
 bool
 WeightedNetwork::
@@ -50,7 +50,7 @@ is_weighted(
     return true;
 }
 
-    
+
 std::string
 WeightedNetwork::
 summary(

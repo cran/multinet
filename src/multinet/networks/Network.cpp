@@ -12,7 +12,7 @@ Network::
 Network(
     const std::string& name,
     EdgeDir dir,
-        bool allows_loops) : name(name)
+    bool allows_loops) : name(name)
 {
 
     auto vs = std::make_unique<AttrVertexStore>();

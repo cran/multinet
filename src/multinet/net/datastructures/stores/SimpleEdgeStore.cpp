@@ -52,28 +52,28 @@ add(
 }
 
 
-    const Edge*
-    SimpleEdgeStore::
-    add(
-        const Vertex* v1,
-        const Vertex* v2
-        )
+const Edge*
+SimpleEdgeStore::
+add(
+    const Vertex* v1,
+    const Vertex* v2
+)
+{
+    if (!get(v1,v2))
     {
-        if (!get(v1,v2))
-        {
-            // Edge::create will also take care of checking that the pointers are not null
-            std::shared_ptr<const Edge> e = Edge::create(v1, v2, edge_directionality);
-            
-            return add(e);
-        }
-        
-        else
-        {
-            return nullptr;
-        }
+        // Edge::create will also take care of checking that the pointers are not null
+        std::shared_ptr<const Edge> e = Edge::create(v1, v2, edge_directionality);
+
+        return add(e);
     }
 
-    
+    else
+    {
+        return nullptr;
+    }
+}
+
+
 const Edge*
 SimpleEdgeStore::
 get(

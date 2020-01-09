@@ -79,7 +79,7 @@ add(
 {
 
     auto ptr = element.get();
-    
+
     assert_not_null(ptr, "SharedPtrSortedRandomSet::add", "element");
 
     if (super::set.add(element))
@@ -101,7 +101,7 @@ add(
     E * const element
 )
 {
-    
+
     assert_not_null(element, "SharedPtrSortedRandomSet::add", "element");
 
     return add(element->shared_from_this());

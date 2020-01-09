@@ -7,7 +7,7 @@
 #include <numeric>
 #include <random>
 #include "community/CommunityStructure.hpp"
-#include "mnet/community/VertexLayerCommunity.hpp"
+#include "community/VertexLayerCommunity.hpp"
 #include <Eigen/Sparse>
 #include <Eigen/Dense>
 

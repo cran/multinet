@@ -183,15 +183,15 @@ read_version(
 
     std::string version = line;
 
-    if (version != "1.0" && version != "2.0" && version != "2")
+    if (version != "1.0" && version != "2.0" && version != "2" && version != "3" && version != "3.0")
         throw core::WrongFormatException("Line " + std::to_string(line_number) +
                                          ": invalid version number "
                                          + line);
 
     // standardization
-    if (version=="2")
+    if (version=="3")
     {
-        version = "2.0";
+        version = "3.0";
     }
 
     return version;

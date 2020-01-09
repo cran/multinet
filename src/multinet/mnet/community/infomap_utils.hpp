@@ -25,7 +25,7 @@
 #include "core/attributes/conversion.hpp"
 #include "core/utils/CSVReader.hpp"
 #include "objects/Vertex.hpp"
-#include "mnet/community/VertexLayerCommunity.hpp"
+#include "community/VertexLayerCommunity.hpp"
 #include "community/CommunityStructure.hpp"
 
 namespace uu {

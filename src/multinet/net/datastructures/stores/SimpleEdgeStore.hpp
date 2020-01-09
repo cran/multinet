@@ -60,8 +60,8 @@ class SimpleEdgeStore :
     add(
         const Vertex* v1,
         const Vertex* v2
-        );
-    
+    );
+
     using super::add;
     using super::neighbors;
     using super::is_directed;

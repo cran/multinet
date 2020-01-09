@@ -1,4 +1,4 @@
-#include "mnet/community/glouvain.hpp"
+#include "community/glouvain.hpp"
 #include "mnet/community/cutils.hpp"
 
 namespace uu {

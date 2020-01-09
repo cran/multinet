@@ -7,17 +7,17 @@
 
 namespace uu {
 namespace net {
-    
+
 void
 resize(
-        VCube* cube,
-        const std::string& dim,
-        const std::string& member
-        )
-    {
-        cube->resize(dim, member);
-    }
-    
+    VCube* cube,
+    const std::string& dim,
+    const std::string& member
+)
+{
+    cube->resize(dim, member);
+}
+
 }
 }
-    
+

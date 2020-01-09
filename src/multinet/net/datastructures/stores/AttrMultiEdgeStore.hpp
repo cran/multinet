@@ -24,7 +24,7 @@ class
   public:
 
     AttrMultiEdgeStore(
-    EdgeDir dir
+        EdgeDir dir
     );
 
 

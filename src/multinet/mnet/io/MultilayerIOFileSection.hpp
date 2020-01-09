@@ -21,8 +21,7 @@ enum class MultilayerIOFileSection
     ACTORS,
     VERTICES,
     INTRALAYER_VERTICES,
-    INTRALAYER_EDGES,
-    INTERLAYER_EDGES
+    EDGES
 };
 
 

@@ -117,27 +117,27 @@ class NCube
     /* index of a dimension */
     size_t
     index_of(
-             const std::string& dim
-             ) const;
-    
+        const std::string& dim
+    ) const;
+
     /* index of a member given a dimension */
     size_t
     index_of(
-             const std::string& dim,
-             const std::string& member
-             ) const;
-    
+        const std::string& dim,
+        const std::string& member
+    ) const;
+
     /* computes a numerical index from a label-based index */
     std::vector<size_t>
     index_of(
-             const std::vector<std::string>& index
-             ) const;
-    
+        const std::vector<std::string>& index
+    ) const;
+
     std::vector<size_t>
     size_of(
-            const std::vector<std::vector<std::string>>& members
-            ) const;
-    
+        const std::vector<std::vector<std::string>>& members
+    ) const;
+
   private:
 
     /* Dimensions */
@@ -149,7 +149,7 @@ class NCube
     std::vector<std::vector<std::string>> members_;
     /* Index of each member (by name), for each dimension */
     std::vector<std::unordered_map<std::string, size_t>> members_idx_;
-   
+
 
 };
 
@@ -307,7 +307,7 @@ at(
     auto idx = index_of(index);
     return super::at(idx);
 }
-    
+
 
 template <class ENTRY_TYPE>
 std::vector<size_t>
@@ -343,48 +343,48 @@ index_of(
     return res;
 }
 
-    /* index of a dimension */
-    template <class ENTRY_TYPE>
-    size_t
-    NCube<ENTRY_TYPE>::
-    index_of(
-             const std::string& dim
-             ) const
+/* index of a dimension */
+template <class ENTRY_TYPE>
+size_t
+NCube<ENTRY_TYPE>::
+index_of(
+    const std::string& dim
+) const
+{
+    return dim_idx_.at(dim);
+}
+
+
+/* index of a member given a dimension */
+template <class ENTRY_TYPE>
+size_t
+NCube<ENTRY_TYPE>::
+index_of(
+    const std::string& dim,
+    const std::string& member
+) const
+{
+    size_t dim_idx = index_of(dim);
+    return members_idx_.at(dim_idx).at(member);
+}
+
+
+template <class ENTRY_TYPE>
+std::vector<size_t>
+NCube<ENTRY_TYPE>::
+size_of(
+    const std::vector<std::vector<std::string>>& members
+) const
+{
+    std::vector<size_t> size;
+
+    for (auto m: members)
     {
-        return dim_idx_.at(dim);
+        size.push_back(m.size());
     }
-    
-    
-    /* index of a member given a dimension */
-    template <class ENTRY_TYPE>
-    size_t
-    NCube<ENTRY_TYPE>::
-    index_of(
-             const std::string& dim,
-             const std::string& member
-             ) const
-    {
-        size_t dim_idx = index_of(dim);
-        return members_idx_.at(dim_idx).at(member);
-    }
-    
-    
-    template <class ENTRY_TYPE>
-    std::vector<size_t>
-    NCube<ENTRY_TYPE>::
-    size_of(
-            const std::vector<std::vector<std::string>>& members
-            ) const
-    {
-        std::vector<size_t> size;
-        
-        for (auto m: members)
-        {
-            size.push_back(m.size());
-        }
-        
-        return size;
-    }
+
+    return size;
+}
 
 }
 }

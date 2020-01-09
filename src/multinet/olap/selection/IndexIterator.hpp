@@ -27,8 +27,8 @@ class IndexIterator
      * Creates indexes.
      */
     IndexIterator(
-                  const std::vector<std::vector<size_t>>& indexes
-                  );
+        const std::vector<std::vector<size_t>>& indexes
+    );
 
 
     /** Iterator over the objects in this collection. */

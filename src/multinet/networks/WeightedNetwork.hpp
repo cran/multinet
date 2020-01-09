@@ -21,13 +21,13 @@ class WeightedNetwork
 {
 
   private:
-    
+
     std::string KWEIGHT_ATTR_NAME = "weight";
-    
+
     typedef Network super;
-    
+
   public:
-    
+
     /**
      * Creates a network with directed or undirected simple edges and with or without loops.
      */
@@ -58,8 +58,8 @@ class WeightedNetwork
      */
     core::Value<double>
     get_weight(
-               const Edge* e
-               );
+        const Edge* e
+    );
 
     /**
      * Returns a string providing a summary of the network structure.

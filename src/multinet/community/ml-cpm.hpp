@@ -5,7 +5,9 @@
 #include <unordered_set>
 #include <vector>
 #include "core/utils/math.hpp"
-#include "mnet/community/MLCPMCommunity.hpp"
+#include "core/utils/pretty_printing.hpp"
+#include "community/MLCPMCommunity.hpp"
+#include "community/CommunityStructure.hpp"
 
 namespace uu {
 namespace net {
@@ -51,7 +53,7 @@ std::map<std::shared_ptr<MultiplexClique<M>>,std::unordered_set<std::shared_ptr<
 template <typename M>
 std::unordered_set<std::shared_ptr<MLCPMCommunity<M>>>
 find_max_communities(
-    const M* mnet,
+    //const M* mnet,
     const std::map<std::shared_ptr<MultiplexClique<M>>,std::unordered_set<std::shared_ptr<MultiplexClique<M>>> >& adjacency,
     size_t m
 );
@@ -89,17 +91,43 @@ mlcpm(
 
     // Step 2: bluid adjacency graph
     auto adjacency = build_max_adjacency_graph(cliques,k,m);
-    // TODO create a simple_graph data structure
+    // @todo use a Network?
+
+    /*std::cout << "ADJACENCY" << std::endl;
+    for (auto pair: adjacency)
+    {
+        std::cout << "node: " << pair.first->to_string() << std::endl;
+        for (auto cl: pair.second)
+        {
+            std::cout << "  " << cl->to_string() << std::endl;
+
+        }
+    }
+    std::cout << std::endl;*/
 
     // Step 3: extract communities
-    auto comm = find_max_communities(mnet,adjacency,m);
+    auto comm = find_max_communities(adjacency,m);
 
     // Translate the result, so that it is compatible with the other clustering algorithms
     auto result = std::make_unique<CommunityStructure<VertexLayerCommunity<const typename M::layer_type>>>();
 
     for (auto c: comm)
     {
-        result->add(std::move(c->to_community(mnet)));
+        result->add(std::move(c->to_community()));
+        /*
+        for (auto c2: comm)
+        {
+            if (c<=c2) continue;
+            auto il = core::s_intersection(c->get_layers(),c2->get_layers());
+            auto ia = core::s_intersection(c->actors(),c2->actors());
+            if (il.size() == std::min(c->get_layers().size(),c2->get_layers().size()) &&
+                ia.size() == c->actors().size() && ia.size() ==  c2->actors().size() )
+            {std::cout << "pair" << std::endl;
+            std::cout << c->to_string() << std::endl;
+            std::cout << c2->to_string() << std::endl;
+            }
+        }
+         */
     }
 
     return result;
@@ -370,7 +398,7 @@ std::map<std::shared_ptr<MultiplexClique<M>>,std::unordered_set<std::shared_ptr<
 template <typename M>
 std::unordered_set<std::shared_ptr<MLCPMCommunity<M>>>
 find_max_communities(
-    const M* mnet,
+    //const M* mnet,
     const std::map<std::shared_ptr<MultiplexClique<M>>,std::unordered_set<std::shared_ptr<MultiplexClique<M>>> >& adjacency,
     size_t m)
 {
@@ -379,12 +407,13 @@ find_max_communities(
     std::unordered_set<std::shared_ptr<MLCPMCommunity<M>>> result;
 
     // A: empty community on all layers
+    /*
     std::shared_ptr<MLCPMCommunity<M>> A = std::make_shared<MLCPMCommunity<M>>();
 
     for (const typename M::layer_type* layer: *mnet->layers())
     {
         A->add_layer(layer);
-    }
+    }*/
 
     std::unordered_set<std::shared_ptr<MultiplexClique<M>>> AlreadySeen;
 
@@ -398,9 +427,9 @@ find_max_communities(
             A->add_layer(layer);
         }
 
-        std::vector<std::shared_ptr<MultiplexClique<M>>> Candidates(clique_pair.second.begin(),clique_pair.second.end());
+        std::set<std::shared_ptr<MultiplexClique<M>>> Candidates(clique_pair.second.begin(),clique_pair.second.end());
         layer_sets<M> empty;
-        find_max_communities(adjacency,A,Candidates,AlreadySeen,empty,m,result);
+        find_max_communities2(adjacency,A,Candidates,AlreadySeen,empty,m,result);
         AlreadySeen.insert(clique_pair.first);
     }
 
@@ -412,7 +441,8 @@ find_max_communities(
 template <typename M>
 void
 find_max_communities(
-    const std::map<std::shared_ptr<MultiplexClique<M>>,std::unordered_set<std::shared_ptr<MultiplexClique<M>>> >& adjacency, std::shared_ptr<MLCPMCommunity<M>>& A,
+    const std::map<std::shared_ptr<MultiplexClique<M>>,std::unordered_set<std::shared_ptr<MultiplexClique<M>>> >& adjacency,
+    std::shared_ptr<MLCPMCommunity<M>>& A,
     std::vector<std::shared_ptr<MultiplexClique<M>>> Candidates,
     std::unordered_set<std::shared_ptr<MultiplexClique<M>>>& processedCliques,
     layer_sets<M>& processedLayerCombinations,
@@ -420,6 +450,8 @@ find_max_communities(
     std::unordered_set<std::shared_ptr<MLCPMCommunity<M>>>& result
 )
 {
+
+    //std::cout << "Start from " << A->to_string() << std::endl;
 
     std::vector<std::shared_ptr<MultiplexClique<M>>> stack;
 
@@ -434,6 +466,7 @@ find_max_communities(
         {
             if (processedCliques.count(c)>0)
             {
+                // all communities starting from c have already been returned.
                 return;
             }
 
@@ -443,6 +476,7 @@ find_max_communities(
             {
                 if (A->cliques.count(j)>0)
                 {
+                    // clique already present in the community
                     continue;
                 }
 
@@ -460,9 +494,11 @@ find_max_communities(
                 stack.push_back(c);
             }
         }
+
     }
 
     result.insert(A);
+
     processedLayerCombinations.insert(A->get_layers());
 
     layer_sets<M> candidate_layer_combinations;
@@ -479,8 +515,123 @@ find_max_communities(
         std::shared_ptr<MLCPMCommunity<M>> comm = MLCPMCommunity<M>::create();
         comm->cliques.insert(A->cliques.begin(),A->cliques.end());
         comm->layers.insert(layers.begin(),layers.end());
-        find_max_communities(adjacency,comm,stack,processedCliques,processedLayerCombinations,m,result);
+
     }
+
+}
+
+
+/** Expand community A to a maximum, and recursively do the same when the number of layers decreases. */
+template <typename M>
+void
+find_max_communities2(
+    const std::map<std::shared_ptr<MultiplexClique<M>>,std::unordered_set<std::shared_ptr<MultiplexClique<M>>> >& adjacency,
+    std::shared_ptr<MLCPMCommunity<M>>& A,
+    std::set<std::shared_ptr<MultiplexClique<M>>>& Candidates,
+    std::unordered_set<std::shared_ptr<MultiplexClique<M>>>& processedCliques,
+    layer_sets<M>& processedLayerCombinations,
+    size_t m,
+    std::unordered_set<std::shared_ptr<MLCPMCommunity<M>>>& result
+)
+{
+
+    std::vector<std::shared_ptr<MultiplexClique<M>>> stack;
+
+
+    //std::cout << "EXPAND COMM: " << A->to_string() << std::endl;
+
+    // EXPAND
+    while (Candidates.size()!=0)
+    {
+        auto element_it = Candidates.begin();
+        std::shared_ptr<MultiplexClique<M>> c = *element_it;
+        Candidates.erase(element_it);
+
+        std::unordered_set<const typename M::layer_type*> i = core::s_intersection(A->get_layers(),c->layers);
+
+
+        if (i.size()==A->get_layers().size())
+        {
+            if (processedCliques.count(c)>0)
+            {
+                // this community has already been expanded from clique c
+                //std::cout << "already expanded with " << c->to_string() << std::endl;
+                return;
+            }
+
+            //std::cout << " + " << c->to_string() << std::endl;
+            A->cliques.insert(c);
+
+            for (auto j: adjacency.at(c))
+            {
+                if (A->cliques.count(j)>0)
+                {
+                    // std::cout << "clique already in community " << c->to_string() << std::endl;
+                    // clique already present in the community
+                    continue;
+                }
+
+                else
+                {
+                    Candidates.insert(j);
+                }
+            }
+        }
+
+        else if (i.size()>=m)
+        {
+
+            // new combination of layers to expand
+            std::shared_ptr<MLCPMCommunity<M>> comm = MLCPMCommunity<M>::create();
+            comm->cliques.insert(A->cliques.begin(),A->cliques.end());
+            comm->layers.insert(i.begin(),i.end());
+
+            //std::cout << " new layers? " << c->to_string() << std::endl;
+
+            /*for (auto l: i)
+                std::cout << l->name << " ";
+            std::cout << std::endl;*/
+
+            if (processedLayerCombinations.find(comm->get_layers()) != processedLayerCombinations.end())
+            {
+                // this has already been expanded earlier
+                //std::cout << " no: already found" << std::endl;
+                continue;
+            }
+
+            std::set<std::shared_ptr<MultiplexClique<M>>> newCandidates(Candidates.begin(), Candidates.end());
+            newCandidates.insert(c);
+            // @todo inefficient, pass newCandidates by reference?
+            find_max_communities2(adjacency,comm,newCandidates,processedCliques,processedLayerCombinations,m,result);
+            processedLayerCombinations.insert(comm->get_layers());
+        }
+
+    }
+
+    //std::cout << "OUT: " << A->to_string() << std::endl;
+
+    result.insert(A);
+
+    /*
+     processedLayerCombinations.insert(A->get_layers());
+
+     layer_sets<M> candidate_layer_combinations;
+
+     for (std::shared_ptr<MultiplexClique<M>> c: stack)
+     {
+     std::unordered_set<const typename M::layer_type*> s = core::s_intersection(A->get_layers(),c->layers);
+     std::set<const typename M::layer_type*> to_be_processed(s.begin(), s.end()); // FIXME
+     candidate_layer_combinations.insert(to_be_processed);
+     }
+
+     for (std::set<const typename M::layer_type*> layers: candidate_layer_combinations)
+     {
+     std::shared_ptr<MLCPMCommunity<M>> comm = MLCPMCommunity<M>::create();
+     comm->cliques.insert(A->cliques.begin(),A->cliques.end());
+     comm->layers.insert(layers.begin(),layers.end());
+     find_max_communities(adjacency,comm,stack,processedCliques,processedLayerCombinations,m,result);
+     }
+     */
 }
 
 

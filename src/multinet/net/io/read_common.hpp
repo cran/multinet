@@ -26,14 +26,14 @@ namespace net {
 /** Default edge directionality (undirected). */
 const EdgeDir kDEFAULT_EDGE_DIRECTIONALITY = EdgeDir::UNDIRECTED;
 
-    template <typename NET>
-    std::unique_ptr<NET>
-    read(
-                 const std::string& infile,
-                 const std::string& name,
-                 char separator
-         );
-    
+template <typename NET>
+std::unique_ptr<NET>
+read(
+    const std::string& infile,
+    const std::string& name,
+    char separator
+);
+
 GraphMetadata
 read_metadata(
     const std::string& infile,
@@ -140,40 +140,40 @@ read_edge(
 );
 
 
-    template <typename NET>
-    std::unique_ptr<NET>
-    read(
-         const std::string& infile,
-         const std::string& name,
-         char separator
-         )
+template <typename NET>
+std::unique_ptr<NET>
+read(
+    const std::string& infile,
+    const std::string& name,
+    char separator
+)
+{
+    // Read metadata
+    GraphMetadata meta = read_metadata(infile, ',');
+    EdgeDir dir = meta.features.is_directed?EdgeDir::DIRECTED:EdgeDir::UNDIRECTED;
+
+    // Check metadata consistency (@todo)
+    // create network
+    // and add attributes
+    auto g = std::make_unique<NET>(name, dir, meta.features.allows_loops);
+
+    for (auto attr: meta.vertex_attributes)
     {
-            // Read metadata
-        GraphMetadata meta = read_metadata(infile, ',');
-        EdgeDir dir = meta.features.is_directed?EdgeDir::DIRECTED:EdgeDir::UNDIRECTED;
-        
-            // Check metadata consistency (@todo)
-            // create network
-            // and add attributes
-        auto g = std::make_unique<NET>(name, dir, meta.features.allows_loops);
-        
-        for (auto attr: meta.vertex_attributes)
-        {
-            g->vertices()->attr()->add(attr.name, attr.type);
-        }
-        
-        for (auto attr: meta.edge_attributes)
-        {
-            g->edges()->attr()->add(attr.name, attr.type);
-        }
-        
-            // Read data (vertices, edges, attribute values)
-        read_data(g.get(),  meta, infile, separator);
-        
-        return g;
-        
+        g->vertices()->attr()->add(attr.name, attr.type);
     }
-    
+
+    for (auto attr: meta.edge_attributes)
+    {
+        g->edges()->attr()->add(attr.name, attr.type);
+    }
+
+    // Read data (vertices, edges, attribute values)
+    read_data(g.get(),  meta, infile, separator);
+
+    return g;
+
+}
+
 template <typename G>
 void
 read_data(
@@ -202,7 +202,7 @@ read_data(
         line.erase(line.find_last_not_of(" \t")+1);
         line.erase(0,line.find_first_not_of(" \t"));
 
-        
+
         if (line.size()==0)
         {
             continue;
@@ -248,7 +248,7 @@ read_vertex(
 )
 {
     (void)line_number; // attribute not used
-    
+
     core::assert_not_null(g, "read_vertex", "g");
 
     std::string vertex_name = fields.at(from_idx);
@@ -273,7 +273,7 @@ read_edge(
 )
 {
     (void)line_number; // attribute not used
-    
+
     core::assert_not_null(g, "read_edge", "g");
 
     std::string from_vertex = fields.at(from_idx);
@@ -351,7 +351,7 @@ read_attr_values(
 )
 {
     (void)line_number; // attribute not used
-    
+
     for (size_t i=from_idx; i<from_idx+attributes.size(); i++)
     {
         store->set_as_string(element, attributes.at(i-from_idx).name, line.at(i));

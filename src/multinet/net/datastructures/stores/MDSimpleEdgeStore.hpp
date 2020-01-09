@@ -17,7 +17,7 @@ namespace uu {
 namespace net {
 
 
-    template <typename VStore>
+template <typename VStore>
 class
     MDSimpleEdgeStore :
     public MDEdgeStore<VStore>,
@@ -36,10 +36,10 @@ class
     using super::super;
 
     //using super::value_type;
-    
+
     using super::layer1;
     using super::layer2;
-    
+
     using super::add;
     //using super::get;
     using super::neighbors;
@@ -110,9 +110,9 @@ class
     erase(
         const VStore* layer
     ) override;
-    
 
-    
+
+
     virtual
     void
     erase(
@@ -128,7 +128,7 @@ class
 };
 
 
-    template <typename VStore>
+template <typename VStore>
 MDSimpleEdgeStore<VStore>::
 MDSimpleEdgeStore(
     const VStore* layer1,
@@ -137,13 +137,13 @@ MDSimpleEdgeStore(
 ) : super(layer1, layer2, dir)
 {
     // @todo should we check that they are different?
-    
+
     cidx_edge_by_vertexes[layer1][layer2];
     cidx_edge_by_vertexes[layer2][layer1];
-     
+
 }
 
-    template <typename VStore>
+template <typename VStore>
 const InterlayerEdge<Vertex,VStore> *
 MDSimpleEdgeStore<VStore>::
 add(
@@ -184,7 +184,7 @@ add(
 
 
 
-    template <typename VStore>
+template <typename VStore>
 const InterlayerEdge<Vertex,VStore>*
 MDSimpleEdgeStore<VStore>::
 get(
@@ -305,7 +305,7 @@ erase(
     {
         super::erase(vertex, layer);
     }
-        
+
 
     template <typename VStore>
 void

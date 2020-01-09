@@ -6,7 +6,7 @@
 #include <numeric>
 #include <utility>
 #include "objects/EdgeMode.hpp"
-#include "mnet/community/VertexLayerCommunity.hpp"
+#include "community/VertexLayerCommunity.hpp"
 
 namespace uu {
 namespace net {

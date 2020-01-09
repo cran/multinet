@@ -135,7 +135,7 @@ EntryIterator(
 {
     // @todo check null
     c_ = c;
-    
+
     size_t num_dimensions = c->dim().size();
 
     if (num_dimensions != indexes.size())
@@ -144,7 +144,7 @@ EntryIterator(
     }
 
     std::vector<std::vector<size_t>> indexes2;
-    
+
     auto size = c->size();
 
     for (size_t i = 0; i < num_dimensions; i++)
@@ -157,7 +157,7 @@ EntryIterator(
             indexes2[i].push_back(indexes[i].next());
         }
     }
-    
+
     idx_ = IndexIterator(indexes2);
 
 }

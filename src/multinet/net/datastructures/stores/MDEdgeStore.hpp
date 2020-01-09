@@ -39,7 +39,7 @@ class MDEdgeStore:
     const VStore* layer2;
 
   public:
-    
+
     typedef InterlayerEdge<Vertex,VStore> value_type;
 
     /**
@@ -106,8 +106,8 @@ class MDEdgeStore:
     const
     GenericObjectList<Vertex>*
     neighbors(
-              const Vertex* vertex,
-              const VStore* layer,
+        const Vertex* vertex,
+        const VStore* layer,
         EdgeMode mode
     ) const;
 
@@ -120,8 +120,8 @@ class MDEdgeStore:
     const
     GenericObjectList<InterlayerEdge<Vertex,VStore>>*
             incident(
-                     const Vertex* vertex,
-                     const VStore* layer,
+                const Vertex* vertex,
+                const VStore* layer,
                 EdgeMode mode
             ) const;
 
@@ -142,7 +142,7 @@ class MDEdgeStore:
     virtual
     void
     erase(
-          const Vertex* vertex,
+        const Vertex* vertex,
         const VStore* layer
     );
 
@@ -166,7 +166,7 @@ class MDEdgeStore:
 };
 
 
-    template <typename VStore>
+template <typename VStore>
 MDEdgeStore<VStore>::
 MDEdgeStore(
     const VStore* layer1,
@@ -174,7 +174,7 @@ MDEdgeStore(
     EdgeDir dir
 ) : layer1(layer1), layer2(layer2), edge_directionality(dir)
 {
-    
+
     core::assert_not_null(layer1, "MDEdgeStore", "layer1");
     core::assert_not_null(layer2, "MDEdgeStore", "layer2");
 
@@ -220,7 +220,7 @@ add(
 
 
 
-    template <typename VStore>
+template <typename VStore>
 const InterlayerEdge<Vertex,VStore>*
 MDEdgeStore<VStore>::
 add(
@@ -332,13 +332,13 @@ GenericObjectList<InterlayerEdge<Vertex,VStore>>*
 }
 */
 
-    template <typename VStore>
+template <typename VStore>
 const
 GenericObjectList<Vertex>*
 MDEdgeStore<VStore>::
 neighbors(
     const Vertex* vertex,
-          const VStore* layer,
+    const VStore* layer,
     EdgeMode mode
 ) const
 {
@@ -384,13 +384,13 @@ neighbors(
 
 
 
-    template <typename VStore>
+template <typename VStore>
 const
 GenericObjectList<InterlayerEdge<Vertex,VStore>>*
         MDEdgeStore<VStore>::
         incident(
             const Vertex* vertex,
-                const VStore* layer,
+            const VStore* layer,
             EdgeMode mode
         ) const
 {
@@ -436,7 +436,7 @@ GenericObjectList<InterlayerEdge<Vertex,VStore>>*
 
 
 
-    template <typename VStore>
+template <typename VStore>
 bool
 MDEdgeStore<VStore>::
 is_directed(
@@ -470,25 +470,25 @@ edge_directionality.at(layer2).at(layer1) = directed?EdgeDir::DIRECTED:EdgeDir::
 */
 
 // @todo What?...
-    
-    template <typename VStore>
+
+template <typename VStore>
 void
 MDEdgeStore<VStore>::
 erase(
-      const Vertex* vertex,
+    const Vertex* vertex,
     const VStore* layer
 )
 {
     core::assert_not_null(layer, "erase", "layer");
     core::assert_not_null(vertex, "erase", "vertex");
-    
+
     std::unordered_set<const InterlayerEdge<Vertex,VStore>*> to_erase;
-    
+
     for (auto e: *incident(vertex,layer,EdgeMode::INOUT))
     {
         to_erase.insert(e);
     }
-    
+
     for (auto e: to_erase)
     {
         erase(e);

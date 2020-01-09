@@ -3,7 +3,7 @@
 
 
 #include "community/CommunityStructure.hpp"
-#include "mnet/community/VertexLayerCommunity.hpp"
+#include "community/VertexLayerCommunity.hpp"
 #include "mnet/community/cutils.hpp"
 #include "Eigen/Sparse"
 #include "Eigen/Dense"

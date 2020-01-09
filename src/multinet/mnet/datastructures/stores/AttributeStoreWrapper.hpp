@@ -38,7 +38,7 @@ class AttributeStoreWrapper
 template <typename OT>
 AttributeStoreWrapper<OT>::
 AttributeStoreWrapper(
-                      std::unique_ptr<core::AttributeStore<OT>> attr
+    std::unique_ptr<core::AttributeStore<OT>> attr
 ) : attr_(std::move(attr))
 {
 }

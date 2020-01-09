@@ -2,6 +2,8 @@
 #define UU_MNET_COMMUNITY_MLCPMCOMMUNITY_H_
 
 #include "mnet/datastructures/objects/MultiplexClique.hpp"
+#include "community/VertexLayerCommunity.hpp"
+
 
 namespace uu {
 namespace net {
@@ -90,7 +92,7 @@ class
 
     std::unique_ptr<VertexLayerCommunity<const typename M::layer_type>>
             to_community(
-                const M* net
+                //const M* net
             ) const;
 
     int
@@ -206,7 +208,7 @@ template <typename M>
 std::unique_ptr<VertexLayerCommunity<const typename M::layer_type>>
         MLCPMCommunity<M>::
         to_community(
-            const M* net
+            //const M* net
         ) const
 {
     auto result = std::make_unique<VertexLayerCommunity<const typename M::layer_type>>();

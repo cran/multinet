@@ -29,7 +29,7 @@ class
   public:
 
     typedef std::tuple<const V*, const L*, const V*, const L*> key_type;
-    
+
     /** Constructor. */
     InterlayerEdge(
         const V* v1,
@@ -67,7 +67,7 @@ class
     const L* l2;
 
     const key_type key;
-    
+
     /** Edge directionality. */
     const EdgeDir dir;
 

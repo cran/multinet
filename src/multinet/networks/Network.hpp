@@ -28,7 +28,7 @@ class Network
   public:
 
     const std::string name;
-    
+
     /**
      * Creates a graph with directed or undirected simple edges and with or without loops.
      */

@@ -6,6 +6,8 @@
 #ifndef UU_NET_MEASURES_TEST_H_
 #define UU_NET_MEASURES_TEST_H_
 
+#include "test.ipp"
+
 namespace uu {
 namespace net {
 
@@ -16,13 +18,11 @@ namespace net {
  * An independent set is a set of vertices V' in V where
  * for all a, b in V' a and b are not adjacent.
  * Complexity: O(n+m)
- *
- * @todo NOT IMPLEMENTED
  */
 template<typename G>
 bool
 is_bipartite(
-    const std::shared_ptr<const G>  g
+    const G*  g
 );
 
 /**
@@ -35,11 +35,12 @@ is_bipartite(
 template<typename G>
 bool
 are_isomorphic(
-    const std::shared_ptr<const G>  g1,
-    const std::shared_ptr<const G>  g2
+    const G*  g1,
+    const G*  g2
 );
 
-} // namespace net
-} // namespace uu
+
+}
+}
 
 #endif

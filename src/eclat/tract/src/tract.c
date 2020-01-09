@@ -1394,9 +1394,10 @@ ib_errmsg (ITEMBASE *base, char *buf, size_t size)
     if (*msg == '#')
     {
         msg++;     /* if message needs a header */
-        k = (size_t)snprintf(buf, size, "%s:%"SIZE_FMT"(%"SIZE_FMT"): ",
-                             TRD_FPOS(base->trd));
-
+        // MY CHANGE, TO GET RID OF A WARNING ON WINDOWS DEVEL
+        // k = (size_t)snprintf(buf, size, "%s:%"SIZE_FMT"(%"SIZE_FMT"): ", TRD_FPOS(base->trd));
+        k = (size_t)snprintf(buf, size, "%s:%"SIZE_FMT"(%"SIZE_FMT"): ", trd_name(base->trd), trd_rec(base->trd), trd_pos(base->trd));
+        
         if (k >= size)
         {
             k = size-1;    /* print the input file name and */

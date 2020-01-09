@@ -81,7 +81,7 @@ edges <- data.frame(
 add_edges_ml(net,edges)
 edges_ml(net)
 
-# The following deletes layer 1, ans also deletes
+# The following deletes layer 1, and also deletes
 # all vertices from "l1" and the edge with an end-point in "l1"
 delete_layers_ml(net,"l1")
 # The following also deletes the vertices associated to

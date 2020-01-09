@@ -11,6 +11,7 @@
 #include <string>
 #include <memory>
 #include "networks/AttributedHomogeneousMultilayerNetwork.hpp"
+#include "core/utils/string.hpp"
 #include "net/io/read_common.hpp"
 
 namespace uu {
@@ -51,30 +52,66 @@ write_attributed_homogeneous_multilayer_network(
     char sep
 )
 {
+    bool is_multiplex = true;
+
+    if (mnet->interlayer_edges()->size()>0)
+    {
+        is_multiplex = false;
+    }
+
     std::ofstream outfile;
     outfile.open(path.data());
 
     outfile << "#TYPE" << std::endl;
-    outfile << "multilayer" << std::endl;
+
+    if (is_multiplex)
+    {
+        outfile << "multiplex" << std::endl;
+    }
+
+    else
+    {
+        outfile << "multilayer" << std::endl;
+    }
+
+    outfile << std::endl;
+
+    outfile << "#VERSION" << std::endl;
+    outfile << "3.0" << std::endl;
     outfile << std::endl;
 
     outfile << "#LAYERS" << std::endl;
 
-    for (auto layer=begin; layer!=end; ++layer)
+
+    if (is_multiplex)
     {
-        outfile << (*layer)->name << sep << (*layer)->name << sep << ((*layer)->is_directed()?"DIRECTED":"UNDIRECTED") << std::endl;
+        for (auto layer=begin; layer!=end; ++layer)
+        {
+            outfile << (*layer)->name << sep << ((*layer)->is_directed()?"DIRECTED":"UNDIRECTED")
+                    << ((*layer)->allows_loops()?"LOOPS":"") << std::endl;
+        }
     }
 
-    for (auto layer1=begin; layer1!=end; ++layer1)
+    else
     {
-        for (auto layer2=begin; layer2!=end; ++layer2)
+        for (auto layer=begin; layer!=end; ++layer)
         {
-            if (layer1==layer2)
-            {
-                continue;
-            }
+            outfile << (*layer)->name << sep << (*layer)->name << sep
+                    << ((*layer)->is_directed()?"DIRECTED":"UNDIRECTED")
+                    << ((*layer)->allows_loops()?"LOOPS":"") << std::endl;
+        }
 
-            outfile << (*layer1)->name << sep << (*layer2)->name << sep << (mnet->interlayer_edges()->is_directed((*layer1),(*layer2))?"DIRECTED":"UNDIRECTED") << std::endl;
+        for (auto layer1=begin; layer1!=end; ++layer1)
+        {
+            for (auto layer2=begin; layer2!=end; ++layer2)
+            {
+                if (layer1==layer2)
+                {
+                    continue;
+                }
+
+                outfile << (*layer1)->name << sep << (*layer2)->name << sep << (mnet->interlayer_edges()->is_directed((*layer1),(*layer2))?"DIRECTED":"UNDIRECTED") << std::endl;
+            }
         }
     }
 
@@ -103,25 +140,32 @@ write_attributed_homogeneous_multilayer_network(
 
     outfile << "#EDGE ATTRIBUTES" << std::endl;
 
-    for (auto layer1=begin; layer1!=end; ++layer1)
+    std::set<std::string> global_attributes;
+
+    for (auto attr: *mnet->interlayer_edges()->attr())
     {
-        for (auto layer2=begin; layer2!=end; ++layer2)
+        global_attributes.insert(attr->name);
+    }
+
+    for (auto layer=begin; layer!=end; ++layer)
+    {
+        for (auto attr: *(*layer)->edges()->attr())
         {
-            if (layer1==layer2)
+            if (global_attributes.find(attr->name) == global_attributes.end())
             {
-                for (auto attr: *(*layer1)->edges()->attr())
-                {
-                    outfile << (*layer1)->name << sep << (*layer2)->name << sep << attr->name << sep << core::to_string(attr->type) << std::endl;
-                }
+                continue;
             }
 
-            else
-            {
-                for (auto attr: *mnet->interlayer_edges()->attr())
-                {
-                    outfile << (*layer1)->name << sep << (*layer2)->name << sep << attr->name << sep << core::to_string(attr->type) << std::endl;
-                }
-            }
+            outfile << (*layer)->name << sep << attr->name << sep
+                    << core::to_string(attr->type) << std::endl;
+        }
+    }
+
+    if (!is_multiplex)
+    {
+        for (auto attr: *mnet->interlayer_edges()->attr())
+        {
+            outfile << attr->name << sep << core::to_string(attr->type) << std::endl;
         }
     }
 
@@ -194,16 +238,56 @@ write_attributed_homogeneous_multilayer_network(
 
     outfile << std::endl;
 
-    outfile << "#INTRALAYER EDGES" << std::endl;
+    outfile << "#EDGES" << std::endl;
 
     for (auto layer=begin; layer!=end; ++layer)
     {
         for (auto edge: *(*layer)->edges())
         {
-            outfile << edge->v1->name << sep << edge->v2->name << sep << (*layer)->name;
+            if (is_multiplex)
+            {
+                outfile << edge->v1->name
+                        << sep << edge->v2->name << sep << (*layer)->name;
+            }
+
+            else
+            {
+                if (is_multiplex)
+                {
+                    outfile << edge->v1->name << sep << (*layer)->name
+                            << sep << edge->v2->name << sep << (*layer)->name;
+                }
+            }
+
             auto edge_attrs = (*layer)->edges()->attr();
 
             for (auto attr: *edge_attrs)
+            {
+
+                if (global_attributes.find(attr->name) == global_attributes.end())
+                {
+                    continue;
+                }
+
+                switch (attr->type)
+                {
+                case core::AttributeType::NUMERIC:
+                case core::AttributeType::DOUBLE:
+                    outfile << sep << edge_attrs->get_double(edge,attr->name);
+                    break;
+
+                case core::AttributeType::STRING:
+                    outfile << sep << edge_attrs->get_string(edge,attr->name);
+                    break;
+
+                case core::AttributeType::TIME:
+                case core::AttributeType::TEXT:
+                case core::AttributeType::INTEGER:
+                    break;
+                }
+            }
+
+            for (auto attr: *mnet->interlayer_edges()->attr())
             {
                 switch (attr->type)
                 {
@@ -223,49 +307,53 @@ write_attributed_homogeneous_multilayer_network(
                 }
             }
 
+
             outfile << std::endl;
         }
     }
 
     outfile << std::endl;
 
-    outfile << "#INTERLAYER EDGES" << std::endl;
+    // INTERLAYER EDGES
 
-    for (auto layer1=begin; layer1!=end; ++layer1)
+    if (!is_multiplex)
     {
-        for (auto layer2=begin; layer2!=end; ++layer2)
+        for (auto layer1=begin; layer1!=end; ++layer1)
         {
-            if (layer1==layer2)
+            for (auto layer2=begin; layer2!=end; ++layer2)
             {
-                continue;
-            }
-
-            for (auto edge: *mnet->interlayer_edges()->get((*layer1),(*layer2)))
-            {
-                outfile << edge->v1->name << sep << (*layer1)->name << sep << edge->v2->name << sep << (*layer2)->name;
-                auto edge_attrs = mnet->interlayer_edges()->attr();
-
-                for (auto attr: *edge_attrs)
+                if (layer1==layer2)
                 {
-                    switch (attr->type)
-                    {
-                    case core::AttributeType::NUMERIC:
-                    case core::AttributeType::DOUBLE:
-                        outfile << sep << edge_attrs->get_double(edge,attr->name);
-                        break;
-
-                    case core::AttributeType::STRING:
-                        outfile << sep << edge_attrs->get_string(edge,attr->name);
-                        break;
-
-                    case core::AttributeType::TIME:
-                    case core::AttributeType::TEXT:
-                    case core::AttributeType::INTEGER:
-                        break;
-                    }
+                    continue;
                 }
 
-                outfile << std::endl;
+                for (auto edge: *mnet->interlayer_edges()->get((*layer1),(*layer2)))
+                {
+                    outfile << edge->v1->name << sep << (*layer1)->name << sep << edge->v2->name << sep << (*layer2)->name;
+                    auto edge_attrs = mnet->interlayer_edges()->attr();
+
+                    for (auto attr: *edge_attrs)
+                    {
+                        switch (attr->type)
+                        {
+                        case core::AttributeType::NUMERIC:
+                        case core::AttributeType::DOUBLE:
+                            outfile << sep << edge_attrs->get_double(edge,attr->name);
+                            break;
+
+                        case core::AttributeType::STRING:
+                            outfile << sep << edge_attrs->get_string(edge,attr->name);
+                            break;
+
+                        case core::AttributeType::TIME:
+                        case core::AttributeType::TEXT:
+                        case core::AttributeType::INTEGER:
+                            break;
+                        }
+                    }
+
+                    outfile << std::endl;
+                }
             }
         }
     }
@@ -304,7 +392,7 @@ write_graphml(
         if ((*layer)->is_directed())
         {
             directed = true;
-            goto end_loop;
+            goto end_loop; // AAAAAAAAARGH!!!! :)
         }
     }
 
@@ -328,21 +416,24 @@ write_graphml(
 end_loop:
 
 
-    // Node attributes
+    // Vertex attributes
     for (auto layer=begin; layer!=end; ++layer)
     {
-        outfile << "    <key id=\"" << (*layer)->name << "\" for=\"node\" attr.name=\"" << (*layer)->name << "\" attr.type=\"string\"/>" << std::endl;
+        std::string layer_name = (*layer)->name;
+        core::format(layer_name);
+
+        outfile << "    <key id=\"" << layer_name << "\" for=\"node\" attr.name=\"" << layer_name << "\" attr.type=\"string\"/>" << std::endl;
 
         for (auto attr: *(*layer)->vertices()->attr())
         {
             if (attr->type==core::AttributeType::NUMERIC || attr->type==core::AttributeType::DOUBLE)
             {
-                outfile << "    <key id=\"" << (*layer)->name << ":" << attr->name << "\" for=\"node\" attr.name=\"" << (*layer)->name << ":" << attr->name << "\" attr.type=\"double\"/>" << std::endl;
+                outfile << "    <key id=\"" << layer_name << ":" << attr->name << "\" for=\"node\" attr.name=\"" << layer_name << ":" << attr->name << "\" attr.type=\"double\"/>" << std::endl;
             }
 
             else if (attr->type==core::AttributeType::STRING)
             {
-                outfile << "    <key id=\"" << (*layer)->name << ":" << attr->name << "\" for=\"node\" attr.name=\"" << (*layer)->name << ":" << attr->name << "\" attr.type=\"string\"/>" << std::endl;
+                outfile << "    <key id=\"" << (*layer)->name << ":" << attr->name << "\" for=\"node\" attr.name=\"" << layer_name << ":" << attr->name << "\" attr.type=\"string\"/>" << std::endl;
             }
         }
     }
@@ -367,18 +458,45 @@ end_loop:
     // Edge attributes
     for (auto layer1=begin; layer1!=end; ++layer1)
     {
+
+        std::string layer_name1 = (*layer1)->name;
+        core::format(layer_name1);
+
         for (auto layer2=begin; layer2!=end; ++layer2)
         {
-            for (auto attr: *mnet->interlayer_edges()->attr())
-            {
-                if (attr->type==core::AttributeType::NUMERIC || attr->type==core::AttributeType::DOUBLE)
-                {
-                    outfile << "    <key id=\"e" << (*layer1)->name << "-" << (*layer2)->name << ": " << attr->name << "\" for=\"edge\" attr.name=\"" << (*layer1)->name << "-" << (*layer2)->name << ": "  << attr->name << "\" attr.type=\"double\"/>" << std::endl;
-                }
 
-                else if (attr->type==core::AttributeType::STRING)
+            std::string layer_name2 = (*layer2)->name;
+            core::format(layer_name2);
+
+            if (layer1 == layer2)
+            {
+                for (auto attr: *(*layer1)->edges()->attr())
                 {
-                    outfile << "    <key id=\"e" << (*layer1)->name << "-" << (*layer2)->name << ": " << attr->name << "\" for=\"edge\" attr.name=\"" << (*layer1)->name << "-" << (*layer2)->name << ": " << attr->name << "\" attr.type=\"string\"/>" << std::endl;
+                    if (attr->type==core::AttributeType::NUMERIC || attr->type==core::AttributeType::DOUBLE)
+                    {
+                        outfile << "    <key id=\"e" << layer_name1 << "-" << layer_name2 << ": " << attr->name << "\" for=\"edge\" attr.name=\"" << layer_name1 << "-" << layer_name2 << ": "  << attr->name << "\" attr.type=\"double\"/>" << std::endl;
+                    }
+
+                    else if (attr->type==core::AttributeType::STRING)
+                    {
+                        outfile << "    <key id=\"e" << layer_name1 << "-" << layer_name2 << ": " << attr->name << "\" for=\"edge\" attr.name=\"" << layer_name1 << "-" << layer_name2 << ": " << attr->name << "\" attr.type=\"string\"/>" << std::endl;
+                    }
+                }
+            }
+
+            else
+            {
+                for (auto attr: *mnet->interlayer_edges()->attr())
+                {
+                    if (attr->type==core::AttributeType::NUMERIC || attr->type==core::AttributeType::DOUBLE)
+                    {
+                        outfile << "    <key id=\"e" << layer_name1 << "-" << layer_name2 << ": " << attr->name << "\" for=\"edge\" attr.name=\"" << layer_name1 << "-" << layer_name2 << ": "  << attr->name << "\" attr.type=\"double\"/>" << std::endl;
+                    }
+
+                    else if (attr->type==core::AttributeType::STRING)
+                    {
+                        outfile << "    <key id=\"e" << layer_name1 << "-" << layer_name2 << ": " << attr->name << "\" for=\"edge\" attr.name=\"" << layer_name1 << "-" << layer_name2 << ": " << attr->name << "\" attr.type=\"string\"/>" << std::endl;
+                    }
                 }
             }
         }
@@ -392,6 +510,10 @@ end_loop:
         // one for each actor
         for (auto actor: *mnet->vertices())
         {
+
+            std::string actor_name = actor->name;
+            core::format(actor_name);
+
             // except if only layer-specific actors must be used
             if (!include_all_actors)
             {
@@ -412,29 +534,36 @@ end_loop:
             }
 
             outfile << "    <node id=\"" << actor << "\">" << std::endl;
-            outfile << "        <data key=\"v_name\">" << actor->name << "</data>" << std::endl;
+            outfile << "        <data key=\"v_name\">" << actor_name << "</data>" << std::endl;
 
             for (auto layer=begin; layer!=end; ++layer)
             {
+
+                std::string layer_name = (*layer)->name;
+                core::format(layer_name);
+
                 if (!(*layer)->vertices()->contains(actor))
                 {
                     // no content
                 }
                 else
                 {
-                    outfile << "        <data key=\"" << (*layer)->name << "\">T</data>" << std::endl;
+                    outfile << "        <data key=\"" << layer_name << "\">T</data>" << std::endl;
                     auto attrs = (*layer)->vertices()->attr();
 
                     for (auto attr: *attrs)
                     {
                         if (attr->type==core::AttributeType::NUMERIC || attr->type==core::AttributeType::DOUBLE)
                         {
-                            outfile << "        <data key=\"" << (*layer)->name << ":" << attr->name << "\">" << attrs->get_double(actor,attr->name) << "</data>" << std::endl;
+                            outfile << "        <data key=\"" << layer_name << ":" << attr->name << "\">" << attrs->get_double(actor,attr->name) << "</data>" << std::endl;
                         }
 
                         else if (attr->type==core::AttributeType::STRING)
                         {
-                            outfile << "        <data key=\"" << (*layer)->name << ":" << attr->name << "\">" << attrs->get_string(actor,attr->name) << "</data>" << std::endl;
+                            auto att_val = attrs->get_string(actor,attr->name);
+                            std::string value = att_val.null?"NA":att_val.value;
+                            core::format(value);
+                            outfile << "        <data key=\"" << layer_name << ":" << attr->name << "\">" << value << "</data>" << std::endl;
                         }
                     }
                 }
@@ -451,7 +580,11 @@ end_loop:
 
                 else if (attr->type==core::AttributeType::STRING)
                 {
-                    outfile << "        <data key=\"" << attr->name << "\">" << attrs->get_string(actor,attr->name) << "</data>" << std::endl;
+                    auto att_val = attrs->get_string(actor,attr->name);
+                    std::string value = att_val.null?"NA":att_val.value;
+                    core::format(value);
+
+                    outfile << "        <data key=\"" << attr->name << "\">" << value << "</data>" << std::endl;
                 }
             }
 
@@ -465,22 +598,34 @@ end_loop:
         // Only actors present in at least one layer are included: the include_all_actors parameter is not used in this case.
         for (auto layer=begin; layer!=end; ++layer)
         {
+
+            std::string layer_name = (*layer)->name;
+            core::format(layer_name);
+
             for (auto actor: *(*layer)->vertices())
             {
+
+                std::string actor_name = actor->name;
+                core::format(actor_name);
+
                 outfile << "    <node id=\"" << actor << ":" << (*layer) << "\">" << std::endl;
-                outfile << "        <data key=\"v_name\">" << actor->name << ":" << (*layer)->name << "</data>" << std::endl;
+                outfile << "        <data key=\"v_name\">" << actor_name << ":" << layer_name << "</data>" << std::endl;
                 auto attrs = (*layer)->vertices()->attr();
 
                 for (auto attr: *attrs)
                 {
                     if (attr->type==core::AttributeType::NUMERIC || attr->type==core::AttributeType::DOUBLE)
                     {
-                        outfile << "        <data key=\"" << (*layer)->name << ":" << attr->name << "\">" << attrs->get_double(actor,attr->name) << "</data>" << std::endl;
+                        outfile << "        <data key=\"" << layer_name << ":" << attr->name << "\">" << attrs->get_double(actor,attr->name) << "</data>" << std::endl;
                     }
 
                     else if (attr->type==core::AttributeType::STRING)
                     {
-                        outfile << "        <data key=\"" << (*layer)->name << ":" << attr->name << "\">" << attrs->get_string(actor,attr->name) << "</data>" << std::endl;
+                        auto att_val = attrs->get_string(actor,attr->name);
+                        std::string value = att_val.null?"NA":att_val.value;
+                        core::format(value);
+
+                        outfile << "        <data key=\"" << layer_name << ":" << attr->name << "\">" << value << "</data>" << std::endl;
                     }
                 }
 
@@ -497,26 +642,38 @@ end_loop:
         // connect actor ids
         for (auto layer1=begin; layer1!=end; ++layer1)
         {
+
+            std::string layer_name1 = (*layer1)->name;
+            core::format(layer_name1);
+
             for (auto layer2=layer1; layer2!=end; ++layer2)
             {
+
+                std::string layer_name2 = (*layer2)->name;
+                core::format(layer_name2);
+
                 if (layer1==layer2)
                 {
                     for (auto edge: *(*layer1)->edges())
                     {
                         outfile << "    <edge id=\"e" << edge << "\" source=\"" << edge->v1 << "\" target=\"" << edge->v2 << "\">" << std::endl;
-                        outfile << "        <data key=\"e_type\">" << (*layer1)->name << "</data>" << std::endl;
+                        outfile << "        <data key=\"e_type\">" << layer_name1 << "</data>" << std::endl;
                         auto attrs = (*layer1)->edges()->attr();
 
                         for (auto attr: *attrs)
                         {
                             if (attr->type==core::AttributeType::NUMERIC || attr->type==core::AttributeType::DOUBLE)
                             {
-                                outfile << "        <data key=\"e" << (*layer1)->name << "-" << (*layer2)->name << ": " << attr->name << "\">" << attrs->get_double(edge,attr->name) << "</data>" << std::endl;
+                                outfile << "        <data key=\"e" << layer_name1 << "-" << layer_name2 << ": " << attr->name << "\">" << attrs->get_double(edge,attr->name) << "</data>" << std::endl;
                             }
 
                             else if (attr->type==core::AttributeType::STRING)
                             {
-                                outfile << "        <data key=\"e" << (*layer1)->name << "-" << (*layer2)->name << ": " << attr->name << "\">" << attrs->get_string(edge,attr->name) << "</data>" << std::endl;
+                                auto att_val = attrs->get_string(edge,attr->name);
+                                std::string value = att_val.null?"NA":att_val.value;
+                                core::format(value);
+
+                                outfile << "        <data key=\"e" << layer_name1 << "-" << layer_name2 << ": " << attr->name << "\">" << value << "</data>" << std::endl;
                             }
                         }
 
@@ -529,19 +686,23 @@ end_loop:
                     for (auto edge: *mnet->interlayer_edges()->get((*layer1),(*layer2)))
                     {
                         outfile << "    <edge id=\"e" << edge << "\" source=\"" << edge->v1 << "\" target=\"" << edge->v2 << "\">" << std::endl;
-                        outfile << "        <data key=\"e_type\">" << (*layer1)->name << "-" << (*layer2)->name << "</data>" << std::endl;
+                        outfile << "        <data key=\"e_type\">" << layer_name1 << "-" << layer_name2 << "</data>" << std::endl;
                         auto attrs = mnet->interlayer_edges()->attr();
 
                         for (auto attr: *attrs)
                         {
                             if (attr->type==core::AttributeType::NUMERIC || attr->type==core::AttributeType::DOUBLE)
                             {
-                                outfile << "        <data key=\"e" << (*layer1)->name << "-" << (*layer2)->name << ": " << attr->name << "\">" << attrs->get_double(edge,attr->name) << "</data>" << std::endl;
+                                outfile << "        <data key=\"e" << layer_name1 << "-" << layer_name2 << ": " << attr->name << "\">" << attrs->get_double(edge,attr->name) << "</data>" << std::endl;
                             }
 
                             else if (attr->type==core::AttributeType::STRING)
                             {
-                                outfile << "        <data key=\"e" << (*layer1)->name << "-" << (*layer2)->name << ": " << attr->name << "\">" << attrs->get_string(edge,attr->name) << "</data>" << std::endl;
+                                auto att_val = attrs->get_string(edge,attr->name);
+                                std::string value = att_val.null?"NA":att_val.value;
+                                core::format(value);
+
+                                outfile << "        <data key=\"e" << layer_name1 << "-" << layer_name2 << ": " << attr->name << "\">" << value << "</data>" << std::endl;
                             }
                         }
 
@@ -557,26 +718,38 @@ end_loop:
         // connect node ids
         for (auto layer1=begin; layer1!=end; ++layer1)
         {
+
+            std::string layer_name1 = (*layer1)->name;
+            core::format(layer_name1);
+
             for (auto layer2=layer1; layer2!=end; ++layer2)
             {
+
+                std::string layer_name2 = (*layer2)->name;
+                core::format(layer_name2);
+
                 if (layer1==layer2)
                 {
                     for (auto edge: *(*layer1)->edges())
                     {
                         outfile << "    <edge id=\"e" << edge << "\" source=\"" << edge->v1 << ":" << (*layer1) << "\" target=\"" << edge->v2 << ":" << (*layer1) << "\">" << std::endl;
-                        outfile << "        <data key=\"e_type\">" << (*layer1)->name << "-" << (*layer1)->name << "</data>" << std::endl;
+                        outfile << "        <data key=\"e_type\">" << layer_name1 << "-" << layer_name1 << "</data>" << std::endl;
                         auto attrs = (*layer1)->edges()->attr();
 
                         for (auto attr: *attrs)
                         {
                             if (attr->type==core::AttributeType::NUMERIC || attr->type==core::AttributeType::DOUBLE)
                             {
-                                outfile << "        <data key=\"e" << (*layer1)->name << "-" << (*layer1)->name << ": " << attr->name << "\">" << attrs->get_double(edge,attr->name) << "</data>" << std::endl;
+                                outfile << "        <data key=\"e" << layer_name1 << "-" << layer_name1 << ": " << attr->name << "\">" << attrs->get_double(edge,attr->name) << "</data>" << std::endl;
                             }
 
                             else if (attr->type==core::AttributeType::STRING)
                             {
-                                outfile << "        <data key=\"e" << (*layer1)->name << "-" << (*layer1)->name << ": " << attr->name << "\">" << attrs->get_string(edge,attr->name) << "</data>" << std::endl;
+                                auto att_val = attrs->get_string(edge,attr->name);
+                                std::string value = att_val.null?"NA":att_val.value;
+                                core::format(value);
+
+                                outfile << "        <data key=\"e" << layer_name1 << "-" << layer_name1 << ": " << attr->name << "\">" << value << "</data>" << std::endl;
                             }
                         }
 
@@ -589,19 +762,24 @@ end_loop:
                     for (auto edge: *mnet->interlayer_edges()->get((*layer1),(*layer2)))
                     {
                         outfile << "    <edge id=\"e" << edge << "\" source=\"" << edge->v1 << ":" << (*layer1) << "\" target=\"" << edge->v2 << ":" << (*layer2) << "\">" << std::endl;
-                        outfile << "        <data key=\"e_type\">" << (*layer1)->name << "-" << (*layer2)->name << "</data>" << std::endl;
+                        outfile << "        <data key=\"e_type\">" << layer_name1 << "-" << layer_name2 << "</data>" << std::endl;
                         auto attrs = mnet->interlayer_edges()->attr();
 
                         for (auto attr: *attrs)
                         {
                             if (attr->type==core::AttributeType::NUMERIC || attr->type==core::AttributeType::DOUBLE)
                             {
-                                outfile << "        <data key=\"e" << (*layer1)->name << "-" << (*layer2)->name << ": " << attr->name << "\">" << attrs->get_double(edge,attr->name) << "</data>" << std::endl;
+                                outfile << "        <data key=\"e" << layer_name1 << "-" << layer_name2 << ": " << attr->name << "\">" << attrs->get_double(edge,attr->name) << "</data>" << std::endl;
                             }
 
                             else if (attr->type==core::AttributeType::STRING)
                             {
-                                outfile << "        <data key=\"e" << (*layer1)->name << "-" << (*layer2)->name << ": " << attr->name << "\">" << attrs->get_string(edge,attr->name) << "</data>" << std::endl;
+                                auto att_val = attrs->get_string(edge,attr->name);
+                                std::string value = att_val.null?"NA":att_val.value;
+                                core::format(value);
+
+
+                                outfile << "        <data key=\"e" << layer_name1 << "-" << layer_name2 << ": " << attr->name << "\">" << value << "</data>" << std::endl;
                             }
                         }
 

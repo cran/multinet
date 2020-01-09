@@ -87,7 +87,7 @@ Attributes() :
 
 
 template <typename OT, typename ...Attrs>
-    typename core::AttributeStore<OT>::iterator
+typename core::AttributeStore<OT>::iterator
 Attributes<OT, Attrs...>::
 begin(
 ) const
@@ -96,7 +96,7 @@ begin(
 }
 
 template <typename OT, typename ...Attrs>
-    typename core::AttributeStore<OT>::iterator
+typename core::AttributeStore<OT>::iterator
 Attributes<OT, Attrs...>::
 end(
 ) const

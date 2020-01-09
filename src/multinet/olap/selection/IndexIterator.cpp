@@ -5,25 +5,28 @@ namespace uu {
 namespace olap {
 namespace sel {
 
-    
-    IndexIterator::
-    IndexIterator(
-                  const std::vector<size_t>& size
-                  )
+
+IndexIterator::
+IndexIterator(
+    const std::vector<size_t>& size
+)
+{
+    std::vector<std::vector<size_t>> indexes;
+
+    for (size_t i=0; i<size.size(); i++)
     {
-        std::vector<std::vector<size_t>> indexes;
-        for (size_t i=0; i<size.size(); i++)
+        indexes.push_back(std::vector<size_t>());
+
+        for (size_t j=0; j<size.at(i); j++)
         {
-            indexes.push_back(std::vector<size_t>());
-            for (size_t j=0; j<size.at(i); j++)
-            {
-                indexes.at(i).push_back(j);
-            }
+            indexes.at(i).push_back(j);
         }
-        indexes_ = indexes;
     }
 
-    
+    indexes_ = indexes;
+}
+
+
 IndexIterator::
 IndexIterator(
     const std::vector<std::vector<size_t>>& indexes

@@ -3,6 +3,7 @@
  * - 2018.03.09 file created, following a restructuring of the previous library.
  */
 
+#include "core/exceptions/DuplicateElementException.hpp"
 #include "io/read_multilayer_network.hpp"
 #include "io/read_network.hpp"
 
@@ -37,17 +38,44 @@ read_attributed_homogeneous_multilayer_network(
         net->layers()->add(std::move(layer));
     }
 
-    for (auto attr: meta.vertex_attributes)
+    /*for (auto l: meta.layers)
     {
-        net->vertices()->attr()->add(attr.name, attr.type);
+        std::string layer_name = l.first;
+        auto layer_type = l.second;
+            //std::cout << "creating layer " << l.first << " " << layer_type.is_directed << std::endl;
+        auto dir = layer_type.is_directed?EdgeDir::DIRECTED:EdgeDir::UNDIRECTED;
+        auto layer = std::make_unique<Network>(layer_name, dir, layer_type.allows_loops);
+        net->layers()->add(std::move(layer));
+    }*/
+
+    for (auto dir: meta.interlayer_dir)
+    {
+        std::string layer_name1 = dir.first.first;
+        std::string layer_name2 = dir.first.second;
+        auto layer1 = net->layers()->get(layer_name1);
+
+        if (!layer1)
+        {
+            throw core::WrongFormatException("unknown layer name (" + layer_name1 + ")");
+        }
+
+        auto layer2 = net->layers()->get(layer_name2);
+
+        if (!layer2)
+        {
+            throw core::WrongFormatException("unknown layer name (" + layer_name2 + ")");
+        }
+
+        net->interlayer_edges()->set_directed(layer1, layer2, dir.second);
     }
 
-    /*
-    for (auto attr: meta.edge_attributes)
+
+    for (auto attr: meta.vertex_attributes)
     {
-        mpx->edges()->attr()->add(attr.name, attr.type);
+
+        net->vertices()->attr()->add(attr.name, attr.type);
+
     }
-    */
 
     for (auto layer_attr: meta.intralayer_vertex_attributes)
     {
@@ -59,13 +87,23 @@ read_attributed_homogeneous_multilayer_network(
         }
     }
 
+    for (auto attr: meta.interlayer_edge_attributes)
+    {
+        net->interlayer_edges()->attr()->add(attr.name, attr.type);
+    }
+
     for (auto layer_attr: meta.intralayer_edge_attributes)
     {
         std::string layer_name = layer_attr.first;
 
         for (auto attr: layer_attr.second)
         {
-            net->layers()->get(layer_name)->edges()->attr()->add(attr.name, attr.type);
+            bool res = net->layers()->get(layer_name)->edges()->attr()->add(attr.name, attr.type);
+
+            if (!res)
+            {
+                throw core::DuplicateElementException("edge attribute " + attr.name);
+            }
         }
     }
 
@@ -173,11 +211,12 @@ read_intralayer_edge(
     l->vertices()->add(v1);
     l->vertices()->add(v2);
 
-    //if (!meta.layers.at(l->name).allows_loops) @todo fix: allow parameters to specify loop handling
+    /*if (!meta.layers.at(l->name).allows_loops)
     if (v1 == v2)
     {
         return;
     }
+    */
 
     auto e = l->edges()->add(v1,v2);
 
@@ -211,12 +250,22 @@ read_interlayer_edge(
 
     if (l1==l2)
     {
-        l1->edges()->add(v1,v2);
+        auto e = l1->edges()->add(v1,v2);
+
+        auto e_attr = meta.intralayer_edge_attributes.find(l1->name);
+
+        if (e_attr != meta.intralayer_edge_attributes.end())
+        {
+            read_attr_values(l1->edges()->attr(), e, e_attr->second, fields, 4, line_number);
+        }
     }
 
     else
     {
-        ml->interlayer_edges()->add(v1,l1,v2,l2);
+        auto e = ml->interlayer_edges()->add(v1,l1,v2,l2);
+
+        read_attr_values(ml->interlayer_edges()->attr(), e, meta.interlayer_edge_attributes, fields, 4, line_number);
+
     }
 
 }

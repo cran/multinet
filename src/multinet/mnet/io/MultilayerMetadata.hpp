@@ -7,6 +7,7 @@
 #define UU_NET_IO_MULTILAYERMETADATA_H_
 
 #include <vector>
+#include <map>
 #include <unordered_map>
 #include "core/attributes/Attribute.hpp"
 #include "net/datastructures/graphs/GraphType.hpp"
@@ -18,7 +19,11 @@ struct MultilayerMetadata
 {
     GraphType features;
 
+    bool is_multiplex = true;
+
     std::unordered_map<std::string, GraphType> layers;
+
+    std::map<std::pair<std::string,std::string>, bool> interlayer_dir;
 
     std::vector<core::Attribute> vertex_attributes;
     std::vector<core::Attribute> interlayer_edge_attributes;

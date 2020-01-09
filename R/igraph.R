@@ -36,12 +36,12 @@ add_igraph_layer_ml <- function(n, g, name)
 {
     if (is.null(vertex_attr(g)$name))
     {
-        stop("igraph object must have a vertex attribute 'name' with vertex names")
+        stop("the igraph object must have a vertex attribute 'name' with the names of the actors")
     }
     
     add_layers_ml(n, name, is.directed(g))
     
-    add_actors_ml(n, vertex_attr(g)$name)
+    # no longer necessary: add_actors_ml(n, vertex_attr(g)$name) # remove from next version
     
     vertices = data.frame(actor=vertex_attr(g)$name, layer=name)
     add_vertices_ml(n, vertices)
@@ -51,12 +51,18 @@ add_igraph_layer_ml <- function(n, g, name)
         if (is.numeric(vertex_attr(g)[[attr]]))
         {
             add_attributes_ml(n, attributes=attr, type="numeric", target="vertex", layer=name)
+            set_values_ml(n, attr, vertices=vertices, values=vertex_attr(g)[[attr]])
         }
         if (is.character(vertex_attr(g)[[attr]]))
         {
             add_attributes_ml(n, attributes=attr, type="string", target="vertex", layer=name)
+            set_values_ml(n, attr, vertices=vertices, values=vertex_attr(g)[[attr]])
         }
-        set_values_ml(n, attr, vertices=vertices, values=vertex_attr(g)[[attr]])
+        if (is.logical(vertex_attr(g)[[attr]]))
+        {
+            add_attributes_ml(n, attributes=attr, type="numeric", target="vertex", layer=name)
+            set_values_ml(n, attr, vertices=vertices, values=as.numeric(vertex_attr(g)[[attr]]))
+        }
     }
     
     
@@ -71,11 +77,17 @@ add_igraph_layer_ml <- function(n, g, name)
         if (is.numeric(edge_attr(g)[[attr]]))
         {
             add_attributes_ml(n, attributes=attr, type="numeric", target="edge", layer=name)
+            set_values_ml(n, attr, edges=edges, values=edge_attr(g)[[attr]])
         }
         if (is.character(edge_attr(g)[[attr]]))
         {
             add_attributes_ml(n, attributes=attr, type="string", target="edge", layer=name)
+            set_values_ml(n, attr, edges=edges, values=edge_attr(g)[[attr]])
         }
-        set_values_ml(n, attr, edges=edges, values=edge_attr(g)[[attr]])
+        if (is.logical(vertex_attr(g)[[attr]]))
+        {
+            add_attributes_ml(n, attributes=attr, type="numeric", target="vertex", layer=name)
+            set_values_ml(n, attr, edges=edges, values=as.numeric(edge_attr(g)[[attr]]))
+        }
     }
 }

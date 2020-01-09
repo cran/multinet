@@ -8,13 +8,15 @@ Reading and writing multilayer networks from/to file
 \description{
 These functions are used to store a multilayer network to a file or load it from a file.
 
-The format used by the package is the following:
+There are two network formats accepted: multiplex (default) or multilayer. A full multiplex network input file has the following format:
 
 \verb{
  -- comment lines start with two dashes (--)
+ #VERSION
+ 3.0
 
- #TYPE multiplex
- -- or: "#TYPE multilayer", if there are inter-layer edges
+ #TYPE
+ multiplex
 
  #ACTOR ATTRIBUTES
  AttributeName1,STRING
@@ -28,64 +30,113 @@ The format used by the package is the following:
  -- etc.
 
  #EDGE ATTRIBUTES
- -- if type is multiplex (default), edge attributes are indicated as follows:
+ -- edge attributes can be defined for specific layers (called local attributes):
  LayerName1,AttributeName,STRING
- LayerName2,AttributeName,NUMERIC
+ LayerName1,AttributeName,NUMERIC
+-- or for all layers (called global attributes):
+AnotherAttributeName,NUMERIC
  -- etc.
- -- if type is multilayer, edge attributes are indicated as follows:
- -- LayerName1,LayerName1,AttributeName,STRING
- -- LayerName1,LayerName2,AttributeName,NUMERIC
- -- etc.
-
 
  #LAYERS
- -- if type is multiplex (default), layers are indicated as follows:
- LayerName1,UNDIRECTED,AttributeValueList...
- LayerName2,DIRECTED,AttributeValueList...
+ LayerName1,UNDIRECTED
+ LayerName2,DIRECTED
+ LayerName3,UNDIRECTED,LOOPS
  -- etc.
- -- if type is multilayer, layers are indicated as follows:
- -- LayerName1,LayerName1,UNDIRECTED,AttributeValueList...
- -- LayerName2,LayerName2,DIRECTED,AttributeValueList...
- -- LayerName1,LayerName2,DIRECTED
- -- etc. and all intra-layer directionalities should be listed before inter-layer directionalities
+ -- LOOPS indicates that edges from one vertex to itself (called loops) are allowed on that layer
 
  #ACTORS
  ActorName1,AttributeValueList...
  ActorName2,AttributeValueList...
  -- etc.
 
- #NODES
+ #VERTICES
  ActorName1,LayerName1,AttributeValueList...
  ActorName1,LayerName2,AttributeValueList...
  -- etc.
 
  #EDGES
- -- if TYPE is multiplex (default), edges are indicated as follows:
- ActorName1,ActorName2,LayerName1,AttributeValueList...
+ ActorName1,ActorName2,LayerName1,LocalAttributeValueList,GlobalAttributeValueList...
  -- etc.
- -- if TYPE is multilayer, edges are instead indicated as follows:
- -- ActorName1,LayerName1,ActorName2,LayerName2,AttributeValueList...
- -- etc.
+ -- the attribute values must be specified in the same order in which they are defined above
 
  ----------------------------------
 }
 
- If the #LAYERS section is empty, undirected layers are created as mentioned in the #EDGES section.
+ If the #LAYERS section is empty, all edges are created as undirected.
 
- If the #LAYER ATTRIBUTES, #ACTOR ATTRIBUTES, #NODE ATTRIBUTES or #EDGE ATTRIBUTES sections are empty, no attributes are created.
+ If the #ACTOR ATTRIBUTES, #VERTEX ATTRIBUTES or #EDGE ATTRIBUTES sections are empty,
+ no attributes are created.
 
- The #LAYERS #ACTORS and #NODES sections are useful only if attributes are present, or if there are actors not present in any layer, or if there are isolated nodes, otherwise they can be omitted.
+ The #LAYERS, #ACTORS and #VERTICES sections are useful only if attributes are present, or if there
+ are actors that are not present in any layer (#ACTORS), or if there are isolated vertices
+ (#VERTICES), otherwise they can be omitted.
 
  If no section is specified, #EDGES is the default.
 
- Therefore, a minimalistic undirected multiplex network file would look like this:
+ Therefore, a non attributed, undirected multiplex network file can be as simple as:
  \verb{
  ----------------------------------
- Matteo,Luca,Facebook
- Matteo,Mark,Facebook
- Luca,Mark,Twitter
+ Actor1,Actor2,Layer1
+ Actor1,Actor3,Layer1
+ Actor4,Actor2,Layer2
  ----------------------------------
  }
+
+If interlayer edges exist, then type "multilayer" must be specified, and layers and edges
+are formatted in a different way:
+
+\verb{
+#VERSION
+3.0
+
+#TYPE
+multilayer
+
+#ACTOR ATTRIBUTES
+AttributeName1,STRING
+AttributeName2,NUMERIC
+-- etc.
+
+#NODE ATTRIBUTES
+LayerName1,AttributeName1,STRING
+LayerName1,AttributeName2,NUMERIC
+LayerName2,AttributeName3,STRING
+-- etc.
+
+#EDGE ATTRIBUTES
+-- edge attributes can be defined for specific layers:
+LayerName1,AttributeName,STRING
+LayerName1,AttributeName,NUMERIC
+-- or for all layers (called global attributes):
+AnotherAttributeName,NUMERIC
+-- etc.
+
+#LAYERS
+-- LayerName1,LayerName1,UNDIRECTED
+-- LayerName2,LayerName2,DIRECTED
+-- LayerName3,LayerName3,DIRECTED,LOOPS
+-- LayerName1,LayerName2,DIRECTED
+-- etc.
+-- all intra-layer specifications (where the first and second layers are the same)
+-- should be listed first.
+-- LOOPS is only allowed for intra-layer specifications.
+
+#ACTORS
+ActorName1,AttributeValueList...
+ActorName2,AttributeValueList...
+-- etc.
+
+#VERTICES
+ActorName1,LayerName1,AttributeValueList...
+ActorName1,LayerName2,AttributeValueList...
+-- etc.
+
+#EDGES
+-- ActorName1,LayerName1,ActorName2,LayerName2,LocalAttributeValueList,GlobalAttributeValueList...
+-- etc.
+
+----------------------------------
+}
 }
 \usage{
 read_ml(file, name = "unnamed", sep = ',', aligned = FALSE)

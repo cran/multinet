@@ -19,16 +19,15 @@ new_multilayer_section_start(const std::string& line)
     core::to_upper_case(line_copy);
 
     if (
-        line_copy=="#VERSION" ||
-        line_copy.find("#TYPE") == 0 ||
+        line_copy.find("#VERSION") == 0 || // for backward compatibility, if the version is on the same line
+        line_copy.find("#TYPE") == 0 || // for backward compatibility, if the type is on the same line
         line_copy=="#LAYERS" ||
         line_copy=="#ACTORS" ||
         line_copy=="#ACTOR ATTRIBUTES" ||
         line_copy=="#VERTICES" ||
         line_copy=="#VERTEX ATTRIBUTES" ||
-        line_copy=="#INTRALAYER EDGES" ||
-        line_copy=="#INTERLAYER EDGES" ||
-        // alternative for: #INTRALAYER EDGES
+        // OLD line_copy=="#INTRALAYER EDGES" ||
+        // OLD line_copy=="#INTERLAYER EDGES" ||
         line_copy=="#EDGES" ||
         line_copy=="#EDGE ATTRIBUTES" ||
         // deprecated
@@ -48,7 +47,7 @@ get_multilayer_section(
     std::string line_copy = line;
     core::to_upper_case(line_copy);
 
-    if (line_copy=="#VERSION")
+    if (line_copy.find("#VERSION") == 0) // for backward compatibility, if the type is on the same line
     {
         return MultilayerIOFileSection::VERSION;
     }
@@ -65,7 +64,7 @@ get_multilayer_section(
 
     if (line_copy=="#ACTORS")
     {
-        return MultilayerIOFileSection::VERTICES;
+        return MultilayerIOFileSection::ACTORS;
     }
 
     if (line_copy=="#ACTOR ATTRIBUTES")
@@ -83,14 +82,9 @@ get_multilayer_section(
         return MultilayerIOFileSection::VERTEX_ATTRIBUTES;
     }
 
-    if (line_copy=="#EDGES" || line_copy=="#INTRALAYER EDGES")
+    if (line_copy=="#EDGES")
     {
-        return MultilayerIOFileSection::INTRALAYER_EDGES;
-    }
-
-    if (line_copy=="#INTERLAYER EDGES")
-    {
-        return MultilayerIOFileSection::INTERLAYER_EDGES;
+        return MultilayerIOFileSection::EDGES;
     }
 
     if (line_copy=="#EDGE ATTRIBUTES")
@@ -148,6 +142,23 @@ read_multilayer_metadata(
         if (new_multilayer_section_start(line))
         {
             section = get_multilayer_section(line);
+
+            if (section == MultilayerIOFileSection::TYPE) // for backward compatibility
+            {
+                std::string line_copy = line;
+                core::to_upper_case(line_copy);
+
+                if (line_copy.find("MULTIPLEX") != std::string::npos)
+                {
+                    meta.is_multiplex = true;
+                }
+
+                else if (line_copy.find("MULTILAYER") != std::string::npos)
+                {
+                    meta.is_multiplex = false;
+                }
+            }
+
             //fields = csv.get_next();
             //line = csv.get_current_raw_line();
             // remove trailing spaces
@@ -159,19 +170,53 @@ read_multilayer_metadata(
 
         switch (section)
         {
+
+        case MultilayerIOFileSection::TYPE:
+        {
+            std::string line_copy = line;
+            core::to_upper_case(line_copy);
+
+            if (line_copy == "MULTIPLEX")
+            {
+                meta.is_multiplex = true;
+            }
+
+            else if (line_copy == "MULTILAYER")
+            {
+                meta.is_multiplex = false;
+            }
+
+            else
+            {
+                throw core::WrongFormatException("Line " + std::to_string(csv.row_num()) +
+                                                 ": wrong network type (" + line + ")");
+            }
+
+            break;
+        }
+
         case MultilayerIOFileSection::VERSION:
         {
             version = read_version(line, csv.row_num());
+
+            if (version != "3.0")
+                throw core::WrongFormatException("Line " + std::to_string(csv.row_num()) +
+                                                 ": version 3.0 required");
+
             break;
         }
 
 
         case MultilayerIOFileSection::LAYERS:
         {
-            //@todo sanity check
-
-            if (fields.size()==2)
+            if (meta.is_multiplex)
             {
+                if (fields.size() < 2)
+                {
+                    throw core::WrongFormatException("Line " + std::to_string(csv.row_num()) +
+                                                     ": layer name and directionality required");
+                }
+
                 std::string layer_name = fields.at(0);
                 meta.layers[layer_name];
 
@@ -181,33 +226,42 @@ read_multilayer_metadata(
                 }
             }
 
-            else if (fields.size()>2)
+            else
             {
+                if (fields.size() < 3)
+                {
+                    throw core::WrongFormatException("Line " + std::to_string(csv.row_num()) +
+                                                     ": layer names and directionality required");
+                }
+
                 std::string layer_name1 = fields.at(0);
                 meta.layers[layer_name1];
                 std::string layer_name2 = fields.at(1);
                 meta.layers[layer_name2];
 
-                if (layer_name1!=layer_name2)
+                if (layer_name1 == layer_name2)
                 {
-                    continue;    //@todo currently not supported
+                    meta.layers[layer_name1];
+
+                    for (size_t idx = 2; idx<fields.size(); idx++)
+                    {
+                        read_graph_type(fields.at(idx), meta.layers[layer_name1], csv.row_num());
+                    }
                 }
 
-                for (size_t idx = 2; idx<fields.size(); idx++)
+                else
                 {
-                    read_graph_type(fields.at(idx), meta.layers[layer_name1], csv.row_num());
+                    std::string dir = fields.at(2);
+                    core::to_upper_case(dir);
+
+                    if (dir=="DIRECTED")
+                    {
+                        meta.interlayer_dir[std::pair<std::string,std::string>(layer_name1,layer_name2)] = true;
+                    }
                 }
 
             }
 
-            break;
-        }
-
-        case MultilayerIOFileSection::TYPE:
-        {
-            // std::cout << "[WARNING] #TYPE section not implented" << std::endl;
-            // read_multilayer_type(line, meta, csv.row_num());
-            // @todo
             break;
         }
 
@@ -233,18 +287,8 @@ read_multilayer_metadata(
 
         case MultilayerIOFileSection::VERTEX_ATTRIBUTES:
         {
-
-            // global vertex ( = actor) attributes
-            // for compatibility with previous version
-            if (fields.size()==2)
-            {
-                size_t from_idx = 0;
-                core::Attribute vertex_att = read_attr_def(fields, from_idx, csv.row_num());
-                meta.vertex_attributes.push_back(vertex_att);
-            }
-
             // intralayer vertex attributes
-            else if (fields.size()==3)
+            if (fields.size()==3)
             {
                 // add layer if not previously defined
                 std::string layer_name = fields[0];
@@ -263,7 +307,8 @@ read_multilayer_metadata(
 
             else
             {
-                // @todo throw wrong format exception
+                throw core::WrongFormatException("Line " + std::to_string(csv.row_num()) +
+                                                 ": layer, attribute name and attribute type expected");
             }
 
             break;
@@ -297,7 +342,8 @@ read_multilayer_metadata(
 
             else
             {
-                // @todo throw wrong format exception
+                throw core::WrongFormatException("Line " + std::to_string(csv.row_num()) +
+                                                 ": layer name (optional), attribute name and attribute type expected");
             }
 
             break;
@@ -305,6 +351,16 @@ read_multilayer_metadata(
 
         default:
             break;
+        }
+    }
+
+    // @todo global edge attributes added to all layers at the end. Maybe add more flexibility
+    for (auto edge_att: meta.interlayer_edge_attributes)
+    {
+        for (auto layer: meta.layers)
+        {
+            std::string layer_name = layer.first;
+            meta.intralayer_edge_attributes[layer_name].push_back(edge_att);
         }
     }
 

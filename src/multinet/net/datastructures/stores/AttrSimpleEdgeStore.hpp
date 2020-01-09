@@ -24,7 +24,7 @@ class
   public:
 
     AttrSimpleEdgeStore(
-    EdgeDir dir
+        EdgeDir dir
     );
 
 

@@ -10,7 +10,7 @@
 namespace uu {
 namespace net {
 
-    
+
 EdgeStore::
 EdgeStore(
     EdgeDir dir

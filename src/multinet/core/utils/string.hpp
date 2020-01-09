@@ -16,8 +16,14 @@ namespace core {
 
 
 void
-to_upper_case(std::string& s);
+to_upper_case(
+    std::string& s
+);
 
+void
+format(
+    std::string& in
+);
 
 }
 }

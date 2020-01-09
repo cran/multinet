@@ -26,10 +26,10 @@ islice(
 
 template <typename CONTAINER_TYPE>
 std::unique_ptr<CCube<CONTAINER_TYPE>>
-    vslice(
-        CCube<CONTAINER_TYPE>* cube,
-        const std::vector<std::vector<size_t>>& indexes
-        );
+                                    vslice(
+                                        CCube<CONTAINER_TYPE>* cube,
+                                        const std::vector<std::vector<size_t>>& indexes
+                                    );
 
 
 // DEFINITIONS

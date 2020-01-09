@@ -36,7 +36,7 @@ class CCube
     typedef CONTAINER_TYPE* entry_type;
     typedef CONTAINER_TYPE container_type;
     typedef typename CONTAINER_TYPE::value_type value_type;
-    
+
     /**
      * Creates a cube specifying its dimensions and the members for each dimension.
      */
@@ -75,7 +75,7 @@ class CCube
     elements(
     ) const;
 
-    
+
     core::UnionSortedRandomSet<typename CONTAINER_TYPE::value_type>*
     elements(
     );
@@ -194,33 +194,33 @@ class CCube
     /* index of a dimension */
     size_t
     index_of(
-             const std::string& dim
-             ) const;
-    
+        const std::string& dim
+    ) const;
+
     /* index of a member given a dimension */
     size_t
     index_of(
-             const std::string& dim,
-             const std::string& member
-             ) const;
-    
+        const std::string& dim,
+        const std::string& member
+    ) const;
+
     /* computes a numerical index from a label-based index */
     std::vector<size_t>
     index_of(
-             const std::vector<std::string>& index
-             ) const;
-    
+        const std::vector<std::string>& index
+    ) const;
+
     // OPERATORS
-    
+
     template <typename Iterator>
     void
     resize(
-           const std::string& dimension,
-           const std::string& member,
-           Iterator begin,
-           Iterator end
-           );
-    
+        const std::string& dimension,
+        const std::string& member,
+        Iterator begin,
+        Iterator end
+    );
+
   private:
 
     CCube(
@@ -330,16 +330,16 @@ elements(
     return elements_.get();
 }
 
-    
-    template <class CONTAINER_TYPE>
-    core::UnionSortedRandomSet<typename CONTAINER_TYPE::value_type>*
-    CCube<CONTAINER_TYPE>::
-    elements(
-    )
-    {
-        return elements_.get();
-    }
-    
+
+template <class CONTAINER_TYPE>
+core::UnionSortedRandomSet<typename CONTAINER_TYPE::value_type>*
+CCube<CONTAINER_TYPE>::
+elements(
+)
+{
+    return elements_.get();
+}
+
 template <class CONTAINER_TYPE>
 core::AttributeStore<typename CONTAINER_TYPE::value_type>*
 CCube<CONTAINER_TYPE>::
@@ -489,30 +489,30 @@ at(
     return data_.at(index).get();
 }
 
-    
-    /* index of a dimension */
-    template <class CONTAINER_TYPE>
-    size_t
-    CCube<CONTAINER_TYPE>::
-    index_of(
-             const std::string& dim
-             ) const
-    {
-        return data_.index_of(dim);
-    }
-    
-    /* index of a member given a dimension */
-    template <class CONTAINER_TYPE>
-    size_t
-    CCube<CONTAINER_TYPE>::
-    index_of(
-             const std::string& dim,
-             const std::string& member
-             ) const
-    {
-        return data_.index_of(dim, member);
-    }
-    
+
+/* index of a dimension */
+template <class CONTAINER_TYPE>
+size_t
+CCube<CONTAINER_TYPE>::
+index_of(
+    const std::string& dim
+) const
+{
+    return data_.index_of(dim);
+}
+
+/* index of a member given a dimension */
+template <class CONTAINER_TYPE>
+size_t
+CCube<CONTAINER_TYPE>::
+index_of(
+    const std::string& dim,
+    const std::string& member
+) const
+{
+    return data_.index_of(dim, member);
+}
+
 /*
 template <class CONTAINER_TYPE>
 void
@@ -564,68 +564,78 @@ insert(
     data_.at[index] = value;
 }
 
-    template <typename CONTAINER_TYPE>
-    template <typename Iterator>
-    void
-    CCube<CONTAINER_TYPE>::
-    resize(
-           const std::string& dimension,
-           const std::string& new_member,
-           Iterator begin,
-           Iterator end
-           )
+template <typename CONTAINER_TYPE>
+template <typename Iterator>
+void
+CCube<CONTAINER_TYPE>::
+resize(
+    const std::string& dimension,
+    const std::string& new_member,
+    Iterator begin,
+    Iterator end
+)
+{
+    size_t dim_idx = index_of(dimension);
+
+    std::vector<std::vector<std::string>> new_members;
+
+    for (auto d: dim())
     {
-        size_t dim_idx = index_of(dimension);
-        
-        std::vector<std::vector<std::string>> new_members;
-        for (auto d: dim())
+        new_members.push_back(std::vector<std::string>());
+
+        for (auto m: members(d))
         {
-            new_members.push_back(std::vector<std::string>());
-            for (auto m: members(d))
-            {
-                new_members.back().push_back(m);
-            }
+            new_members.back().push_back(m);
         }
-        new_members.at(dim_idx).push_back(new_member);
-        size_t member_idx = new_members.at(dim_idx).size()-1;
-        
-        auto new_size = size();
-        new_size.at(dim_idx)++;
-        
-        uu::olap::sel::IndexIterator idx(new_size);
-        
-        std::vector<std::shared_ptr<CONTAINER_TYPE>> cells;
-        
-        auto it = begin;
-        for (auto index: idx)
-        {
-            if (index.at(dim_idx) == member_idx)
-            {
-                if (it==end) throw core::OutOfBoundsException("too few new containers");
-                cells.push_back(*it);
-                ++it;
-            }
-            else {
-                auto container = at(index)->shared_from_this();
-                cells.push_back(container);
-            }
-        }
-        
-        for (auto cont = begin; cont != end; ++cont)
-        {
-            (*cont)->attach(elements_.get());
-            
-            // Add all existing objects in the containers to the elements
-            for (auto obj: *(*cont))
-            {
-                elements_->notify_add(obj);
-            }
-        }
-        
-        data_ =
-        NCube<std::shared_ptr<CONTAINER_TYPE>>(dim(), new_members, cells.begin(), cells.end());
     }
-    
+
+    new_members.at(dim_idx).push_back(new_member);
+    size_t member_idx = new_members.at(dim_idx).size()-1;
+
+    auto new_size = size();
+    new_size.at(dim_idx)++;
+
+    uu::olap::sel::IndexIterator idx(new_size);
+
+    std::vector<std::shared_ptr<CONTAINER_TYPE>> cells;
+
+    auto it = begin;
+
+    for (auto index: idx)
+    {
+        if (index.at(dim_idx) == member_idx)
+        {
+            if (it==end)
+            {
+                throw core::OutOfBoundsException("too few new containers");
+            }
+
+            cells.push_back(*it);
+            ++it;
+        }
+
+        else
+        {
+            auto container = at(index)->shared_from_this();
+            cells.push_back(container);
+        }
+    }
+
+    for (auto cont = begin; cont != end; ++cont)
+    {
+        (*cont)->attach(elements_.get());
+
+        // Add all existing objects in the containers to the elements
+        for (auto obj: *(*cont))
+        {
+            elements_->notify_add(obj);
+        }
+    }
+
+    data_ =
+        NCube<std::shared_ptr<CONTAINER_TYPE>>(dim(), new_members, cells.begin(), cells.end());
+}
+
 
 }
 }

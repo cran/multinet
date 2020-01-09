@@ -221,13 +221,13 @@ std::vector<std::pair<const uu::net::Vertex*, uu::net::Network*>>
     return res;
 }
 
-std::vector<std::pair<const uu::net::Edge*, uu::net::Network*>>
+std::vector<std::tuple<const uu::net::Vertex*, uu::net::Network*, const uu::net::Vertex*, uu::net::Network*>>
         resolve_edges(
             const uu::net::AttributedHomogeneousMultilayerNetwork* mnet,
             const Rcpp::DataFrame& edges
         )
 {
-    std::vector<std::pair<const uu::net::Edge*, uu::net::Network*>> res(edges.nrow());
+    std::vector<std::tuple<const uu::net::Vertex*, uu::net::Network*, const uu::net::Vertex*, uu::net::Network*>> res(edges.nrow());
     CharacterVector a_from = edges(0);
     CharacterVector l_from = edges(1);
     CharacterVector a_to = edges(2);
@@ -269,16 +269,26 @@ std::vector<std::pair<const uu::net::Edge*, uu::net::Network*>>
 
             if (!edge)
             {
-                Rcpp::stop("cannot find edge from " + actor1->to_string() + " to " + actor2->to_string());
+                Rcpp::stop("cannot find edge from " + actor1->to_string() + " to "
+                           + actor2->to_string() + " on layer " + layer1->name);
             }
 
-            res[i] = std::make_pair(edge, layer1);
+            res[i] = std::tuple<const uu::net::Vertex*, uu::net::Network*, const uu::net::Vertex*, uu::net::Network*>(actor1, layer1, actor2, layer2);
+            
         }
 
         else
         {
-            // @todo
-            Rcpp::stop("interlayer edges not currently supported");
+            auto edge = mnet->interlayer_edges()->get(actor1, layer1, actor2, layer2);
+            
+            if (!edge)
+            {
+                Rcpp::stop("cannot find edge from " + actor1->to_string() + " on layer " +
+                           layer1->name + " to " + actor2->to_string() + " on layer " + layer2->name);
+            }
+
+            res[i] = std::tuple<const uu::net::Vertex*, uu::net::Network*, const uu::net::Vertex*, uu::net::Network*>(actor1, layer1, actor2, layer2);
+            
         }
     }
 

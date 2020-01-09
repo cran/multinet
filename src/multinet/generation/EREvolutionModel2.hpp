@@ -12,42 +12,36 @@ namespace net {
 
 
 /**
- * @brief Grows a network by first creating all the nodes and then at every step choosing two nodes (uniform probability) to connect with an edge.
+ * @brief Grows a network by first creating all the nodes and then at every step
+ * choosing two nodes (uniform probability) to connect with an edge.
  **/
-template <typename M>
+template <typename G>
 class EREvolutionModel :
-    public EvolutionModel<M>
+    public EvolutionModel<G>
 {
-    size_t m0;
+
+    size_t num_vertices_;
+
   public:
 
     EREvolutionModel(
-        size_t m0
+        size_t num_vertices
     );
 
     ~EREvolutionModel();
 
     void
     init_step(
-        M* mnet,
-        typename M::layer_type* layer,
+        G* g,
         GenericObjectList<Vertex>& available_actors
     );
 
     void
-    internal_evolution_step(
-        M* mnet,
-        typename M::layer_type* layer,
+    evolution_step(
+        G* g,
         GenericObjectList<Vertex>& available_actors
     );
 
-    void
-    external_evolution_step(
-        M* mnet,
-        typename M::layer_type* target_layer,
-        GenericObjectList<Vertex>& available_actors,
-        const typename M::layer_type* ext_layer
-    );
 };
 
 
@@ -73,8 +67,7 @@ template <typename M>
 void
 EREvolutionModel<M>::
 internal_evolution_step(
-    M* mnet,
-    typename M::layer_type* layer,
+    G* g,
     GenericObjectList<Vertex>& available_actors
 )
 {
@@ -88,40 +81,8 @@ internal_evolution_step(
 template <typename M>
 void
 EREvolutionModel<M>::
-external_evolution_step(
-    M* mnet,
-    typename M::layer_type* target_layer,
-    GenericObjectList<Vertex>& available_actors,
-    const typename M::layer_type* ext_layer
-)
-{
-    // Randomly pick an edge (uniform probability) on the external layer and connect its ends on the target (if they are present)
-    if (ext_layer->edges()->size()==0)
-    {
-        return;
-    }
-
-    auto e = ext_layer->edges()->get_at_random();
-
-    if (!target_layer->vertices()->contains(e->v1))
-    {
-        return;
-    }
-
-    if (!target_layer->vertices()->contains(e->v2))
-    {
-        return;
-    }
-
-    target_layer->edges()->add(e->v1,e->v2);
-}
-
-template <typename M>
-void
-EREvolutionModel<M>::
 init_step(
-    M* mnet,
-    typename M::layer_type* layer,
+    G* g,
     GenericObjectList<Vertex>& available_actors
 )
 {

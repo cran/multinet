@@ -17,23 +17,23 @@ class MessageStore :
     public AttrVertexStore
 {
     typedef AttrVertexStore super;
-    
+
   public:
-    
+
     MessageStore();
-    
+
     std::string
     get_msg(
-             const Vertex* v
-             ) const;
+        const Vertex* v
+    ) const;
 
-    
+
     void
     set_msg(
-            const Vertex* v,
-            const std::string& msg
-            );
-    
+        const Vertex* v,
+        const std::string& msg
+    );
+
 };
 
 }

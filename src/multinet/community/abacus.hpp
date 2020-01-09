@@ -13,7 +13,7 @@
 #include "core/exceptions/ExternalLibException.hpp"
 #include "community/CommunityStructure.hpp"
 #include "community/label_propagation.hpp"
-#include "mnet/community/PillarCommunity.hpp"
+#include "community/PillarCommunity.hpp"
 
 
 extern "C" {

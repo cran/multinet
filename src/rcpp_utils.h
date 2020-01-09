@@ -16,7 +16,7 @@
 #include "objects/Vertex.hpp"
 #include "objects/Edge.hpp"
 #include "networks/Network.hpp"
-#include "mnet/community/VertexLayerCommunity.hpp"
+#include "community/VertexLayerCommunity.hpp"
 #include "networks/AttributedHomogeneousMultilayerNetwork.hpp"
 #include "r_functions.h"
 
@@ -56,7 +56,7 @@ std::vector<std::pair<const uu::net::Vertex*, uu::net::Network*>>
             const Rcpp::DataFrame& vertex_matrix
         );
 
-std::vector<std::pair<const uu::net::Edge*, uu::net::Network*>>
+std::vector<std::tuple<const uu::net::Vertex*, uu::net::Network*, const uu::net::Vertex*, uu::net::Network*>>
         resolve_edges(
             const uu::net::AttributedHomogeneousMultilayerNetwork* mnet,
             const Rcpp::DataFrame& edge_matrix

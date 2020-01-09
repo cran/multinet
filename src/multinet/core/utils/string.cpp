@@ -15,5 +15,20 @@ to_upper_case(std::string& s)
     std::transform(s.begin(),s.end(),s.begin(),touppercase);
 }
 
+
+void
+format(
+    std::string& in
+)
+{
+    size_t pos = 0;
+
+    while ((pos = in.find("&", pos)) != std::string::npos)
+    {
+        in.replace(pos, 1, "&amp;");
+        pos += 5;
+    }
+}
+
 }
 }

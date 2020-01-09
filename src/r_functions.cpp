@@ -11,10 +11,10 @@
 #include "rcpp_utils.h"
 
 #include "operations/union.hpp"
-#include "mnet/community/glouvain.hpp"
-#include "mnet/community/abacus.hpp"
-#include "mnet/community/infomap.hpp"
-#include "mnet/community/ml-cpm.hpp"
+#include "community/glouvain.hpp"
+#include "community/abacus.hpp"
+#include "community/infomap.hpp"
+#include "community/ml-cpm.hpp"
 #include "mnet/community/modularity.hpp"
 #include "io/read_multilayer_network.hpp"
 #include "io/write_multilayer_network.hpp"
@@ -377,7 +377,7 @@ edges(
                     from_a.push_back(edge->v1->name);
                     from_l.push_back(layer1->name);
                     to_a.push_back(edge->v2->name);
-                    to_l.push_back(layer2->name);
+                    to_l.push_back(layer1->name);
                     directed.push_back((edge->dir==uu::net::EdgeDir::DIRECTED)?1:0);
                 }
             }
@@ -387,9 +387,9 @@ edges(
                 for (auto edge: *mnet->interlayer_edges()->get(layer1,layer2))
                 {
                     from_a.push_back(edge->v1->name);
-                    from_l.push_back(layer1->name);
+                    from_l.push_back(edge->l1->name);
                     to_a.push_back(edge->v2->name);
-                    to_l.push_back(layer2->name);
+                    to_l.push_back(edge->l2->name);
                     directed.push_back((edge->dir==uu::net::EdgeDir::DIRECTED)?1:0);
                 }
             }
@@ -697,11 +697,6 @@ addNodes(
     {
         auto actor = mnet->vertices()->get(std::string(a(i)));
 
-        if (!actor) // @todo this can no longer happen: we can remove it
-        {
-            stop("cannot find actor " + std::string(a(i)));
-        }
-
         auto layer = mnet->layers()->get(std::string(l(i)));
 
         if (!layer)
@@ -725,21 +720,25 @@ addEdges(
     CharacterVector a_to = edges(2);
     CharacterVector l_to = edges(3);
 
+    
+    // New in v3.2: automatically add actors
+    for (size_t i=0; i<a_from.size(); i++)
+    {
+        auto actor_name = std::string(a_from[i]);
+        mnet->vertices()->add(actor_name);
+    }
+    for (size_t i=0; i<a_to.size(); i++)
+    {
+        auto actor_name = std::string(a_to[i]);
+        mnet->vertices()->add(actor_name);
+    }
+    // weN
+    
     for (size_t i=0; i<edges.nrow(); i++)
     {
         auto actor1 = mnet->vertices()->get(std::string(a_from(i)));
 
-        if (!actor1)
-        {
-            stop("cannot find actor " + std::string(a_from(i)));
-        }
-
         auto actor2 = mnet->vertices()->get(std::string(a_to(i)));
-
-        if (!actor2)
-        {
-            stop("cannot find actor " + std::string(a_to(i)));
-        }
 
         auto layer1 = mnet->layers()->get(std::string(l_from(i)));
 
@@ -747,6 +746,8 @@ addEdges(
         {
             stop("cannot find layer " + std::string(l_from(i)));
         }
+        
+        layer1->vertices()->add(actor1);
 
         auto layer2 = mnet->layers()->get(std::string(l_to(i)));
 
@@ -755,6 +756,8 @@ addEdges(
             stop("cannot find layer " + std::string(l_to(i)));
         }
 
+        layer2->vertices()->add(actor2);
+        
         /*
         auto vertex1 = mnet->get_vertex(actor1,layer1);
         if (!vertex1) stop("cannot find vertex " + actor1->name + " " + layer1->name);
@@ -874,8 +877,20 @@ deleteEdges(
 
     for (auto edge: edges)
     {
-        auto layer = edge.second;
-        layer->edges()->erase(edge.first);
+        auto actor1 = std::get<0>(edge);
+        auto layer1 = std::get<1>(edge);
+        auto actor2 = std::get<2>(edge);
+        auto layer2 = std::get<3>(edge);
+        if (layer1 == layer2)
+        {
+            auto e = layer1->edges()->get(actor1, actor2);
+            layer1->edges()->erase(e);
+        }
+        else
+        {
+            auto e = mnet->interlayer_edges()->get(actor1, layer1, actor2, layer2);
+            mnet->interlayer_edges()->erase(e);
+        }
     }
 }
 
@@ -1107,6 +1122,15 @@ getAttributes(
             }
         }
 
+        auto attributes = mnet->interlayer_edges()->attr();
+        
+        for (auto att: *attributes)
+        {
+            a_layer.push_back("--");
+            a_name.push_back(att->name);
+            a_type.push_back(uu::core::to_string(att->type));
+        }
+        
         return DataFrame::create(_["layer"] = a_layer, _["name"] = a_name, _["type"] = a_type);
     }
 
@@ -1192,87 +1216,176 @@ getValues(
 
         auto vertices = resolve_vertices(mnet,vertex_matrix);
 
-        auto layer = vertices.at(0).second;
-
-        auto attributes = layer->vertices()->attr();
-        auto att = attributes->get(attribute_name);
-
-        if (!att)
+        // Check if the attribute is available for all layers
+        const uu::core::Attribute* att;
+        std::set<const G*> layers;
+        std::set<uu::core::AttributeType> types;
+        for (auto vertex: vertices)
         {
-            stop("cannot find attribute: " + attribute_name + " for vertices on layer " + layer->name);
+            auto layer = vertex.second;
+            layers.insert(layer);
         }
-
-        if (att->type==uu::core::AttributeType::DOUBLE)
+        for (auto layer: layers)
+        {
+            auto attributes = layer->vertices()->attr();
+            att = attributes->get(attribute_name);
+            if (!att)
+            {
+                stop("cannot find attribute: " + attribute_name + " for vertices on layer " + layer->name);
+            }
+            types.insert(att->type);
+        }
+        if (types.size() > 1)
+        {
+            stop("different attribute types on different layers");
+        }
+        
+        auto attribute_type = *types.begin();
+        
+        if (attribute_type==uu::core::AttributeType::DOUBLE)
         {
             NumericVector value;
-
+            
             for (auto vertex: vertices)
             {
-                value.push_back(attributes->get_double(vertex.first,att->name).value);
-            }
+                
+                auto layer = vertex.second;
+                auto attributes = layer->vertices()->attr();
 
+            value.push_back(attributes->get_double(vertex.first,attribute_name).value);
+            
+        }
+            
             return DataFrame::create(_["value"] = value);
         }
 
-        else if (att->type==uu::core::AttributeType::STRING)
+        else if (attribute_type == uu::core::AttributeType::STRING)
         {
             CharacterVector value;
-
+            
             for (auto vertex: vertices)
             {
-                value.push_back(attributes->get_string(vertex.first,att->name).value);
+                
+                auto layer = vertex.second;
+                auto attributes = layer->vertices()->attr();
+                
+                value.push_back(attributes->get_string(vertex.first,attribute_name).value);
+                
             }
-
+            
             return DataFrame::create(_["value"] = value);
         }
-
+        
         else
         {
-            stop("attribute type not supported: " + uu::core::to_string(att->type));
+            stop("attribute type not supported: " + uu::core::to_string(attribute_type));
         }
+        
 
     }
 
     else if (edge_matrix.size() > 0)
     {
         auto edges = resolve_edges(mnet,edge_matrix);
-        auto layer1 = edges.at(0).second;
-        auto layer2 = edges.at(0).second;
-        auto attributes = layer1->edges()->attr();
-        auto att = attributes->get(attribute_name);
-
-        if (!att)
+        
+        // Check if the attribute is available for all combinations of layers
+        const uu::core::Attribute* att;
+        std::set<std::pair<const G*,const G*>> layers;
+        std::set<uu::core::AttributeType> types;
+        for (auto edge: edges)
         {
-            stop("cannot find attribute: " + attribute_name + " for edges on layers " + layer1->name + ", " + layer2->name);
+            auto layer1 = std::get<1>(edge);
+            auto layer2 = std::get<3>(edge);
+            layers.insert(std::pair<const G*,const G*>(layer1, layer2));
         }
-
-        if (att->type==uu::core::AttributeType::DOUBLE)
+        for (auto p: layers)
+        {
+            auto layer1 = p.first;
+            auto layer2 = p.second;
+            if (layer1 == layer2)
+            {
+                auto attributes = layer1->edges()->attr();
+                att = attributes->get(attribute_name);
+                if (!att)
+                {
+                    stop("cannot find attribute: " + attribute_name + " for edges on layer " + layer1->name);
+                }
+                types.insert(att->type);
+                
+            }
+            else
+            {
+                auto attributes = mnet->interlayer_edges()->attr();
+                att = attributes->get(attribute_name);
+                if (!att)
+                {
+                    stop("cannot find attribute: " + attribute_name + " for edges on layers " + layer1->name + ", " + layer2->name);
+                }
+                types.insert(att->type);
+            }
+        }
+        if (types.size() > 1)
+        {
+            stop("different attribute types on different combinations of layers");
+        }
+        
+        auto attribute_type = *types.begin();
+        
+        if (attribute_type == uu::core::AttributeType::DOUBLE)
         {
             NumericVector value;
 
             for (auto edge: edges)
             {
-                value.push_back(attributes->get_double(edge.first,att->name).value);
+                auto actor1 = std::get<0>(edge);
+                auto layer1 = std::get<1>(edge);
+                auto actor2 = std::get<2>(edge);
+                auto layer2 = std::get<3>(edge);
+                if (layer1 == layer2)
+                {
+                    auto attributes = layer1->edges()->attr();
+                    auto e = layer1->edges()->get(actor1, actor2);
+                    value.push_back(attributes->get_double(e, attribute_name).value);
+                }
+                else
+                {
+                    auto attributes = mnet->interlayer_edges()->attr();
+                    auto e = mnet->interlayer_edges()->get(actor1, layer1, actor2, layer2);
+                    value.push_back(attributes->get_double(e, attribute_name).value);
+                }
             }
-
             return DataFrame::create(_["value"] = value);
         }
 
-        else if (att->type==uu::core::AttributeType::STRING)
+        else if (attribute_type == uu::core::AttributeType::STRING)
         {
             CharacterVector value;
 
             for (auto edge: edges)
             {
-                value.push_back(attributes->get_string(edge.first,att->name).value);
+                auto actor1 = std::get<0>(edge);
+                auto layer1 = std::get<1>(edge);
+                auto actor2 = std::get<2>(edge);
+                auto layer2 = std::get<3>(edge);
+                if (layer1 == layer2)
+                {
+                    auto attributes = layer1->edges()->attr();
+                    auto e = layer1->edges()->get(actor1, actor2);
+                    value.push_back(attributes->get_string(e, attribute_name).value);
+                }
+                else
+                {
+                    auto attributes = mnet->interlayer_edges()->attr();
+                    auto e = mnet->interlayer_edges()->get(actor1, layer1, actor2, layer2);
+                    value.push_back(attributes->get_string(e, attribute_name).value);
+                }
             }
-
             return DataFrame::create(_["value"] = value);
         }
 
         else
         {
-            stop("attribute type not supported: " + uu::core::to_string(att->type));
+            stop("attribute type not supported: " + uu::core::to_string(attribute_type));
         }
     }
 
@@ -1408,6 +1521,8 @@ setValues(
                     attributes->set_double(vertex.first,att->name,as<double>(values[i]));
                 }
 
+                    i++;
+                    
                 break;
 
             case uu::core::AttributeType::STRING:
@@ -1421,6 +1536,8 @@ setValues(
                     attributes->set_string(vertex.first,att->name,as<std::string>(values[i]));
                 }
 
+                    i++;
+                    
                 break;
 
             case uu::core::AttributeType::TEXT:
@@ -1430,7 +1547,6 @@ setValues(
 
             }
 
-            i++;
         }
     }
 
@@ -1447,12 +1563,23 @@ setValues(
 
         for (auto edge: edges)
         {
-            auto attributes = edge.second->edges()->attr();
+         
+         auto actor1 = std::get<0>(edge);
+         auto layer1 = std::get<1>(edge);
+         auto actor2 = std::get<2>(edge);
+         auto layer2 = std::get<3>(edge);
+         
+            if (layer1 == layer2)
+            {
+                
+            
+            auto attributes = layer1->edges()->attr();
             auto att = attributes->get(attribute_name);
+                auto e = layer1->edges()->get(actor1, actor2);
 
             if (!att)
             {
-                stop("cannot find attribute: " + attribute_name + " for edges on layers " + edge.second->name + ", " + edge.second->name);
+                stop("cannot find attribute: " + attribute_name + " for edges on layer " + layer1->name);
             }
 
             switch (att->type)
@@ -1461,27 +1588,31 @@ setValues(
             case uu::core::AttributeType::DOUBLE:
                 if (values.size()==1)
                 {
-                    attributes->set_double(edge.first,att->name,as<double>(values[0]));
+                    attributes->set_double(e,att->name,as<double>(values[0]));
                 }
 
                 else
                 {
-                    attributes->set_double(edge.first,att->name,as<double>(values[i]));
+                    attributes->set_double(e,att->name,as<double>(values[i]));
                 }
 
+                    i++;
+                    
                 break;
 
             case uu::core::AttributeType::STRING:
                 if (values.size()==1)
                 {
-                    attributes->set_string(edge.first,att->name,as<std::string>(values[0]));
+                    attributes->set_string(e,att->name,as<std::string>(values[0]));
                 }
 
                 else
                 {
-                    attributes->set_string(edge.first,att->name,as<std::string>(values[i]));
+                    attributes->set_string(e,att->name,as<std::string>(values[i]));
                 }
 
+                    i++;
+                    
                 break;
 
             case uu::core::AttributeType::TEXT:
@@ -1490,8 +1621,61 @@ setValues(
                 stop("attribute type not supported: " + uu::core::to_string(att->type));
 
             }
+            }
 
-            i++;
+            else
+            {
+                
+                auto attributes = mnet->interlayer_edges()->attr();
+                auto att = attributes->get(attribute_name);
+                auto e = mnet->interlayer_edges()->get(actor1, layer1, actor2, layer2);
+                
+                if (!att)
+                {
+                    stop("cannot find attribute: " + attribute_name + " for edges on layers " + layer1->name +
+                         ", " + layer2->name);
+                }
+                
+                switch (att->type)
+                {
+                    case uu::core::AttributeType::NUMERIC:
+                    case uu::core::AttributeType::DOUBLE:
+                    if (values.size()==1)
+                    {
+                        attributes->set_double(e,att->name,as<double>(values[0]));
+                    }
+                    
+                    else
+                    {
+                        attributes->set_double(e,att->name,as<double>(values[i]));
+                    }
+                    
+                        i++;
+                        
+                    break;
+                    
+                    case uu::core::AttributeType::STRING:
+                    if (values.size()==1)
+                    {
+                        attributes->set_string(e,att->name,as<std::string>(values[0]));
+                    }
+                    
+                    else
+                    {
+                        attributes->set_string(e,att->name,as<std::string>(values[i]));
+                    }
+                    
+                        i++;
+                        
+                    break;
+                    
+                    case uu::core::AttributeType::TEXT:
+                    case uu::core::AttributeType::TIME:
+                    case uu::core::AttributeType::INTEGER:
+                    stop("attribute type not supported: " + uu::core::to_string(att->type));
+                    
+                }
+            }
         }
     }
 

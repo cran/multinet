@@ -34,7 +34,7 @@ read_temporal_network(
     {
         g->edges()->attr()->add(attr.name, attr.type);
     }
-    
+
     // Read data (vertices, edges, attribute values)
     read_data(g.get(),  meta, infile, separator);
 
