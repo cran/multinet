@@ -3,6 +3,7 @@
 \alias{abacus_ml}
 \alias{clique_percolation_ml}
 \alias{glouvain_ml}
+\alias{glouvain2_ml}
 \alias{infomap_ml}
 \alias{get_community_list_ml}
 \alias{modularity_ml}
@@ -10,11 +11,12 @@
 Community detection algorithms
 }
 \description{
-Various algorithms to compute communities in multiplex networks, based on frequent itemset mining (abacus), adjacent cliques (clique percolation), modularity optimization (generalized louvain) and random walks (infomap). get_community_list_ml is a commodity function translating the result of these algorithms into a list of vertex identifiers, and is internally used by the plotting function.}
+Various algorithms to compute communities in multiplex networks, based on frequent itemset mining (abacus), adjacent cliques (clique percolation), modularity optimization (generalized louvain) and random walks (infomap). glouvain2_ml is a more efficient implementation of the original glouvain_ml, no longer based on matrices. get_community_list_ml is a commodity function translating the result of these algorithms into a list of vertex identifiers, and is internally used by the plotting function.}
 \usage{
 abacus_ml(n, min.actors=3, min.layers=1)
 clique_percolation_ml(n, k=3, m=1)
 glouvain_ml(n, gamma=1, omega=1, limit=0)
+glouvain2_ml(n, omega=1)
 infomap_ml(n, overlapping=FALSE, directed=FALSE, self.links=TRUE)
 
 modularity_ml(n, comm.struct, gamma=1, omega=1)
@@ -54,5 +56,6 @@ net <- ml_florentine()
 abacus_ml(net)
 clique_percolation_ml(net)
 glouvain_ml(net)
+glouvain2_ml(net)
 infomap_ml(net)
 }

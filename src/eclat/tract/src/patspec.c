@@ -1416,7 +1416,7 @@ psp_show (PATSPEC *psp)
 #endif
 
     assert(psp);                  /* check the function argument */
-    printf("sigcnt: %"SIZE_FMT"\n", psp->sigcnt);
+    printf("sigcnt: %"SIZE_FMT"\n", (int)psp->sigcnt);
 
     if (!psp->rows)
     {
@@ -1438,7 +1438,7 @@ psp_show (PATSPEC *psp)
         for (supp = row->min; supp <= row->max; supp++)
             if ((frq = row->frqs[supp-row->min]) > 0)
             {
-                printf(" %"RSUPP_FMT":%"SIZE_FMT, supp, frq);
+                printf(" %"RSUPP_FMT":%"SIZE_FMT, supp, (int)frq);
             }
 
         printf("\n");               /* print support:frequency pairs */
@@ -1448,8 +1448,8 @@ psp_show (PATSPEC *psp)
 #endif                      /* print (size,minsupp,maxsupp) */
     }
 
-    printf("sigcnt: %"SIZE_FMT"\n", psp->sigcnt);
-    printf("total : %"SIZE_FMT"\n", psp->total);
+    printf("sigcnt: %"SIZE_FMT"\n", (int)psp->sigcnt);
+    printf("total : %"SIZE_FMT"\n", (int)psp->total);
 }  /* psp_show() */
 
 #endif

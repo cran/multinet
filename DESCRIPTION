@@ -1,8 +1,8 @@
 Package: multinet
 Type: Package
 Title: Analysis and Mining of Multilayer Social Networks
-Version: 3.2
-Date: 2020-01-07
+Version: 3.3
+Date: 2020-04-12
 Author: Matteo Magnani, Davide Vega, Mikael Dubik (glouvain). The package uses functions from eclat (www.borgelt.net/eclat.html), for association rule mining, Eigen (eigen.tuxfamily.org) and spectra (https://spectralib.org), for matrix manipulation, Infomap (www.mapequation.org), for the Infomap community detection method, and Howard Hinnant's date and time library (https://github.com/HowardHinnant/date). The code from these libraries has been included in our source package.
 Maintainer: Matteo Magnani <matteo.magnani@it.uu.se>
 Description: Functions for the creation/generation and analysis of multilayer social networks.
@@ -16,5 +16,5 @@ Repository: CRAN
 Note: the current version of the library has been developed as part of
         the European Union's Horizon 2020 research and innovation
         programme under grant agreement No. 727040 (Virt-EU).
-Packaged: 2020-01-08 13:46:00 UTC; matteomagnami
-Date/Publication: 2020-01-09 17:00:03 UTC
+Packaged: 2020-05-07 21:29:02 UTC; matteomagnami
+Date/Publication: 2020-05-08 22:50:06 UTC

@@ -23,7 +23,7 @@ Creates predefined multilayer networks from the literature.
 }
 }
 \usage{
-ml_empty(name="unnamed")
+ml_empty(name="")
 ml_aucs()
 ml_bankwiring()
 ml_florentine()
@@ -42,7 +42,7 @@ All these functions return a multilayer network.
 \item Rossi, Luca, and Magnani, Matteo (2015). Towards effective visual analytics on multiplex and multilayer networks. Chaos, Solitons and Fractals, 72, 68-76. (for ml_aucs()).
 \item Padgett, John F., and McLean, Paul D. (2006). Organizational Invention and Elite Transformation: The Birth of Partnership Systems in Renaissance Florence. American Journal of Sociology, 111(5), 1463-1568. (for ml_florentine()).
 \item Breiger, R. and Boorman, S. and Arabic, P. (1975). An algorithm for clustering relational data with applications to social network analysis and comparison with multidimensional scaling. Journal of Mathematical Psychology, 12 (for ml_monastery() and ml_bankwiring() - these authors prepared the datasets, see multilayer.it.uu.se/datasets.html for references to the data collectors).
-\item Kapferer, Bruce (1972). Strategy and Transaction in an African Factory: African Workers and Indian Management in a Zambian Town. Manchester University Press (fot ml_tailorshop()).
+\item Kapferer, Bruce (1972). Strategy and Transaction in an African Factory: African Workers and Indian Management in a Zambian Town. Manchester University Press (for ml_tailorshop()).
 }
 }
 \seealso{

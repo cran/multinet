@@ -10,7 +10,7 @@
 #define _R_FUNCTIONS_H_
 
 #include <Rcpp.h>
-#include "networks/AttributedHomogeneousMultilayerNetwork.hpp"
+#include "networks/MultilayerNetwork.hpp"
 #include "generation/EvolutionModel.hpp"
 #include <unordered_set>
 #include <vector>
@@ -21,7 +21,7 @@ using namespace Rcpp;
 class RMLNetwork
 {
   private:
-    std::shared_ptr<uu::net::AttributedHomogeneousMultilayerNetwork> ptr;
+    std::shared_ptr<uu::net::MultilayerNetwork> ptr;
 
   public:
 
@@ -32,12 +32,12 @@ class RMLNetwork
         return ptr->name;
     }
 
-    RMLNetwork(std::shared_ptr<uu::net::AttributedHomogeneousMultilayerNetwork> ptr) : ptr(ptr)
+    RMLNetwork(std::shared_ptr<uu::net::MultilayerNetwork> ptr) : ptr(ptr)
     {
         // @todo check not null?
     }
 
-    uu::net::AttributedHomogeneousMultilayerNetwork*
+    uu::net::MultilayerNetwork*
     get_mlnet() const
     {
         return ptr.get();
@@ -48,7 +48,7 @@ class RMLNetwork
 class REvolutionModel
 {
   private:
-    std::shared_ptr<uu::net::EvolutionModel<uu::net::AttributedHomogeneousMultilayerNetwork>> ptr;
+    std::shared_ptr<uu::net::EvolutionModel<uu::net::MultilayerNetwork>> ptr;
     std::string desc;
 
   public:
@@ -60,11 +60,11 @@ class REvolutionModel
     }
 
     REvolutionModel(
-        std::shared_ptr<uu::net::EvolutionModel<uu::net::AttributedHomogeneousMultilayerNetwork>> ptr,
+        std::shared_ptr<uu::net::EvolutionModel<uu::net::MultilayerNetwork>> ptr,
         const std::string description
     ) : ptr(ptr), desc(description) {}
 
-    uu::net::EvolutionModel<uu::net::AttributedHomogeneousMultilayerNetwork>*
+    uu::net::EvolutionModel<uu::net::MultilayerNetwork>*
     get_model() const
     {
         return ptr.get();
@@ -80,19 +80,14 @@ emptyMultilayer(
 );
 
 
-
-/*
-void
-renameMultilayer(
-    RMLNetwork& rmnet,
-    const std::string& new_name);
- */
 RMLNetwork
-readMultilayer(const std::string& input_file,
+readMultilayer(
+               const std::string& input_file,
                const std::string& name, char sep, bool vertex_aligned);
 
 void
-writeMultilayer(const RMLNetwork& mnet,
+writeMultilayer(
+                const RMLNetwork& mnet,
                 const std::string& output_file,
                 const std::string& format,
                 const CharacterVector& layer_names, char sep, bool merge_actors, bool all_actors);
@@ -306,7 +301,6 @@ flatten(
 );
 
 
-/*
 void
 project(
     RMLNetwork& rmnet,
@@ -317,7 +311,7 @@ project(
 
 // MEASURES
 
- */
+
 NumericVector
 degree_ml(
     const RMLNetwork&,
@@ -438,22 +432,17 @@ glouvain_ml(
 );
 
 DataFrame
+glouvain2_ml(
+    const RMLNetwork&,
+    double omega
+);
+
+DataFrame
 abacus_ml(
     const RMLNetwork&,
     int min_actors,
     int min_layers
 );
-
-/*
-DataFrame
-lart_ml(
-    const RMLNetwork&,
- int t,
- double eps,
- double gamma
- );
-
- */
 
 double
 modularity_ml(

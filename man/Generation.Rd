@@ -24,8 +24,8 @@ evolution_er_ml(n)
 \item{pr.external}{A vector with (for each layer) the probability that at each step the layer evolves importing edges from another layer.}
 \item{dependency}{A matrix LxL where element (i,j) indicates the probability that layer i will import an edge from layer j in case an external event is triggered.}
 \item{m0}{Initial number of nodes.}
-\item{m}{Number of edges created for each new node joining the network.}
-\item{n}{Number of nodes (created at the beginning, before starting adding edges).}
+\item{m}{Number of edges created for each new vertex joining the network.}
+\item{n}{Number of vertices (created at the beginning, before starting adding edges).}
 }
 \value{
 \code{grow_ml} returns a multilayer network. \code{evolution_*_ml} return evolutionary models that are used by \code{grow_ml} to decide how each layer should grow.

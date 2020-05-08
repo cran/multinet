@@ -12,17 +12,18 @@ The plot function draws a multilayer network. values2graphics is a support funct
 }
 \usage{
 \S3method{plot}{Rcpp_RMLNetwork}(x,
-layout = NULL, grid = NULL, mai = .1,
+layout = NULL, grid = NULL, mai = c(.1,.1,.1,.1),
 layers = NULL,
-vertex.shape = 21, vertex.cex = 1, vertex.size = vertex.cex, vertex.color = NULL,
+vertex.shape = 21, vertex.cex = 1, vertex.size = vertex.cex, vertex.color = 1,
 vertex.labels = NULL, vertex.labels.pos = 3,
-vertex.labels.offset = .5, vertex.labels.cex = 1,
-edge.type = 1, edge.width = 1, edge.color = 1,
+vertex.labels.offset = .5, vertex.labels.cex = 1, vertex.labels.col=1,
+edge.type = 1, edge.width = 1, edge.col = 1, edge.alpha=.5,
 edge.arrow.length = 0.1, edge.arrow.angle = 20,
 legend.x = NULL, legend.y = NULL,
 legend.pch = 20, legend.cex = 0.5,
 legend.inset = c(0, 0),
-com = NULL, com.cex = 1, ...)
+com = NULL, com.cex = 1,
+show.layer.names=TRUE, layer.names.cex=1, ...)
 
 values2graphics(values, output = "color")
 }
@@ -30,7 +31,7 @@ values2graphics(values, output = "color")
 \item{x}{A multilayer network.}
 \item{layout}{A data frame indicating the position of nodes. If NULL, the function layout.multiforce.ml is used to compute it.}
 \item{grid}{A vector of size 2 indicating the number of rows and columns where to draw the layers.}
-\item{mai}{Percentage of each frame reserved as internal margin. This only concerns nodes: text labels can be printed inside the margin or even outside the frame depending on their offset.}
+\item{mai}{Percentage of each frame reserved as internal margin (left, top, right, bottom). This only concerns vertices: text labels can be printed inside the margin or even outside the frame depending on their offset.}
 
 \item{layers}{A vector of layer names, that determine which layers and in which order are plotted.}
 
@@ -52,6 +53,7 @@ character width. It corresponds to the parameter \code{offset} of the R \code{te
 \item{vertex.labels.cex}{Numeric *c*haracter *ex*pansion factor; multiplied by
 'par("cex")' yields the final character size.  'NULL' and
 'NA' are equivalent to '1.0'. It corresponds to the parameter \code{cex} of the R \code{text} function.}
+\item{vertex.labels.col}{Color of the labels.}
 
 \item{edge.type}{Edge line type, corresponding to the 'lty' parameter of the R par function.  Line types can either be specified as an
 integer (0=blank, 1=solid (default), 2=dashed, 3=dotted,
@@ -61,7 +63,8 @@ strings '"blank"', '"solid"', '"dashed"', '"dotted"',
 uses 'invisible lines' (i.e., does not draw them). See \code{?par} for more details. It accepts a vector of values which are recycled.}
 \item{edge.width}{Edge line width, corresponding to the 'lwd' parameter of the R 'par' function. See \code{?par} for more details. It accepts a vector of
 values which are recycled.}
-\item{edge.color}{Color of the edges.}
+\item{edge.col}{Color of the edges.}
+\item{edge.alpha}{Transparency of the edges.}
 
 \item{edge.arrow.length}{Length of the edges of the arrow head (in inches) - corresponding to the parameter of the R \code{arrows} function with the same name.}
 \item{edge.arrow.angle}{Angle from the shaft of the arrow to the edge of the arrow
@@ -74,6 +77,10 @@ head - corresponding to the parameter of the R \code{arrows} function with the s
 
 \item{com}{The result of a community detection algorithm. When this parameter is set, a colored area is added behind each community.}
 \item{com.cex}{Increases (>1) or decreases (<1) the margin around the nodes when the colored areas are drawn around the communities.}
+
+
+\item{show.layer.names}{if TRUE adds the name of each layer at the center bottom of it.}
+\item{layer.names.cex}{Increases (>1) or decreases (<1) the size of the layer names.}
 
 \item{...}{Other graphical parameters.}
 

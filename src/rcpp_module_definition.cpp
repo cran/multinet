@@ -38,7 +38,7 @@ RCPP_MODULE(multinet)
     /* CREATION AND STORAGE       */
     /******************************/
 
-    function("ml_empty", &emptyMultilayer, List::create( _["name"]="unnamed"), "Creates an empty multilayer network");
+    function("ml_empty", &emptyMultilayer, List::create( _["name"]=""), "Creates an empty multilayer network");
 
     // OTHER FUNCTIONS TO CREATE MLNETWORKS FROM THE LITERATURE (E.G., AUCS) ARE DEFINED IN functions.R
 
@@ -164,11 +164,11 @@ RCPP_MODULE(multinet)
     // TRANSFORMATION
 
     function("flatten_ml", &flatten, List::create( _["n"], _["new.layer"]="flattening", _["layers"]=CharacterVector(), _["method"] = "weighted", _["force.directed"] = false, _["all.actors"] = false), "Adds a new layer with the actors in the input layers and an edge between A and B if they are connected in any of the merged layers");
-    /*
+    
      function("project_ml", &project, List::create( _["n"], _["new.layer"]="projection", _["layer1"], _["layer2"], _["method"] = "clique"), "Adds a new layer with the actors in layer 1, and edges between actors A and B if they are connected to a common object in layer 2");
 
     // MEASURES
-    */
+    
     function("degree_ml", &degree_ml, List::create( _["n"], _["actors"]=CharacterVector(), _["layers"]=CharacterVector(), _["mode"] = "all"), "Returns the degree of each actor");
 
     function("degree_deviation_ml", &degree_deviation_ml, List::create( _["n"], _["actors"]=CharacterVector(), _["layers"]=CharacterVector(), _["mode"] = "all"), "Returns the standard deviation of the degree of each actor on the specified layers");
@@ -191,29 +191,36 @@ RCPP_MODULE(multinet)
 
 
     // CLUSTERING
-    function("clique_percolation_ml", &cliquepercolation_ml, List::create( _["n"], _["k"]=3, _["m"]=1), "Extension of the clique percolation method");
-
-    function("glouvain_ml", &glouvain_ml, List::create( _["n"], _["gamma"]=1, _["omega"]=1, _["limit"]=0), "Extension of the louvain method");
-    function("abacus_ml", &abacus_ml, List::create( _["n"], _["min.actors"]=3, _["min.layers"]=1), "Community extraction based on frequent itemset mining");
-    function("infomap_ml",
-             &infomap_ml,
+    function("clique_percolation_ml",
+             &cliquepercolation_ml,
              List::create(
-                 _["n"],
-                 _["overlapping"]=false,
-                 _["directed"]=false,
-                 _["self.links"]=true
-             ),
+                          _["n"],
+                          _["k"]=3,
+                          _["m"]=1
+            ), "Extension of the clique percolation method");
+    
+
+    function("glouvain_ml",
+             &glouvain_ml,
+             List::create(_["n"],_["gamma"]=1,_["omega"]=1,_["limit"]=0),
+             "Extension of the louvain method");
+    
+    function("glouvain2_ml",
+             &glouvain2_ml,
+             List::create(_["n"], _["omega"]=1),
+             "Extension of the louvain method");
+    
+    function("abacus_ml", &abacus_ml,List::create(_["n"],_["min.actors"]=3,_["min.layers"]=1),
+            "Community extraction based on frequent itemset mining");
+    
+    function("infomap_ml",
+             &infomap_ml, List::create(_["n"],_["overlapping"]=false,_["directed"]=false,_["self.links"]=true),
              "Community extraction based on the flow equation");
 
     
     function("modularity_ml",
              &modularity_ml,
-             List::create(
-                _["n"],
-                _["comm.struct"],
-                _["gamma"]=1,
-                _["omega"]=1
-             ),
+             List::create(_["n"], _["comm.struct"],_["gamma"]=1,_["omega"]=1),
              "Generalized modularity");
     
     /*

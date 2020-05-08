@@ -1396,7 +1396,7 @@ ib_errmsg (ITEMBASE *base, char *buf, size_t size)
         msg++;     /* if message needs a header */
         // MY CHANGE, TO GET RID OF A WARNING ON WINDOWS DEVEL
         // k = (size_t)snprintf(buf, size, "%s:%"SIZE_FMT"(%"SIZE_FMT"): ", TRD_FPOS(base->trd));
-        k = (size_t)snprintf(buf, size, "%s:%"SIZE_FMT"(%"SIZE_FMT"): ", trd_name(base->trd), trd_rec(base->trd), trd_pos(base->trd));
+        k = (size_t)snprintf(buf, size, "%s:%"SIZE_FMT"(%"SIZE_FMT"): ", trd_name(base->trd), (int)trd_rec(base->trd), (int)trd_pos(base->trd));
         
         if (k >= size)
         {

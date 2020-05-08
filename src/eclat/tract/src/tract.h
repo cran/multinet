@@ -56,7 +56,7 @@
 ----------------------------------------------------------------------*/
 
 #define TA_READ // Added by MM
-#define SIZE_FMT  "zu"  // Added by MM
+#define SIZE_FMT  "d"  // Added by MM
 #define ITEM_FMT  "d"  // Added by MM
 
 #ifndef __TRACT__

@@ -11,11 +11,13 @@
 #include "rcpp_utils.h"
 
 #include "operations/union.hpp"
+#include "operations/project.hpp"
 #include "community/glouvain.hpp"
+#include "community/glouvain2.hpp"
 #include "community/abacus.hpp"
 #include "community/infomap.hpp"
 #include "community/ml-cpm.hpp"
-#include "mnet/community/modularity.hpp"
+#include "community/modularity.hpp"
 #include "io/read_multilayer_network.hpp"
 #include "io/write_multilayer_network.hpp"
 #include "measures/degree_ml.hpp"
@@ -36,7 +38,7 @@ using namespace Rcpp;
 RCPP_EXPOSED_CLASS(RMLNetwork)
 RCPP_EXPOSED_CLASS(REvolutionModel)
 
-using M = uu::net::AttributedHomogeneousMultilayerNetwork;
+using M = uu::net::MultilayerNetwork;
 using G = uu::net::Network;
 // CREATION AND STORAGE
 
@@ -45,7 +47,7 @@ emptyMultilayer(
     const std::string& name
 )
 {
-    return RMLNetwork(uu::net::create_shared_attributed_homogeneous_multilayer_network(name));
+    return RMLNetwork(std::make_shared<uu::net::MultilayerNetwork>(name));
 }
 
 /*
@@ -108,7 +110,7 @@ ba_evolution_model(
     size_t m
 )
 {
-    auto pa = std::make_shared<uu::net::PAEvolutionModel<uu::net::AttributedHomogeneousMultilayerNetwork>>(m0, m);
+    auto pa = std::make_shared<uu::net::PAEvolutionModel<uu::net::MultilayerNetwork>>(m0, m);
 
     return REvolutionModel(pa,"Preferential attachment evolution model (" + std::to_string(m0) + "," + std::to_string(m) + ")");
 }
@@ -119,7 +121,7 @@ er_evolution_model(
     size_t n
 )
 {
-    auto er = std::make_shared<uu::net::EREvolutionModel<uu::net::AttributedHomogeneousMultilayerNetwork>>(n);
+    auto er = std::make_shared<uu::net::EREvolutionModel<uu::net::MultilayerNetwork>>(n);
 
     return REvolutionModel(er, "Uniform evolution model (" + std::to_string(n) + ")");
 }
@@ -182,7 +184,7 @@ growMultiplex(
         dep[i] = row;
     }
 
-    std::vector<uu::net::EvolutionModel<uu::net::AttributedHomogeneousMultilayerNetwork>*> models(evolution_model.size());
+    std::vector<uu::net::EvolutionModel<uu::net::MultilayerNetwork>*> models(evolution_model.size());
 
     for (size_t i=0; i<models.size(); i++)
     {
@@ -190,11 +192,11 @@ growMultiplex(
 
     }
 
-    auto res = uu::net::create_shared_attributed_homogeneous_multilayer_network("synth");
+    auto res = std::make_shared<uu::net::MultilayerNetwork>("synth");
 
     for (size_t a=0; a<num_actors; a++)
     {
-        res->vertices()->add("a"+std::to_string(a));
+        res->actors()->add("a"+std::to_string(a));
     }
 
     std::vector<std::string> layer_names;
@@ -241,7 +243,7 @@ actors(
 
     if (layer_names.size()==0)
     {
-        for (auto actor: *mnet->vertices())
+        for (auto actor: *mnet->actors())
         {
             actors.push_back(actor->name);
         }
@@ -419,7 +421,7 @@ numActors(
 
     if (layer_names.size()==0)
     {
-        return mnet->vertices()->size();
+        return mnet->actors()->size();
     }
 
     std::vector<uu::net::Network*> layers = resolve_layers(mnet,layer_names);
@@ -501,20 +503,6 @@ numEdges(
         }
     }
 
-    for (auto layer1: layers1)
-    {
-        for (auto layer2: layers2)
-        {
-            if (layer2<layer1)
-            {
-                continue;
-            }
-
-            num_edges += mnet->interlayer_edges()->get(layer1,layer2)->size();
-
-        }
-    }
-
     return num_edges;
 }
 
@@ -572,7 +560,7 @@ actor_neighbors(
 {
     std::unordered_set<std::string> res_neighbors;
     auto mnet = rmnet.get_mlnet();
-    auto actor = mnet->vertices()->get(actor_name);
+    auto actor = mnet->actors()->get(actor_name);
 
     if (!actor)
     {
@@ -601,7 +589,7 @@ actor_xneighbors(
 {
     std::unordered_set<std::string> res_xneighbors;
     auto mnet = rmnet.get_mlnet();
-    auto actor = mnet->vertices()->get(actor_name);
+    auto actor = mnet->actors()->get(actor_name);
 
     if (!actor)
     {
@@ -671,7 +659,7 @@ addActors(
     for (size_t i=0; i<actor_names.size(); i++)
     {
         auto actor_name = std::string(actor_names[i]);
-        mnet->vertices()->add(actor_name);
+        mnet->actors()->add(actor_name);
     }
 }
 
@@ -685,23 +673,28 @@ addNodes(
     CharacterVector a = vertices(0);
     CharacterVector l = vertices(1);
 
-    // New in v3.1: automatically add actors
     for (size_t i=0; i<a.size(); i++)
     {
         auto actor_name = std::string(a[i]);
-        mnet->vertices()->add(actor_name);
+        mnet->actors()->add(actor_name);
     }
-    // weN
     
     for (size_t i=0; i<vertices.nrow(); i++)
     {
-        auto actor = mnet->vertices()->get(std::string(a(i)));
+        auto actor = mnet->actors()->get(std::string(a(i)));
 
+        if (!actor)
+        {
+            actor = mnet->actors()->add(std::string(a(i)));
+        }
+        
         auto layer = mnet->layers()->get(std::string(l(i)));
 
         if (!layer)
         {
-            stop("cannot find layer " + std::string(l(i)));
+            auto dir = uu::net::EdgeDir::UNDIRECTED;
+            auto layer_ = std::make_unique<G>(std::string(l(i)), dir, true);
+            layer = mnet->layers()->add(std::move(layer_));
         }
 
         layer->vertices()->add(actor);
@@ -721,30 +714,29 @@ addEdges(
     CharacterVector l_to = edges(3);
 
     
-    // New in v3.2: automatically add actors
-    for (size_t i=0; i<a_from.size(); i++)
-    {
-        auto actor_name = std::string(a_from[i]);
-        mnet->vertices()->add(actor_name);
-    }
-    for (size_t i=0; i<a_to.size(); i++)
-    {
-        auto actor_name = std::string(a_to[i]);
-        mnet->vertices()->add(actor_name);
-    }
-    // weN
-    
     for (size_t i=0; i<edges.nrow(); i++)
     {
-        auto actor1 = mnet->vertices()->get(std::string(a_from(i)));
+        auto actor1 = mnet->actors()->get(std::string(a_from(i)));
 
-        auto actor2 = mnet->vertices()->get(std::string(a_to(i)));
+        if (!actor1)
+        {
+            actor1 = mnet->actors()->add(std::string(a_from(i)));
+        }
+        
+        auto actor2 = mnet->actors()->get(std::string(a_to(i)));
 
+        if (!actor2)
+        {
+            actor2 = mnet->actors()->add(std::string(a_to(i)));
+        }
+        
         auto layer1 = mnet->layers()->get(std::string(l_from(i)));
 
         if (!layer1)
         {
-            stop("cannot find layer " + std::string(l_from(i)));
+            auto dir = uu::net::EdgeDir::UNDIRECTED;
+            auto layer_ = std::make_unique<G>(std::string(l_from(i)), dir, true);
+            layer1 = mnet->layers()->add(std::move(layer_));
         }
         
         layer1->vertices()->add(actor1);
@@ -753,17 +745,13 @@ addEdges(
 
         if (!layer2)
         {
-            stop("cannot find layer " + std::string(l_to(i)));
+            auto dir = uu::net::EdgeDir::UNDIRECTED;
+            auto layer_ = std::make_unique<G>(std::string(l_to(i)), dir, true);
+            layer2 = mnet->layers()->add(std::move(layer_));
         }
 
         layer2->vertices()->add(actor2);
         
-        /*
-        auto vertex1 = mnet->get_vertex(actor1,layer1);
-        if (!vertex1) stop("cannot find vertex " + actor1->name + " " + layer1->name);
-        auto vertex2 = mnet->get_vertex(actor2,layer2);
-        if (!vertex2) stop("cannot find vertex " + actor2->name + " " + layer2->name);
-         */
 
         if (layer1==layer2)
         {
@@ -844,8 +832,8 @@ deleteActors(
 
     for (size_t i=0; i<actor_names.size(); i++)
     {
-        auto actor = mnet->vertices()->get(std::string(actor_names(i)));
-        mnet->vertices()->erase(actor);
+        auto actor = mnet->actors()->get(std::string(actor_names(i)));
+        mnet->actors()->erase(actor);
     }
 }
 
@@ -934,7 +922,7 @@ newAttributes(
 
         for (size_t i=0; i<attribute_names.size(); i++)
         {
-            mnet->vertices()->attr()->add(std::string(attribute_names[i]),a_type);
+            mnet->actors()->attr()->add(std::string(attribute_names[i]),a_type);
         }
     }
 
@@ -1039,7 +1027,7 @@ getAttributes(
 
     if (target=="actor")
     {
-        auto attributes = mnet->vertices()->attr();
+        auto attributes = mnet->actors()->attr();
         CharacterVector a_name, a_type;
 
         for (auto att: *attributes)
@@ -1167,7 +1155,7 @@ getValues(
         }
 
         auto actors = resolve_actors(mnet,actor_names);
-        auto attributes = mnet->vertices()->attr();
+        auto attributes = mnet->actors()->attr();
         auto att = attributes->get(attribute_name);
 
         if (!att)
@@ -1428,7 +1416,7 @@ setValues(
         }
 
         auto actors = resolve_actors(mnet,actor_names);
-        auto attributes = mnet->vertices()->attr();
+        auto attributes = mnet->actors()->attr();
         auto att = attributes->get(attribute_name);
 
         if (!att)
@@ -1737,7 +1725,11 @@ flatten(
 
     else if (method=="or")
     {
-        uu::net::graph_union(layers.begin(),layers.end(),target);
+        // todo replace with new union
+        for (auto g=layers.begin(); g!=layers.end(); ++g)
+        {
+            uu::net::graph_add(*g, target);
+        }
     }
 
     else
@@ -1747,24 +1739,26 @@ flatten(
 }
 
 
-/*
+
 void project(
     RMLNetwork& rmnet,
     const std::string& new_layer,
     const std::string& layer_name1,
     const std::string& layer_name2,
     const std::string& method) {
-auto mnet = rmnet.get_mlnet();
-auto layer1 = mnet->layers()->get(layer_name1);
-auto layer2 = mnet->layers()->get(layer_name2);
-if (!layer1 || !layer2)
-    stop("Layer not found");
-if (method=="clique")
-    project_unweighted(mnet,new_layer,layer1,layer2);
-else stop("Unexpected value: algorithm");
+    auto mnet = rmnet.get_mlnet();
+    auto layer1 = mnet->layers()->get(layer_name1);
+    auto layer2 = mnet->layers()->get(layer_name2);
+    if (!layer1 || !layer2)
+        stop("Layer not found");
+    if (method=="clique")
+    {
+        auto target = std::make_unique<G>(new_layer, uu::net::EdgeDir::UNDIRECTED, true);
+        auto target_ptr = mnet->layers()->add(std::move(target));
+        uu::net::project_unweighted(mnet, layer1, layer2, target_ptr);
+    }
+    else stop("Unexpected value: algorithm");
 }
-
- */
 
 // MEASURES
 
@@ -2657,7 +2651,7 @@ distance_ml(
 {
     auto mnet = rmnet.get_mlnet();
     std::vector<const uu::net::Vertex*> actors_to = resolve_actors(mnet,to_actors);
-    auto actor_from = mnet->vertices()->get(from_actor);
+    auto actor_from = mnet->actors()->get(from_actor);
 
     if (!actor_from)
     {
@@ -2761,6 +2755,19 @@ glouvain_ml(
 
     auto com_struct = uu::net::generalized_louvain<M,G>(mnet, gamma, omega, limit);
 
+    return to_dataframe(com_struct.get());
+}
+
+DataFrame
+glouvain2_ml(
+    const RMLNetwork& rmnet,
+    double omega
+)
+{
+    auto mnet = rmnet.get_mlnet();
+    
+    auto com_struct = uu::net::glouvain2<M>(mnet, omega);
+    
     return to_dataframe(com_struct.get());
 }
 
@@ -2879,7 +2886,7 @@ to_list(
         }
 
         int l = mnet->layers()->index_of(layer);
-        auto actor = mnet->vertices()->get(std::string(cs_actor[i]));
+        auto actor = mnet->actors()->get(std::string(cs_actor[i]));
 
         if (!actor)
         {

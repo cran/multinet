@@ -45,8 +45,8 @@ delete_edges_ml(n, edges)
 \item{g}{An igraph object with simple edges and a vertex attribute called name storing the actor name corresponding to the vertex.}
 \item{name}{Name of the new layer.}
 \item{directed}{Determines if the layer(s) is (are) directed or undirected. If multiple layers are specified, directed should be either a single value or an array with as many values as the number of layers.}
-\item{vertices}{A dataframe of vertices to be updated. The first column specifies actor names, the second layer names.}
-\item{edges}{A dataframe containing the vertices to be connected. The four columns must contain, in this order: actor1 name, layer1 name, actor2 name, layer2 name. The directionality of the edge (directed/undirected) is pre-defined depending on the layer(s).}
+\item{vertices}{A dataframe of vertices to be updated or deleted. The first column specifies actor names, the second layer names.}
+\item{edges}{A dataframe containing the edges to be connected or deleted. The four columns must contain, in this order: actor1 name, layer1 name, actor2 name, layer2 name.}
 }
 \seealso{
 \link{multinet.properties}, \link{multinet.edge_directionality}

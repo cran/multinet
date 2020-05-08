@@ -1,3 +1,14 @@
+# version 3.3
+
+- added some argument checks to plot_ml
+- added option to print layer names inside each frame in plotting
+- updated plot colors (default black for vertices) and added edge transparency
+- added support for edge-by-edge style
+- now add_vertices and add_edges automatically add actors and layers if they do not exist.  Layers are by default undirected.
+- added a more efficient implementation of glouvain, now available as glouvain2.
+- added back project_ml, only performing clique (i.e., unweighted) projections.
+- fixed bug in write_ml (missing comma before "LOOP" keyword)
+
 # version 3.2
 
 - add_edges_ml now automatically adds the corresponding actors and vertices if they do not exist

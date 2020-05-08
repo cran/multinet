@@ -30,10 +30,10 @@ For layer comparison:
 \item{K}{This argument is used for distribution dissimilarity measures and indicates the number of histogram bars used to compute the divergence. If 0 is specified, then a "typical" value is used, close to the logarithm of the number of actors.}
 }
 \value{
-A data frame with layer-by-layer coparisons. For each pair of layers, the data frame contains a value between 0 and 1 (for overlapping and distribution dissimilarity) or -1 and 1 (for correlation).
+A data frame with layer-by-layer comparisons. For each pair of layers, the data frame contains a value between 0 and 1 (for overlapping and distribution dissimilarity) or -1 and 1 (for correlation).
 }
 \references{
-Brodka, P., Chmiel, A., Magnani, M., and Ragozini, G. (2018). Qunatifying layer similarity in multiplex networks: a systematic study. Royal Sociwty Open Science 5(8)
+Brodka, P., Chmiel, A., Magnani, M., and Ragozini, G. (2018). Quantifying layer similarity in multiplex networks: a systematic study. Royal Sociwty Open Science 5(8)
 }
 \examples{
 net <- ml_aucs()
