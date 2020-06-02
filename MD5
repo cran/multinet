@@ -1,4 +1,4 @@
-61e9f36d061cadb9650486f8a8b83ae1 *DESCRIPTION
+7d3fd501e6dce76a76960325d1c0dc94 *DESCRIPTION
 6f0cad7dd9b5d47c5d412413451de9c3 *NAMESPACE
 d8efcc44724a2336a0ef8b3b7b91079a *NEWS
 1d9b2f9a6c5d34d81fd0f004940352a3 *R/datasets.R
@@ -662,8 +662,8 @@ c491bdc31cbff0c2d1bda005f16ae2ad *src/src/community/infomap.ipp
 22a0cca978e0b317a4e770fa0f428cb1 *src/src/community/louvain.ipp
 425b37d06480ec77207a23b453b8a913 *src/src/community/ml-cpm.hpp
 c4c43b74d466017653fe17e3eb2555fd *src/src/community/ml-cpm.ipp
-96f8f6978bc1d3e482f0e99ae527c1b9 *src/src/community/modularity.hpp
-218274038cb684bdb6d476e37555c15f *src/src/community/normalized_mutual_information.hpp
+e35edf124e4b079b39e1fbc70cfb2bce *src/src/community/modularity.hpp
+f9044b22213260a5997d3a5525302ae7 *src/src/community/normalized_mutual_information.hpp
 a393879500192381e09304e0244f0527 *src/src/community/optimize_slices.cpp
 ac1c877ebf39146f2399b88c26390e7f *src/src/community/optimize_slices.hpp
 2d0241537c105ac4820a12f8483a9a9a *src/src/core/attributes/Attribute.cpp

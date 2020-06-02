@@ -6,6 +6,8 @@
 #include <utility>
 #include "objects/EdgeMode.hpp"
 
+#undef CS
+
 namespace uu {
 namespace net {
 

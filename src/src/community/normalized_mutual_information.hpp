@@ -6,6 +6,8 @@
 #ifndef UU_NET_COMMUNITY_NORMALIZEDMUTUALINFORMATION_H_
 #define UU_NET_COMMUNITY_NORMALIZEDMUTUALINFORMATION_H_
 
+#undef CS
+
 namespace uu {
 namespace net {
 
