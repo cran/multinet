@@ -8,6 +8,7 @@
 #define UU_CORE_DATASTRUCTURES_CONTAINERS_PTRSORTEDRANDOMSET_H_
 
 #include <memory>
+#include <iostream>
 #include "core/datastructures/containers/SortedRandomSet.hpp"
 #include "core/exceptions/assert_not_null.hpp"
 

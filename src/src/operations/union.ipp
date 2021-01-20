@@ -109,7 +109,7 @@ graph_add(
 
 template<typename G, typename W>
 void
-weigthed_graph_add(
+weighted_graph_add(
     const G* g,
     W* target)
 {
@@ -131,13 +131,13 @@ weigthed_graph_add(
         if (!new_edge)
         {
             new_edge = target->edges()->add(edge->v1,edge->v2);
-            target->edges()->attr()->set_weight(new_edge,1.0);
+            target->set_weight(new_edge,1.0);
         }
 
         else
         {
-            double weight = target->edges()->attr()->get_weight(new_edge).value;
-            target->edges()->attr()->set_weight(new_edge, weight+1.0);
+            double weight = target->get_weight(new_edge).value;
+            target->set_weight(new_edge, weight+1.0);
         }
     }
 
@@ -150,13 +150,13 @@ weigthed_graph_add(
             if (!new_edge)
             {
                 new_edge = target->edges()->add(edge->v2,edge->v1);
-                target->edges()->attr()->set_weight(new_edge,1.0);
+                target->set_weight(new_edge,1.0);
             }
 
             else
             {
-                double weight = target->edges()->attr()->get_weight(new_edge).value;
-                target->edges()->attr()->set_weight(new_edge, weight+1.0);
+                double weight = target->get_weight(new_edge).value;
+                target->set_weight(new_edge, weight+1.0);
             }
         }
     }

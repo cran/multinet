@@ -1,26 +1,29 @@
+#include "community/louvain.hpp"
+
 namespace uu {
 namespace net {
 
 
-template <typename M, typename L>
-std::unique_ptr<CommunityStructure<PillarCommunity<L>>>
-abacus(
-    const M* mnet,
-    int min_actors,
-    int min_layers
-)
+template <typename M>
+std::unique_ptr<CommunityStructure<M>>
+                                    abacus(
+                                        const M* mnet,
+                                        int min_actors,
+                                        int min_layers
+                                    )
 {
-    std::vector<std::unique_ptr<CommunityStructure<Community<const Vertex*>>>> coms;
-    std::unordered_map<const L*, CommunityStructure<Community<const Vertex*>>*> single_layer_communities;
+    std::vector<std::unique_ptr<CommunityStructure<typename M::layer_type>>> coms;
+    std::unordered_map<const typename M::layer_type*, CommunityStructure<typename M::layer_type>*> single_layer_communities;
 
     for (auto layer: *mnet->layers())
     {
-        auto c = label_propagation(layer);
+        auto c = louvain(layer);
         single_layer_communities[layer] = c.get();
         coms.push_back(std::move(c));
     }
 
-    return eclat_merge(mnet, single_layer_communities, min_actors, min_layers);
+    auto com = eclat_merge(mnet, single_layer_communities, min_actors, min_layers);
+    return to_vertex_layer_community_structure(com);
 }
 
 }

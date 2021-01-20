@@ -2,7 +2,6 @@
 
 namespace uu {
 namespace core {
-namespace sel {
 
 Indexes::
 Indexes(
@@ -40,7 +39,6 @@ next(
     return 0;
 }
 
-}
 }
 }
 

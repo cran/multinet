@@ -3,7 +3,6 @@
 
 namespace uu {
 namespace core {
-namespace sel {
 
 Range::
 Range(
@@ -78,7 +77,6 @@ next(
     }
 }
 
-}
 }
 }
 

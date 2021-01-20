@@ -9,7 +9,6 @@
 
 namespace uu {
 namespace core {
-namespace sel {
 
 class Range
     : public Indexes
@@ -48,7 +47,6 @@ class Range
 
 };
 
-}
 }
 }
 

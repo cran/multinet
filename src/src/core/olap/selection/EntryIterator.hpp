@@ -8,7 +8,6 @@
 
 namespace uu {
 namespace core {
-namespace sel {
 
 // @todo add const version
 
@@ -265,7 +264,6 @@ operator!=(
     return current_ != rhs.current_;
 }
 
-}
 }
 }
 

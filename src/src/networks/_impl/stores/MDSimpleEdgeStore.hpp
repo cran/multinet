@@ -19,7 +19,7 @@ namespace net {
 
 template <typename VStore>
 class
-    MDSimpleEdgeStore :
+    MDSimpleEdgeStore final :
     public MDEdgeStore<VStore>,
     public std::enable_shared_from_this<MDSimpleEdgeStore<VStore>>
 {

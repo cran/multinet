@@ -73,11 +73,11 @@ range(
 */
 
 template <typename M, typename G>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<G>>>
-to_community_structure(
-    const M* mnet,
-    const std::vector<unsigned int>& nodes2cid
-);
+std::unique_ptr<CommunityStructure<M>>
+                                    to_community_structure(
+                                        const M* mnet,
+                                        const std::vector<unsigned int>& nodes2cid
+                                    );
 
 
 
@@ -89,7 +89,7 @@ to_community_structure(
 	Post: returns a community assignment of actors with their real attributes from the multilayer network
 // * //
  template <typename M, typename G>
- std::unique_ptr<CommunityStructure<VertexLayerCommunity<G>>>
+ std::unique_ptr<CommunityStructure<M>>
  to_community_structure(
  const M* mnet,
  std::vector<unsigned int> nodes2cid
@@ -190,11 +190,11 @@ std::vector<Eigen::SparseMatrix<double>>
 
 
 template <typename M, typename G>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<G>>>
-to_community_structure(
-    const M* mnet,
-    const std::vector<unsigned int>& nodes2cid
-)
+std::unique_ptr<CommunityStructure<M>>
+                                    to_community_structure(
+                                        const M* mnet,
+                                        const std::vector<unsigned int>& nodes2cid
+                                    )
 {
     size_t num_layers = mnet->layers()->size();
     size_t num_actors = mnet->vertices()->size();
@@ -224,11 +224,11 @@ to_community_structure(
 
     // build community structure
 
-    auto communities = std::make_unique<CommunityStructure<VertexLayerCommunity<G>>>();
+    auto communities = std::make_unique<CommunityStructure<M>>();
 
     for (auto pair: result)
     {
-        auto c = std::make_unique<VertexLayerCommunity<G>>();
+        auto c = std::make_unique<Community<M>>();
 
         for (auto vertex_layer_pair: pair.second)
         {

@@ -25,9 +25,8 @@ components(
             // recursively traverse the whole component
 
             BFS<G> bfs(g, v, EdgeMode::INOUT);
-            const Vertex* current_vertex;
 
-            while ((current_vertex = bfs.get_next()) != nullptr)
+            for (auto current_vertex: bfs)
             {
                 size_t pos_current_vertex = g->vertices()->index_of(current_vertex);
 

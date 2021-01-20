@@ -25,6 +25,8 @@ class MultiEdgeStore :
         EdgeDir dir
     );
 
+    virtual
+    ~MultiEdgeStore() {}
 
     /**
      * Adds a new edge.

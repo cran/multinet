@@ -12,10 +12,10 @@
 namespace uu {
 namespace net {
 
-template <typename Element>
+template <typename NET>
 class
     Community :
-    public core::SortedRandomSet<Element>
+    public core::SortedRandomSet<typename NET::community_element_type>
 {};
 
 }

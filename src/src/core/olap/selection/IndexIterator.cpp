@@ -3,7 +3,6 @@
 
 namespace uu {
 namespace core {
-namespace sel {
 
 
 IndexIterator::
@@ -169,7 +168,6 @@ operator!=(
 }
 
 
-}
 }
 }
 

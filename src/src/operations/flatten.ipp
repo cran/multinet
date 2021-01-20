@@ -1,7 +1,9 @@
+#include "operations/union.hpp"
+
 namespace uu {
 namespace net {
 
-
+template <typename LayerIterator, typename W>
 void
 flatten_weighted(
     LayerIterator begin,
@@ -14,11 +16,25 @@ flatten_weighted(
     {
         // force actors? @todo
 
-        weighted_graph_union(*layer,target,target);
+        weighted_graph_add(*layer,target);
     }
 }
 
-}
+template <typename LayerIterator, typename G>
+void
+flatten_unweighted(
+    LayerIterator begin,
+    LayerIterator end,
+    G* target
+)
+{
+    for (auto g=begin; g!=end; ++g)
+    {
+        uu::net::graph_add(*g, target);
+    }
 }
 
-#endif
+
+
+}
+}

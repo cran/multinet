@@ -17,7 +17,7 @@ namespace net {
  * A MultiEdgeStore allows to create, store, retrieve and erase a set of vertices.
  */
 class
-    AttrMultiEdgeStore
+    AttrMultiEdgeStore final
     : public MultiEdgeStore
 {
 

@@ -6,10 +6,10 @@ namespace uu {
 namespace net {
 
 template <typename G>
-std::unique_ptr<CommunityStructure<Community<const Vertex*>>>
-louvain(
-    const G* g
-)
+std::unique_ptr<CommunityStructure<Network>>
+        louvain(
+            const G* g
+        )
 {
 
     std::vector<std::unique_ptr<MetaNetwork>> passes;

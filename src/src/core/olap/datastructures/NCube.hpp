@@ -67,6 +67,13 @@ class NCube
     ) const;
 
     /**
+     * Returns the members of all dimensions.
+     */
+    const std::vector<std::vector<std::string>>&
+            members(
+            ) const;
+
+    /**
      * Returns the members of a dimension.
      */
     const std::vector<std::string>&
@@ -240,6 +247,16 @@ dim(
     return dim_;
 }
 
+template <class ENTRY_TYPE>
+const std::vector<std::vector<std::string>>&
+        NCube<ENTRY_TYPE>::
+        members(
+        ) const
+{
+
+    return members_;
+
+}
 
 template <class ENTRY_TYPE>
 const std::vector<std::string>&

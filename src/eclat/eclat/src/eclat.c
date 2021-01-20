@@ -1097,7 +1097,6 @@ rec_tcm (ECLAT *eclat, TIDLIST **lists,
     for (r = 0; k != z; k += eclat->dir)
     {
         l = lists[k];               /* traverse the items / tid lists */
-
         if (!closed(eclat, l, e))   /* if the current set is not closed, */
         {
             continue;    /* the item need not be processed */
@@ -1211,7 +1210,6 @@ rec_tcm (ECLAT *eclat, TIDLIST **lists,
                 }
             }                         /* in the created projection */
         }                           /* (or rather their trans. id lists) */
-
         if ((eclat->target & ISR_CLOSED) ? (max < l->supp)
                 :   ((max < eclat->supp) && maximal(eclat, l, e)))
         {
@@ -1263,7 +1261,6 @@ rec_tid (ECLAT *eclat, TIDLIST **lists, ITEM k, size_t x)
     }
 
 #endif                        /* abort the recursion */
-
     if (eclat->mode & ECL_TAIL)   /* if to use tail to prune w/ repo. */
     {
         t = isr_buf(eclat->report); /* get the item set buffer */
@@ -1350,7 +1347,7 @@ rec_tid (ECLAT *eclat, TIDLIST **lists, ITEM k, size_t x)
         }                           /* and abort the function */
 
         r = isr_add(eclat->report, l->item, l->supp);
-
+        
         if (r <  0)
         {
             break;    /* add current item to the reporter */
@@ -1474,7 +1471,7 @@ rec_tid (ECLAT *eclat, TIDLIST **lists, ITEM k, size_t x)
         }
 
         r = isr_reportx(eclat->report, l->tids, (TID)-l->supp);
-
+        
         if (r < 0)
         {
             break;    /* report the current item set */
@@ -4856,7 +4853,6 @@ eclat_data (ECLAT *eclat, TABAG *tabag, int mode, int sort)
     {
         CLOCK(t);                   /* start timer, print log message */
         XMSG(stderr, "filtering, sorting and recoding items ... ");
-
         if (eclat->mode & ECL_REORDER) /* simplified sorting for reorder */
         {
             sort = (sort < 0) ? -1 : (sort > 0) ? +1 : 0;
@@ -4878,6 +4874,7 @@ eclat_data (ECLAT *eclat, TABAG *tabag, int mode, int sort)
         XMSG(stderr, " done [%.2fs].\n", SEC_SINCE(t));
     }                             /* print a log message */
 
+    //printf("%d %d %d", (eclat->mode & ECL_EXTCHK), (mode & ECL_NOREDUCE), (mode & ECL_NOSORT));
     /* --- sort and reduce transactions --- */
     CLOCK(t);                     /* start timer, print log message */
     XMSG(stderr, "sorting and reducing transactions ... ");
@@ -4888,7 +4885,7 @@ eclat_data (ECLAT *eclat, TABAG *tabag, int mode, int sort)
     {
         tbg_filter(tabag, eclat->zmin, NULL, 0);
     }
-
+    
     if (!(mode & ECL_NOSORT))     /* if item sorting allowed, */
     {
         tbg_itsort(tabag, dir, 0);    /* sort items in transactions */
@@ -4944,6 +4941,9 @@ eclat_data (ECLAT *eclat, TABAG *tabag, int mode, int sort)
         }
     }                             /* (bit-represented transactions) */
 
+    
+    
+    
 #ifndef QUIET                 /* if to print messages */
     n = tbg_cnt(tabag);           /* get the number of transactions */
     w = tbg_wgt(tabag);           /* and the new transaction weight */

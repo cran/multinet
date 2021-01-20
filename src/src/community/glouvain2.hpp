@@ -3,7 +3,6 @@
 
 
 #include "community/CommunityStructure.hpp"
-#include "community/VertexLayerCommunity.hpp"
 #include "objects/Vertex.hpp"
 #include "community/_impl/glouvain2_utils.hpp"
 #include <memory>
@@ -13,11 +12,11 @@ namespace uu {
 namespace net {
 
 template <typename M>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<const typename M::layer_type>>>
-glouvain2(
-    const M* g,
-    double omega
-);
+std::unique_ptr<CommunityStructure<M>>
+                                    glouvain2(
+                                        const M* g,
+                                        double omega
+                                    );
 
 }
 }

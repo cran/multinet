@@ -18,7 +18,6 @@
 #include "infomap/InfomapContext.h"
 #include "core/exceptions/ExternalLibException.hpp"
 #include "community/_impl/infomap_utils.hpp"
-#include "community/VertexLayerCommunity.hpp"
 #include "community/CommunityStructure.hpp"
 
 namespace uu {
@@ -26,12 +25,12 @@ namespace net {
 
 /*  */
 template <typename M>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<const typename M::layer_type>>>
-infomap(const M* net,
-        bool overlapping=false,
-        bool directed=false,
-        bool include_self_links=true
-       );
+std::unique_ptr<CommunityStructure<M>>
+                                    infomap(const M* net,
+                                            bool overlapping=false,
+                                            bool directed=false,
+                                            bool include_self_links=true
+                                           );
 
 
 }

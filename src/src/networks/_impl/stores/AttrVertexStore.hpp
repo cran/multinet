@@ -17,7 +17,7 @@ namespace net {
  * A VertexStore allows to create, store, retrieve and erase a set of vertices.
  */
 class
-    AttrVertexStore
+    AttrVertexStore final
     : public VertexStore
 {
 

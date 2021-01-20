@@ -1,0 +1,166 @@
+
+#include <string>
+//#include "core/utils/pretty_printing.hpp"
+#include "core/exceptions/assert_not_null.hpp"
+#include "core/exceptions/WrongParameterException.hpp"
+#include "core/exceptions/OutOfBoundsException.hpp"
+#include "core/olap/selection/IndexIterator.hpp"
+//#include "core/olap/selection/EntryIterator.hpp"
+
+namespace uu {
+namespace net {
+
+template <typename C>
+std::unique_ptr<C>
+vsort_dimensions(
+    C* const cube,
+    const std::vector<size_t>& perm
+)
+{
+    core::assert_not_null(cube, "vsort_dimensions", "cube");
+
+    if (perm.size() != cube->order())
+    {
+        throw core::WrongParameterException("the number of input indexes does not match the number of dimensions");
+    }
+
+    std::set<size_t> check;
+    check.insert(perm.begin(), perm.end());
+
+    if (perm.size() != check.size())
+    {
+        throw core::WrongParameterException("duplicate indexes");
+    }
+
+    if (*std::max_element(perm.begin(), perm.end()) != cube->order()-1)
+    {
+        throw core::OutOfBoundsException("the maximum index is larger than the number of dimensions");
+    }
+
+    std::vector<size_t> size = cube->size();
+    std::vector<std::string> in_dimensions = cube->dim();
+    size_t num_dimensions = size.size();
+    std::vector<std::string> out_dimensions(num_dimensions);
+
+    for (size_t i = 0; i < num_dimensions; i++)
+    {
+        out_dimensions[i] = in_dimensions[perm[i]];
+    }
+
+    std::vector<std::vector<std::string>> in_members = cube->members();
+    std::vector<std::vector<std::string>> out_members(num_dimensions);
+
+    for (size_t i = 0; i < num_dimensions; i++)
+    {
+        out_members[i] = in_members[perm[i]];
+    }
+
+    auto out_cube = cube->model(out_dimensions, out_members);
+
+    // for each cell in the input cube compute the corresponding cell in the output cube
+    // and copy a reference to the cell.
+
+    core::IndexIterator in_idx(cube->size());
+    auto in_idx_iter = in_idx.begin();
+
+    while (in_idx_iter != in_idx.end())
+    {
+        // we process cell at in_index in the input cube
+        auto in_index = *in_idx_iter;
+
+        std::vector<size_t> out_index;
+
+        for (size_t i=0; i<num_dimensions; i++)
+        {
+            out_index.push_back(in_index[perm[i]]);
+        }
+
+        out_cube->init(out_index, cube->operator[](in_index)->shared_from_this());
+
+        ++in_idx_iter;
+    }
+
+    return out_cube;
+}
+
+
+template <typename C>
+std::unique_ptr<C>
+msort_dimensions(
+    const C* const cube,
+    const std::vector<size_t>& perm
+)
+{
+    core::assert_not_null(cube, "msort_dimensions", "cube");
+
+    if (perm.size() != cube->order())
+    {
+        throw core::WrongParameterException("the number of input indexes does not match the number of dimensions");
+    }
+
+    std::set<size_t> check;
+    check.insert(perm.begin(), perm.end());
+
+    if (perm.size() != check.size())
+    {
+        throw core::WrongParameterException("the input indexes must be a permutation of 1..cube->order()");
+    }
+
+    if (*std::max_element(perm.begin(), perm.end()) != cube->order()-1)
+    {
+        throw core::OutOfBoundsException("too large dimension index in the input");
+    }
+
+    std::vector<std::string> in_dimensions = cube->dim();
+    size_t num_dimensions = in_dimensions.size();
+    std::vector<std::string> out_dimensions(num_dimensions);
+
+    for (size_t i = 0; i < num_dimensions; i++)
+    {
+        out_dimensions[i] = in_dimensions[perm[i]];
+    }
+
+    std::vector<std::vector<std::string>> in_members = cube->members();
+    std::vector<std::vector<std::string>> out_members(num_dimensions);
+
+    for (size_t i = 0; i < num_dimensions; i++)
+    {
+        out_members[i] = in_members[perm[i]];
+    }
+
+    auto out_cube = std::make_unique<C>(out_dimensions, out_members);
+
+    // for each cell in the input cube compute the corresponding cell in the output cube
+    // and copy the elements from one cell to the other.
+
+    core::IndexIterator in_idx(cube->size());
+    auto in_idx_iter = in_idx.begin();
+
+    while (in_idx_iter != in_idx.end())
+    {
+        // we process cell at in_index in the input cube
+        auto in_index = *in_idx_iter;
+
+        std::vector<size_t> out_index;
+
+        for (size_t i=0; i<num_dimensions; i++)
+        {
+            out_index.push_back(in_index[perm[i]]);
+        }
+
+        auto store = out_cube->init(out_index);
+
+        for (auto el: *cube->operator[](in_index))
+        {
+            store->add(el);
+        }
+
+        ++in_idx_iter;
+    }
+
+    return out_cube;
+}
+
+}
+}
+

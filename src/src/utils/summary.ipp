@@ -39,7 +39,7 @@ summary_short(
 
     size_t num_inter_edges = net->interlayer_edges()->size();
 
-    size_t num_actors = net->vertices()->size();
+    size_t num_actors = net->actors()->size();
 
     size_t num_layers = net->layers()->size();
 

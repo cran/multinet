@@ -24,6 +24,10 @@ class Network
 
   public:
 
+    typedef const Vertex* vertex_type;
+    typedef const Edge* edge_type;
+    typedef const Vertex* community_element_type;
+
     const std::string name;
 
     /**
@@ -35,6 +39,9 @@ class Network
         bool allow_loops = false
     );
 
+    virtual
+    ~Network()
+    {}
 
     /**
      * Returns a pointer to the network's vertices.

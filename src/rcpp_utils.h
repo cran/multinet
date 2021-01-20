@@ -1,11 +1,3 @@
-/**
- *
- *
- * History:
- * - 2018.09.12 updated to version 2.0 C++ uunet library API.
- * - 2014.07.29 file created.
- */
-
 #ifndef UU_R_MULTINET_RCPP_UTILS_H_
 #define UU_R_MULTINET_RCPP_UTILS_H_
 
@@ -16,7 +8,7 @@
 #include "objects/Vertex.hpp"
 #include "objects/Edge.hpp"
 #include "networks/Network.hpp"
-#include "community/VertexLayerCommunity.hpp"
+#include "community/Community.hpp"
 #include "networks/MultilayerNetwork.hpp"
 #include "r_functions.h"
 
@@ -70,10 +62,10 @@ resolve_mode(
 
 Rcpp::DataFrame
 to_dataframe(
-    uu::net::CommunityStructure<uu::net::VertexLayerCommunity<const uu::net::Network>>* cs
+    uu::net::CommunityStructure<uu::net::MultilayerNetwork>* cs
 );
 
-std::unique_ptr<uu::net::CommunityStructure<uu::net::VertexLayerCommunity<const uu::net::Network>>>
+std::unique_ptr<uu::net::CommunityStructure<uu::net::MultilayerNetwork>>
 to_communities(
                const DataFrame& com,
                const uu::net::MultilayerNetwork* mnet

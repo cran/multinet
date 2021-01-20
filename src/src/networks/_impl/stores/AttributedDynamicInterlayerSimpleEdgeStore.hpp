@@ -17,7 +17,7 @@ namespace net {
 
 template <typename V, typename L, typename A>
 class
-    AttributedDynamicInterlayerSimpleEdgeStore :
+    AttributedDynamicInterlayerSimpleEdgeStore final :
     public Attributed<A>,
     public DynamicInterlayerSimpleEdgeStore<V,L>
 {

@@ -25,7 +25,6 @@
 #include "core/attributes/conversion.hpp"
 #include "core/utils/CSVReader.hpp"
 #include "objects/Vertex.hpp"
-#include "community/VertexLayerCommunity.hpp"
 #include "community/CommunityStructure.hpp"
 
 namespace uu {
@@ -44,11 +43,11 @@ multinet_to_infomap(
 
 
 template <typename M>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<const typename M::layer_type>>>
-read_infomap_communities(
-    const M* net,
-    const std::string& filename_prefix
-);
+std::unique_ptr<CommunityStructure<M>>
+                                    read_infomap_communities(
+                                        const M* net,
+                                        const std::string& filename_prefix
+                                    );
 
 
 
@@ -84,11 +83,11 @@ multinet_to_infomap(
 }
 
 template <typename M>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<const typename M::layer_type>>>
-to_communities(
-    const M* net,
-    infomap::HierarchicalNetwork& resultNetwork
-)
+std::unique_ptr<CommunityStructure<M>>
+                                    to_communities(
+                                        const M* net,
+                                        infomap::HierarchicalNetwork& resultNetwork
+                                    )
 {
     std::unordered_map<size_t, const Vertex*> actors;
     size_t a_id = 0;
@@ -98,7 +97,7 @@ to_communities(
         actors[a_id++] = a;
     }
 
-    std::unordered_map<size_t, std::vector<std::pair<const Vertex*,const typename M::layer_type*>>> comm;
+    std::unordered_map<size_t, std::vector<MLVertex<M>>> comm;
 
     /*
     for (infomap::LeafIterator leafIt(&resultNetwork.getRootNode()); !leafIt.isEnd(); ++leafIt)
@@ -126,18 +125,18 @@ to_communities(
             {
                 if (l->vertices()->contains(actor))
                 {
-                    comm[c_id].push_back(std::make_pair(actor,l));
+                    comm[c_id].push_back(MLVertex<M>(actor,l));
                 }
             }
         }
     }
 
 
-    auto communities = std::make_unique<CommunityStructure<VertexLayerCommunity<const typename M::layer_type>>>();
+    auto communities = std::make_unique<CommunityStructure<M>>();
 
     for (auto pair: comm)
     {
-        auto c = std::make_unique<VertexLayerCommunity<const typename M::layer_type>>();
+        auto c = std::make_unique<Community<M>>();
 
         for (auto vertex_layer_pair: pair.second)
         {
@@ -210,11 +209,11 @@ multinet_to_infomap(
 
 
 template <typename M>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<const typename M::layer_type>>>
-read_infomap_communities(
-    const M* net,
-    const std::string& filename
-)
+std::unique_ptr<CommunityStructure<M>>
+                                    read_infomap_communities(
+                                        const M* net,
+                                        const std::string& filename
+                                    )
 {
 
     // read id -> name mapping for actors
@@ -239,7 +238,7 @@ read_infomap_communities(
         actors[a_id++] = a;
     }
 
-    std::unordered_map<size_t, std::vector<std::pair<const Vertex*,const typename M::layer_type*>>> comm;
+    std::unordered_map<size_t, std::vector<MLVertex<M>>> comm;
 
     core::CSVReader clusters;
     clusters.set_field_separator(' ');
@@ -257,7 +256,7 @@ read_infomap_communities(
         {
             if (l->vertices()->contains(actor))
             {
-                comm[c_id].push_back(std::make_pair(actor,l));
+                comm[c_id].push_back(MLVertex<M>(actor,l));
             }
         }
     }
@@ -265,11 +264,11 @@ read_infomap_communities(
     clusters.close();
 
 
-    auto communities = std::make_unique<CommunityStructure<VertexLayerCommunity<const typename M::layer_type>>>();
+    auto communities = std::make_unique<CommunityStructure<M>>();
 
     for (auto pair: comm)
     {
-        auto c = std::make_unique<VertexLayerCommunity<const typename M::layer_type>>();
+        auto c = std::make_unique<Community<M>>();
 
         for (auto vertex_layer_pair: pair.second)
         {

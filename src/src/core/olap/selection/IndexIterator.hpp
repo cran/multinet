@@ -10,7 +10,6 @@
 
 namespace uu {
 namespace core {
-namespace sel {
 
 class IndexIterator
 {
@@ -110,7 +109,6 @@ class IndexIterator
 
 };
 
-}
 }
 }
 

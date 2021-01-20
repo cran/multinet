@@ -36,6 +36,9 @@ class MultiNetwork
         bool allow_loops = true
     );
 
+    virtual
+    ~MultiNetwork() {}
+
     /**
      * Returns a pointer to the network's vertices.
      */

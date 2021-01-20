@@ -3,7 +3,6 @@
 
 namespace uu {
 namespace core {
-namespace sel {
 
 All::
 All(
@@ -56,7 +55,6 @@ next(
     }
 }
 
-}
 }
 }
 

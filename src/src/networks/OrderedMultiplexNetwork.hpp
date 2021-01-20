@@ -9,6 +9,7 @@
 #include "networks/_impl/stores/MLSimpleEdgeStore.hpp"
 
 #include "objects/Vertex.hpp"
+#include "objects/MLVertex.hpp"
 #include "networks/Network.hpp"
 
 namespace uu {
@@ -30,6 +31,7 @@ class
 
     typedef Network layer_type;
     typedef Vertex vertex_type;
+    typedef MLVertex<OrderedMultiplexNetwork> community_element_type;
 
     OrderedMultiplexNetwork(
         const std::string& name

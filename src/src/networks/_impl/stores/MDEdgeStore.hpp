@@ -395,7 +395,7 @@ GenericObjectList<MLEdge<Vertex,VStore>>*
                                       ) const
 {
 
-    core::assert_not_null(layer1, "neighbors", "layer");
+    core::assert_not_null(layer, "incident", "layer");
     core::assert_not_null(vertex, "incident", "vertex");
 
     if (mode==EdgeMode::IN)

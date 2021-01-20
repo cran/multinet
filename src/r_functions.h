@@ -113,6 +113,16 @@ growMultiplex(
     const NumericMatrix& dependency
 );
 
+List
+generateCommunities(
+     const std::string& type,
+     size_t num_actors,
+     size_t num_layers,
+     size_t num_communities,
+     size_t overlap,
+     const NumericVector& pr_internal,
+     const NumericVector& pr_external
+);
 
 // INFORMATION ON NETWORKS
 
@@ -416,12 +426,27 @@ cliquepercolation_ml(
 
 
 DataFrame
-infomap_ml(const RMLNetwork& mnet,
-           bool overlapping,
-           bool directed,
-           bool include_self_links
+infomap_ml(
+   const RMLNetwork& mnet,
+   bool overlapping,
+   bool directed,
+   bool include_self_links
           );
 
+DataFrame
+flat_ec(
+    const RMLNetwork& mnet
+);
+
+DataFrame
+flat_nw(
+    const RMLNetwork& mnet
+);
+
+DataFrame
+mdlp(
+     const RMLNetwork& mnet
+);
 
 DataFrame
 glouvain_ml(
@@ -446,10 +471,24 @@ abacus_ml(
 
 double
 modularity_ml(
-              const RMLNetwork& rmnet,
-              const DataFrame& com, double gamma,
-              double omega
-              );
+    const RMLNetwork& rmnet,
+    const DataFrame& com, double gamma,
+    double omega
+);
+
+double
+nmi(
+    const RMLNetwork& rmnet,
+    const DataFrame& com1,
+    const DataFrame& com2
+);
+
+double
+omega(
+    const RMLNetwork& rmnet,
+    const DataFrame& com1,
+    const DataFrame& com2
+);
 
 
 List

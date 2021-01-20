@@ -8,7 +8,6 @@
 
 namespace uu {
 namespace core {
-namespace sel {
 
 class Indexes
 {
@@ -39,7 +38,6 @@ class Indexes
 
 };
 
-}
 }
 }
 

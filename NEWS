@@ -1,3 +1,14 @@
+# version 3.3.2
+
+- new default behavior: loops are allowed
+- added generate_communities_ml, to create simple community structures
+- added flat_ec_ml, flat_nw_ml and mdlp_ml clustering algorithms
+- added nmi_ml and omega_index_ml evaluation functions
+
+# version 3.3.1
+
+- no significant change (code fix for CRAN compatibility)
+
 # version 3.3
 
 - added some argument checks to plot_ml

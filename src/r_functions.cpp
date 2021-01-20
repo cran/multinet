@@ -16,8 +16,12 @@
 #include "community/glouvain2.hpp"
 #include "community/abacus.hpp"
 #include "community/infomap.hpp"
+#include "community/flat.hpp"
+#include "community/mlp.hpp"
 #include "community/ml-cpm.hpp"
 #include "community/modularity.hpp"
+#include "community/normalized_mutual_information.hpp"
+#include "community/omega_index.hpp"
 #include "io/read_multilayer_network.hpp"
 #include "io/write_multilayer_network.hpp"
 #include "measures/degree_ml.hpp"
@@ -26,6 +30,7 @@
 #include "measures/redundancy.hpp"
 #include "measures/layer.hpp"
 #include "measures/distance.hpp"
+#include "generation/communities.hpp"
 #include "generation/evolve.hpp"
 #include "generation/PAEvolutionModel.hpp"
 #include "generation/EREvolutionModel.hpp"
@@ -84,7 +89,7 @@ writeMultilayer(
 
     if (format=="multilayer")
     {
-        write_attributed_homogeneous_multilayer_network(mnet,layers.begin(),layers.end(),output_file,sep);
+        write_multilayer_network(mnet,layers.begin(),layers.end(),output_file,sep);
     }
 
     else if (format=="graphml")
@@ -211,6 +216,91 @@ growMultiplex(
 
     uu::net::evolve(res.get(), layer_names, pr_int, pr_ext, dep, models, num_of_steps);
     return RMLNetwork(res);
+}
+
+
+List
+generateCommunities(
+     const std::string& type,
+     size_t num_actors,
+     size_t num_layers,
+     size_t num_communities,
+     size_t overlap,
+     const NumericVector& pr_internal,
+     const NumericVector& pr_external
+)
+{
+    // @todo wrap code to process vectors in a utility function
+    std::vector<double> pr_int(num_layers);
+    if (pr_internal.size() == 1)
+    {
+        for (size_t i=0; i<num_layers; i++)
+        {
+            pr_int[i] = pr_internal.at(0);
+        }
+    }
+    else if (pr_internal.size() == num_layers)
+    {
+        for (size_t i=0; i<num_layers; i++)
+        {
+            pr_int[i] = pr_internal.at(i);
+        }
+    }
+    else throw uu::core::WrongParameterException("wrong number of values in pr.internal");
+    
+    std::vector<double> pr_ext(num_layers);
+    if (pr_external.size() == 1)
+    {
+        for (size_t i=0; i<num_layers; i++)
+        {
+            pr_ext[i] = pr_external.at(0);
+        }
+    }
+    else if (pr_external.size() == num_layers)
+    {
+        for (size_t i=0; i<num_layers; i++)
+        {
+            pr_ext[i] = pr_external.at(i);
+        }
+    }
+    else throw uu::core::WrongParameterException("wrong number of values in pr.external");
+    
+    std::string uc_type = type;
+    uu::core::to_upper_case(uc_type);
+    
+    if (uc_type == "PEP")
+    {
+        if (overlap > 0)
+        {
+            Rcout << "Warning: unused parameter: \"overlap\"" << std::endl;
+        }
+        auto pair = uu::net::generate_pep(num_layers, num_actors, num_communities, pr_int, pr_ext);
+        List res = List::create(_["net"]=RMLNetwork(std::move(pair.first)), _["com"]=to_dataframe(pair.second.get()));
+        return res;
+    }
+    else if (uc_type == "PEO")
+    {
+        auto pair = uu::net::generate_peo(num_layers, num_actors, num_communities, overlap, pr_int, pr_ext);
+        List res = List::create(_["net"]=RMLNetwork(std::move(pair.first)), _["com"]=to_dataframe(pair.second.get()));
+        return res;
+    }
+    else if (uc_type == "SEP")
+    {
+        if (overlap > 0)
+        {
+            Rcout << "Warning: unused parameter: \"overlap\"" << std::endl;
+        }
+        auto pair = uu::net::generate_sep(num_layers, num_actors, num_communities, pr_int, pr_ext);
+        List res = List::create(_["net"]=RMLNetwork(std::move(pair.first)), _["com"]=to_dataframe(pair.second.get()));
+        return res;
+    }
+    else if (uc_type == "SEO")
+    {
+        auto pair = uu::net::generate_seo(num_layers, num_actors, num_communities, overlap, pr_int, pr_ext);
+        List res = List::create(_["net"]=RMLNetwork(std::move(pair.first)), _["com"]=to_dataframe(pair.second.get()));
+        return res;
+    }
+    else throw uu::core::WrongParameterException("wrong type parameter");
 }
 
 
@@ -2792,7 +2882,7 @@ infomap_ml(const RMLNetwork& rmnet,
         Rcout << "Returning empty community set." << std::endl;
     }
 
-    auto com_struct = std::make_unique<uu::net::CommunityStructure<uu::net::VertexLayerCommunity<const G>>>();
+    auto com_struct = std::make_unique<uu::net::CommunityStructure<uu::net::MultilayerNetwork>>();
     return to_dataframe(com_struct.get());
 }
 
@@ -2807,8 +2897,7 @@ abacus_ml(
 
     try
     {
-        auto pillar_com_struct = uu::net::abacus<M,G>(mnet, min_actors, min_layers);
-        auto com_struct = to_vertex_layer_community_structure(pillar_com_struct.get());
+        auto com_struct = uu::net::abacus(mnet, min_actors, min_layers);
         return to_dataframe(com_struct.get());
     }
 
@@ -2818,11 +2907,44 @@ abacus_ml(
         Rcout << "Returning empty community set." << std::endl;
     }
 
-    auto pillar_com_struct = std::make_unique<uu::net::CommunityStructure<uu::net::PillarCommunity<const G>>>();
-    auto com_struct = to_vertex_layer_community_structure(pillar_com_struct.get());
+    auto com_struct = std::make_unique<uu::net::CommunityStructure<uu::net::MultilayerNetwork>>();
     return to_dataframe(com_struct.get());
 
 }
+
+DataFrame
+flat_ec(
+    const RMLNetwork& rmnet
+)
+{
+    auto mnet = rmnet.get_mlnet();
+
+    auto com_struct = uu::net::flat_ec(mnet);
+    return to_dataframe(com_struct.get());
+}
+
+DataFrame
+flat_nw(
+    const RMLNetwork& rmnet
+)
+{
+    auto mnet = rmnet.get_mlnet();
+
+    auto com_struct = uu::net::flat_nw(mnet);
+    return to_dataframe(com_struct.get());
+}
+
+DataFrame
+mdlp(
+     const RMLNetwork& rmnet
+)
+{
+    auto mnet = rmnet.get_mlnet();
+
+    auto com_struct = uu::net::mlp(mnet);
+    return to_dataframe(com_struct.get());
+}
+
 /*
 DataFrame lart_ml(
    const RMLNetwork& rmnet, int t, double eps, double gamma) {
@@ -2848,6 +2970,35 @@ modularity_ml(
     auto mnet = rmnet.get_mlnet();
     auto communities = to_communities(com, mnet);
     return uu::net::modularity(mnet, communities.get(), omega);
+}
+
+
+double
+nmi(
+    const RMLNetwork& rmnet,
+    const DataFrame& com1,
+    const DataFrame& com2
+)
+{
+    size_t num_vertices = numNodes(rmnet, CharacterVector());
+    auto mnet = rmnet.get_mlnet();
+    auto c1 = to_communities(com1, mnet);
+    auto c2 = to_communities(com2, mnet);
+    return uu::net::normalized_mutual_information(c1.get(), c2.get(), num_vertices);
+}
+
+double
+omega(
+    const RMLNetwork& rmnet,
+    const DataFrame& com1,
+    const DataFrame& com2
+)
+{
+    size_t num_vertices = numNodes(rmnet, CharacterVector());
+    auto mnet = rmnet.get_mlnet();
+    auto c1 = to_communities(com1, mnet);
+    auto c2 = to_communities(com2, mnet);
+    return uu::net::omega_index(c1.get(), c2.get(), num_vertices);
 }
 
 

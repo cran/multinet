@@ -1,35 +1,58 @@
 namespace uu {
 namespace net {
 
-template <typename M, typename L>
-std::unique_ptr<CommunityStructure<PillarCommunity<L>>>
+
+
+template <typename M>
+std::set<std::unique_ptr<PillarCommunity<M>>>
 eclat_merge(
     const M* mnet,
-    const std::unordered_map<const L*, CommunityStructure<Community<const Vertex*>>*>& single_layer_communities,
+    const std::unordered_map<const typename M::layer_type*, CommunityStructure<Network>*>& single_layer_communities,
     int min_actors,
     int min_layers
 )
 {
 
+    TABREAD  *tread  = NULL; /* table/transaction reader */
+    ITEMBASE *ibase  = NULL; /* item base */
+    TABAG    *tabag  = NULL; /* transaction bag/multiset */
+    ISREPORT *report = NULL; /* item set reporter */
+    ECLAT    *eclat  = NULL; /* eclat miner object */
+
+
     std::unordered_map<int, std::vector<std::string> > transactions;
 
     for (auto pair: single_layer_communities)
     {
+        //std::cout << "SINGLE LAYER COMM:" << std::endl;
         std::string layer_str = std::to_string(mnet->layers()->index_of(pair.first));
         int community = 0;
 
         for (auto c: *pair.second)
         {
             std::string community_str = std::to_string(community);
+            //std::cout << " - " << community_str << std::endl;
 
             for (auto node: *c)
             {
+                //std::cout << " + " << mnet->actors()->index_of(node) << std::endl;
                 transactions[mnet->actors()->index_of(node)].push_back(community_str + ":" + layer_str);
             }
 
             community++;
         }
+
     }
+
+    /*for (auto pair: transactions)
+    {
+        std::cout << " T " << pair.first;
+        for (auto val: pair.second)
+        {
+            std::cout << " " << val;
+        }
+        std::cout << std::endl;
+    }*/
 
     FILE* f_inp = std::tmpfile();
 
@@ -63,28 +86,28 @@ eclat_merge(
     CCHAR   *dflt    = " (%S)";   /* default format for check */
     CCHAR   *info    = dflt;      /* format for information output */
     int     target   = ISR_CLOSED;       /* target type (e.g. closed/maximal) */
+    ITEM    zmin     = min_layers;         /* minimum rule/item set size */
     ITEM    zmax     = ITEM_MAX;  /* maximum rule/item set size */
+    double  smin     = -min_actors;        /* minimum support of an item set */
     double  smax     = 100;       /* maximum support of an item set */
     double  conf     = 80;        /* minimum confidence (in percent) */
-    int     eval     = 'x';       /* additional evaluation measure */
-    int     agg      = 'x';       /* aggregation mode for eval. measure */
+    int     eval     = RE_NONE;       /* additional evaluation measure */
+    //int     eflgs    = 0;         /* evaluation measure flags */
+    int     agg      = ECL_NONE;       /* aggregation mode for eval. measure */
     double  thresh   = 10;        /* threshold for evaluation measure */
     ITEM    prune    = ITEM_MIN;  /* (min. size for) evaluation pruning */
     int     sort     = 2;         /* flag for item sorting and recoding */
-    int     algo     = 'a';       /* variant of eclat algorithm */
+    int     algo     = ECL_AUTO;       /* variant of eclat algorithm */
     int     mode     = ECL_DEFAULT|ECL_PREFMT;   /* search mode */
     int     pack     = 16;        /* number of bit-packed items */
     int     cmfilt   = -1;        /* mode for closed/maximal filtering */
     int     mtar     = 0;         /* mode for transaction reading */
     int     scan     = 0;         /* flag for scanable item output */
+    //int     bdrcnt   = 0;         /* number of support values in border */
     ITEM    m;                    /* number of items */
     TID     n;                    /* number of transactions */
+    //SUPP    w;                    /* total transaction weight */
 
-    TABREAD  *tread  = NULL; /* table/transaction reader */
-    ITEMBASE *ibase  = NULL; /* item base */
-    TABAG    *tabag  = NULL; /* transaction bag/multiset */
-    ISREPORT *report = NULL; /* item set reporter */
-    ECLAT    *eclat  = NULL; /* eclat miner object */
 
     for (size_t i=0; i<mnet->actors()->size(); i++)
     {
@@ -98,12 +121,15 @@ eclat_merge(
 
     rewind(f_inp);
 
+
     if ((cmfilt >= 0) && (target & (ISR_CLOSED|ISR_MAXIMAL)))
     {
         mode |= (cmfilt > 0) ? ECL_VERT : ECL_HORZ;
     }
 
-    mode |= ECL_TIDS;
+    mode |= ECL_TIDS;           /* turn "-" into "" for consistency */
+
+
     mode = (mode & ~ECL_FIM16)    /* add packed items to search mode */
            | ((pack <= 0) ? 0 : (pack < 16) ? pack : 16);
     mode |= ECL_VERBOSE|ECL_NOCLEAN;
@@ -140,7 +166,7 @@ eclat_merge(
 
     k = tbg_read(tabag, tread, mtar);
 
-    if (k)
+    if (k < 0)
     {
         throw core::ExternalLibException("Cannot execute eternal function tbg_read");
     }
@@ -149,14 +175,16 @@ eclat_merge(
     tread = NULL;                 /* then delete the table reader */
     m = ib_cnt(ibase);            /* get the number of items, */
     n = tbg_cnt(tabag);           /* the number of transactions, */
+    //SUPP w = tbg_wgt(tabag);
+    //printf("%d %d %d", m, n, w);
 
     if ((m <= 0) || (n <= 0))     /* check for at least one item */
     {
-        return std::make_unique<CommunityStructure<PillarCommunity<L>>>();
+        return std::set<std::unique_ptr<PillarCommunity<M>>>();
     }
 
     /* --- find frequent item sets/association rules --- */
-    eclat = eclat_create(target, -min_actors, smax, conf, min_layers, zmax,
+    eclat = eclat_create(target, smin, smax, conf, zmin, zmax,
                          eval, agg, thresh, algo, mode);
 
     if (!eclat)
@@ -165,6 +193,8 @@ eclat_merge(
     }
 
     k = eclat_data(eclat, tabag, 0, sort);
+    //SUPP w = tbg_wgt(tabag);
+    //printf("%d %d %d", m, n, w);
 
     if (k)
     {
@@ -184,6 +214,13 @@ eclat_merge(
     {
         throw core::ExternalLibException("Cannot prepare report ");
     }
+
+    /*
+    if (setbdr(report, w, min_layers, &border, bdrcnt) != 0)
+    {
+        throw core::ExternalLibException("Cannot set the support border");
+    }
+     */
 
     if (isr_setfmt(report, scan, hdr, sep, imp, info) != 0)
     {
@@ -216,14 +253,14 @@ eclat_merge(
         throw core::ExternalLibException("Cannot run eclat_mine");
     }
 
-    //if (stats)                    /* print item set statistics */
-    //    isr_prstats(report, stdout, 0);
     isr_flush(report);
     isr_tidflush(report);
 
+
     rewind(report->file);
     rewind(report->tidfile);
-    auto result = read_eclat_communities<M,L>(mnet, report->file, report->tidfile);
+    //isr_prstats(report, stdout, 0);
+    auto result = read_eclat_communities<M>(mnet, report->file, report->tidfile);
 
     /*if (f_inp!=NULL) {
      std::fclose(f_inp);
@@ -238,7 +275,7 @@ eclat_merge(
      f_tid=NULL;
      }*/
 
-    if (isr_close   (report) != 0)
+    if (isr_close(report) != 0)
     {
         throw core::ExternalLibException("Cannot close itemset output file");
     }
@@ -271,18 +308,18 @@ eclat_merge(
 
     if (ibase)
     {
-        ib_delete (ibase);
+        ib_delete(ibase);
     }
 
     return result;
 }
 
 
-template <typename M, typename L>
+template <typename M>
 void
 read_layers(
     const M* mnet,
-    PillarCommunity<L>* com,
+    PillarCommunity<M>* com,
     FILE* file
 )
 {
@@ -291,15 +328,19 @@ read_layers(
     int c;
     int lid; // layer identifier
 
+    //std::cout << "read layers" << std::endl;
     while (1)
     {
         c=getc(file);
 
         if (c=='\n' || c==EOF)
         {
+            //std::cout << " ";
             if (reading_number)
             {
+                //std::cout << "[([)" << lid << "])]";
                 com->add_layer(mnet->layers()->at(lid));
+                //std::cout << std::endl;
             }
 
             return;
@@ -312,12 +353,14 @@ read_layers(
 
         else if (c==':')
         {
+            //std::cout << ":";
             found_separator=true;
             continue;
         }
 
         if (c>='0' && c<='9')
         {
+            //std::cout << (int)(c-'0');
             if (!reading_number)
             {
                 lid=(int)(c-'0');
@@ -335,7 +378,9 @@ read_layers(
         {
             if (reading_number)
             {
+                //std::cout << "[[" << lid << "]]";
                 com->add_layer(mnet->layers()->at(lid));
+                //std::cout << std::endl;
             }
 
             reading_number=false;
@@ -344,11 +389,11 @@ read_layers(
     }
 }
 
-template <typename M, typename L>
+template <typename M>
 int
 read_actors(
     const M* mnet,
-    PillarCommunity<L>* com,
+    PillarCommunity<M>* com,
     FILE* tidfile
 )
 {
@@ -356,12 +401,14 @@ read_actors(
     int c;
     bool reading_number=false;
 
+    //std::cout << "read actors" << std::endl;
     while (1)
     {
         c=getc(tidfile);
 
         if (c>='0' && c<='9')
         {
+            //std::cout << (int)(c-'0');
             if (!reading_number)
             {
                 id=(int)(c-'0');
@@ -377,9 +424,12 @@ read_actors(
 
         else if (c==' ' || c=='\n' || c==EOF)
         {
+            //std::cout << " ";
             if (reading_number)
             {
+                //std::cout << "[[" << (id-1) << "]]";
                 com->add_actor(mnet->actors()->at(id-1));
+                //std::cout << std::endl;
             }
 
             reading_number=false;
@@ -398,16 +448,16 @@ read_actors(
 
 }
 
-template <typename M, typename L>
-std::unique_ptr<CommunityStructure<PillarCommunity<L>>>
+template <typename M>
+std::set<std::unique_ptr<PillarCommunity<M>>>
 read_eclat_communities(
     const M* mnet,
     FILE* file,
     FILE* tidfile
 )
 {
-    auto communities = std::make_unique<CommunityStructure<PillarCommunity<L>>>();
-    auto current = std::make_unique<PillarCommunity<L>>();
+    auto communities = std::set<std::unique_ptr<PillarCommunity<M>>>();
+    auto current = std::make_unique<PillarCommunity<M>>();
 
     while (read_actors(mnet,current.get(),tidfile))
     {
@@ -415,12 +465,12 @@ read_eclat_communities(
 
         if (current->get_actors().size()>0)
         {
-            communities->add(std::move(current));
-            current = std::make_unique<PillarCommunity<L>>();
+            communities.insert(std::move(current));
+            current = std::make_unique<PillarCommunity<M>>();
         }
     }
 
-    communities->add(std::move(current));
+    //communities.insert(std::move(current));
     return communities;
 }
 

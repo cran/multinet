@@ -68,6 +68,20 @@ RCPP_MODULE(multinet)
              "Grows a multiplex network"
             );
 
+    
+    function("generate_communities_ml",
+             &generateCommunities,
+             List::create(
+                 _["type"],
+                 _["num.actors"],
+                 _["num.layers"],
+                 _["num.communities"],
+                 _["overlap"]=0,
+                 _["pr.internal"]=.4,
+                 _["pr.external"]=.01),
+             "Creates a network with a known community structure"
+            );
+    
     // IO
 
     function("read_ml", &readMultilayer, List::create( _["file"], _["name"]="unnamed", _["sep"]=',', _["aligned"]=false), "Reads a multilayer network from a file");
@@ -191,6 +205,7 @@ RCPP_MODULE(multinet)
 
 
     // CLUSTERING
+    
     function("clique_percolation_ml",
              &cliquepercolation_ml,
              List::create(
@@ -213,22 +228,53 @@ RCPP_MODULE(multinet)
     function("abacus_ml", &abacus_ml,List::create(_["n"],_["min.actors"]=3,_["min.layers"]=1),
             "Community extraction based on frequent itemset mining");
     
+    function("flat_ec_ml",
+             &flat_ec,
+             List::create(
+                _["n"]
+            ), "Flattening-based method, weighted");
+    
+    function("flat_nw_ml",
+             &flat_nw,
+             List::create(
+                _["n"]
+            ), "Flattening-based method, unweighted");
+    
     function("infomap_ml",
              &infomap_ml, List::create(_["n"],_["overlapping"]=false,_["directed"]=false,_["self.links"]=true),
              "Community extraction based on the flow equation");
 
+    function("mdlp_ml",
+             &mdlp,
+             List::create(
+                _["n"]
+            ), "Multidimensional label propagation method");
     
     function("modularity_ml",
              &modularity_ml,
              List::create(_["n"], _["comm.struct"],_["gamma"]=1,_["omega"]=1),
              "Generalized modularity");
     
-    /*
-    function("lart_ml", &lart_ml, List::create( _["n"], _["t"]=-1, _["eps"]=1, _["gamma"]=1), "Community extraction based on locally adaptive random walks");
-
-
+    function("nmi_ml",
+             &nmi,
+             List::create(
+                _["n"],
+                _["com1"],
+                _["com2"]),
+             "Normalized Mutual Information"
+             );
+    
+    function("omega_index_ml",
+             &omega,
+             List::create(
+                _["n"],
+                _["com1"],
+                _["com2"]),
+             "Omega Index"
+             );
+    
     // FOR VISUALIZATION
-     */
+    
     function("layout_multiforce_ml", &multiforce_ml, List::create( _["n"], _["w_in"]=1, _["w_inter"]=1, _["gravity"]=0, _["iterations"]=100), "Multiforce method: computes vertex coordinates");
 
     function("layout_circular_ml", &circular_ml, List::create( _["n"] ), "Circular method: computes vertex coordinates arranging actors on a circle");

@@ -7,9 +7,7 @@
 Generation of multilayer networks
 }
 \description{
-The grow_ml function generates a multilayer network by letting it grow for a number of steps, where for each step three events can happen: (1) evolution according to internal dynamics (in which case a specific internal evolution model is used), (2) evolution importing edges from another layer, and (3) no action.
-
-The functions evolution_pa_ml and evolution_er_ml define, respectively, an evolutionary model based on preferential attachment and an evolutionary model where edges are created by choosing random end points, as in the ER random graph model.
+The grow_ml function generates a multilayer network by letting it grow for a number of steps, where for each step three events can happen: (1) evolution according to internal dynamics (in which case a specific internal evolution model is used), (2) evolution importing edges from another layer, and (3) no action. The functions evolution_pa_ml and evolution_er_ml define, respectively, an evolutionary model based on preferential attachment and an evolutionary model where edges are created by choosing random end points, as in the ER random graph model.
 }
 \usage{
 grow_ml(num.actors, num.steps, models, pr.internal, pr.external, dependency)

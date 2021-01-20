@@ -7,11 +7,11 @@ namespace uu {
 namespace net {
 
 template <typename M>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<const typename M::layer_type>>>
-glouvain2(
-    const M* g,
-    double omega
-)
+std::unique_ptr<CommunityStructure<M>>
+                                    glouvain2(
+                                        const M* g,
+                                        double omega
+                                    )
 {
 
     auto multilayer_metanetwork = convert(g, omega);
@@ -25,6 +25,7 @@ glouvain2(
 
     while (meta)
     {
+        //std::cout << "." << std::endl;
         //std::cout << "pass" << std::endl;
         passes.push_back(std::move(meta));
         auto w = passes.back().get();
@@ -34,11 +35,11 @@ glouvain2(
 
     auto c = communities(passes);
 
-    auto communities = std::make_unique<CommunityStructure<VertexLayerCommunity<const typename M::layer_type>>>();
+    auto communities = std::make_unique<CommunityStructure<M>>();
 
     for (auto meta_community: *c)
     {
-        auto community = std::make_unique<VertexLayerCommunity<const typename M::layer_type>>();
+        auto community = std::make_unique<Community<M>>();
 
         for (auto meta_vertex: *meta_community)
         {

@@ -4,7 +4,7 @@ namespace net {
 
 template <typename LayerIterator>
 void
-write_attributed_homogeneous_multilayer_network(
+write_multilayer_network(
     const MultilayerNetwork* mnet,
     LayerIterator begin,
     LayerIterator end,

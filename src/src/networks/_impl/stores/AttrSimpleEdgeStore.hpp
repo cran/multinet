@@ -17,7 +17,7 @@ namespace net {
  * A SimpleEdgeStore allows to create, store, retrieve and erase a set of vertices.
  */
 class
-    AttrSimpleEdgeStore
+    AttrSimpleEdgeStore final
     : public SimpleEdgeStore
 {
 

@@ -28,6 +28,7 @@ read_attributed_homogeneous_multilayer_network(
     {
         std::string layer_name = l.first;
         auto layer_type = l.second;
+
         //std::cout << "creating layer " << l.first << " " << layer_type.is_directed << std::endl;
         auto dir = layer_type.is_directed?EdgeDir::DIRECTED:EdgeDir::UNDIRECTED;
         auto layer = std::make_unique<Network>(layer_name, dir, layer_type.allows_loops);

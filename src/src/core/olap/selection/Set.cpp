@@ -3,7 +3,6 @@
 
 namespace uu {
 namespace core {
-namespace sel {
 
 Set::
 Set(
@@ -64,7 +63,6 @@ next(
     }
 }
 
-}
 }
 }
 

@@ -10,14 +10,22 @@
 namespace uu {
 namespace net {
 
+void
+write_multilayer_network(
+    const MultilayerNetwork* net,
+    const std::string& outfile,
+    char separator = ','
+);
+
+
 template <typename LayerIterator>
 void
-write_attributed_homogeneous_multilayer_network(
+write_multilayer_network(
     const MultilayerNetwork* net,
     LayerIterator begin,
     LayerIterator end,
     const std::string& outfile,
-    char separator
+    char separator = ','
 );
 
 template <typename LayerIterator>

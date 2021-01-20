@@ -7,11 +7,9 @@
 #include <numeric>
 #include <random>
 #include "community/CommunityStructure.hpp"
-#include "community/VertexLayerCommunity.hpp"
 #include "Eigen/Sparse"
 #include "Eigen/Dense"
 #include <vector>
-#include "community/Community.hpp"
 #include "objects/EdgeMode.hpp"
 #include "objects/Vertex.hpp"
 
@@ -23,26 +21,26 @@ namespace uu {
 namespace net {
 
 /*  */
-template <typename M, typename L>
+template <typename M>
 void
 read_layers(
     const M* mnet,
-    PillarCommunity<L>* com,
+    PillarCommunity<M>* com,
     FILE* file
 );
 
 /*  */
-template <typename M, typename L>
+template <typename M>
 int
 read_actors(
     const M* mnet,
-    PillarCommunity<L>* com,
+    PillarCommunity<M>* com,
     FILE* tidfile
 );
 
 /*  */
-template <typename M, typename L>
-std::unique_ptr<CommunityStructure<PillarCommunity<L>>>
+template <typename M>
+std::set<std::unique_ptr<PillarCommunity<M>>>
 read_eclat_communities(
     const M* mnet,
     FILE* file,
@@ -50,11 +48,11 @@ read_eclat_communities(
 );
 
 /*  */
-template <typename M, typename L>
-std::unique_ptr<CommunityStructure<PillarCommunity<L>>>
+template <typename M>
+std::set<std::unique_ptr<PillarCommunity<M>>>
 eclat_merge(
     const M* mnet,
-    const std::unordered_map<const L*, CommunityStructure<Community<const Vertex*>>*>& single_layer_communities,
+    const std::unordered_map<const typename M::layer_type*, CommunityStructure<Network>*>& single_layer_communities,
     int min_actors,
     int min_layers
 );

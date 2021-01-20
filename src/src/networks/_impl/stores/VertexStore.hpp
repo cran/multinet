@@ -14,6 +14,7 @@
 namespace uu {
 namespace net {
 
+
 /**
  * A VertexStore allows to create, store, retrieve and erase a set of vertices.
  */
@@ -30,20 +31,24 @@ class
 
     typedef Vertex value_type;
     typedef std::string key_type;
+    typedef core::PtrSortedRandomSet<const Vertex,std::shared_ptr<const Vertex>,core::SharedPtrLT<const Vertex>,core::SharedPtrEQ<const Vertex>>::iterator iterator;
 
     VertexStore(
     );
 
 
+    virtual
+    ~VertexStore() {}
+
     /** Returns an iterator to the first object in the collection */
-    core::PtrSortedRandomSet<const Vertex,std::shared_ptr<const Vertex>,core::SharedPtrLT<const Vertex>,core::SharedPtrEQ<const Vertex>>::iterator
-            begin(
-            ) const;
+    iterator
+    begin(
+    ) const;
 
     /** Returns an iterator after the last object in the collection */
-    core::PtrSortedRandomSet<const Vertex,std::shared_ptr<const Vertex>,core::SharedPtrLT<const Vertex>,core::SharedPtrEQ<const Vertex>>::iterator
-            end(
-            ) const;
+    iterator
+    end(
+    ) const;
 
     /** Returns the number of objects in the collection */
     size_t

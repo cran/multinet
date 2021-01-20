@@ -1,8 +1,8 @@
 #ifndef UU_MNET_COMMUNITY_MLCPMCOMMUNITY_H_
 #define UU_MNET_COMMUNITY_MLCPMCOMMUNITY_H_
 
+#include "community/Community.hpp"
 #include "objects/MultiplexClique.hpp"
-#include "community/VertexLayerCommunity.hpp"
 
 
 namespace uu {
@@ -90,10 +90,10 @@ class
     actors(
     ) const;
 
-    std::unique_ptr<VertexLayerCommunity<const typename M::layer_type>>
-            to_community(
-                //const M* net
-            ) const;
+    std::unique_ptr<Community<M>>
+                               to_community(
+                                   //const M* net
+                               ) const;
 
     int
     size(
@@ -205,13 +205,13 @@ get_layers(
 }
 
 template <typename M>
-std::unique_ptr<VertexLayerCommunity<const typename M::layer_type>>
-        MLCPMCommunity<M>::
-        to_community(
-            //const M* net
-        ) const
+std::unique_ptr<Community<M>>
+                           MLCPMCommunity<M>::
+                           to_community(
+                               //const M* net
+                           ) const
 {
-    auto result = std::make_unique<VertexLayerCommunity<const typename M::layer_type>>();
+    auto result = std::make_unique<Community<M>>();
 
     for (auto actor: actors())
     {
@@ -222,7 +222,7 @@ std::unique_ptr<VertexLayerCommunity<const typename M::layer_type>>
                 continue;
             }
 
-            auto iv = std::make_pair(actor, layer);
+            auto iv = MLVertex<M>(actor, layer);
             result->add(iv);
         }
     }

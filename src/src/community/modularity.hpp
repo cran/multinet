@@ -56,20 +56,20 @@ modularity(const M* mnet, const CS* communities, double omega)
                 //std::cout << j->to_string() << " " << groups.count(j) << std::endl;
 
                 // same layer
-                if (i.second==j.second)
+                if (i.l==j.l)
                 {
                     //std::cout << "Same group!" << std::endl;
                     //if (mnet.getNetwork(net)->containsEdge(*v_i,*v_j))
                     //    std::cout << "Edge" << std::endl;
-                    long k_i = i.second->edges()->neighbors(i.first,EdgeMode::OUT)->size();
-                    long k_j = j.second->edges()->neighbors(j.first,EdgeMode::IN)->size();
-                    int a_ij = i.second->edges()->get(i.first, j.first)? 1.0 : 0.0;
-                    res += a_ij - (double)k_i * k_j / (m_s.at(i.second->name));
+                    long k_i = i.l->edges()->neighbors(i.v,EdgeMode::OUT)->size();
+                    long k_j = j.l->edges()->neighbors(j.v,EdgeMode::IN)->size();
+                    int a_ij = i.l->edges()->get(i.v, j.v)? 1.0 : 0.0;
+                    res += a_ij - (double)k_i * k_j / (m_s.at(i.l->name));
                     //std::cout << i->actor->name << " " << j->actor->name << " " << i->layer->name << " "<< k_i << " " <<  k_j << " " <<  m_s.at(i->layer) << std::endl;
                     //std::cout << "->" << res << std::endl;
                 }
 
-                if (i.first==j.first)
+                if (i.v==j.v)
                 {
                     res += omega;
                 }
@@ -150,22 +150,22 @@ ordered_modularity(const M* mnet, const CS* communities, double omega)
                 //std::cout << j->to_string() << " " << groups.count(j) << std::endl;
 
                 // same layer
-                if (i.second==j.second)
+                if (i.l==j.l)
                 {
                     //std::cout << "Same group!" << std::endl;
                     //if (mnet.getNetwork(net)->containsEdge(*v_i,*v_j))
                     //    std::cout << "Edge" << std::endl;
-                    long k_i = i.second->edges()->neighbors(i.first,EdgeMode::OUT)->size();
-                    long k_j = j.second->edges()->neighbors(j.first,EdgeMode::IN)->size();
-                    int a_ij = i.second->edges()->get(i.first, j.first)? 1.0 : 0.0;
-                    res += a_ij - (double)k_i * k_j / (m_s.at(i.second->name));
+                    long k_i = i.l->edges()->neighbors(i.v,EdgeMode::OUT)->size();
+                    long k_j = j.l->edges()->neighbors(j.v,EdgeMode::IN)->size();
+                    int a_ij = i.l->edges()->get(i.v, j.v)? 1.0 : 0.0;
+                    res += a_ij - (double)k_i * k_j / (m_s.at(i.l->name));
                     //std::cout << i->actor->name << " " << j->actor->name << " " << i->layer->name << " "<< k_i << " " <<  k_j << " " <<  m_s.at(i->layer) << std::endl;
                     //std::cout << "->" << res << std::endl;
                 }
 
-                if (i.first==j.first)
+                if (i.v==j.v)
                 {
-                    if (std::abs((int)(layer_index[i.second]-layer_index[j.second]))<2)
+                    if (std::abs((int)(layer_index[i.l]-layer_index[j.l]))<2)
                     {
                         res += omega;
                     }

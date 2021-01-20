@@ -23,6 +23,67 @@ null_graph(
     return g;
 }
 
+
+std::unique_ptr<MultilayerNetwork>
+null_multiplex(
+    size_t n,
+    const std::vector<EdgeDir>& dir,
+    const std::vector<bool>& allows_loops
+)
+{
+    std::string name = "N_" + std::to_string(n) + "_" + std::to_string(dir.size());
+    auto g = std::make_unique<MultilayerNetwork>(name);
+
+    if (dir.size() != allows_loops.size())
+    {
+        std::string err = "parameter lengths do not match";
+        throw core::WrongParameterException(err);
+    }
+
+    // Adding layers
+    core::NameIterator layer_names("l", dir.size());
+    size_t l = 0;
+
+    for (auto layer_name: layer_names)
+    {
+        g->layers()->add(std::make_unique<Network>(layer_name, dir[l], allows_loops[l]));
+        l++;
+    }
+
+    // Adding actors
+    core::NameIterator actor_names("a", n);
+
+    for (auto actor_name: actor_names)
+    {
+        g->actors()->add(actor_name);
+    }
+
+    // Adding vertices
+    for (auto l: *g->layers())
+    {
+        for (auto a: *g->actors())
+        {
+            l->vertices()->add(a);
+        }
+    }
+
+    return g;
+}
+
+std::unique_ptr<MultilayerNetwork>
+null_multiplex(
+    size_t n,
+    size_t l
+)
+{
+    std::vector<uu::net::EdgeDir> dir(l, uu::net::EdgeDir::UNDIRECTED);
+    std::vector<bool> loops(l, true);
+    return null_multiplex(n, dir, loops);
+}
+
+
+
+
 std::unique_ptr<Network>
 complete_graph(
     size_t n,

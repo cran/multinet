@@ -10,8 +10,8 @@ single_source_path_length(
     EdgeMode mode
 )
 {
-    core::assert_not_null(g, "single_source_shortest_pa.hpp", "g");
-    core::assert_not_null(v, "single_source_shortest_pa.hpp", "v");
+    core::assert_not_null(g, "single_source_path_length", "g");
+    core::assert_not_null(v, "single_source_path_length", "v");
 
     std::vector<int> path_length(order(g), -1);
 

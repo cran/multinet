@@ -7,13 +7,14 @@
 #include <numeric>
 #include <random>
 #include "community/CommunityStructure.hpp"
-#include "community/VertexLayerCommunity.hpp"
 #include "Eigen/Sparse"
 #include "Eigen/Dense"
 #include <vector>
 #include "community/Community.hpp"
+#include "networks/Network.hpp"
 #include "objects/EdgeMode.hpp"
 #include "objects/Vertex.hpp"
+#include "objects/MLVertex.hpp"
 
 namespace uu {
 namespace net {
@@ -358,10 +359,10 @@ std::vector<Eigen::SparseMatrix<double>>
 }
 
 
-std::unique_ptr<CommunityStructure<Community<const Vertex*>>>
-to_community_structure(
-    std::unordered_map<const Vertex*, size_t> membership
-);
+std::unique_ptr<CommunityStructure<Network>>
+        to_community_structure(
+            std::unordered_map<const Vertex*, size_t> membership
+        );
 
 class glouvain
 {
@@ -387,14 +388,14 @@ class glouvain
      method for single layer networks. This implementation is based from http://netwiki.amath.unc.edu/GenLouvain/GenLouvain
      */
     template <typename M, typename G>
-    std::unique_ptr<CommunityStructure<VertexLayerCommunity<const G>>>
-    fit(
-        const M* mnet,
-        const std::string& m,
-        double gamma,
-        double omega,
-        size_t limit
-    );
+    std::unique_ptr<CommunityStructure<M>>
+                                        fit(
+                                            const M* mnet,
+                                            const std::string& m,
+                                            double gamma,
+                                            double omega,
+                                            size_t limit
+                                        );
 
     /* Map indexes of b to values of a:
      https://stackoverflow.com/questions/5691218/matlab-mapping-values-to-index-of-other-array*/
@@ -802,11 +803,11 @@ class metanet
 
 
 template <typename M, typename G>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<const G>>>
-to_community_structure(
-    const M* mnet,
-    const std::vector<unsigned int>& nodes2cid
-)
+std::unique_ptr<CommunityStructure<M>>
+                                    to_community_structure(
+                                        const M* mnet,
+                                        const std::vector<unsigned int>& nodes2cid
+                                    )
 {
 
     size_t num_layers = mnet->layers()->size();
@@ -838,15 +839,16 @@ to_community_structure(
 
     // build community structure
 
-    auto communities = std::make_unique<CommunityStructure<VertexLayerCommunity<const G>>>();
+    auto communities = std::make_unique<CommunityStructure<M>>();
 
     for (auto pair: result)
     {
-        auto c = std::make_unique<VertexLayerCommunity<const G>>();
+        auto c = std::make_unique<Community<M>>();
 
         for (auto vertex_layer_pair: pair.second)
         {
-            c->add(vertex_layer_pair);
+            auto v = MLVertex<M>(vertex_layer_pair.first, vertex_layer_pair.second);
+            c->add(v);
         }
 
         communities->add(std::move(c));

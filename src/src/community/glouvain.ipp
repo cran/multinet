@@ -2,13 +2,13 @@ namespace uu {
 namespace net {
 
 template <typename M, typename G>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<const G>>>
-generalized_louvain(
-    const M* mnet,
-    double gamma,
-    double omega,
-    size_t limit
-)
+std::unique_ptr<CommunityStructure<M>>
+                                    generalized_louvain(
+                                        const M* mnet,
+                                        double gamma,
+                                        double omega,
+                                        size_t limit
+                                    )
 {
     glouvain g;
     return g.fit<M,G>(mnet, "move", gamma, omega, limit);
@@ -16,14 +16,14 @@ generalized_louvain(
 
 
 template <typename M, typename G>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<const G>>>
-glouvain::fit(
-    const M* mnet,
-    const std::string& m,
-    double gamma,
-    double omega,
-    size_t limit
-)
+std::unique_ptr<CommunityStructure<M>>
+                                    glouvain::fit(
+                                        const M* mnet,
+                                        const std::string& m,
+                                        double gamma,
+                                        double omega,
+                                        size_t limit
+                                    )
 {
     // @todo check UNDIRECTED
     // @todo check ORDERED

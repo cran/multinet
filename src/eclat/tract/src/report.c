@@ -1787,11 +1787,11 @@ isr_add (ISREPORT *rep, ITEM item, RSUPP supp)
     /* assert(!isr_uses(rep, item)); */
     /* if (supp < rep->smin) return 0; */
 #ifdef ISR_CLOMAX             /* if closed/maximal filtering */
-
+    
     if      (rep->clomax)         /* if a closed/maximal filter exists */
     {
         int r = cm_add(rep->clomax, item, supp);
-
+        
         if (r <= 0)
         {
             return r;    /* add the item to the c/m filter */

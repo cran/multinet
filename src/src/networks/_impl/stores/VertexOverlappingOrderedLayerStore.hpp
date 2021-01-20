@@ -13,7 +13,7 @@ namespace uu {
 namespace net {
 
 template <typename Graph>
-class VertexOverlappingOrderedLayerStore :
+class VertexOverlappingOrderedLayerStore final :
     public core::Subject<Graph>
 {
 

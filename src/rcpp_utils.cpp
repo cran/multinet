@@ -1,4 +1,5 @@
 #include "rcpp_utils.h"
+#include "objects/MLVertex.hpp"
 #include <algorithm>
 
 std::vector<uu::net::Network*>
@@ -324,7 +325,7 @@ resolve_mode(
 
 Rcpp::DataFrame
 to_dataframe(
-    uu::net::CommunityStructure<uu::net::VertexLayerCommunity<const uu::net::Network>>* cs
+    uu::net::CommunityStructure<uu::net::MultilayerNetwork>* cs
 )
 {
 
@@ -337,8 +338,8 @@ to_dataframe(
     {
         for (auto pair: *com)
         {
-            actor.push_back(pair.first->name);
-            layer.push_back(pair.second->name);
+            actor.push_back(pair.v->name);
+            layer.push_back(pair.l->name);
             community_id.push_back(comm_id);
         }
 
@@ -352,7 +353,7 @@ to_dataframe(
            );
 }
 
-std::unique_ptr<uu::net::CommunityStructure<uu::net::VertexLayerCommunity<const uu::net::Network>>>
+std::unique_ptr<uu::net::CommunityStructure<uu::net::MultilayerNetwork>>
 to_communities(
                const DataFrame& com,
                const uu::net::MultilayerNetwork* mnet
@@ -362,7 +363,7 @@ to_communities(
     CharacterVector cs_layer = com["layer"];
     NumericVector cs_cid = com["cid"];
     
-    std::unordered_map<int, std::list<std::pair<const uu::net::Vertex*, const uu::net::Network*>> > result;
+    std::unordered_map<size_t, std::list<uu::net::MLVertex<uu::net::MultilayerNetwork>>> result;
     
     for (size_t i=0; i<com.nrow(); i++) {
         int comm_id = cs_cid[i];
@@ -371,19 +372,18 @@ to_communities(
         auto actor = mnet->actors()->get(std::string(cs_actor[i]));
         if (!actor) stop("cannot find actor " + std::string(cs_actor[i]) + " (community structure not compatible with this network?)");
         
-        auto iv = std::make_pair(actor, layer);
-        result[comm_id].push_back(iv);
+        result[comm_id].push_back(uu::net::MLVertex<uu::net::MultilayerNetwork>(actor,layer));
         
     }
     
     
         // build community structure
     
-    auto communities = std::make_unique<uu::net::CommunityStructure<uu::net::VertexLayerCommunity<const uu::net::Network>>>();
+    auto communities = std::make_unique<uu::net::CommunityStructure<uu::net::MultilayerNetwork>>();
     
     for (auto pair: result)
     {
-        auto c = std::make_unique<uu::net::VertexLayerCommunity<const uu::net::Network>>();
+        auto c = std::make_unique<uu::net::Community<uu::net::MultilayerNetwork>>();
         
         for (auto vertex_layer_pair: pair.second)
         {

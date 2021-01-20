@@ -14,10 +14,10 @@ namespace uu {
 namespace net {
 
 template <typename G>
-std::unique_ptr<CommunityStructure<Community<const Vertex*>>>
-label_propagation(
-    const G* net
-);
+std::unique_ptr<CommunityStructure<G>>
+                                    label_propagation(
+                                        const G* net
+                                    );
 
 }
 }

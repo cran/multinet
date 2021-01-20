@@ -13,12 +13,12 @@ namespace uu {
 namespace net {
 
 template <typename M>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<const typename M::layer_type>>>
-mlcpm(
-    const M* mnet,
-    size_t k,
-    size_t m
-);
+std::unique_ptr<CommunityStructure<M>>
+                                    mlcpm(
+                                        const M* mnet,
+                                        size_t k,
+                                        size_t m
+                                    );
 
 /**
  * This method finds all the maximal cliques (1) being a superset of clique A

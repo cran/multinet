@@ -6,12 +6,11 @@
 #include <numeric>
 #include <utility>
 #include "objects/EdgeMode.hpp"
-#include "community/VertexLayerCommunity.hpp"
 
 namespace uu {
 namespace net {
 
-template <typename L>
+template <typename M>
 class
     PillarCommunity
 {
@@ -36,10 +35,10 @@ class
 
     void
     add_layer(
-        const L*
+        const typename M::layer_type*
     );
 
-    const std::unordered_set<const L*>&
+    const std::unordered_set<const typename M::layer_type*>&
     get_layers(
     ) const;
 
@@ -49,62 +48,62 @@ class
 
   private:
     std::unordered_set<const Vertex*> actors;
-    std::unordered_set<const L*> layers;
+    std::unordered_set<const typename M::layer_type*> layers;
 };
 
-template <typename L>
-std::unique_ptr<VertexLayerCommunity<const L>>
-        to_vertex_layer_community(
-            PillarCommunity<L>* com
-        );
+template <typename M>
+std::unique_ptr<Community<M>>
+                           to_vertex_layer_community(
+                               PillarCommunity<M>* com
+                           );
 
 
-template <typename L>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<const L>>>
-to_vertex_layer_community_structure(
-    CommunityStructure<PillarCommunity<L>>* com
-);
+template <typename M>
+std::unique_ptr<CommunityStructure<M>>
+                                    to_vertex_layer_community_structure(
+                                        const std::set<std::unique_ptr<PillarCommunity<M>>>& com
+                                    );
 // Definitions
 
 
-template <typename L>
-std::unique_ptr<VertexLayerCommunity<const L>>
-        to_vertex_layer_community(
-            PillarCommunity<L>* com
-        )
+template <typename M>
+std::unique_ptr<Community<M>>
+                           to_vertex_layer_community(
+                               PillarCommunity<M>* com
+                           )
 {
-    auto res = std::make_unique<VertexLayerCommunity<const L>>();
+    auto res = std::make_unique<Community<M>>();
 
     for (auto a: com->get_actors())
     {
         for (auto l: com->get_layers())
         {
-            res->add(std::make_pair(a,l));
+            res->add(MLVertex<M>(a,l));
         }
     }
 
     return res;
 }
 
-template <typename L>
-std::unique_ptr<CommunityStructure<VertexLayerCommunity<const L>>>
-to_vertex_layer_community_structure(
-    CommunityStructure<PillarCommunity<L>>* com
-)
+template <typename M>
+std::unique_ptr<CommunityStructure<M>>
+                                    to_vertex_layer_community_structure(
+                                        const std::set<std::unique_ptr<PillarCommunity<M>>>& com
+                                    )
 {
-    auto res = std::make_unique<CommunityStructure<VertexLayerCommunity<const L>>>();
+    auto res = std::make_unique<CommunityStructure<M>>();
 
-    for (auto c: *com)
+    for (auto&& c: com)
     {
-        res->add(std::move(to_vertex_layer_community(c)));
+        res->add(std::move(to_vertex_layer_community(c.get())));
     }
 
     return res;
 }
 
-template <typename L>
+template <typename M>
 std::string
-PillarCommunity<L>::
+PillarCommunity<M>::
 to_string(
 ) const
 {
@@ -159,8 +158,8 @@ to_string(
 }
 
 
-template <typename L>
-void PillarCommunity<L>::
+template <typename M>
+void PillarCommunity<M>::
 add_actor(
     const Vertex* actor
 )
@@ -169,9 +168,9 @@ add_actor(
 }
 
 
-template <typename L>
+template <typename M>
 const std::unordered_set<const Vertex*>&
-PillarCommunity<L>::
+PillarCommunity<M>::
 get_actors(
 ) const
 {
@@ -179,20 +178,20 @@ get_actors(
 }
 
 
-template <typename L>
+template <typename M>
 void
-PillarCommunity<L>::
+PillarCommunity<M>::
 add_layer(
-    const L* layer
+    const typename M::layer_type* layer
 )
 {
     layers.insert(layer);
 }
 
 
-template <typename L>
-const std::unordered_set<const L*>&
-PillarCommunity<L>::
+template <typename M>
+const std::unordered_set<const typename M::layer_type*>&
+PillarCommunity<M>::
 get_layers(
 ) const
 {

@@ -50,6 +50,10 @@ class Graph
         std::unique_ptr<E> e
     );
 
+    virtual
+    ~Graph()
+    {}
+
     /**
      * Returns a pointer to the graph's vertex store.
      */
