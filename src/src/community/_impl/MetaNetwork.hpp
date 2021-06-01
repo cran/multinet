@@ -4,10 +4,7 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
-#include "networks/WeightedNetwork.hpp"
-#include "objects/EdgeMode.hpp"
-#include "objects/Vertex.hpp"
-#include "objects/Edge.hpp"
+#include "networks/Network.hpp"
 
 namespace uu {
 namespace net {
@@ -16,7 +13,7 @@ class MetaNetwork
 {
   public:
 
-    std::unique_ptr<WeightedNetwork> w;
+    std::unique_ptr<Network> w;
     size_t order = 0;
     std::unordered_map<const Vertex*, std::set<const Vertex*>> mapping;
     std::unordered_map<const Vertex*, const Vertex*> reverse_mapping;
@@ -45,7 +42,7 @@ class MetaNetwork
     );
 
 
-    const WeightedNetwork*
+    const Network*
     get(
     ) const;
 

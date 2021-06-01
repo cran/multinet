@@ -5,9 +5,6 @@
 #include <vector>
 #include <memory>
 #include "networks/MultiNetwork.hpp"
-#include "objects/EdgeMode.hpp"
-#include "objects/Vertex.hpp"
-#include "objects/Edge.hpp"
 
 namespace uu {
 namespace net {

@@ -19,14 +19,12 @@ include( GNUInstallDirs )
 
 target_include_directories ( ${META_LIBRARY_NAME}
 	PUBLIC
-		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>/ext/spectra
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>/ext/eclat/eclat/src
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>/ext/eclat/tract/src
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>/ext/eclat/math/src
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>/ext/eclat/util/src
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>/ext/eclat/apriori/src
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>/ext/infomap
-		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>/ext/eigen3
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}> )
 
@@ -86,18 +84,6 @@ install(
     NAMESPACE {PROJECT_NAME}::
 	DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${META_LIBRARY_NAME}
 	COMPONENT ${META_LIBRARY_NAME}_dev )
-
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/ext/eigen3/" # source directory
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/eigen3" # target directory
-        FILES_MATCHING # install only matched files
-        PATTERN "*" # select header files
-)
-
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/ext/spectra" # source directory
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/spectra" # target directory
-        FILES_MATCHING # install only matched files
-        PATTERN "*.h" # select header files
-)
 
 file (GLOB_RECURSE ECLAT_HEADERS ${PROJECT_SOURCE_DIR}/ext/eclat/*.h)
 install(FILES ${ECLAT_HEADERS} # source directory

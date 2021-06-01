@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include "r_functions.h"
+#include "utils/summary.hpp"
 
 using namespace Rcpp;
 
@@ -13,7 +14,7 @@ show_multilayer_network(
     RMLNetwork *mnet
 )
 {
-    Rcpp::Rcout << mnet->get_mlnet()->summary() << std::endl;
+    Rcpp::Rcout << uu::net::summary_short(mnet->get_mlnet()) << std::endl;
 }
 
 void
@@ -150,7 +151,6 @@ RCPP_MODULE(multinet)
     // NETWORK MANIPULATION
 
     function("add_layers_ml", &addLayers, List::create( _["n"], _["layers"], _["directed"]=false), "Adds one or more layers to a multilayer network");
-    function("add_actors_ml_v3", &addActors, List::create( _["n"], _["actors"]), "Adds one or more actors to a multilayer network");
     function("add_vertices_ml", &addNodes, List::create( _["n"], _["vertices"]), "Adds one or more vertices to a layer of a multilayer network");
     function("add_edges_ml", &addEdges, List::create( _["n"], _["edges"]), "Adds one or more edges to a multilayer network - each edge is a quadruple [actor,layer,actor,layer]");
 
@@ -217,12 +217,7 @@ RCPP_MODULE(multinet)
 
     function("glouvain_ml",
              &glouvain_ml,
-             List::create(_["n"],_["gamma"]=1,_["omega"]=1,_["limit"]=0),
-             "Extension of the louvain method");
-    
-    function("glouvain2_ml",
-             &glouvain2_ml,
-             List::create(_["n"], _["omega"]=1),
+             List::create(_["n"],_["gamma"]=1,_["omega"]=1),
              "Extension of the louvain method");
     
     function("abacus_ml", &abacus_ml,List::create(_["n"],_["min.actors"]=3,_["min.layers"]=1),

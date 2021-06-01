@@ -1,5 +1,5 @@
 #include "core/utils/random.hpp"
-#include "core/exceptions/OperationNotSupportedException.hpp"
+#include "core/exceptions/WrongParameterException.hpp"
 #include <algorithm>
 #include <iostream>
 
@@ -23,7 +23,7 @@ get_random_engine(
 }
 
 size_t
-getRandomInt(
+irand(
     size_t max
 )
 {
@@ -33,7 +33,7 @@ getRandomInt(
 }
 
 long
-getRandomLong(
+lrand(
     long max
 )
 {
@@ -81,29 +81,6 @@ random_level(
     return lvl < MAX_LEVEL ? lvl : MAX_LEVEL;
 }
 
-
-std::set<size_t>
-getKRandom(
-    size_t max,
-    size_t k
-)
-{
-    if (max<k)
-    {
-        throw OperationNotSupportedException("Only " + std::to_string(max) + " values available, requested " + std::to_string(k));
-    }
-
-    std::set<size_t> res;
-
-    while (res.size()<k)
-    {
-        res.insert(getRandomInt(max));
-    }
-
-    return res;
-}
-
-
 std::vector<size_t>
 get_k_uniform(
     size_t max,
@@ -111,9 +88,11 @@ get_k_uniform(
 )
 {
 
+    if (k>max) throw core::WrongParameterException("get_k_uniform: k must be <= max");
+    
     std::vector<size_t> res(k, 0);
 
-    size_t rand = getRandomInt(max);
+    size_t rand = irand(max);
 
     size_t last_position = 1;
 
@@ -121,7 +100,7 @@ get_k_uniform(
 
     for (size_t i = 1; i < k; i++)
     {
-        rand = getRandomInt(max-i);
+        rand = irand(max-i);
 
         size_t pos = 0;
 
@@ -196,12 +175,12 @@ test(
             return idx;
         }
 
-        prob_failing_previous_tests *= (1-adjusted_prob);
+        prob_failing_previous_tests *= (1.0-adjusted_prob);
     }
 
     // In practice, the last value of the input is assumed to be 1 minus the sum of the previous values
     return options.at(row_num).size()-1;
 }
 
-} // namespace core
-} // namespace uu
+}
+}

@@ -1,3 +1,11 @@
+# version 4.0
+
+- the multilayer network data structure has been re-implemented using multilayer cubes
+- actors must exist on at least one layer
+- removed actor Pucci from florentine data, not being present in any layer
+- improved efficiency of functions returning dataframes
+- removed functions deprecated since versions 3.0 and 3.1
+
 # version 3.3.2
 
 - new default behavior: loops are allowed

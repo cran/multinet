@@ -17,7 +17,7 @@ std::unique_ptr<Network>
 null_graph(
     size_t n,
     EdgeDir dir = EdgeDir::UNDIRECTED,
-    bool allows_loops = false
+    LoopMode allows_loops = LoopMode::DISALLOWED
 );
 
 
@@ -28,7 +28,7 @@ std::unique_ptr<MultilayerNetwork>
 null_multiplex(
     size_t n,
     const std::vector<EdgeDir>& dir,
-    const std::vector<bool>& allows_loops
+    const std::vector<LoopMode>& allows_loops
 );
 
 /**

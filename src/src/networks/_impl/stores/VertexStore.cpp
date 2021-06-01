@@ -13,18 +13,18 @@ VertexStore(
     store_ = std::make_unique<core::ObjectStore<Vertex>>();
 }
 
-core::PtrSortedRandomSet<const Vertex,std::shared_ptr<const Vertex>,core::SharedPtrLT<const Vertex>,core::SharedPtrEQ<const Vertex>>::iterator
-        VertexStore::
-        begin(
-        ) const
+VertexStore::iterator
+VertexStore::
+begin(
+) const
 {
     return store_->begin();
 }
 
-core::PtrSortedRandomSet<const Vertex,std::shared_ptr<const Vertex>,core::SharedPtrLT<const Vertex>,core::SharedPtrEQ<const Vertex>>::iterator
-        VertexStore::
-        end(
-        ) const
+VertexStore::iterator
+VertexStore::
+end(
+) const
 {
     return store_->end();
 }
@@ -90,6 +90,25 @@ contains(
     return store_->contains(v);
 }
 
+bool
+VertexStore::
+contains(
+    const std::string& key
+) const
+{
+    auto v = store_->get(key);
+
+    if (v)
+    {
+        return true;
+    }
+
+    else
+    {
+        return false;
+    }
+}
+
 const Vertex*
 VertexStore::
 get(
@@ -136,13 +155,32 @@ erase(
     return store_->erase(v);
 }
 
+bool
+VertexStore::
+erase(
+    const std::string& key
+)
+{
+    auto v = store_->get(key);
+
+    if (v)
+    {
+        return store_->erase(v);
+    }
+
+    else
+    {
+        return false;
+    }
+}
+
 void
 VertexStore::
 attach(
     core::Observer<const Vertex>* obs
 )
 {
-    return store_->attach(obs);
+    store_->attach(obs);
 }
 
 std::string

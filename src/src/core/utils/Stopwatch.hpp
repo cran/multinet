@@ -1,9 +1,6 @@
 /**
- * Class used to count execution times.
- *
- * History: created on 2020-04-10.
+ * Class used to measure execution times.
  */
-
 #ifndef UU_CORE_UTILS_STOPWATCH_H_
 #define UU_CORE_UTILS_STOPWATCH_H_
 

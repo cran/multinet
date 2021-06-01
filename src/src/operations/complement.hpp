@@ -8,12 +8,14 @@ namespace uu {
 namespace net {
 
 /**
- * Returns the complement of a graph.
- * The set of vertices is the same, and there is an edge
- * for each pair of vertices that are not adjacent in the
+ * Returns the complement G' of a graph G.
+ * V(G') = V(G), and there is an edge for each pair of vertices that are not adjacent in the
  * input graph.
  *
+ * G' does not have any attributes.
+ *
  * @param g input graph
+ * @param name name of the new graph
  */
 template<typename G>
 std::unique_ptr<G>

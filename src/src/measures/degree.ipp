@@ -171,7 +171,7 @@ degree(
     {
         for (auto e: *inc)
         {
-            if (e->v1 == e->v2)
+            if (!(g->is_directed() && mode != EdgeMode::INOUT) && e->v1 == e->v2)
             {
                 d++;    // for loops
             }

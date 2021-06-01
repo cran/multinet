@@ -1,10 +1,3 @@
-/**
- * This header defines functions to print containers and other objects.
- *
- * History:
- * - 2018.01.01 file imported from version 1.0 of the multinet library
- */
-
 #ifndef UU_CORE_UTILS_PRETTYPRINTING_H_
 #define UU_CORE_UTILS_PRETTYPRINTING_H_
 

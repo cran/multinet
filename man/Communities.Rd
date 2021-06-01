@@ -3,7 +3,6 @@
 \alias{abacus_ml}
 \alias{clique_percolation_ml}
 \alias{glouvain_ml}
-\alias{glouvain2_ml}
 \alias{flat_ec_ml}
 \alias{flat_nw_ml}
 \alias{infomap_ml}
@@ -29,8 +28,7 @@ abacus_ml(n, min.actors=3, min.layers=1)
 flat_ec_ml(n)
 flat_nw_ml(n)
 clique_percolation_ml(n, k=3, m=1)
-glouvain_ml(n, gamma=1, omega=1, limit=0)
-glouvain2_ml(n, omega=1)
+glouvain_ml(n, gamma=1, omega=1)
 infomap_ml(n, overlapping=FALSE, directed=FALSE, self.links=TRUE)
 mdlp_ml(n)
 
@@ -47,7 +45,6 @@ get_community_list_ml(comm.struct, n)
 \item{m}{Minimum number of common layers in a clique.}
 \item{gamma}{Resolution parameter for modularity in the generalized louvain method.}
 \item{omega}{Inter-layer weight parameter in the generalized louvain method.}
-\item{limit}{Limit parameter in the generalized louvain method: if the number of nodes exceeds this limit, then the modularity is computed on the fly without keeping the full data in memory.}
 \item{overlapping}{Specifies if overlapping clusters can be returned.}
 \item{directed}{Specifies whether the edges should be considered as directed.}
 \item{self.links}{Specifies whether self links should be considered or not.}
@@ -84,13 +81,12 @@ flat_ec_ml(net)
 flat_nw_ml(net)
 clique_percolation_ml(net)
 glouvain_ml(net)
-glouvain2_ml(net)
 infomap_ml(net)
 mdlp_ml(net)
 
 # evaluation
 
-c1 <- glouvain2_ml(net)
+c1 <- glouvain_ml(net)
 modularity_ml(net, c1)
 
 c2 <- flat_ec_ml(net)

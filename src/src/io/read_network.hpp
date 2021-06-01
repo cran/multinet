@@ -13,7 +13,7 @@ std::unique_ptr<Network>
 read_network(
     const std::string& infile,
     const std::string& name,
-    char separator
+    char separator = ','
 );
 
 template <>

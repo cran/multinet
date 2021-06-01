@@ -7,7 +7,7 @@
 #define UU_NET_DATASTRUCTURE_OBSERVERS_ADJVERTEXCHECKOBSERVER_H_
 
 #include "core/exceptions/NullPtrException.hpp"
-#include "core/datastructures/observers/Observer.hpp"
+#include "core/observers/Observer.hpp"
 #include "objects/Edge.hpp"
 
 namespace uu {

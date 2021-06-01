@@ -1,11 +1,6 @@
 /**
  * Classes to count the number of occurrences of some objects/values.
- *
- * History:
- * - 2018.01.01 file imported from version 1.0 of the multinet library
  */
-
-
 #ifndef UU_CORE_UTILS_COUNTER_H_
 #define UU_CORE_UTILS_COUNTER_H_
 
@@ -27,7 +22,7 @@ class Counter
 {
   private:
     /** A map where the count is kept */
-    std::unordered_map<T,int> values;
+    std::unordered_map<T,size_t> values;
 
   public:
     /**
@@ -60,14 +55,14 @@ class Counter
     void
     set(
         const T& key,
-        int num
+        size_t num
     );
 
     /**
      * @param val value whose count should be returned
      * @return the count of T
      */
-    int
+    size_t
     count(
         const T& val
     ) const;
@@ -83,9 +78,9 @@ class Counter
      * Grants access to the internal data structure storing the numbers of occurrences.
      * @return a reference to the map storing the number of occurrences
      */
-    const std::unordered_map<T,int>&
+    const std::unordered_map<T,size_t>&
     map(
-    );
+    ) const;
 };
 
 /**
@@ -96,7 +91,7 @@ class PairCounter
 {
   private:
     /** A map where the count is kept */
-    std::unordered_map<T1, std::unordered_map<T2,int> > values;
+    std::unordered_map<T1, std::unordered_map<T2,size_t> > values;
 
   public:
     /**
@@ -132,7 +127,7 @@ class PairCounter
     set(
         const T1& key1,
         const T2& key2,
-        int num
+        size_t num
     );
 
     /**
@@ -140,7 +135,7 @@ class PairCounter
      * @param key2 second part of the value whose number of occurrences should be returned
      * @return count of the pair (key1,key2)
      */
-    int
+    size_t
     count(
         const T1& key1,
         const T2& key2
@@ -150,9 +145,9 @@ class PairCounter
      * Grants access to the internal data structure storing the numbers of occurrences.
      * @return a reference to the map storing the number of occurrences
      */
-    std::unordered_map<T1, std::unordered_map<T2,int> >&
+    std::unordered_map<T1, std::unordered_map<T2,size_t> >&
     map(
-    );
+    ) const;
 };
 
 /**
@@ -163,7 +158,7 @@ class TripletCounter
 {
   private:
     /** A map where the count is kept */
-    std::unordered_map<T1, std::unordered_map<T2, std::unordered_map<T3,int> > > values;
+    std::unordered_map<T1, std::unordered_map<T2, std::unordered_map<T3,size_t> > > values;
 
   public:
     /**
@@ -203,7 +198,7 @@ class TripletCounter
         const T1& key1,
         const T2& key2,
         const T3& key3,
-        int num
+        size_t num
     );
 
     /**
@@ -212,7 +207,7 @@ class TripletCounter
      * @param key3 third part of the value whose number of occurrences should be returned
      * @return the number of occurrences of the triple (key1,key2,key3)
      */
-    int
+    size_t
     count(
         const T1& key1,
         const T2& key2,
@@ -223,9 +218,9 @@ class TripletCounter
      * Grants access to the internal data structure storing the numbers of occurrences.
      * @return a reference to the map storing the number of occurrences
      */
-    std::unordered_map<T1, std::unordered_map<T2, std::unordered_map<T3,int> > >&
+    std::unordered_map<T1, std::unordered_map<T2, std::unordered_map<T3,size_t> > >&
     map(
-    );
+    ) const;
 
 };
 
@@ -255,14 +250,14 @@ template <class T>
 void
 Counter<T>::set(
     const T& val,
-    int num
+    size_t num
 )
 {
     values[val] = num;
 }
 
 template <class T>
-int
+size_t
 Counter<T>::count(
     const T& val
 ) const
@@ -283,12 +278,12 @@ T
 Counter<T>::max(
 ) const
 {
-    int max = -1;
+    size_t max = 0;
     T max_value = 0;
 
     for (auto pair: values)
     {
-        if (pair.second>max)
+        if (pair.second>=max)
         {
             max_value = pair.first;
             max = pair.second;
@@ -299,9 +294,9 @@ Counter<T>::max(
 }
 
 template <class T>
-const std::unordered_map<T, int>&
+const std::unordered_map<T, size_t>&
 Counter<T>::map(
-)
+) const
 {
     return values;
 }
@@ -339,14 +334,14 @@ void
 PairCounter<T1, T2>::set(
     const T1& val1,
     const T2& val2,
-    int num
+    size_t num
 )
 {
     values[val1][val2] = num;
 }
 
 template <class T1, class T2>
-int
+size_t
 PairCounter<T1,T2>::count(
     const T1& val1,
     const T2& val2
@@ -364,9 +359,9 @@ PairCounter<T1,T2>::count(
 }
 
 template <class T1, class T2>
-std::unordered_map<T1, std::unordered_map<T2,int> >&
+std::unordered_map<T1, std::unordered_map<T2,size_t> >&
 PairCounter<T1,T2>::map(
-)
+) const
 {
     return values;
 }
@@ -406,14 +401,14 @@ TripletCounter<T1, T2, T3>::set(
     const T1& val1,
     const T2& val2,
     const T3& val3,
-    int num
+    size_t num
 )
 {
     values[val1][val2][val3] = num;
 }
 
 template <class T1, class T2, class T3>
-int
+size_t
 TripletCounter<T1,T2,T3>::count(
     const T1& val1,
     const T2& val2,
@@ -432,14 +427,14 @@ TripletCounter<T1,T2,T3>::count(
 }
 
 template <class T1, class T2, class T3>
-std::unordered_map<T1, std::unordered_map<T2, std::unordered_map<T3,int> > >&
+std::unordered_map<T1, std::unordered_map<T2, std::unordered_map<T3,size_t> > >&
 TripletCounter<T1,T2,T3>::map(
-)
+) const
 {
     return values;
 }
 
-} // namespace core
-} // namespace uu
+}
+} 
 
-#endif /* UU_CORE_UTILS_COUNTER_H_ */
+#endif

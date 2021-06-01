@@ -107,6 +107,6 @@ class DFS
 }
 }
 
-#import "DFS.ipp"
+#include "DFS.ipp"
 
 #endif

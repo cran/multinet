@@ -11,10 +11,8 @@
 #include "core/exceptions/OperationNotSupportedException.hpp"
 #include "core/exceptions/WrongFormatException.hpp"
 #include "core/attributes/Attribute.hpp"
-//#include "core/attributes/AttributeStore.hpp"
 #include "core/utils/CSVReader.hpp"
-#include "core/datastructures/objects/Object.hpp"
-#include "networks/_impl/Graph.hpp"
+#include "core/objects/Object.hpp"
 #include "objects/Vertex.hpp"
 #include "objects/Edge.hpp"
 #include "io/_impl/GraphMetadata.hpp"
@@ -354,7 +352,25 @@ read_attr_values(
 
     for (size_t i=from_idx; i<from_idx+attributes.size(); i++)
     {
-        store->set_as_string(element, attributes.at(i-from_idx).name, line.at(i));
+        switch (attributes.at(i-from_idx).type)
+        {
+        case core::AttributeType::DOUBLESET:
+        case core::AttributeType::INTEGERSET:
+        case core::AttributeType::STRINGSET:
+        case core::AttributeType::TIMESET:
+            store->add_as_string(element, attributes.at(i-from_idx).name, line.at(i));
+            break;
+
+        case core::AttributeType::NUMERIC:
+        case core::AttributeType::DOUBLE:
+        case core::AttributeType::INTEGER:
+        case core::AttributeType::STRING:
+        case core::AttributeType::TIME:
+        case core::AttributeType::TEXT:
+            store->set_as_string(element, attributes.at(i-from_idx).name, line.at(i));
+            break;
+
+        }
     }
 }
 

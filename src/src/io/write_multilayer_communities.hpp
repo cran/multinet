@@ -4,7 +4,6 @@
 #include <string>
 #include <memory>
 #include "community/CommunityStructure.hpp"
-#include "networks/MultilayerNetwork.hpp"
 #include "core/utils/string.hpp"
 #include "io/_impl/read_common.hpp"
 

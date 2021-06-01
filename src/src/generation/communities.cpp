@@ -29,7 +29,7 @@ create_eq_seeds(
 }
 
 
-std::pair<std::unique_ptr<uu::net::MultilayerNetwork>, std::unique_ptr<CommunityStructure<uu::net::MultilayerNetwork>>>
+std::pair<std::unique_ptr<MultilayerNetwork>, std::unique_ptr<CommunityStructure<MultilayerNetwork>>>
 generate_pep(
     size_t num_layers,
     size_t num_actors,
@@ -42,7 +42,7 @@ generate_pep(
 }
 
 
-std::pair<std::unique_ptr<uu::net::MultilayerNetwork>, std::unique_ptr<CommunityStructure<uu::net::MultilayerNetwork>>>
+std::pair<std::unique_ptr<MultilayerNetwork>, std::unique_ptr<CommunityStructure<MultilayerNetwork>>>
 generate_peo(
     size_t num_layers,
     size_t num_actors,
@@ -69,7 +69,7 @@ generate_peo(
             for (size_t a = seeds[i]; a < seeds[i+1]+overlapping_size && a < net->actors()->size(); a++)
             {
                 auto actor = net->actors()->at(a);
-                c->add(MLVertex<MultilayerNetwork>(actor, layer));
+                c->add(MLVertex(actor, layer));
             }
         }
 
@@ -83,7 +83,7 @@ generate_peo(
 }
 
 
-std::pair<std::unique_ptr<uu::net::MultilayerNetwork>, std::unique_ptr<CommunityStructure<uu::net::MultilayerNetwork>>>
+std::pair<std::unique_ptr<MultilayerNetwork>, std::unique_ptr<CommunityStructure<MultilayerNetwork>>>
 generate_sep(
     size_t num_layers,
     size_t num_actors,
@@ -96,7 +96,7 @@ generate_sep(
 }
 
 
-std::pair<std::unique_ptr<uu::net::MultilayerNetwork>, std::unique_ptr<CommunityStructure<uu::net::MultilayerNetwork>>>
+std::pair<std::unique_ptr<MultilayerNetwork>, std::unique_ptr<CommunityStructure<MultilayerNetwork>>>
 generate_seo(
     size_t num_layers,
     size_t num_actors,
@@ -128,7 +128,7 @@ generate_seo(
             for (size_t a = seeds[i]; a < seeds[i+1]+overlapping_size && a < net->actors()->size(); a++)
             {
                 auto actor = net->actors()->at(a);
-                c->add(MLVertex<MultilayerNetwork>(actor, layer));
+                c->add(MLVertex(actor, layer));
             }
         }
 
@@ -140,12 +140,12 @@ generate_seo(
 
     for (size_t s=0; s<num_communities/2; s++)
     {
-        auto c = std::make_unique<uu::net::Community<uu::net::MultilayerNetwork>>();
+        auto c = std::make_unique<Community<MultilayerNetwork>>();
 
         for (size_t a = s; a < net->actors()->size(); a += (num_actors/num_communities*2))
         {
             auto actor = net->actors()->at(a);
-            c->add(uu::net::MLVertex<uu::net::MultilayerNetwork>(actor, layer));
+            c->add(MLVertex(actor, layer));
         }
 
         com->add(std::move(c));

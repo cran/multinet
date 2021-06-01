@@ -41,6 +41,10 @@ typedef struct                  /* --- rule evaluation info. --- */
 double
 re_none (SUPP supp, SUPP body, SUPP head, SUPP base)
 {
+    (void)supp;
+    (void)body;
+    (void)head;
+    (void)base;
     return 0;    /* --- no measure / constant zero */
 }
 
@@ -49,6 +53,9 @@ re_none (SUPP supp, SUPP body, SUPP head, SUPP base)
 double
 re_supp (SUPP supp, SUPP body, SUPP head, SUPP base)
 {
+    (void)body;
+    (void)head;
+    (void)base;
     return (double)supp;    /* --- rule support (body and head) */
 }
 
@@ -57,6 +64,8 @@ re_supp (SUPP supp, SUPP body, SUPP head, SUPP base)
 double
 re_conf (SUPP supp, SUPP body, SUPP head, SUPP base)
 {
+    (void)head;
+    (void)base;
     /* --- rule confidence */
     return (body > 0) ? (double)supp/(double)body : 0;
 }  /* re_conf() */

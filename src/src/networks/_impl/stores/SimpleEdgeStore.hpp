@@ -1,37 +1,64 @@
-/**
- * History:
- * - 2018.03.09 file created, following a restructuring of the previous library.
- */
+#ifndef UU_NET_DATASTRUCTURES_STORES_MDSIMPLEEDGESTORE_H_
+#define UU_NET_DATASTRUCTURES_STORES_MDSIMPLEEDGESTORE_H_
 
-#ifndef UU_NET_DATASTRUCTURES_STORES_SIMPLEEDGESTORE2_H_
-#define UU_NET_DATASTRUCTURES_STORES_SIMPLEEDGESTORE2_H_
-
-#include <unordered_map>
+#include <unordered_set>
 #include "networks/_impl/stores/EdgeStore.hpp"
 
 namespace uu {
 namespace net {
 
-class SimpleEdgeStore :
-    public EdgeStore
+
+class
+    SimpleEdgeStore final :
+    public EdgeStore,
+    public std::enable_shared_from_this<SimpleEdgeStore>
 {
 
-  private:
     typedef EdgeStore super;
+
 
   public:
 
-    /**
-     * Constructor.
-     */
+    typedef const Edge* get_return_type;
+
     SimpleEdgeStore(
-        EdgeDir dir
-    ) :
-        super(dir)
-    {}
+        VCube* cube1,
+        VCube* cube2,
+        EdgeDir dir,
+        LoopMode loops
+    );
 
     virtual
     ~SimpleEdgeStore() {}
+    
+    using super::super;
+
+    //using super::value_type;
+
+    using super::cube1_;
+    using super::cube2_;
+
+    using super::add;
+    //using super::get;
+    using super::contains;
+    using super::neighbors;
+    using super::incident;
+    using super::is_directed;
+    using super::attach;
+    using super::erase;
+    using super::size;
+    //using super::summary;
+
+    using super::edges_;
+    using super::dir_;
+    using super::sidx_neighbors_out;
+    using super::sidx_neighbors_in;
+    using super::sidx_neighbors_all;
+    using super::sidx_incident_out;
+    using super::sidx_incident_in;
+    using super::sidx_incident_all;
+    using super::observers;
+
 
     /**
      * Adds a new edge.
@@ -43,6 +70,12 @@ class SimpleEdgeStore :
     add(
         std::shared_ptr<const Edge>  e
     ) override;
+
+    const Edge *
+    add(
+        const Vertex* vertex1,
+        const Vertex* vertex2
+    );
 
     /**
      * Returns an edge.
@@ -56,52 +89,67 @@ class SimpleEdgeStore :
     const Edge*
     get(
         const Vertex* vertex1,
+        const VCube* cube1,
+        const Vertex* vertex2,
+        const VCube* cube2
+    ) const;
+
+    const Edge*
+    get(
+        const Vertex* vertex1,
         const Vertex* vertex2
     ) const;
 
     const Edge*
-    add(
-        const Vertex* v1,
-        const Vertex* v2
-    );
+    get(
+        const typename Edge::key_type& key
+    ) const;
 
-    using super::add;
-    using super::neighbors;
-    using super::is_directed;
-    using super::attach;
-    using super::size;
-    using super::summary;
-
-    using super::edge_directionality;
-    using super::sidx_neighbors_out;
-    using super::sidx_neighbors_in;
-    using super::sidx_neighbors_all;
-    using super::sidx_incident_out;
-    using super::sidx_incident_in;
-    using super::sidx_incident_all;
-    using super::observers;
+    bool
+    contains(
+        const typename Edge::key_type& key
+    ) const;
 
     virtual
     bool
     erase(
-        const Edge* const e
+        const Edge* e
     ) override;
 
+    bool
+    erase(
+        const typename Edge::key_type& key
+    );
+
+    /*
+    virtual
+    void
+    add(
+        const VCube* layer
+    ) override;
+
+    virtual
     void
     erase(
-        const Vertex* const v
+        const VCube* layer
     ) override;
 
-    std::string
-    summary(
-    ) const override;
+
+
+    virtual
+    void
+    erase(
+          const Vertex* vertex,
+          const VCube* layer
+    );*/
+
 
   protected:
 
     // Indexes to objects (Component IDX):
-    std::unordered_map<const Vertex*, std::unordered_map<const Vertex*, const Edge*> > cidx_edge_by_vertexes;
-
+    std::unordered_map<const VCube*, std::unordered_map<const VCube*, std::unordered_map<const Vertex*, std::unordered_map<const Vertex*, const Edge*>>>> cidx_edge_by_vertexes;
 };
+
 
 }
 }

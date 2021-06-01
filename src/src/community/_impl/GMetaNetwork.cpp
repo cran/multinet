@@ -3,10 +3,7 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
-#include "networks/WeightedNetwork.hpp"
-#include "objects/EdgeMode.hpp"
-#include "objects/Vertex.hpp"
-#include "objects/Edge.hpp"
+//#include "networks/Network.hpp"
 
 namespace uu {
 namespace net {
@@ -15,7 +12,7 @@ namespace net {
 GMetaNetwork::
 GMetaNetwork()
 {
-    w = std::make_unique<MultiNetwork>("w", EdgeDir::UNDIRECTED, true);
+    w = std::make_unique<MultiNetwork>("w", EdgeDir::UNDIRECTED, LoopMode::ALLOWED);
 }
 
 const Vertex*

@@ -3,8 +3,7 @@
 #define UU_OPERATIONS_SHUFFLE_H_
 
 #include <memory>
-#include "networks/TemporalNetwork.hpp"
-#include "networks/OrderedMultiplexNetwork.hpp"
+#include "networks/time.hpp"
 
 namespace uu {
 namespace net {
@@ -15,13 +14,16 @@ namespace net {
 * @param net a multilayer network
 * @param num number of shufflings
 **/
+template <class M>
 void
 shuffle(
-    uu::net::OrderedMultiplexNetwork* net,
+    M* net,
     size_t num
 );
 
 }
 }
+
+#include "shuffle.ipp"
 
 #endif

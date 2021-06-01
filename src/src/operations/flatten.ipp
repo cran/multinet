@@ -1,4 +1,6 @@
+#include "core/exceptions/assert_not_null.hpp"
 #include "operations/union.hpp"
+#include "networks/weight.hpp"
 
 namespace uu {
 namespace net {
@@ -11,7 +13,12 @@ flatten_weighted(
     W* target
 )
 {
-
+    
+    core::assert_not_null(target, "flatten_weighted", "target");
+    if (!is_weighted(target))
+    {
+        make_weighted(target);
+    }
     for (auto layer=begin; layer!=end; ++layer)
     {
         // force actors? @todo
@@ -28,6 +35,7 @@ flatten_unweighted(
     G* target
 )
 {
+    core::assert_not_null(target, "flatten_unweighted", "target");
     for (auto g=begin; g!=end; ++g)
     {
         uu::net::graph_add(*g, target);

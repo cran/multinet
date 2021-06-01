@@ -3,8 +3,6 @@
 
 #include <memory>
 #include <string>
-#include "networks/Network.hpp"
-#include "networks/ProbabilisticNetwork.hpp"
 
 namespace uu {
 namespace net {

@@ -5,7 +5,7 @@ namespace core {
 
 FileNotFoundException::FileNotFoundException(std::string value)
 {
-    FileNotFoundException::value = value;
+    FileNotFoundException::value = "File not found: " + value;
 }
 
 FileNotFoundException::~FileNotFoundException() throw() {}
@@ -13,8 +13,8 @@ FileNotFoundException::~FileNotFoundException() throw() {}
 const char*
 FileNotFoundException::what() const throw()
 {
-    return ("File not found: " + value).data();
+    return value.data();
 }
 
-} // namespace core
-} // namespace uu
+} 
+}

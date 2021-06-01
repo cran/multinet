@@ -28,7 +28,8 @@ std::unique_ptr<CommunityStructure<M>>
     csv.set_field_separator(separator);
     csv.open(infile);
 
-    std::unordered_map<std::string, std::set<MLVertex<M>> > result;
+    std::unordered_map<std::string, std::set<MLVertex> > result;
+
 
     while (csv.has_next())
     {
@@ -53,7 +54,7 @@ std::unique_ptr<CommunityStructure<M>>
                 throw core::ElementNotFoundException("vertex " + actor_name + "@" + layer_name);
             }
 
-            auto v = MLVertex<M>(a,l);
+            auto v = MLVertex(a,l);
             result[community_id].insert(v);
         }
 
@@ -71,7 +72,7 @@ std::unique_ptr<CommunityStructure<M>>
                     continue;
                 }
 
-                auto v = MLVertex<M>(a,l);
+                auto v = MLVertex(a,l);
                 result[community_id].insert(v);
             }
         }

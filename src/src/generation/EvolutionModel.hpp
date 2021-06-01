@@ -1,6 +1,8 @@
 #ifndef UU_GENERATION_EVOLUTIONMODEL_H_
 #define UU_GENERATION_EVOLUTIONMODEL_H_
 
+#include "objects/Vertex.hpp"
+#include "networks/_impl/containers/GenericObjectList.hpp"
 
 namespace uu {
 namespace net {

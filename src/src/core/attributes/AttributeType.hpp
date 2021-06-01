@@ -6,9 +6,6 @@
  * versions of C++, but also in this case we practically use the existing C(++) `time_t` type.
  *
  * This file also provides basic functions to stream attribute types.
- *
- * History:
- * - 2018.01.01 file created, adapted from version 1.0 of the multinet library
  */
 
 #ifndef UU_CORE_ATTRIBUTES_ATTRIBUTETYPE_H_
@@ -29,7 +26,11 @@ enum class AttributeType
     DOUBLE, // double
     INTEGER, // int
     TIME, // uu::core::Time
-    TEXT //uu::core::Text
+    TEXT, //uu::core::Text
+    STRINGSET, // std::set<std::string>
+    DOUBLESET, // std::set<double>
+    INTEGERSET, // std::set<int>
+    TIMESET // std::set<uu::core::Time>
 };
 
 

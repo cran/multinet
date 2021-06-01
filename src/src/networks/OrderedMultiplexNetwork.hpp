@@ -1,38 +1,65 @@
-#ifndef UU_MNET_DATASTRUCTURE_GRAPHS_ATTRIBUTEDORDEREDHOMOGENEOUSMULTILAYERNETWORK_H_
-#define UU_MNET_DATASTRUCTURE_GRAPHS_ATTRIBUTEDORDEREDHOMOGENEOUSMULTILAYERNETWORK_H_
+#ifndef UU_NETWORKS_ORDEREDMULTIPLEXNETWORK_H_
+#define UU_NETWORKS_ORDEREDMULTIPLEXNETWORK_H_
 
+#include <map>
 #include <memory>
 #include <string>
-#include "networks/_impl/TMultilayerNetwork.hpp"
-#include "networks/_impl/stores/AttrVertexStore.hpp"
-#include "networks/_impl/stores/MLOrderedLayerStore.hpp"
-#include "networks/_impl/stores/MLSimpleEdgeStore.hpp"
+#include <vector>
 
-#include "objects/Vertex.hpp"
 #include "objects/MLVertex.hpp"
+#include "olap/VCube.hpp"
+#include "olap/ECube.hpp"
 #include "networks/Network.hpp"
+
+#include "networks/_impl/stores/LayerStore.hpp"
+#include "networks/_impl/stores/MLECubeStore.hpp"
 
 namespace uu {
 namespace net {
 
 /**
- * An OrderedMultiplexNetwork is a set of ordered Networks (called layers).
+ * An OrderedMultiplexNetwork is a Vertex Cube with N dimensions.
+ * Each cell of the Vertex Cube has an Edge Cube defined on it, with one dimension.
  *
- * Vertices are called actors, and the same actor can be present in multiple layers.
+ * In OrderedMultiplexNetwork's, vertices are called actors, and the same actor can be
+ * present in multiple layers.
  * A multilayer vertex (MLVertex) is a pair (actor,layer).
+ * A multilayer edge (MLEdge) is an edge connecting multilayer vertices.
  */
 class
     OrderedMultiplexNetwork
 {
 
+    friend LayerStore;
+
+  public:
+
+    typedef Network layer_type;
+    typedef Vertex vertex_type;
+    typedef MLVertex community_element_type;
+
+  private:
+
+    /** The actors, organized into N members on one dimension */
+    std::unique_ptr<VCube> actors_;
+    /** Layer Store */
+    std::unique_ptr<LayerStore> layers_;
+    /** Layer's vertices */
+    //std::map<std::vector<std::string>, std::unique_ptr<VCube>> vertices_;
+    /** Intralayer edges */
+    //std::map<std::vector<std::string>, std::unique_ptr<ECube>> intra_edges_;
+
   public:
 
     const std::string name;
 
-    typedef Network layer_type;
-    typedef Vertex vertex_type;
-    typedef MLVertex<OrderedMultiplexNetwork> community_element_type;
+    //typedef Network layer_type;
+    //typedef Vertex vertex_type;
+    //typedef MLVertex<OrderedMultiplexNetwork> community_element_type;
 
+    /**
+     * Creates an empty Network.
+     */
     OrderedMultiplexNetwork(
         const std::string& name
     );
@@ -40,69 +67,34 @@ class
     /**
      * Returns a pointer to the network's actors.
      */
-    AttrVertexStore*
+    const VCube*
     actors(
-    );
-
+    ) const;
 
     /**
      * Returns a pointer to the network's actors.
      */
-    const AttrVertexStore*
+    VCube*
     actors(
-    ) const;
-
-
-    /**
-     * Returns a pointer to the network's layers.
-     */
-    MLOrderedLayerStore*
-    layers(
     );
 
 
     /**
-     * Returns a pointer to the network's layers.
+     * Returns a pointer to the network's interlayer edges.
      */
-    const MLOrderedLayerStore*
+    LayerStore*
+    layers(
+    );
+
+    /**
+     * Returns a pointer to the network's interlayer edges.
+     */
+    const LayerStore*
     layers(
     ) const;
 
-
-    /**
-     * Checks if the network allows interlayer edges.
-     * Always returns false.
-     */
-    bool
-    is_ordered(
-    ) const
-    {
-        return false;
-    }
-
-
-    /**
-     * Checks if the network allows interlayer edges.
-     * Always returns true.
-     */
-    bool
-    allows_interlayer_edges(
-    ) const
-    {
-        return false;
-    }
-
-
-    std::string
-    summary(
-    ) const;
-
-
-  private:
-
-    std::unique_ptr<TMultilayerNetwork<AttrVertexStore, MLOrderedLayerStore, MLSimpleEdgeStore>> data_;
-
 };
+
 
 }
 }

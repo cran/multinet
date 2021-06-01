@@ -64,13 +64,7 @@ graph_union(
 
     for (auto edge: e_union)
     {
-        auto success = res->edges()->add(edge);
-
-        if (!success)
-        {
-            std::string err = "the two networks contain different edges with the same end-vertices";
-            throw core::OperationNotSupportedException(err);
-        }
+        res->edges()->add(edge->v1, edge->v2);
     }
 
     return res;
@@ -95,14 +89,14 @@ graph_add(
 
     for (auto edge: *g->edges())
     {
-        target->edges()->add(edge->v1,edge->v2);
+        target->edges()->add(edge->v1, edge->v2);
     }
 
     if (!g->is_directed() && target->is_directed())
     {
         for (auto edge: *g->edges())
         {
-            target->edges()->add(edge->v2,edge->v1);
+            target->edges()->add(edge->v2, edge->v1);
         }
     }
 }
@@ -131,13 +125,13 @@ weighted_graph_add(
         if (!new_edge)
         {
             new_edge = target->edges()->add(edge->v1,edge->v2);
-            target->set_weight(new_edge,1.0);
+            set_weight(target, new_edge,1.0);
         }
 
         else
         {
-            double weight = target->get_weight(new_edge).value;
-            target->set_weight(new_edge, weight+1.0);
+            double weight = get_weight(target, new_edge);
+            set_weight(target, new_edge, weight+1.0);
         }
     }
 
@@ -150,13 +144,13 @@ weighted_graph_add(
             if (!new_edge)
             {
                 new_edge = target->edges()->add(edge->v2,edge->v1);
-                target->set_weight(new_edge,1.0);
+                set_weight(target, new_edge,1.0);
             }
 
             else
             {
-                double weight = target->get_weight(new_edge).value;
-                target->set_weight(new_edge, weight+1.0);
+                double weight = get_weight(target, new_edge);
+                set_weight(target, new_edge, weight+1.0);
             }
         }
     }

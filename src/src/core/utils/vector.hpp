@@ -1,7 +1,3 @@
-/**
- *
- */
-
 #ifndef UU_CORE_UTILS_VECTOR_H_
 #define UU_CORE_UTILS_VECTOR_H_
 

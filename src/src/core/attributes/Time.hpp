@@ -6,9 +6,6 @@
  *
  * This file also provides basic functions to stream times, and a
  * default format to read/write/stream times.
- *
- * History:
- * - 2018.01.01 file created, adapted from version 1.0 of the multinet library
  */
 
 #ifndef UU_CORE_ATTRIBUTES_TIME_H_

@@ -1,9 +1,8 @@
-
 #ifndef UU_TNET_TRANSFORMATION_SLICE_H_
 #define UU_TNET_TRANSFORMATION_SLICE_H_
 
 #include <memory>
-#include "networks/TemporalNetwork.hpp"
+#include "networks/time.hpp"
 #include "networks/OrderedMultiplexNetwork.hpp"
 
 namespace uu {
@@ -18,7 +17,7 @@ namespace net {
 **/
 std::unique_ptr<OrderedMultiplexNetwork>
 slice_equal_time(
-    const TemporalNetwork* tnet,
+    const Network* tnet,
     size_t num_partitions
 );
 

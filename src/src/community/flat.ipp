@@ -1,5 +1,7 @@
 #include <unordered_map>
 #include <vector>
+#include "networks/Network.hpp"
+#include "networks/weight.hpp"
 #include "community/louvain.hpp"
 #include "operations/flatten.hpp"
 
@@ -14,18 +16,18 @@ namespace net {
 */
 template <typename M>
 std::unique_ptr<CommunityStructure<M>>
-                                    map_back_to_ml(
-                                        const uu::net::CommunityStructure<typename M::layer_type>* fComs,
-                                        const M* mnet
-                                    )
+map_back_to_ml(
+    const CommunityStructure<typename M::layer_type>* fComs,
+    const M* mnet
+)
 {
 
-    auto ml_communities = std::make_unique<uu::net::CommunityStructure<M>>();
+    auto ml_communities = std::make_unique<CommunityStructure<M>>();
 
     //for each community in the flattened network
     for (auto single_community: *fComs)
     {
-        auto ml_community = std::make_unique<uu::net::Community<M>>();
+        auto ml_community = std::make_unique<Community<M>>();
 
         //for each node in the current flattened network community
         for (auto actor: *single_community)
@@ -34,7 +36,7 @@ std::unique_ptr<CommunityStructure<M>>
             {
                 if (layer->vertices()->contains(actor))
                 {
-                    auto vertex = uu::net::MLVertex<M>(actor, layer);
+                    auto vertex = MLVertex(actor, layer);
                     ml_community->add(vertex);
                 }
             }
@@ -50,25 +52,26 @@ std::unique_ptr<CommunityStructure<M>>
 
 template <typename M>
 std::unique_ptr<CommunityStructure<M>>
-                                    flat_nw(
-                                        const M* net
-                                    )
+flat_nw(
+    const M* net
+)
 {
-    auto fnet = std::make_unique<Network>("tmp", EdgeDir::UNDIRECTED, true);
+    auto fnet = std::make_unique<Network>("tmp", EdgeDir::UNDIRECTED, LoopMode::ALLOWED);
     flatten_unweighted(net->layers()->begin(), net->layers()->end(), fnet.get());
-    auto single_layer_communities = uu::net::louvain(fnet.get());
+    auto single_layer_communities = louvain(fnet.get());
     return map_back_to_ml(single_layer_communities.get(), net);
 }
 
 template <typename M>
 std::unique_ptr<CommunityStructure<M>>
-                                    flat_ec(
-                                        const M* net
-                                    )
+flat_ec(
+    const M* net
+)
 {
-    auto fnet = std::make_unique<WeightedNetwork>("tmp", EdgeDir::UNDIRECTED, true);
+    auto fnet = std::make_unique<Network>("tmp", EdgeDir::UNDIRECTED, LoopMode::ALLOWED);
+    make_weighted(fnet.get());
     flatten_weighted(net->layers()->begin(), net->layers()->end(), fnet.get());
-    auto single_layer_communities = uu::net::louvain(fnet.get());
+    auto single_layer_communities = louvain(fnet.get());
     return map_back_to_ml(single_layer_communities.get(), net);
 }
 

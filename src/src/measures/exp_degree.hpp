@@ -19,7 +19,7 @@ double
 exp_degree(
     const G* g,
     const Vertex* v,
-    const EdgeMode mode
+    const EdgeMode mode = EdgeMode::INOUT
 );
 
 }

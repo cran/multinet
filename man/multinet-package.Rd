@@ -27,5 +27,7 @@ Matteo Magnani \email{matteo.magnani@it.uu.se}
 }
 \references{
 Dickison, Magnani, and Rossi, 2016. Multilayer Social Networks. Cambridge University Press. ISBN: 978-1107438750
+
+Magnani, Rossi, and Vega, 2021. Analysis of Multiplex Social Networks with R. Journal of Statistical Software 98(8), 1-30. doi: 10.18637/jss.v098.i08
 }
 \keyword{ multilayer network social analysis mining }

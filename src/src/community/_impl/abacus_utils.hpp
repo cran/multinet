@@ -7,8 +7,6 @@
 #include <numeric>
 #include <random>
 #include "community/CommunityStructure.hpp"
-#include "Eigen/Sparse"
-#include "Eigen/Dense"
 #include <vector>
 #include "objects/EdgeMode.hpp"
 #include "objects/Vertex.hpp"

@@ -1,6 +1,7 @@
 #include "generation/empty_copy.hpp"
 #include "core/exceptions/WrongParameterException.hpp"
 #include "core/utils/Counter.hpp"
+#include "objects/Edge.hpp"
 
 namespace uu {
 namespace net {
@@ -41,7 +42,8 @@ vertex_induced_subgraph(
     {
         if (pair.second == 2)
         {
-            g_sub->edges()->add(pair.first);
+            auto edge = pair.first;
+            g_sub->edges()->add(edge->v1, edge->v2);
         }
     }
 
@@ -79,7 +81,7 @@ edge_induced_subgraph(
 
         g_sub->vertices()->add(e->v1);
         g_sub->vertices()->add(e->v2);
-        g_sub->edges()->add(e);
+        g_sub->edges()->add(e->v1, e->v2);
 
     }
 

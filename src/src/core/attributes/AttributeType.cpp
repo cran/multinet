@@ -28,6 +28,19 @@ to_string(
     case AttributeType::TEXT:
         return "text";
 
+    case AttributeType::STRINGSET:
+        return "string_set";
+
+    case AttributeType::INTEGERSET:
+        return "int_set";
+
+    case AttributeType::DOUBLESET:
+        return "double_set";
+
+    case AttributeType::TIMESET:
+        return "time_set";
+
+
     default:
         return ""; // cannot get here
     }

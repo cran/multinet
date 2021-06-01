@@ -1,7 +1,7 @@
 #include "core/exceptions/assert_not_null.hpp"
 #include "core/exceptions/WrongParameterException.hpp"
 #include "core/exceptions/DuplicateElementException.hpp"
-#include "core/utils/names.hpp"
+#include "core/utils/NameIterator.hpp"
 #include "objects/Vertex.hpp"
 
 namespace uu {

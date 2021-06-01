@@ -2,10 +2,7 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
-#include "networks/WeightedNetwork.hpp"
-#include "objects/EdgeMode.hpp"
-#include "objects/Vertex.hpp"
-#include "objects/Edge.hpp"
+//#include "networks/Network.hpp"
 
 namespace uu {
 namespace net {

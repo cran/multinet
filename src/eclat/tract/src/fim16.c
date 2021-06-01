@@ -152,51 +152,53 @@ indent (int k)
     }
 }
 
-/*--------------------------------------------------------------------*/
+/*--------------------------------------------------------------------
 
+ FUNCTION NOT USED, COMMENTED (MM)
+ 
 static void
 show (const char *text, FIM16 *fim, int ind)
 {
-    /* --- show a 16 items machine */
-    ITEM  i;                      /* loop variable (item) */
-    BITTA *t, *e;                 /* to traverse the transactions */
+    // --- show a 16 items machine
+    ITEM  i;                      // loop variable (item)
+    BITTA *t, *e;                 // to traverse the transactions
 
-    assert(fim);                  /* check the function arguments */
+    assert(fim);                  // check the function arguments
 
-    if (text && *text)            /* print the given text */
+    if (text && *text)            // print the given text
     {
         indent(ind);
         printf("%s\n", text);
     }
 
-    for (i = 16; --i >= 0; )      /* find top item with support */
+    for (i = 16; --i >= 0; )      // find top item with support
         if (fim->supps[i] > 0)
         {
             break;
         }
 
-    for (++i; --i >= 0; )         /* traverse the items/trans. lists */
+    for (++i; --i >= 0; )         // traverse the items/trans. lists
     {
-        t = fim->btas[i];           /* get the transaction list */
+        t = fim->btas[i];           // get the transaction list
 
         if (!t)
         {
-            continue;    /* skip non-existing lists */
+            continue;    // skip non-existing lists
         }
 
-        indent(ind);                /* indent the output line */
+        indent(ind);                // indent the output line
         printf("%s/",  isr_itemname(fim->report, fim->map[i]));
-        printf("%2"ITEM_FMT" ", fim->map[i]);   /* print item, list index */
-        printf("%2"SUPP_FMT":", fim->supps[i]); /* and item support */
+        printf("%2"ITEM_FMT" ", fim->map[i]);   // print item, list index
+        printf("%2"SUPP_FMT":", fim->supps[i]); // and item support
 
         for (e = fim->ends[i]; t < e; t++)
         {
             printf(" %04x:%"SUPP_FMT, *t, fim->wgts[*t]);
         }
 
-        printf("\n");               /* print the transactions (as int) */
-    }                             /* and terminate the output line */
-}  /* show() */
+        printf("\n");               // print the transactions (as int)
+    }                             // and terminate the output line
+}  // show() */
 
 #endif
 /*----------------------------------------------------------------------

@@ -6,8 +6,8 @@
 #ifndef UU_MNET_DATASTRUCTURE_OBSERVERS_LAYEROBSERVER_H_
 #define UU_MNET_DATASTRUCTURE_OBSERVERS_LAYEROBSERVER_H_
 
-#include "core/datastructures/observers/Observer.hpp"
-#include "core/datastructures/observers/ObserverStore.hpp"
+#include "core/observers/Observer.hpp"
+#include "core/observers/ObserverStore.hpp"
 #include "networks/_impl/observers/LayerPropagateObserver.hpp"
 #include "core/exceptions/assert_not_null.hpp"
 

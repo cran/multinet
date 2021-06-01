@@ -2,21 +2,7 @@
 #define UU_COMMUNITY_ABACUS_H_
 
 #include <memory>
-#include <string>
-#include <unordered_map>
-#include <vector>
-#include <cstdio>
-#include <stdio.h>
-#include <iostream>
-#include <fstream>
-#include "core/exceptions/FileNotFoundException.hpp"
-#include "core/exceptions/ExternalLibException.hpp"
 #include "community/CommunityStructure.hpp"
-#include "community/PillarCommunity.hpp"
-#include "community/_impl/abacus_utils.hpp"
-
-
-
 
 namespace uu {
 namespace net {

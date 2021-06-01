@@ -15,14 +15,14 @@ namespace uu {
 namespace net {
 
 
-std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex<MultilayerNetwork>>, std::vector<std::unique_ptr<const Vertex>>>
-        convert(
-            const MultilayerNetwork* g,
-            double omega
-        )
+std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex>, std::vector<std::unique_ptr<const Vertex>>>
+convert(
+    const MultilayerNetwork* g,
+    double omega
+)
 {
-    std::map<MLVertex<MultilayerNetwork>, const Vertex*> mapping;
-    std::map<const Vertex*, MLVertex<MultilayerNetwork>> reverse_mapping;
+    std::map<MLVertex, const Vertex*> mapping;
+    std::map<const Vertex*, MLVertex> reverse_mapping;
 
     //std::map<MLVertex<MultilayerNetwork>, size_t> deg;
     //std::map<MLVertex<MultilayerNetwork>, double> ome;
@@ -45,7 +45,7 @@ std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex<Multi
         {
             //std::cout << (*v) << std::endl;
             auto metavertex = std::make_unique<const Vertex>(std::to_string(v_id++));
-            auto intralayer_vertex = MLVertex<MultilayerNetwork>(v, l);
+            auto intralayer_vertex = MLVertex(v, l);
             mapping[intralayer_vertex] = metavertex.get();
             reverse_mapping[metavertex.get()] = intralayer_vertex;
             meta->add(metavertex.get());
@@ -57,8 +57,8 @@ std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex<Multi
         {
             //std::cout << "e " << (*e->v1) << std::endl;
 
-            auto iv1 = MLVertex<MultilayerNetwork>(e->v1, l);
-            auto iv2 = MLVertex<MultilayerNetwork>(e->v2, l);
+            auto iv1 = MLVertex(e->v1, l);
+            auto iv2 = MLVertex(e->v2, l);
             auto v1 = mapping.at(iv1);
             auto v2 = mapping.at(iv2);
 
@@ -89,8 +89,8 @@ std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex<Multi
                     continue;
                 }
 
-                auto iv1 = MLVertex<MultilayerNetwork>(v, l1);
-                auto iv2 = MLVertex<MultilayerNetwork>(v, l2);
+                auto iv1 = MLVertex(v, l1);
+                auto iv2 = MLVertex(v, l2);
                 auto v1 = mapping.at(iv1);
                 auto v2 = mapping.at(iv2);
 
@@ -109,14 +109,14 @@ std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex<Multi
 }
 
 
-std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex<OrderedMultiplexNetwork>>, std::vector<std::unique_ptr<const Vertex>>>
-        convert(
-            const OrderedMultiplexNetwork* g,
-            double omega
-        )
+std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex>, std::vector<std::unique_ptr<const Vertex>>>
+convert(
+    const OrderedMultiplexNetwork* g,
+    double omega
+)
 {
-    std::map<MLVertex<OrderedMultiplexNetwork>, const Vertex*> mapping;
-    std::map<const Vertex*, MLVertex<OrderedMultiplexNetwork>> reverse_mapping;
+    std::map<MLVertex, const Vertex*> mapping;
+    std::map<const Vertex*, MLVertex> reverse_mapping;
 
     auto meta = std::make_unique<GMetaNetwork>();
 
@@ -132,7 +132,7 @@ std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex<Order
         for (auto v: *l->vertices())
         {
             auto metavertex = std::make_unique<const Vertex>(std::to_string(v_id++));
-            auto intralayer_vertex = MLVertex<OrderedMultiplexNetwork>(v, l);
+            auto intralayer_vertex = MLVertex(v, l);
             mapping[intralayer_vertex] = metavertex.get();
             reverse_mapping[metavertex.get()] = intralayer_vertex;
             meta->add(metavertex.get());
@@ -144,8 +144,8 @@ std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex<Order
         for (auto e: *l->edges())
         {
 
-            auto iv1 = MLVertex<OrderedMultiplexNetwork>(e->v1, l);
-            auto iv2 = MLVertex<OrderedMultiplexNetwork>(e->v2, l);
+            auto iv1 = MLVertex(e->v1, l);
+            auto iv2 = MLVertex(e->v2, l);
             auto v1 = mapping.at(iv1);
             auto v2 = mapping.at(iv2);
 
@@ -171,8 +171,8 @@ std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex<Order
                 continue;
             }
 
-            auto iv1 = MLVertex<OrderedMultiplexNetwork>(v, l1);
-            auto iv2 = MLVertex<OrderedMultiplexNetwork>(v, l2);
+            auto iv1 = MLVertex(v, l1);
+            auto iv2 = MLVertex(v, l2);
             auto v1 = mapping.at(iv1);
             auto v2 = mapping.at(iv2);
 

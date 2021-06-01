@@ -2,7 +2,7 @@
 
 #include "core/exceptions/assert_not_null.hpp"
 #include "core/exceptions/WrongParameterException.hpp"
-#include "core/utils/names.hpp"
+#include "core/utils/NameIterator.hpp"
 #include "operations/_impl/add_predefined_subgraphs.hpp"
 #include "objects/Vertex.hpp"
 
@@ -14,7 +14,7 @@ std::unique_ptr<Network>
 null_graph(
     size_t n,
     EdgeDir dir,
-    bool allows_loops
+    LoopMode allows_loops
 )
 {
     std::string name = "N_" + std::to_string(n);
@@ -28,7 +28,7 @@ std::unique_ptr<MultilayerNetwork>
 null_multiplex(
     size_t n,
     const std::vector<EdgeDir>& dir,
-    const std::vector<bool>& allows_loops
+    const std::vector<LoopMode>& allows_loops
 )
 {
     std::string name = "N_" + std::to_string(n) + "_" + std::to_string(dir.size());
@@ -46,7 +46,7 @@ null_multiplex(
 
     for (auto layer_name: layer_names)
     {
-        g->layers()->add(std::make_unique<Network>(layer_name, dir[l], allows_loops[l]));
+        g->layers()->add(layer_name, dir[l], allows_loops[l]);
         l++;
     }
 
@@ -77,7 +77,7 @@ null_multiplex(
 )
 {
     std::vector<uu::net::EdgeDir> dir(l, uu::net::EdgeDir::UNDIRECTED);
-    std::vector<bool> loops(l, true);
+    std::vector<LoopMode> loops(l, LoopMode::ALLOWED);
     return null_multiplex(n, dir, loops);
 }
 
@@ -91,7 +91,7 @@ complete_graph(
 )
 {
     std::string name = "K_" + std::to_string(n);
-    bool allows_loops = false;
+    LoopMode allows_loops = LoopMode::DISALLOWED;
     auto g = std::make_unique<Network>(name, dir, allows_loops);
     add_complete_subgraph(g.get(), n);
     return g;
@@ -106,7 +106,7 @@ complete_bipartite_graph(
 )
 {
     std::string name = "K_" + std::to_string(n1) + "_" + std::to_string(n2);
-    bool allows_loops = false;
+    LoopMode allows_loops = LoopMode::DISALLOWED;
     auto g = std::make_unique<Network>(name, dir, allows_loops);
     add_complete_bipartite_subgraph(g.get(), n1, n2);
     return g;
@@ -120,7 +120,7 @@ path_graph(
 )
 {
     std::string name = "P_" + std::to_string(n);
-    bool allows_loops = false;
+    LoopMode allows_loops = LoopMode::DISALLOWED;
     auto g = std::make_unique<Network>(name, dir, allows_loops);
     add_path(g.get(), n);
     return g;
@@ -133,7 +133,7 @@ cycle_graph(
 )
 {
     std::string name = "C_" + std::to_string(n);
-    bool allows_loops = false;
+    LoopMode allows_loops = LoopMode::DISALLOWED;
     auto g = std::make_unique<Network>(name, dir, allows_loops);
     add_cycle(g.get(), n);
     return g;
@@ -147,7 +147,7 @@ wheel_graph(
 {
     std::string name = "W_" + std::to_string(n);
     EdgeDir dir = EdgeDir::UNDIRECTED;
-    bool allows_loops = false;
+    LoopMode allows_loops = LoopMode::DISALLOWED;
     auto g = std::make_unique<Network>(name, dir, allows_loops);
     add_wheel(g.get(), n);
     return g;

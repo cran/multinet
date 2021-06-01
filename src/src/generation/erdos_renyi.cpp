@@ -3,7 +3,7 @@
 #include "core/exceptions/OperationNotSupportedException.hpp"
 #include "core/utils/random.hpp"
 #include "generation/standard_graphs.hpp"
-#include "generation/utils.hpp"
+#include "generation/_impl/utils.hpp"
 #include "operations/_impl/add_predefined_subgraphs.hpp"
 
 namespace uu {

@@ -4,9 +4,6 @@
  * We have aliased `std::string` because text support might be improved in the future.
  *
  * This file also provides basic functions to stream text.
- *
- * History:
- * - 2018.01.03 file created
  */
 
 #include <string>

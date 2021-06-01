@@ -1,11 +1,3 @@
-/**
- * This header defines:
- * basic mathematical/statistical functions (mean, standard deviation, intersection, union).
- *
- * History:
- * - 2018.01.01 file imported from version 1.0 of the multinet library
- */
-
 #ifndef UU_CORE_UTILS_STRING_H_
 #define UU_CORE_UTILS_STRING_H_
 
@@ -15,13 +7,15 @@ namespace uu {
 namespace core {
 
 
+/** Modifies the input string in place, making it uppercase. */
 void
 to_upper_case(
     std::string& s
 );
 
+/** Modifies the input string in place, escaping the characters < > and &. */
 void
-format(
+to_xml(
     std::string& in
 );
 

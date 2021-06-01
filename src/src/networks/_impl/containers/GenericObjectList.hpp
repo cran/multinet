@@ -7,7 +7,7 @@
 #define UU_NETCORE_DATASTRUCTURES_CONTAINERS_GENERICOBJECTLIST_H_
 
 
-#include "core/datastructures/containers/SortedRandomSet.hpp"
+#include "core/stores/_impl/SortedRandomSet.hpp"
 #include <memory>
 
 namespace uu {

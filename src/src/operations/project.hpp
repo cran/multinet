@@ -7,7 +7,7 @@
 #include "objects/Vertex.hpp"
 #include "objects/EdgeMode.hpp"
 #include "measures/degree.hpp"
-#include "networks/TemporalNetwork.hpp"
+#include "networks/Network.hpp"
 
 namespace uu {
 namespace net {
@@ -20,8 +20,8 @@ namespace net {
  * We say that layer 2 is projected into layer 1.
  * @param mnet The multilayer network containing the layers to be merged.
  * @param new_layer_name The name of a new layer, added to the input multilayer network and obtained as a projection of layer 2 into layer 1.
- * @param layer1 The layer containing the actors who will populate the projection.
- * @param layer2 The layer projected into layer 1.
+ * @param from The layer projected into the other. 
+ * @param to The layer containing the actors who will populate the projection.
  * @return A pointer to the newly created layer.
  * @throws DuplicateElementException If a layer with the same name already exists.
  */
@@ -41,7 +41,7 @@ project_temporal(
     const M* net,
     const typename M::layer_type* from,
     const typename M::layer_type* to,
-    TemporalNetwork* target,
+    Network* target,
     size_t delta_time
 );
 

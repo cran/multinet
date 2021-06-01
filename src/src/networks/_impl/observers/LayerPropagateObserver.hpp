@@ -6,7 +6,7 @@
 #ifndef UU_MNET_DATASTRUCTURE_OBSERVERS_LAYERPROPAGATEOBSERVER_H_
 #define UU_MNET_DATASTRUCTURE_OBSERVERS_LAYERPROPAGATEOBSERVER_H_
 
-#include "core/datastructures/observers/Observer.hpp"
+#include "core/observers/Observer.hpp"
 #include "core/exceptions/assert_not_null.hpp"
 
 namespace uu {

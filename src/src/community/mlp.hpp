@@ -128,7 +128,6 @@ std::unique_ptr<CommunityStructure<M>>
     }
 
 
-
     // (2) recover the relevant dimensions (layers) Dv for each actor using equation(8) in the reference
     for (const Vertex* actor: *mnet->actors())
     {
@@ -327,9 +326,11 @@ std::unique_ptr<CommunityStructure<M>>
                   for (auto pair: membership)
                   {
                       std::cout << (*pair.first) << " " << pair.second << std::endl;
-                  }
 
-                  std::cout << "CHECK STOP" << std::endl;*/
+                  }*/
+
+        //std::cout << "CHECK STOP" << std::endl;
+
         stop = true;
 
         //check the stopping condition
@@ -377,7 +378,6 @@ std::unique_ptr<CommunityStructure<M>>
         //break;
     }
 
-
     std::unordered_map<size_t, std::vector<const Vertex*>> group_by_community_id;
 
     for (auto pair: membership)
@@ -398,11 +398,12 @@ std::unique_ptr<CommunityStructure<M>>
             {
                 if (layer->vertices()->contains(actor))
                 {
-                    c->add(MLVertex<M>(actor, layer));
+                    c->add(MLVertex(actor, layer));
                 }
             }
         }
 
+        // @todo control needed?
         if (c->size() > 0)
         {
             res->add(std::move(c));
@@ -415,6 +416,5 @@ std::unique_ptr<CommunityStructure<M>>
 }
 }
 
-//#include "ml-cpm.ipp"
 
 #endif

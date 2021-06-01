@@ -711,6 +711,7 @@ cm_add (CLOMAX *cm, ITEM item, RSUPP supp)
 int
 cm_addnc (CLOMAX *cm, ITEM item, RSUPP supp)
 {
+    (void)supp;
     /* --- add an item to the prefix */
     CMTREE *t, **p;               /* to access the c/m prefix trees */
 

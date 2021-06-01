@@ -1,8 +1,3 @@
-/**
- * History:
- * - 2018.01.01 file adapted from version 1.0 of the multinet library
- */
-
 #ifndef UU_CORE_ATTRIBUTES_ATTRIBUTE_H_
 #define UU_CORE_ATTRIBUTES_ATTRIBUTE_H_
 
@@ -19,32 +14,18 @@ class Attribute :
 {
   public:
 
+
     /** Name of the attribute. */
-    const std::string name;
+    std::string name;
 
     /** Type of the attribute. */
-    const AttributeType type;
-
+    AttributeType type;
 
     /** Constructor. */
     Attribute(
         const std::string& name,
         const AttributeType& type
     );
-
-
-    /**
-     * Creates a new Attribute.
-     * @param name name of the attribute.
-     * @param type type of the attribute.
-     */
-    static
-    std::unique_ptr<const Attribute>
-    create(
-        const std::string& name,
-        const AttributeType& type
-    );
-
 
 };
 

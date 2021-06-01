@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 #include <iostream>
-#include "core/datastructures/objects/NamedObject.hpp"
+#include "core/objects/Object.hpp"
 
 namespace uu {
 namespace net {
@@ -14,12 +14,14 @@ namespace net {
  */
 class
     Vertex :
-    public core::NamedObject,
+    public core::Object,
     public std::enable_shared_from_this<Vertex>
 {
 
   public:
 
+    const std::string name;
+    
     typedef std::string key_type;
 
     /** Constructor. */
@@ -27,18 +29,13 @@ class
         const std::string& name
     );
 
-    /*static
-    std::shared_ptr<const Vertex>
-    create(
-        const key_type& name
-    );*/
-
     /** Output function, presenting a complete description of the vertex. */
     std::string
     to_string(
     ) const;
 
-    const key_type key;
+    key_type
+    key() const;
 
 };
 

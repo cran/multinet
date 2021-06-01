@@ -1,5 +1,15 @@
 #include "community/louvain.hpp"
 
+#include <string>
+#include <unordered_map>
+#include <vector>
+#include <cstdio>
+#include <stdio.h>
+#include "core/exceptions/FileNotFoundException.hpp"
+#include "core/exceptions/ExternalLibException.hpp"
+#include "community/_impl/PillarCommunity.hpp"
+#include "community/_impl/abacus_utils.hpp"
+
 namespace uu {
 namespace net {
 

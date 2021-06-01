@@ -1,0 +1,21 @@
+bibentry(bibtype = "Article",
+  title        = "Analysis of Multiplex Social Networks with {R}",
+  author       = c(person(given = "Matteo",
+                          family = "Magnani",
+                          email = "matteo.magnani@it.uu.se"),
+                   person(given = "Luca",
+                          family = "Rossi",
+                          email = "lucr@itu.dk"),
+                   person(given = "Davide",
+                          family = "Vega",
+                          email = "davide.vega@it.uu.se")),
+  journal      = "Journal of Statistical Software",
+  year         = "2021",
+  volume       = "98",
+  number       = "8",
+  pages        = "1--30",
+  doi          = "10.18637/jss.v098.i08",
+
+  header       = "To cite multinet in publications use:"
+)
+

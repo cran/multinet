@@ -1,20 +1,17 @@
-#ifndef UU_OBJECTS_EDGE_H_
-#define UU_OBJECTS_EDGE_H_
+#ifndef UU_OBJECTS_MLEDGE2_H_
+#define UU_OBJECTS_MLEDGE2_H_
 
-#include <string>
-#include <memory>
 #include <iostream>
-#include "objects/Vertex.hpp"
+#include <memory>
+#include <string>
+#include <tuple>
 #include "objects/EdgeDir.hpp"
-#include "core/datastructures/objects/Object.hpp"
-#include "core/exceptions/assert_not_null.hpp"
+#include "objects/Vertex.hpp"
+#include "olap/VCube.hpp"
 
 namespace uu {
 namespace net {
 
-/**
- * An edge between two vertices.
- */
 class
     Edge :
     public core::Object,
@@ -23,42 +20,44 @@ class
 
   public:
 
+    typedef std::tuple<const Vertex*, const VCube*, const Vertex*, const VCube*> key_type;
+
     /** Constructor. */
     Edge(
         const Vertex* v1,
+        const VCube* c1,
         const Vertex* v2,
+        const VCube* c2,
         EdgeDir dir
     );
 
-    static
-    std::shared_ptr<Edge>
-    create(
-        const Vertex* v1,
-        const Vertex* v2,
-        EdgeDir dir
-    );
-
-    /** Output function, presenting a complete description of the edge. */
+    key_type
+    key() const;
+    
     std::string
     to_string(
     ) const;
 
-    /** The vertex at the first end of this edge. */
+    /** The v at the first end of this edge. */
     const Vertex* v1;
 
-    /** The vertex at the second end of this edge. */
+    /** The c at the first end of this edge. */
+    const VCube* c1;
+
+    /** The v at the second end of this edge. */
     const Vertex* v2;
+
+    /** The c at the second end of this edge. */
+    const VCube* c2;
 
     /** Edge directionality. */
     const EdgeDir dir;
 
 };
 
+
 std::ostream&
-operator<<(
-    std::ostream& os,
-    const Edge& e
-);
+operator<<(std::ostream& os, const Edge& e);
 
 
 }

@@ -16,7 +16,7 @@ namespace net {
 
 std::unique_ptr<OrderedMultiplexNetwork>
 slice_equal_time(
-    const TemporalNetwork* tnet,
+    const Network* tnet,
     size_t num_partitions
 )
 {
@@ -31,8 +31,9 @@ slice_equal_time(
     for (size_t i = 0; i<num_partitions; i++)
     {
         EdgeDir dir = (tnet->is_directed()? EdgeDir::DIRECTED : EdgeDir::UNDIRECTED);
-        auto g = std::make_unique<uu::net::Network>("l" + std::to_string(i), dir);
-        mpx->layers()->push_back(std::move(g));
+        //auto g = std::make_unique<uu::net::Network>("l" + std::to_string(i), dir);
+        // @todo use core::name_generator
+        mpx->layers()->add("l" + std::to_string(i), dir);
     }
 
     // adding all vertices to all the layers
@@ -46,10 +47,12 @@ slice_equal_time(
         }
     }
 
-    auto max_time = tnet->get_max_time().value;
-    auto min_time = tnet->get_min_time().value;
+    auto bounds = get_time_bounds(tnet);
+    auto min_time = bounds[0];
+    auto max_time = bounds[1];
 
     auto split_time = (max_time - min_time) / (float)num_partitions;
+
 
     if (max_time == min_time)
     {
@@ -58,23 +61,21 @@ slice_equal_time(
 
     for (auto e : *tnet->edges())
     {
-        auto t = tnet->get_time(e);
+        auto times = get_times(tnet, e);
 
-        if (t.null)
+        for (auto t: times)
         {
-            continue;
+            size_t idx = ((t - min_time) / split_time);
+
+            if (idx == num_partitions)
+            {
+                idx--;
+            }
+
+            auto layer = mpx->layers()->at(idx);
+
+            layer->edges()->add(e->v1, e->v2);
         }
-
-        size_t idx = ((t.value - min_time) / split_time);
-
-        if (idx == num_partitions)
-        {
-            idx--;
-        }
-
-        auto layer = mpx->layers()->at(idx);
-
-        layer->edges()->add(e->v1, e->v2);
     }
 
     return mpx;

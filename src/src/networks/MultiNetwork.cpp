@@ -1,7 +1,5 @@
 #include "networks/MultiNetwork.hpp"
 
-#include "networks/_impl/observers/NoLoopCheckObserver.hpp"
-
 namespace uu {
 namespace net {
 
@@ -9,64 +7,50 @@ MultiNetwork::
 MultiNetwork(
     const std::string& name,
     EdgeDir dir,
-    bool allows_loops) : name(name)
+    LoopMode loops
+)
+    : name(name)
 {
+    vertices_ = std::make_unique<VCube>("V");
+    edges_ = std::make_unique<MECube>("E", vertices_.get(), vertices_.get(), dir, loops);
 
-    auto vs = std::make_unique<AttrVertexStore>();
-
-    auto es = std::make_unique<AttrMultiEdgeStore>(dir);
-
-    GraphType t;
-    t.allows_loops = allows_loops;
-    t.allows_multi_edges = true;
-    t.is_directed = dir==EdgeDir::DIRECTED ? true : false;
-    t.is_weighted = false;
-
-    data_ = std::make_unique<Graph<AttrVertexStore, AttrMultiEdgeStore>>(name, t, std::move(vs), std::move(es));
-
-    if (!allows_loops)
-    {
-        auto obs = std::make_unique<NoLoopCheckObserver>();
-        data_->edges()->attach(obs.get());
-        data_->register_observer(std::move(obs));
-    }
 }
 
 
 
-AttrVertexStore*
+VCube*
 MultiNetwork::
 vertices(
 )
 {
-    return data_->vertices();
+    return vertices_.get();
 }
 
 
-const AttrVertexStore*
+const VCube*
 MultiNetwork::
 vertices(
 ) const
 {
-    return data_->vertices();
+    return vertices_.get();
 }
 
 
-AttrMultiEdgeStore*
+MECube*
 MultiNetwork::
 edges(
 )
 {
-    return data_->edges();
+    return edges_.get();
 }
 
 
-const AttrMultiEdgeStore*
+const MECube*
 MultiNetwork::
 edges(
 ) const
 {
-    return data_->edges();
+    return edges_.get();
 }
 
 
@@ -75,7 +59,7 @@ MultiNetwork::
 is_directed(
 ) const
 {
-    return data_->is_directed();
+    return edges_->is_directed();
 }
 
 
@@ -84,52 +68,7 @@ MultiNetwork::
 allows_loops(
 ) const
 {
-    return data_->allows_loops();
-}
-
-
-bool
-MultiNetwork::
-is_weighted(
-) const
-{
-    return data_->is_weighted();
-}
-
-
-bool
-MultiNetwork::
-is_probabilistic(
-) const
-{
-    return data_->is_probabilistic();
-}
-
-
-bool
-MultiNetwork::
-is_temporal(
-) const
-{
-    return data_->is_temporal();
-}
-
-
-bool
-MultiNetwork::
-is_attributed(
-) const
-{
-    return data_->is_attributed();
-}
-
-
-bool
-MultiNetwork::
-allows_multi_edges(
-) const
-{
-    return data_->allows_multi_edges();
+    return edges_->allows_loops();
 }
 
 }

@@ -1,7 +1,5 @@
 #include "networks/Network.hpp"
 
-#include "networks/_impl/observers/NoLoopCheckObserver.hpp"
-
 namespace uu {
 namespace net {
 
@@ -9,64 +7,72 @@ Network::
 Network(
     const std::string& name,
     EdgeDir dir,
-    bool allows_loops) : name(name)
+    LoopMode loops
+)
+    : name(name)
 {
 
-    auto vs = std::make_unique<AttrVertexStore>();
+    vertices_ = std::make_unique<VCube>("V");
+    edges_ = std::make_unique<ECube>("E", vertices_.get(), vertices_.get(), dir, loops);
 
-    auto es = std::make_unique<AttrSimpleEdgeStore>(dir);
+}
 
-    GraphType t;
-    t.allows_loops = allows_loops;
-    t.is_directed = dir==EdgeDir::DIRECTED ? true : false;
-    t.is_weighted = false;
+Network::
+Network(
+    const std::string& name,
+    std::unique_ptr<VCube> vertices,
+    std::unique_ptr<ECube> edges
+):
+    name(name)
+{
+    core::assert_not_null(vertices.get(), "Network::Network2", "vertices");
+    core::assert_not_null(edges.get(), "Network::Network2", "edges");
 
-    data_ = std::make_unique<Graph<AttrVertexStore, AttrSimpleEdgeStore>>(name, t, std::move(vs), std::move(es));
-
-    if (!allows_loops)
+    if (edges->vcube1() != vertices.get() || edges->vcube2() != vertices.get())
     {
-        auto obs = std::make_unique<NoLoopCheckObserver>();
-        data_->edges()->attach(obs.get());
-        data_->register_observer(std::move(obs));
+        std::string err = "edges must be defined on the vertices in the network";
+        throw core::WrongParameterException(err);
     }
+
+    vertices_ = std::move(vertices);
+    edges_ = std::move(edges);
+
 }
 
-
-
-AttrVertexStore*
+VCube*
 Network::
 vertices(
 )
 {
-    return data_->vertices();
+    return vertices_.get();
 }
 
 
 
-const AttrVertexStore*
+const VCube*
 Network::
 vertices(
 ) const
 {
-    return data_->vertices();
+    return vertices_.get();
 }
 
 
-AttrSimpleEdgeStore*
+ECube*
 Network::
 edges(
 )
 {
-    return data_->edges();
+    return edges_.get();
 }
 
 
-const AttrSimpleEdgeStore*
+const ECube*
 Network::
 edges(
 ) const
 {
-    return data_->edges();
+    return edges_.get();
 }
 
 
@@ -75,61 +81,15 @@ Network::
 is_directed(
 ) const
 {
-    return data_->is_directed();
+    return edges_->is_directed();
 }
-
-
-bool
-Network::
-is_weighted(
-) const
-{
-    return data_->is_weighted();
-}
-
-
-bool
-Network::
-is_probabilistic(
-) const
-{
-    return data_->is_probabilistic();
-}
-
-
-bool
-Network::
-is_temporal(
-) const
-{
-    return data_->is_temporal();
-}
-
-
-bool
-Network::
-is_attributed(
-) const
-{
-    return data_->is_attributed();
-}
-
-
-bool
-Network::
-allows_multi_edges(
-) const
-{
-    return data_->allows_multi_edges();
-}
-
 
 bool
 Network::
 allows_loops(
 ) const
 {
-    return data_->allows_loops();
+    return edges_->allows_loops();
 }
 
 }

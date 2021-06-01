@@ -10,10 +10,10 @@ namespace uu {
 namespace net {
 
 std::unique_ptr<MultilayerNetwork>
-read_attributed_homogeneous_multilayer_network(
+read_multilayer_network(
     const std::string& infile,
     const std::string& name,
-    char separator,
+    char separator = ',',
     bool align = false
 );
 

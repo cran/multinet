@@ -1,12 +1,9 @@
-
 #include "community/_impl/MetaNetwork.hpp"
+#include "networks/weight.hpp"
+
 #include <unordered_map>
 #include <vector>
 #include <memory>
-#include "networks/WeightedNetwork.hpp"
-#include "objects/EdgeMode.hpp"
-#include "objects/Vertex.hpp"
-#include "objects/Edge.hpp"
 
 namespace uu {
 namespace net {
@@ -15,7 +12,9 @@ namespace net {
 MetaNetwork::
 MetaNetwork()
 {
-    w = std::make_unique<WeightedNetwork>("w", EdgeDir::UNDIRECTED, true);
+    w = std::make_unique<Network>("w", EdgeDir::UNDIRECTED, LoopMode::ALLOWED);
+    make_weighted(w.get());
+
 }
 
 const Vertex*
@@ -51,14 +50,14 @@ edge(
     if (!e)
     {
         e = w->edges()->get(u_prime, v_prime);
-        previous_weight = w->get_weight(e).value;
+        previous_weight = get_weight(w.get(), e);
     }
 
-    w->set_weight(e, previous_weight+weight);
+    set_weight(w.get(), e, previous_weight+weight);
     return e;
 }
 
-const WeightedNetwork*
+const Network*
 MetaNetwork::
 get(
 ) const

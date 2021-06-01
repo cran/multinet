@@ -17,7 +17,7 @@ exp_degree(
     core::assert_not_null(g, "exp_degree", "g");
     core::assert_not_null(g, "exp_degree", "v");
 
-    if (!g->is_probabilistic())
+    if (!is_probabilistic(g))
     {
         throw core::WrongParameterException("expected degree can only be computed on probabilistic networks");
     }
@@ -26,12 +26,16 @@ exp_degree(
 
     for (auto edge: *g->edges()->incident(v, mode))
     {
-        auto p = g->get_prob(edge);
+        auto p = get_prob(g, edge);
 
-        if (!p.null)
+        exp_d += p;
+        
+        if (!(g->is_directed() && mode != EdgeMode::INOUT) && edge->v1 == edge->v2)
         {
-            exp_d += p.value;
+            // loops are counted twice
+            exp_d += p;
         }
+        
     }
 
     return exp_d;

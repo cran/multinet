@@ -3,9 +3,8 @@
 
 #include <memory>
 #include <string>
-#include "networks/_impl/Graph.hpp"
-#include "networks/_impl/stores/AttrVertexStore.hpp"
-#include "networks/_impl/stores/AttrMultiEdgeStore.hpp"
+#include "olap/VCube.hpp"
+#include "olap/MECube.hpp"
 
 namespace uu {
 namespace net {
@@ -25,6 +24,10 @@ class MultiNetwork
 
   public:
 
+    typedef const Vertex* vertex_type;
+    typedef const Edge* edge_type;
+    typedef const Vertex* community_element_type;
+
     const std::string name;
 
     /**
@@ -33,7 +36,7 @@ class MultiNetwork
     MultiNetwork(
         const std::string& name,
         EdgeDir dir = EdgeDir::UNDIRECTED,
-        bool allow_loops = true
+        LoopMode loops = LoopMode::ALLOWED
     );
 
     virtual
@@ -42,14 +45,14 @@ class MultiNetwork
     /**
      * Returns a pointer to the network's vertices.
      */
-    AttrVertexStore*
+    VCube*
     vertices(
     );
 
     /**
      * Returns a pointer to the network's (const) vertices.
      */
-    const AttrVertexStore*
+    const VCube*
     vertices(
     ) const;
 
@@ -57,7 +60,7 @@ class MultiNetwork
     /**
      * Returns a pointer to the network's edges.
      */
-    AttrMultiEdgeStore*
+    MECube*
     edges(
     );
 
@@ -65,7 +68,7 @@ class MultiNetwork
     /**
      * Returns a pointer to the network's (const) edges.
      */
-    const AttrMultiEdgeStore*
+    const MECube*
     edges(
     ) const;
 
@@ -87,59 +90,10 @@ class MultiNetwork
     allows_loops(
     ) const;
 
-
-    /**
-     * Checks if the network is weighted.
-     * Always returns false.
-     */
-    virtual
-    bool
-    is_weighted(
-    ) const;
-
-    /**
-     * Checks if the network is probabilistic.
-     * Always returns false.
-     */
-    virtual
-    bool
-    is_probabilistic(
-    ) const;
-
-
-    /**
-     * Checks if the network has temporal information on its edges.
-     * Always returns false.
-     */
-    virtual
-    bool
-    is_temporal(
-    ) const;
-
-
-    /**
-     * Checks if the network allows users to define their own generic attributes.
-     * Always returns true.
-     */
-    virtual
-    bool
-    is_attributed(
-    ) const;
-
-
-    /**
-     * Checks if the network allows multi-edges.
-     * Always returns true.
-     */
-    virtual
-    bool
-    allows_multi_edges(
-    ) const;
-
-
   private:
 
-    std::unique_ptr<Graph<AttrVertexStore, AttrMultiEdgeStore>> data_;
+    std::unique_ptr<VCube> vertices_;
+    std::unique_ptr<MECube> edges_;
 
 };
 

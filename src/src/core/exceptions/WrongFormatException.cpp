@@ -16,5 +16,5 @@ WrongFormatException::what() const throw()
     return value.data();
 }
 
-} // namespace core
-} // namespace uu
+}
+}

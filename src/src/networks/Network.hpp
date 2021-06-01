@@ -1,11 +1,10 @@
-#ifndef UU_NETWORKS_NETWORK_H_
-#define UU_NETWORKS_NETWORK_H_
+#ifndef UU_NETWORKS_NETWORK2_H_
+#define UU_NETWORKS_NETWORK2_H_
 
 #include <memory>
 #include <string>
-#include "networks/_impl/Graph.hpp"
-#include "networks/_impl/stores/AttrVertexStore.hpp"
-#include "networks/_impl/stores/AttrSimpleEdgeStore.hpp"
+#include "olap/VCube.hpp"
+#include "olap/ECube.hpp"
 
 namespace uu {
 namespace net {
@@ -15,9 +14,8 @@ namespace net {
  *
  * Vertex and edge attributes are local to the network, that is, the same vertex inside another
  * network will have different attributes.
- * Depending on its parameters, a Network can allow or disallow loops (default: disallow) and
- * be directed or undirected (default: undirected). That is, a Network by default corresponds to
- * a mathematical simple graph.
+ * Depending on its parameters, a Network can allow or disallow loops (default: allowed) and
+ * be directed or undirected (default: undirected).
  */
 class Network
 {
@@ -36,17 +34,22 @@ class Network
     Network(
         const std::string& name,
         EdgeDir dir = EdgeDir::UNDIRECTED,
-        bool allow_loops = false
+        LoopMode loops = LoopMode::ALLOWED
+    );
+
+    Network(
+        const std::string& name,
+        std::unique_ptr<VCube> vertices,
+        std::unique_ptr<ECube> edges
     );
 
     virtual
-    ~Network()
-    {}
+    ~Network() {}
 
     /**
      * Returns a pointer to the network's vertices.
      */
-    AttrVertexStore*
+    VCube*
     vertices(
     );
 
@@ -54,7 +57,7 @@ class Network
     /**
      * Returns a pointer to the network's vertices.
      */
-    const AttrVertexStore*
+    const VCube*
     vertices(
     ) const;
 
@@ -62,7 +65,7 @@ class Network
     /**
      * Returns a pointer to the network's edges.
      */
-    AttrSimpleEdgeStore*
+    ECube*
     edges(
     );
 
@@ -70,7 +73,7 @@ class Network
     /**
      * Returns a pointer to the network's edges.
      */
-    const AttrSimpleEdgeStore*
+    const ECube*
     edges(
     ) const;
 
@@ -93,59 +96,10 @@ class Network
     ) const;
 
 
-    /**
-     * Checks if the network is weighted.
-     * Always returns false.
-     */
-    virtual
-    bool
-    is_weighted(
-    ) const;
-
-
-    /**
-     * Checks if the network is probabilistic.
-     * Always returns false.
-     */
-    virtual
-    bool
-    is_probabilistic(
-    ) const;
-
-
-    /**
-     * Checks if the network is temporal.
-     * Always returns false.
-     */
-    virtual
-    bool
-    is_temporal(
-    ) const;
-
-
-    /**
-     * Checks if the network allows users to define their own generic attributes.
-     * Always returns true.
-     */
-    virtual
-    bool
-    is_attributed(
-    ) const;
-
-
-    /**
-     * Checks if the network allows multi-edges.
-     * Always returns false.
-     */
-    virtual
-    bool
-    allows_multi_edges(
-    ) const;
-
-
   private:
 
-    std::unique_ptr<Graph<AttrVertexStore, AttrSimpleEdgeStore>> data_;
+    std::unique_ptr<VCube> vertices_;
+    std::unique_ptr<ECube> edges_;
 
 };
 

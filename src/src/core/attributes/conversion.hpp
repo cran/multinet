@@ -1,8 +1,5 @@
 /**
  * This file provides functions to convert values from/to different attribute types.
- *
- * History:
- * - 2018.01.01 file created, adapted from version 1.0 of the multinet library
  */
 
 #ifndef UU_CORE_ATTRIBUTES_CONVERSION_H_

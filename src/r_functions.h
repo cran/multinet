@@ -1,11 +1,3 @@
-/*
- * r_functions.h
- *
- * Created on: Jun 19, 2014
- * Author: matteomagnani
- * Version: 0.0.1
- */
-
 #ifndef _R_FUNCTIONS_H_
 #define _R_FUNCTIONS_H_
 
@@ -452,13 +444,6 @@ DataFrame
 glouvain_ml(
     const RMLNetwork&,
     double gamma,
-    double omega,
-    int limit
-);
-
-DataFrame
-glouvain2_ml(
-    const RMLNetwork&,
     double omega
 );
 

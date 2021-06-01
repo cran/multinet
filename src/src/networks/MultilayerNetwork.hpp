@@ -1,28 +1,27 @@
 #ifndef UU_NETWORKS_MULTILAYERNETWORK_H_
 #define UU_NETWORKS_MULTILAYERNETWORK_H_
 
-/**
- *
- */
-
+#include <map>
 #include <memory>
 #include <string>
-#include "networks/_impl/TMultilayerNetwork.hpp"
-#include "networks/_impl/stores/AttrVertexStore.hpp"
-#include "networks/_impl/stores/MLLayerStore.hpp"
-#include "networks/_impl/stores/MLSimpleEdgeStore.hpp"
-
-#include "objects/Vertex.hpp"
+#include <vector>
 #include "objects/MLVertex.hpp"
+#include "olap/VCube.hpp"
+#include "olap/ECube.hpp"
 #include "networks/Network.hpp"
+#include "networks/_impl/stores/LayerStore.hpp"
+#include "networks/_impl/stores/MLECubeStore.hpp"
 
 namespace uu {
 namespace net {
 
 /**
- * A MultilayerNetwork is a set of Networks (called layers) allowing edges across layers.
+ * A generalized MultilayerNetwork is a Vertex Cube with N dimensions.
+ * Each cell of the Vertex Cube has an Edge Cube defined on it, with one dimension.
+ * Edge Cubes can also be added between pairs of Vertex Cells, allowing edges across layers.
  *
- * Vertices are called actors, and the same actor can be present in multiple layers.
+ * In generalized MultilayerNetworks, vertices are called actors, and the same actor can be
+ * present in multiple layers.
  * A multilayer vertex (MLVertex) is a pair (actor,layer).
  * A multilayer edge (MLEdge) is an edge connecting multilayer vertices.
  */
@@ -30,96 +29,86 @@ class
     MultilayerNetwork
 {
 
+    friend LayerStore;
+
+  public:
+
+    typedef Network layer_type;
+    typedef Vertex vertex_type;
+    typedef MLVertex community_element_type;
+
+  private:
+
+    /** The actors, organized into N members on one dimension */
+    std::unique_ptr<VCube> actors_;
+    /** Layer Store */
+    std::unique_ptr<LayerStore> layers_;
+    /** Layer's vertices */
+    //std::map<std::vector<std::string>, std::unique_ptr<VCube>> vertices_;
+    /** Intralayer edges */
+    //std::map<std::vector<std::string>, std::unique_ptr<ECube>> intra_edges_;
+    /** Interlayer edges */
+    std::unique_ptr<MLECubeStore> interlayer_edges_;
+
   public:
 
     const std::string name;
 
-    typedef Network layer_type;
-    typedef Vertex vertex_type;
-    typedef MLVertex<MultilayerNetwork> community_element_type;
+    //typedef Network layer_type;
+    //typedef Vertex vertex_type;
+    //typedef MLVertex<MultilayerNetwork> community_element_type;
 
     /**
-     * Creates a Network with no layers.
+     * Creates an empty Network.
      */
     MultilayerNetwork(
         const std::string& name
     );
 
+    /**
+     * Returns a pointer to the network's actors.
+     */
+    const VCube*
+    actors(
+    ) const;
 
     /**
      * Returns a pointer to the network's actors.
      */
-    AttrVertexStore*
+    VCube*
     actors(
-    );
-
-
-    /**
-     * Returns a pointer to the network's actors.
-     */
-    const AttrVertexStore*
-    actors(
-    ) const;
-
-
-    /**
-     * Returns a pointer to the network's layers.
-     */
-    MLLayerStore*
-    layers(
-    );
-
-
-    /**
-     * Returns a pointer to the network's layers.
-     */
-    const MLLayerStore*
-    layers(
-    ) const;
-
-
-    /**
-     * Returns a pointer to the network's interlayer edges.
-     */
-    MLSimpleEdgeStore*
-    interlayer_edges(
     );
 
 
     /**
      * Returns a pointer to the network's interlayer edges.
      */
-    const MLSimpleEdgeStore*
+    LayerStore*
+    layers(
+    );
+
+    /**
+     * Returns a pointer to the network's interlayer edges.
+     */
+    const LayerStore*
+    layers(
+    ) const;
+
+    /**
+     * Returns a pointer to the network's interlayer edges.
+     */
+    MLECubeStore*
+    interlayer_edges(
+    );
+
+    /**
+     * Returns a pointer to the network's interlayer edges.
+     */
+    const MLECubeStore*
     interlayer_edges(
     ) const;
 
 
-    /**
-     * Checks if the network allows interlayer edges.
-     * Always returns false.
-     */
-    bool
-    is_ordered(
-    ) const;
-
-
-    /**
-     * Checks if the network allows interlayer edges.
-     * Always returns true.
-     */
-    bool
-    allows_interlayer_edges(
-    ) const;
-
-
-    std::string
-    summary(
-    ) const;
-
-
-  private:
-
-    std::unique_ptr<TMultilayerNetwork<AttrVertexStore, MLLayerStore, MLSimpleEdgeStore>> data_;
 
 };
 

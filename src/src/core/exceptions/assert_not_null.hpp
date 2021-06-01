@@ -1,8 +1,3 @@
-/**
- * History:
- * - 2018.08.11 file created
- */
-
 #ifndef UU_CORE_EXCEPTIONS_ASSERT_H_
 #define UU_CORE_EXCEPTIONS_ASSERT_H_
 

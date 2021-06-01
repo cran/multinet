@@ -19,17 +19,17 @@ namespace uu {
 namespace net {
 
 
-std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex<MultilayerNetwork>>, std::vector<std::unique_ptr<const Vertex>>>
-        convert(
-            const MultilayerNetwork* g,
-            double omega
-        );
+std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex>, std::vector<std::unique_ptr<const Vertex>>>
+convert(
+    const MultilayerNetwork* g,
+    double omega
+);
 
-std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex<OrderedMultiplexNetwork>>, std::vector<std::unique_ptr<const Vertex>>>
-        convert(
-            const OrderedMultiplexNetwork* g,
-            double omega
-        );
+std::tuple<std::unique_ptr<GMetaNetwork>, std::map<const Vertex*, MLVertex>, std::vector<std::unique_ptr<const Vertex>>>
+convert(
+    const OrderedMultiplexNetwork* g,
+    double omega
+);
 
 void
 expand(

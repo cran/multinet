@@ -17,7 +17,8 @@ read_network(
     // Check metadata consistency (@todo)
     // create network
     // and add attributes
-    auto g = std::make_unique<Network>(name, dir, meta.features.allows_loops);
+    LoopMode loops = meta.features.allows_loops ? LoopMode::ALLOWED : LoopMode::DISALLOWED;
+    auto g = std::make_unique<Network>(name, dir, loops);
 
     for (auto attr: meta.vertex_attributes)
     {
@@ -78,8 +79,7 @@ read_edge(
     {
         throw core::WrongFormatException("Line " +
                                          std::to_string(line_number) +
-                                         ": From and To actor names and weight must " +
-                                         "be specified for each edge");
+                                         ": wrong number of fields");
     }
 
     auto edge = read_edge(g, fields, 0, line_number);

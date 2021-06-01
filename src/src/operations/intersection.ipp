@@ -44,9 +44,9 @@ graph_intersection(
 
     for (auto edge: *g1->edges())
     {
-        if (g2->edges()->contains(edge))
+        if (g2->edges()->contains(edge->v1, edge->v2))
         {
-            res->edges()->add(edge);
+            res->edges()->add(edge->v1, edge->v2);
         }
     }
 

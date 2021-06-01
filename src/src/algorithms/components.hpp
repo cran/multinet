@@ -27,6 +27,6 @@ components(
 }
 }
 
-#import "components.ipp"
+#include "components.ipp"
 
 #endif

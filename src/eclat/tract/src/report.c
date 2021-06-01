@@ -735,6 +735,7 @@ isr_occout (ISREPORT *rep, ITEM occ)
 static size_t
 is_hash (const void *set, int type)
 {
+    (void)type;
     /* --- compute item set hash value */
     size_t     i;                 /* loop variable */
     size_t     h;                 /* computed hash value */
@@ -792,6 +793,7 @@ is_hash (const void *set, int type)
 static int
 is_cmp (const void *a, const void *b, void *d)
 {
+    (void)d;
     /* --- compare two item sets */
     ITEM n;                       /* loop variable, number of items */
     ITEM *x, *y;                  /* to access the item sets */
@@ -1978,6 +1980,7 @@ isr_remove (ISREPORT *rep, ITEM n)
 double
 isr_logrto (ISREPORT *rep, void *data)
 {
+    (void)data;
     /* --- logarithm of support ratio */
     ITEM   i;                     /* loop variable */
     double sum;                   /* sum of item logarithms */
@@ -2020,6 +2023,7 @@ isr_lrsize (ISREPORT *rep, void *data)
 double
 isr_sizewgt (ISREPORT *rep, void *data)
 {
+    (void)data;
     /* --- item set size times weight */
     assert(rep);                  /* check the function arguments */
     return rep->wgts[rep->cnt] *(double)rep->cnt;
@@ -2033,6 +2037,7 @@ isr_sizewgt (ISREPORT *rep, void *data)
 double
 isr_wgtsize (ISREPORT *rep, void *data)
 {
+    (void)data;
     /* --- item set weight / size */
     assert(rep);                  /* check the function arguments */
     return (rep->cnt > 0) ? rep->wgts[rep->cnt] /(double)rep->cnt : 0;
@@ -2043,6 +2048,7 @@ isr_wgtsize (ISREPORT *rep, void *data)
 double
 isr_wgtsupp (ISREPORT *rep, void *data)
 {
+    (void)data;
     /* --- item set weight / support */
     assert(rep);                  /* check the function arguments */
     return (rep->supps[rep->cnt] > 0)

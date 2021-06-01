@@ -1,8 +1,3 @@
-/**
- * History:
- * - 2018.01.01 file adapted from version 1.0 of the multinet library
- */
-
 #ifndef UU_CORE_EXCEPTIONS_FILENOTFOUNDEXCEPTION_H_
 #define UU_CORE_EXCEPTIONS_FILENOTFOUNDEXCEPTION_H_
 

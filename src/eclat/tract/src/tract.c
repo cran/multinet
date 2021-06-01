@@ -267,6 +267,7 @@ static char msgbuf[2*TRD_MAXLEN+64];
 static int
 appcmp (const void *p1, const void *p2, void *data)
 {
+    (void)data;
     /* --- compare appearance indicators */
     CCHAR *s1 = (CCHAR*)p1 +2;    /* type the two pointers */
     CCHAR *s2 = (CCHAR*)p2 +2;    /* to strings (skip code) */
@@ -334,6 +335,7 @@ appcode (CCHAR *s)
 static int
 nocmp (const void *p1, const void *p2, void *data)
 {
+    (void)data;
     /* --- compare item identifiers */
     const ITEMDATA *a = (const ITEMDATA*)p1; /* type the pointers */
     const ITEMDATA *b = (const ITEMDATA*)p2;
@@ -366,6 +368,7 @@ nocmp (const void *p1, const void *p2, void *data)
 static int
 asccmp (const void *p1, const void *p2, void *data)
 {
+    (void)data;
     /* --- compare item frequencies */
     const ITEMDATA *a = (const ITEMDATA*)p1; /* type the pointers */
     const ITEMDATA *b = (const ITEMDATA*)p2;
@@ -398,6 +401,7 @@ asccmp (const void *p1, const void *p2, void *data)
 static int
 descmp (const void *p1, const void *p2, void *data)
 {
+    (void)data;
     /* --- compare item frequencies */
     const ITEMDATA *a = (const ITEMDATA*)p1; /* type the pointers */
     const ITEMDATA *b = (const ITEMDATA*)p2;
@@ -430,6 +434,7 @@ descmp (const void *p1, const void *p2, void *data)
 static int
 asccmpx (const void *p1, const void *p2, void *data)
 {
+    (void)data;
     /* --- compare item frequencies */
     const ITEMDATA *a = (const ITEMDATA*)p1; /* type the pointers */
     const ITEMDATA *b = (const ITEMDATA*)p2;
@@ -462,6 +467,7 @@ asccmpx (const void *p1, const void *p2, void *data)
 static int
 descmpx (const void *p1, const void *p2, void *data)
 {
+    (void)data;
     /* --- compare item frequencies */
     const ITEMDATA *a = (const ITEMDATA*)p1; /* type the pointers */
     const ITEMDATA *b = (const ITEMDATA*)p2;
@@ -1924,6 +1930,7 @@ ta_equal (const TRACT *t1, const TRACT *t2)
 int
 ta_cmp (const void *p1, const void *p2, void *data)
 {
+    (void)data;
     /* --- compare transactions */
     const ITEM *a, *b;            /* to traverse the items */
 
@@ -1958,6 +1965,7 @@ ta_cmp (const void *p1, const void *p2, void *data)
 int
 ta_cmpep (const void *p1, const void *p2, void *data)
 {
+    (void)data;
     /* --- compare trans. (equal packed) */
     ITEM       i, k;              /* item buffers */
     const ITEM *a, *b;            /* to traverse the items */
@@ -2680,6 +2688,7 @@ wta_unique (WTRACT *t)
 int
 wta_cmp (const void *p1, const void *p2, void *data)
 {
+    (void)data;
     /* --- compare transactions */
     return wi_cmp(((const WTRACT*)p1)->items,
                   ((const WTRACT*)p2)->items);

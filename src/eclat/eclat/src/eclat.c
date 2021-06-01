@@ -339,26 +339,28 @@ indent (int k)
     }
 }
 
-/*--------------------------------------------------------------------*/
+/*-------------------------------------------------------------------
+ 
+ FUNCTIONS NOT USED, COMMENTED (MM)
 
 static void
 show_tid (const char *text, ITEMBASE *base,
           TIDLIST **lists, ITEM k, int ind)
 {
-    /* --- show a cond. trans. database */
-    ITEM i, j;                    /* item, loop variable */
-    TID  *s;                      /* to traverse transaction ids */
+    // --- show a cond. trans. database
+    ITEM i, j;                    // item, loop variable
+    TID  *s;                      // to traverse transaction ids
 
-    if (text && *text)            /* print the given text */
+    if (text && *text)            // print the given text
     {
         indent(ind);
         printf("%s\n", text);
     }
 
-    for (j = 0; j < k; j++)       /* traverse the items / tid lists */
+    for (j = 0; j < k; j++)       // traverse the items / tid lists
     {
-        indent(ind);                /* indent the output line */
-        i = lists[j]->item;         /* print the item name and id */
+        indent(ind);                // indent the output line
+        i = lists[j]->item;         // print the item name and id
 
         if (i < 0)
         {
@@ -372,38 +374,37 @@ show_tid (const char *text, ITEMBASE *base,
 
         for (s = lists[j]->tids; *s >= 0; s++)
         {
-            printf(" %"TID_FMT, *s);    /* print the transaction ids */
+            printf(" %"TID_FMT, *s);    // print the transaction ids
         }
 
         printf(" (%"SUPP_FMT")\n", lists[j]->supp);
-    }                             /* print the item support */
-}  /* show_tid() */
+    }                             // print the item support
+}  // show_tid()
 
-/*--------------------------------------------------------------------*/
 
 static void
 show_tab (const char *text, ITEMBASE *base,
           SUPP **tab, TID n, ITEM k)
 {
-    /* --- show item counter table */
-    ITEM i;                       /* loop variable for items */
-    TID  r;                       /* loop variable for rows */
+    // --- show item counter table
+    ITEM i;                       // loop variable for items
+    TID  r;                       // loop variable for rows
 
-    if (text && *text)            /* if it is not empty, */
+    if (text && *text)            // if it is not empty,
     {
-        printf("%s\n", text);    /* print the given text */
+        printf("%s\n", text);    // print the given text
     }
 
-    printf("    ");               /* skip row id/tid column */
+    printf("    ");               // skip row id/tid column
 
-    for (r = 0; r < n; r++)       /* print the transaction header */
+    for (r = 0; r < n; r++)       // print the transaction header
     {
-        printf(" %3"TID_FMT, r);    /* print the row number / tid */
+        printf(" %3"TID_FMT, r);    // print the row number / tid
     }
 
-    printf("\n");                 /* terminate the header line */
+    printf("\n");                 // terminate the header line
 
-    for (i = 0; i < k; i++)       /* traverse the table columns */
+    for (i = 0; i < k; i++)       // traverse the table columns
     {
         printf("%4s[%2"ITEM_FMT"]:", ib_name(base, i), i);
 
@@ -412,57 +413,57 @@ show_tab (const char *text, ITEMBASE *base,
             printf(" %3"SUPP_FMT, tab[i][r]);
         }
 
-        printf("\n");               /* print the item counters */
-    }                             /* and terminate the line */
-}  /* show_tab() */
+        printf("\n");               // print the item counters
+    }                             // and terminate the line
+}  // show_tab()
 
-/*--------------------------------------------------------------------*/
 
 static void
 show_trg (const char *text, ITEMBASE *base,
           TRGLIST **lists, ITEM k, int ind)
 {
-    /* --- show a cond. trans. database */
-    ITEM     i, j;                /* item, loop variable */
-    TIDRANGE *r;                  /* to traverse transaction id ranges */
+    // --- show a cond. trans. database
+    ITEM     i, j;                // item, loop variable
+    TIDRANGE *r;                  // to traverse transaction id ranges
 
-    if (text && *text)            /* print the given text */
+    if (text && *text)            // print the given text
     {
         indent(ind);
         printf("%s\n", text);
     }
 
-    for (j = 0; j < k; j++)       /* traverse the items / range lists */
+    for (j = 0; j < k; j++)       // traverse the items / range lists
     {
-        indent(ind);                /* indent the output line */
-        i = lists[j]->item;         /* get the item identifier */
-        r = lists[j]->trgs;         /* and the transaction ranges */
+        indent(ind);                // indent the output line
+        i = lists[j]->item;         // get the item identifier
+        r = lists[j]->trgs;         // and the transaction ranges
 
-        if (i < 0)                  /* if list for packed items */
+        if (i < 0)                  // if list for packed items
         {
-            printf("packed:");        /* print special indicator */
+            printf("packed:");        // print special indicator
 
-            for ( ; r->min >= 0; r++) /* and the transaction ids */
+            for ( ; r->min >= 0; r++) // and the transaction ids
             {
                 printf(" %"TID_FMT":%04x", r->min, (unsigned int)r->max);
                 printf(":%"SUPP_FMT, r->wgt);
             }
         }
 
-        else                        /* if list for a normal item */
+        else                        // if list for a normal item
         {
             printf("%s[%"ITEM_FMT"]:", ib_name(base, i), i);
 
-            for ( ; r->min >= 0; r++) /* print item name and id */
+            for ( ; r->min >= 0; r++) // print item name and id
             {
                 printf(" %"TID_FMT"-%"TID_FMT, r->min, r->max);
                 printf(":%"SUPP_FMT, r->wgt);
-            }                         /* print the transaction ranges */
+            }                         // print the transaction ranges
         }
 
         printf(" (%"SUPP_FMT")\n", lists[j]->supp);
-    }                             /* print the item support */
-}  /* show_trg() */
+    }                             // print the item support
+}  // show_trg()
+ */
 
 #endif  /* #ifndef NDEBUG */
 /*----------------------------------------------------------------------
@@ -761,6 +762,7 @@ eclat_base (ECLAT *eclat)
 static int
 tid_cmp (const void *a, const void *b, void *data)
 {
+    (void)data;
     /* --- compare support of tid lists */
     if (((TIDLIST*)b)->supp > ((TIDLIST*)a)->supp)
     {
@@ -780,6 +782,7 @@ tid_cmp (const void *a, const void *b, void *data)
 static int
 tid_cmpx (const void *a, const void *b, void *data)
 {
+    (void)data;
     /* --- compare support of tid lists */
     if (((TIDLIST*)a)->item < 0)
     {
@@ -1707,6 +1710,7 @@ eclat_tid (ECLAT *eclat)
 static int
 bit_cmp (const void *a, const void *b, void *data)
 {
+    (void)data;
     /* --- compare support of tid lists */
     if (((BITVEC*)b)->supp > ((BITVEC*)a)->supp)
     {

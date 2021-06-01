@@ -26,6 +26,6 @@ single_source_path_length(
 }
 }
 
-#import "sssp.ipp"
+#include "sssp.ipp"
 
 #endif

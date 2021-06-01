@@ -97,7 +97,7 @@ std::unique_ptr<CommunityStructure<M>>
         actors[a_id++] = a;
     }
 
-    std::unordered_map<size_t, std::vector<MLVertex<M>>> comm;
+    std::unordered_map<size_t, std::vector<MLVertex>> comm;
 
     /*
     for (infomap::LeafIterator leafIt(&resultNetwork.getRootNode()); !leafIt.isEnd(); ++leafIt)
@@ -125,7 +125,7 @@ std::unique_ptr<CommunityStructure<M>>
             {
                 if (l->vertices()->contains(actor))
                 {
-                    comm[c_id].push_back(MLVertex<M>(actor,l));
+                    comm[c_id].push_back(MLVertex(actor,l));
                 }
             }
         }
@@ -238,7 +238,7 @@ std::unique_ptr<CommunityStructure<M>>
         actors[a_id++] = a;
     }
 
-    std::unordered_map<size_t, std::vector<MLVertex<M>>> comm;
+    std::unordered_map<size_t, std::vector<MLVertex>> comm;
 
     core::CSVReader clusters;
     clusters.set_field_separator(' ');
@@ -256,7 +256,7 @@ std::unique_ptr<CommunityStructure<M>>
         {
             if (l->vertices()->contains(actor))
             {
-                comm[c_id].push_back(MLVertex<M>(actor,l));
+                comm[c_id].push_back(MLVertex(actor,l));
             }
         }
     }

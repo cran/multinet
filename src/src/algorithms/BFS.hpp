@@ -108,6 +108,6 @@ class BFS
 }
 }
 
-#import "BFS.ipp"
+#include "BFS.ipp"
 
 #endif

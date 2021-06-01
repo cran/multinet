@@ -1,12 +1,7 @@
-/**
- * History:
- * - 2018.03.09 file created, following a restructuring of the previous library.
- */
-
 #ifndef UU_NET_DATASTRUCTURE_OBSERVERS_PROPAGATEOBSERVER_H_
 #define UU_NET_DATASTRUCTURE_OBSERVERS_PROPAGATEOBSERVER_H_
 
-#include "core/datastructures/observers/Observer.hpp"
+#include "core/observers/Observer.hpp"
 #include "core/exceptions/NullPtrException.hpp"
 
 namespace uu {

@@ -1,10 +1,3 @@
-/**
- * Functions based on random number generation.
- *
- * History:
- * - 2018.01.01 file imported from version 1.0 of the multinet library
- */
-
 #ifndef UU_CORE_UTILS_RANDOM_H_
 #define UU_CORE_UTILS_RANDOM_H_
 
@@ -32,28 +25,8 @@ get_random_engine(
  * @throws OperationNotSupprtedException if the range is larger than the number of random numbers that can be returned by the system
  */
 size_t
-getRandomInt(
+irand(
     size_t max
-);
-
-/**
- *
- */
-size_t
-get_binomial(
-    size_t tests,
-    double p
-);
-
-/**
- * Returns a random integral number in the range [0,max[ using an
- * approximately uniform probability distribution.
- * @param max
- * @throws OperationNotSupprtedException if the range is larger than the number of random numbers that can be returned by the system
- */
-long
-getRandomLong(
-    long max
 );
 
 /**
@@ -63,6 +36,28 @@ getRandomLong(
 double
 drand(
 );
+
+/**
+ * Returns a random integral number in the range [0,max[ using an
+ * approximately uniform probability distribution.
+ * @param max
+ * @throws OperationNotSupprtedException if the range is larger than the number of random numbers that can be returned by the system
+ */
+long
+lrand(
+    long max
+);
+
+/**
+ * Returns a number from 0 to num_tests with the number of successes in a sequence of num_tests
+ * yes/no experiments, each of which succeeds with probability p.
+ */
+size_t
+get_binomial(
+    size_t num_tests,
+    double p
+);
+
 
 /**
  * Returns a number from 0 to MAX_LEVEL with geometrically decreasing
@@ -75,22 +70,11 @@ random_level(
 );
 
 /**
-* Returns K random integral numbers in the range [0,max[ using an
-* approximately uniform probability distribution.
-* @param max
-* @param k
-*/
-std::set<size_t>
-getKRandom(
-    size_t max,
-    size_t k
-);
-
-/**
- * Returns K random integral numbers in the range [0,max[ using an
+ * Returns k random integers (size_t) in the range [0,max[ using an
  * approximately uniform probability distribution.
  * @param max
  * @param k
+ * @throw WrongParameterException if k >= max
  */
 std::vector<size_t>
 get_k_uniform(
@@ -120,6 +104,9 @@ test(
  * Random test: returns the index of the vector randomly selected,
  * where each element of the vector contains the probability of selecting
  * it. It is assumed that the elements of the vector sum up to 1.
+ *
+ * @todo this function seems useless, as the previous can be used by just passing
+ * options.at(row_num). Check in the code where it is used.
  */
 size_t
 test(
@@ -127,6 +114,9 @@ test(
     int row_num
 );
 
+/**
+ * @todo add documentation
+ */
 template <class RandomAccessIterator, class URNG>
 void
 shuffle (RandomAccessIterator first, RandomAccessIterator last, URNG&& g)

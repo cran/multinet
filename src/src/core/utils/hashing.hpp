@@ -61,4 +61,4 @@ struct hash<std::set<T> >
 }
 
 
-#endif /* UU_CORE_UTILS_HASHING_H_ */
+#endif 
