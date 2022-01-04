@@ -22,9 +22,9 @@ The functions \code{nodes_ml} and \code{num_nodes_ml} are deprecated in the curr
 }
 \usage{
 layers_ml(n)
-actors_ml(n, layers = character(0))
-vertices_ml(n, layers = character(0))
-edges_ml(n, layers1 = character(0), layers2 = character(0))
+actors_ml(n, layers = character(0), add.attributes = FALSE)
+vertices_ml(n, layers = character(0), add.attributes = FALSE)
+edges_ml(n, layers1 = character(0), layers2 = character(0), add.attributes = FALSE)
 edges_idx_ml(n)
 
 num_layers_ml(n)
@@ -37,9 +37,11 @@ num_edges_ml(n, layers1 = character(0), layers2 = character(0))
 \item{layers}{An array of names of layers belonging to the network. Only the actors/vertices in these layers are returned. If the array is empty, all the vertices in the network are returned. Notice that this may not correspond to the list of actors: there can be actors that are not present in any layer. These would be returned only using the \code{actors_ml} function.}
 \item{layers1}{The layer(s) from where the edges to be extracted start. If an empty list of layers is passed (default), all the layers are considered.}
 \item{layers2}{The layer(s) where the edges to be extracted end. If an empty list of layers is passed (default), the ending layers are set as equal to those in parameter layer1.}
+\item{add.attributes}{If set to TRUE, one column for each attribute is added to the data frame,
+    with the corresponding attribute value.}
 }
 \value{
-\code{actors_ml} and \code{layers_ml} return an array of respectively actor and layer names. \code{vertices_ml} returns a data frame where each row contains the name of the actor corresponding to that vertex and the layer of the vertex. \code{edges_ml} returns a data frame where each row contains two actor names (i.e., an edge), the name of the two layers connected by the edge (which can be the same layer if it is an intra-layer edge) and the type of edge (directed/undirected).
+\code{layers_ml} returns an array of layer names. \code{actors_ml} returns a data frame with one column, containing actors names. \code{vertices_ml} returns a data frame where each row contains the name of the actor corresponding to that vertex and the layer of the vertex. \code{edges_ml} returns a data frame where each row contains two actor names (i.e., an edge), the name of the two layers connected by the edge (which can be the same layer if it is an intra-layer edge) and the type of edge (directed/undirected).
 
     \code{edges_idx_ml} returns the index of the vertex as returned by the \code{vertices_ml} function instead of its name - this is used internally by the plotting function.
 

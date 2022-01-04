@@ -8,7 +8,7 @@
 Drawing a multilayer network
 }
 \description{
-The plot function draws a multilayer network. values2graphics is a support function translating discrete attribute values to graphical parameters. values2graphics returns an object with fields legend.text, legend.pch, legend.col and color or shape.
+The plot function draws a multilayer network. values2graphics is a support function translating discrete attribute values to graphical parameters.
 }
 \usage{
 \S3method{plot}{Rcpp_RMLNetwork}(x,
@@ -78,17 +78,15 @@ head - corresponding to the parameter of the R \code{arrows} function with the s
 \item{com}{The result of a community detection algorithm. When this parameter is set, a colored area is added behind each community.}
 \item{com.cex}{Increases (>1) or decreases (<1) the margin around the nodes when the colored areas are drawn around the communities.}
 
-
 \item{show.layer.names}{if TRUE adds the name of each layer at the center bottom of it.}
 \item{layer.names.cex}{Increases (>1) or decreases (<1) the size of the layer names.}
 
 \item{...}{Other graphical parameters.}
 
-
 \item{values}{A vector with values.}
-
 \item{output}{The type of graphical objects the values should be translated to. It can currently take values "color" and "shape".}
 }
+\value{\code{plot} returns no value. \code{values2graphics} returns an object with fields: legend.text, legend.pch, legend.col and color or shape, containing respectively the text entries for the legend, their characher shapes, their colours, and the color or shape of the entities in the \code{values} input parameter.}
 \seealso{
 \link{multinet.layout}, \link{multinet.communities}
 }

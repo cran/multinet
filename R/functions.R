@@ -82,6 +82,10 @@ legend.cex=.5, legend.inset=c(0, 0),
 com=NULL, com.cex=1,
 show.layer.names=TRUE, layer.names.cex=1, ...) {
    
+   # reset original parameters after exiting the function
+   oldpar <- par(no.readonly = TRUE)
+   on.exit(par(oldpar))
+   
    # some sub-functions:
    
    # function to add transparency

@@ -1,3 +1,8 @@
+# version 4.0.1
+
+- Rewritten as.igraph to remove dependency on igraph's ability to read graphml files
+- Modified is_directed_ml not to process pairs of layers that have not been initialised (it used to return a warning)
+
 # version 4.0
 
 - the multilayer network data structure has been re-implemented using multilayer cubes

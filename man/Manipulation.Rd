@@ -48,6 +48,7 @@ delete_edges_ml(n, edges)
 \item{vertices}{A dataframe of vertices to be updated or deleted. The first column specifies actor names, the second layer names.}
 \item{edges}{A dataframe containing the edges to be connected or deleted. The four columns must contain, in this order: actor1 name, layer1 name, actor2 name, layer2 name.}
 }
+\value{These functions return no value: they modify the input network.}
 \seealso{
 \link{multinet.properties}, \link{multinet.edge_directionality}
 }

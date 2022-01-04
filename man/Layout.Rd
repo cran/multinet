@@ -19,6 +19,7 @@ layout_circular_ml(n)
 \item{gravity}{An array with weights for gravity forces, or a single number if weights are the same for all layers. This parameter results in the application of a force to the vertices, directed toward the center of the plot. It can be useful when there there are multiple components, so that they do not drift away from each other because of the repulsion force applied to their vertices.}
 \item{iterations}{Number of iterations.}
 }
+\value{These functions return a data frame with columns: actor, layer, x, y, z. Each value of z corresponds to one layer, and x and y are the coordinates of the actor inside that layer.}
 \references{
 Fatemi, Zahra, Salehi, Mostafa, & Magnani, Matteo (2018). A generalised force-based layout for multiplex sociograms. Social Informatics
 }

@@ -102,17 +102,25 @@ RCPP_MODULE(multinet)
 
     function("actors_ml",
              &actors,
-             List::create( _["n"], _["layers"]=CharacterVector()),
+             List::create( _["n"],
+             _["layers"]=CharacterVector(),
+             _["add.attributes"]=false),
              "Returns the list of actors present in the input layers, or in the whole multilayer network if no layers are specified");
 
     function("vertices_ml",
              &vertices,
-             List::create( _["n"], _["layers"]=CharacterVector()),
+             List::create( _["n"],
+             _["layers"]=CharacterVector(),
+             _["add.attributes"]=false),
              "Returns the list of vertices in the input layers, or in the whole multilayer network if no layers are specified");
 
     function("edges_ml",
              &edges,
-             List::create( _["n"], _["layers1"]=CharacterVector(), _["layers2"]=CharacterVector()),
+             List::create(
+                _["n"],
+                _["layers1"]=CharacterVector(),
+                _["layers2"]=CharacterVector(),
+                _["add.attributes"]=false),
              "Returns the list of edges among vertices in the input layers (if only one set of layers is specified), or from the first set of input layers to the second set of input layers, or in the whole multilayer network if no layers are specified");
 
     function("edges_idx_ml",

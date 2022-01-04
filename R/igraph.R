@@ -5,13 +5,62 @@ as.igraph.Rcpp_RMLNetwork <- function (x, layers=NULL, merge.actors=TRUE, all.ac
     if (is.null(layers)) {
         layers <- layers_ml(x)
     }
-    temp_f <- tempfile()
-    write_ml(x, temp_f, format = "graphml", layers, ",", merge.actors, all.actors)
-    g <- read.graph(temp_f, format = "graphml")
-    unlink(temp_f)
+    dir = max(is_directed_ml(x)$dir)
+    
+    if (merge.actors) {
+        a_df <- actors_ml(x, layers, add.attributes=T)
+        e <- edges_ml(x, layers, add.attributes=T)
+        #e <- e[e$from_layer %in% layers & e$to_layer %in% layers,]
+        e_df <- NULL
+        if (length(e)>5) {
+            e_df <- data.frame(from_actor=e$from_actor, to_actor=e$to_actor, layers=paste(e$from_layer, "-", e$to_layer, sep = ""), e[6:length(e)])
+        }
+        else {
+            e_df <- data.frame(from_actor=e$from_actor, to_actor=e$to_actor, layers=paste(e$from_layer, "-", e$to_layer, sep = ""))
+        }
+        if (dir) {
+            e <- e[e$dir==0,]
+            e_df_reverse <- NULL
+            if (length(e)>5) {
+                e_df_reverse <- data.frame(from_actor=e$to_actor, to_actor=e$from_actor, layers=paste(e$to_layer, "-", e$from_layer, sep = ""), e[6:length(e)])
+            }
+            else {
+                e_df_reverse <- data.frame(from_actor=e$to_actor, to_actor=e$from_actor, layers=paste(e$to_layer, "-", e$from_layer, sep = ""))
+            }
+            e_df <- rbind(e_df, e_df_reverse)
+        }
+        g <- graph_from_data_frame(vertices=a_df, e_df, directed=dir)
+    }
+    else {
+        a_df <- vertices_ml(x, layers, add.attributes=T)
+        v_df <- NULL
+        if (length(a_df)>2) {
+            v_df <- data.frame(node=paste(a_df$layer, "::", a_df$actor, sep = ""), layer=a_df$layer, a_df[3:length(a_df)])
+        }
+        e <- edges_ml(x, layers, add.attributes=T)
+        #e <- e[e$from_layer %in% layers & e$to_layer %in% layers,]
+        e_df <- NULL
+        if (length(e)>5) {
+            e_df <- data.frame(from_actor=paste(e$from_layer, "::", e$from_actor, sep = ""), to_actor=paste(e$to_layer, "::", e$to_actor, sep = ""), e[6:length(e)])
+        }
+        else {
+            e_df <- data.frame(from_actor=paste(e$from_layer, "::", e$from_actor, sep = ""), to_actor=paste(e$to_layer, "::", e$to_actor, sep = ""))
+        }
+        if (dir) {
+            e <- e[e$dir==0,]
+            e_df_reverse <- NULL
+            if (length(e)>5) {
+                e_df <- data.frame(from_actor=paste(e$to_layer, "::", e$to_actor, sep = ""), to_actor=paste(e$from_layer, "::", e$from_actor, sep = ""), e[6:length(e)])
+            }
+            else {
+                e_df <- data.frame(from_actor=paste(e$to_layer, "::", e$to_actor, sep = ""), to_actor=paste(e$from_layer, "::", e$from_actor, sep = ""))
+            }
+            e_df <- rbind(e_df, e_df_reverse)
+        }
+        g <- graph_from_data_frame(vertices=v_df, e_df, directed=dir)
+    }
     g
 }
-
 
 # A function to convert the network into a list of igraph objects
 as.list.Rcpp_RMLNetwork <- function(x, ...) {

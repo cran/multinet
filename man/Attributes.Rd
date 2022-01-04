@@ -67,7 +67,7 @@ get_values_ml(net,"name",actors=c("U139"))
 get_values_ml(net,"strength",edges=e)
 # setting attributes based on network properties: create a "degree"
 # attribute and set its value to the degree of each actor
-actors_ml(net) -> a
+actors_ml(net)$actor -> a
 layers_ml(net) -> l
 degree_ml(net,actors=a,layers=l,mode="all") -> d
 add_attributes_ml(net,target="actor",type="numeric",attributes="degree")

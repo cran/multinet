@@ -29,8 +29,8 @@ method = "clique")
     layers where the two actors are connected.}
 \item{force.directed}{The new layer is set as directed. If this is false, the new layer is set as directed if at least one of the merged layers is directed.}
 \item{all.actors}{If TRUE, then all the actors are included in the new layer, even if they are not present in any of the merged layers.}
-
 }
+\value{These functions return no value: they modify the input network.}
 \seealso{\link{multinet.conversion}}
 \references{
 Dickison, Magnani, and Rossi, 2016. Multilayer Social Networks. Cambridge University Press. ISBN: 978-1107438750

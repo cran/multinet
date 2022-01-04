@@ -1,13 +1,13 @@
 Package: multinet
 Type: Package
 Title: Analysis and Mining of Multilayer Social Networks
-Version: 4.0
-Date: 2021-06-01
-Author: Matteo Magnani, Luca Rossi (API design), Obaida Hanteer (mdlpa, flat_ec, flat_nw, some community eval. functions), Davide Vega (API and code design). The package uses functions from eclat <https://borgelt.net/eclat.html>, for association rule mining, Infomap <https://www.mapequation.org>, for the Infomap community detection method, and Howard Hinnant's date and time library <https://github.com/HowardHinnant/date>. The code from these libraries has been included in our source package.
+Version: 4.0.1
+Date: 2022-01-04
+Authors@R: c(person("Matteo", "Magnani", role = c("aut", "cre"), email = "matteo.magnani@it.uu.se"), person("Luca", "Rossi", role = "aut", comment="API design"), person("Davide", "Vega", role = "aut", comment="API and code design"), person("Obaida", "Hanteer", role = "ctb", comment="mdlpa, flat_ec, flat_nw, some community evaluation functions"))
 Maintainer: Matteo Magnani <matteo.magnani@it.uu.se>
 Description: Functions for the creation/generation and analysis of multilayer social networks <doi:10.18637/jss.v098.i08>.
 License: GPL
-Depends: igraph (>= 1.2), Rcpp (>= 1.0.1), methods, RColorBrewer
+Depends: igraph (>= 1.2), Rcpp (>= 1.0), methods, RColorBrewer
 LinkingTo: Rcpp
 RcppModules: multinet
 SystemRequirements: A C++14 compiler
@@ -16,6 +16,17 @@ Repository: CRAN
 Note: a previous version of the library (main version number: 3) was
         developed as part of the European Union's Horizon 2020 research
         and innovation programme under grant agreement No. 727040
-        (Virt-EU).
-Packaged: 2021-06-01 10:14:51 UTC; matteomagnami
-Date/Publication: 2021-06-01 13:00:02 UTC
+        (Virt-EU). The package uses functions from eclat
+        <https://borgelt.net/eclat.html>, for association rule mining,
+        Infomap <https://www.mapequation.org>, for the Infomap
+        community detection method (please refer to their web site for
+        up-to-date code), and Howard Hinnant's date and time library
+        <https://github.com/HowardHinnant/date>. The code from these
+        libraries has been included in our source package.
+Packaged: 2022-01-04 14:03:57 UTC; matteomagnami
+Author: Matteo Magnani [aut, cre],
+  Luca Rossi [aut] (API design),
+  Davide Vega [aut] (API and code design),
+  Obaida Hanteer [ctb] (mdlpa, flat_ec, flat_nw, some community
+    evaluation functions)
+Date/Publication: 2022-01-05 00:20:02 UTC

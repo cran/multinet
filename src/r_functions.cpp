@@ -296,6 +296,7 @@ generateCommunities(
         return res;
     }
     else throw uu::core::WrongParameterException("wrong type parameter");
+    return List();
 }
 
 
@@ -317,16 +318,38 @@ layers(
     return res;
 }
 
-CharacterVector
+DataFrame
 actors(
     const RMLNetwork& rmnet,
-    const CharacterVector& layer_names
+    const CharacterVector& layer_names,
+    bool add_attributes
 )
 {
+    DataFrame res;
     CharacterVector actors(0);
     auto mnet = rmnet.get_mlnet();
 
-    if (layer_names.size()==0)
+    auto layers = resolve_layers(mnet,layer_names);
+    
+    if (layer_names.size()>0)
+    {
+        std::unordered_set<const uu::net::Vertex*> selected_actors;
+        for (auto layer: layers)
+        {
+            for (auto actor: *layer->vertices())
+            {
+                selected_actors.insert(actor);
+            }
+        }
+        for (auto actor: *mnet->actors())
+        {
+            if (selected_actors.count(actor)>0)
+            {
+                actors.push_back(actor->name);
+            }
+        }
+    }
+    else
     {
         for (auto actor: *mnet->actors())
         {
@@ -334,33 +357,114 @@ actors(
         }
     }
 
-    else
+    res["actor"] = actors;
+    
+    if (add_attributes)
     {
-        auto layers = resolve_layers(mnet,layer_names);
-
         for (auto layer: layers)
         {
-            for (auto vertex: *layer->vertices())
+            std::string layer_name = layer->name;
+            
+            auto attrs = layer->vertices()->attr();
+            for (auto attr: *attrs)
             {
-                actors.push_back(vertex->name);
+                if (attr->type==uu::core::AttributeType::NUMERIC || attr->type==uu::core::AttributeType::DOUBLE)
+                {
+                    NumericVector values(actors.size());
+                    
+                    for (size_t i = 0; i<actors.size(); i++)
+                    {
+                        std::string actor_name = std::string(actors(i));
+                        auto actor = mnet->actors()->get(actor_name);
+                        if (!layer->vertices()->contains(actor))
+                        {
+                            values(i) = NA_REAL;
+                        }
+                        else
+                        {
+                            auto att_val = attrs->get_double(actor, attr->name);
+                            if (att_val.null) values(i) = NA_REAL;
+                            else values(i) = att_val.value;
+                        }
+                    }
+
+                    res[attr->name] = values;
+                }
+                
+                else if (attr->type==uu::core::AttributeType::STRING)
+                {
+                    CharacterVector values(actors.size());
+                    
+                    for (size_t i = 0; i<actors.size(); i++)
+                    {
+                        std::string actor_name = std::string(actors(i));
+                        auto actor = mnet->actors()->get(actor_name);
+                        if (!layer->vertices()->contains(actor))
+                        {
+                            values(i) = NA_STRING;
+                        }
+                        else
+                        {
+                            auto att_val = attrs->get_string(actor, attr->name);
+                            if (att_val.null) values(i) = NA_STRING;
+                            else values(i) = att_val.value;
+                        }
+                    }
+                    res[attr->name] = values;
+                }
+
+            }
+        }
+        
+        auto attrs = mnet->actors()->attr();
+        for (auto attr: *attrs)
+        {
+            if (attr->type==uu::core::AttributeType::NUMERIC || attr->type==uu::core::AttributeType::DOUBLE)
+            {
+                NumericVector values(actors.size());
+                
+                for (size_t i = 0; i<actors.size(); i++)
+                {
+                    std::string actor_name = std::string(actors(i));
+                    auto actor = mnet->actors()->get(actor_name);
+                    auto att_val = attrs->get_double(actor, attr->name);
+                    if (att_val.null) values(i) = NA_REAL;
+                    else values(i) = att_val.value;
+                }
+                res[attr->name] = values;
+            }
+            
+            else if (attr->type==uu::core::AttributeType::STRING)
+            {
+                CharacterVector values(actors.size());
+                
+                for (size_t i = 0; i<actors.size(); i++)
+                {
+                    std::string actor_name = std::string(actors(i));
+                    auto actor = mnet->actors()->get(actor_name);
+                    auto att_val = attrs->get_string(actor, attr->name);
+                    if (att_val.null) values(i) = NA_STRING;
+                    else values(i) = att_val.value;
+                }
+                res[attr->name] = values;
             }
         }
     }
 
-    //for (auto actor: actors)
-    //  res.push_back(actor->name);
-    return actors;
+    return res;
 }
 
 DataFrame
 vertices(
     const RMLNetwork& rmnet,
-    const CharacterVector& layer_names
+    const CharacterVector& layer_names,
+    bool add_attributes
 )
 {
+    DataFrame res;
     auto mnet = rmnet.get_mlnet();
     auto layers = resolve_layers_unordered(mnet,layer_names);
-    CharacterVector actor, layer;
+    CharacterVector actors, layers_df;
 
     for (auto l: *mnet->layers())
     {
@@ -372,12 +476,111 @@ vertices(
 
         for (auto vertex: *l->vertices())
         {
-            actor.push_back(vertex->name);
-            layer.push_back(l->name);
+            actors.push_back(vertex->name);
+            layers_df.push_back(l->name);
+        }
+    }
+    res["actor"] = actors;
+    res["layer"] = layers_df;
+    
+    if (add_attributes)
+    {
+        for (auto layer: *mnet->layers())
+        {
+            if (layers.count(layer)==0)
+            {
+                continue;
+            }
+            
+            std::string layer_name = layer->name;
+            
+            auto attrs = layer->vertices()->attr();
+            for (auto attr: *attrs)
+            {
+                if (attr->type==uu::core::AttributeType::NUMERIC || attr->type==uu::core::AttributeType::DOUBLE)
+                {
+                    NumericVector values(actors.size());
+                    
+                    for (size_t i = 0; i<actors.size(); i++)
+                    {
+                        std::string actor_name = std::string(actors(i));
+                        auto actor = mnet->actors()->get(actor_name);
+                        if (std::string(layers_df(i)) != layer_name)
+                        {
+                            values(i) = NA_REAL;
+                        }
+                        else
+                        {
+                            auto att_val = attrs->get_double(actor, attr->name);
+                            if (att_val.null) values(i) = NA_REAL;
+                            else values(i) = att_val.value;
+                        }
+                    }
+
+                    res[attr->name] = values;
+                }
+                
+                else if (attr->type==uu::core::AttributeType::STRING)
+                {
+                    CharacterVector values(actors.size());
+                    
+                    for (size_t i = 0; i<actors.size(); i++)
+                    {
+                        std::string actor_name = std::string(actors(i));
+                        auto actor = mnet->actors()->get(actor_name);
+                        if (std::string(layers_df(i)) != layer_name)
+                        {
+                            values(i) = NA_STRING;
+                        }
+                        else
+                        {
+                            auto att_val = attrs->get_string(actor, attr->name);
+                            if (att_val.null) values(i) = NA_STRING;
+                            else values(i) = att_val.value;
+                        }
+                    }
+                    res[attr->name] = values;
+                }
+
+            }
+        }
+        
+        auto attrs = mnet->actors()->attr();
+        for (auto attr: *attrs)
+        {
+            if (attr->type==uu::core::AttributeType::NUMERIC || attr->type==uu::core::AttributeType::DOUBLE)
+            {
+                NumericVector values(actors.size());
+                
+                for (size_t i = 0; i<actors.size(); i++)
+                {
+                    std::string actor_name = std::string(actors(i));
+                    auto actor = mnet->actors()->get(actor_name);
+                    auto att_val = attrs->get_double(actor, attr->name);
+                    if (att_val.null) values(i) = NA_REAL;
+                    else values(i) = att_val.value;
+                }
+                res[attr->name] = values;
+            }
+            
+            else if (attr->type==uu::core::AttributeType::STRING)
+            {
+                CharacterVector values(actors.size());
+                
+                for (size_t i = 0; i<actors.size(); i++)
+                {
+                    std::string actor_name = std::string(actors(i));
+                    auto actor = mnet->actors()->get(actor_name);
+                    auto att_val = attrs->get_string(actor, attr->name);
+                    if (att_val.null) values(i) = NA_STRING;
+                    else values(i) = att_val.value;
+                }
+                res[attr->name] = values;
+            }
         }
     }
 
-    return DataFrame::create(_["actor"] = actor, _["layer"] = layer);
+    return res;
 }
 
 DataFrame
@@ -430,7 +633,7 @@ edges_idx(
     // interlayer
     for (auto l1: *mnet->layers())
     {
-        num_edges += l1->edges()->size();
+        //num_edges += l1->edges()->size();
         for (auto l2: *mnet->layers())
         {
             if (l2 <= l1) continue;
@@ -453,9 +656,11 @@ DataFrame
 edges(
     const RMLNetwork& rmnet,
     const CharacterVector& layer_names1,
-    const CharacterVector& layer_names2
+    const CharacterVector& layer_names2,
+    bool add_attributes
 )
 {
+    DataFrame res;
     auto mnet = rmnet.get_mlnet();
     std::vector<uu::net::Network*> layers1 = resolve_layers(mnet,layer_names1);
     std::vector<uu::net::Network*> layers2;
@@ -521,7 +726,93 @@ edges(
         }
     }
 
-    return DataFrame::create(_["from_actor"] = from_a, _["from_layer"] = from_l, _["to_actor"] = to_a, _["to_layer"] = to_l, _["dir"] = directed );
+    res["from_actor"] = from_a;
+    res["from_layer"] = from_l;
+    res["to_actor"] = to_a;
+    res["to_layer"] = to_l;
+    res["dir"] = directed;
+    
+    if (add_attributes)
+    {
+        for (auto layer1: layers1)
+        {
+            for (auto layer2: layers2)
+            {
+                if (layer2<layer1)
+                {
+                    continue;
+                }
+                
+                else if (layer1==layer2)
+                {
+                    std::string layer_name = layer1->name;
+                    
+                    auto attrs = layer1->edges()->attr();
+                    for (auto attr: *attrs)
+                    {
+                        if (attr->type==uu::core::AttributeType::NUMERIC || attr->type==uu::core::AttributeType::DOUBLE)
+                        {
+                            NumericVector values(from_a.size());
+                            
+                            for (size_t i = 0; i<from_a.size(); i++)
+                            {
+                                std::string from_actor = std::string(from_a(i));
+                                std::string to_actor = std::string(to_a(i));
+                                std::string from_layer = std::string(from_l(i));
+                                std::string to_layer = std::string(to_l(i));
+                                if (from_layer != layer_name)
+                                {
+                                    values(i) = NA_REAL;
+                                }
+                                else
+                                {
+                                    auto actor1 = layer1->vertices()->get(from_actor);
+                                    auto actor2 = layer1->vertices()->get(to_actor);
+                                    auto edge = layer1->edges()->get(actor1, actor2);
+                                    auto att_val = attrs->get_double(edge, attr->name);
+                                    if (att_val.null) values(i) = NA_REAL;
+                                    else values(i) = att_val.value;
+                                }
+                            }
+                            
+                            res[attr->name] = values;
+                        }
+                        
+                        else if (attr->type==uu::core::AttributeType::STRING)
+                        {
+                            CharacterVector values(from_a.size());
+                            
+                            for (size_t i = 0; i<from_a.size(); i++)
+                            {
+                                std::string from_actor = std::string(from_a(i));
+                                std::string to_actor = std::string(to_a(i));
+                                std::string from_layer = std::string(from_l(i));
+                                std::string to_layer = std::string(to_l(i));
+                                if (from_layer != layer_name)
+                                {
+                                    values(i) = NA_STRING;
+                                }
+                                else
+                                {
+                                    auto actor1 = layer1->vertices()->get(from_actor);
+                                    auto actor2 = layer1->vertices()->get(to_actor);
+                                    auto edge = layer1->edges()->get(actor1, actor2);
+                                    auto att_val = attrs->get_string(edge, attr->name);
+                                    if (att_val.null) values(i) = NA_STRING;
+                                    else values(i) = att_val.value;
+                                }
+                            }
+                            res[attr->name] = values;
+                        }
+                    }
+                }
+            }
+        }
+        
+        
+    }
+    
+    return res;
 }
 
 size_t
@@ -652,7 +943,24 @@ isDirected(
         layers2 = resolve_layers(mnet,layer_names2);
     }
 
-    size_t num_entries = layers1.size() * layers2.size();
+    size_t num_entries = 0;
+    for (auto layer1: layers1)
+    {
+        for (auto layer2: layers2)
+        {
+            if (layer1==layer2)
+            {
+                num_entries++;
+            }
+            else
+            {
+                if (mnet->interlayer_edges()->get(layer1,layer2))
+                {
+                    num_entries++;;
+                }
+            }
+        }
+    }
     
     CharacterVector l1(num_entries);
     CharacterVector l2(num_entries);
@@ -663,25 +971,19 @@ isDirected(
     {
         for (auto layer2: layers2)
         {
-            l1[row_num] = layer1->name;
-            l2[row_num] = layer2->name;
-            
             if (layer1==layer2)
             {
-                directed[row_num] = layer1->is_directed()?1:0;
+                l1[row_num] = layer1->name;
+                l2[row_num] = layer2->name;
+                directed[row_num++] = layer1->is_directed()?1:0;
             }
             else
             {
-                if (!mnet->interlayer_edges()->get(layer1,layer2))
+                if (mnet->interlayer_edges()->get(layer1,layer2))
                 {
-                    Rcout << "Warning: interlayer edges between " <<
-                    layer1->name << " and " << layer2->name <<
-                    " not initialized" << std::endl;
-                    directed[row_num] = 0;
+                    directed[row_num++] = (mnet->interlayer_edges()->is_directed(layer1,layer2))?1:0;
                 }
-                else directed[row_num] = (mnet->interlayer_edges()->is_directed(layer1,layer2))?1:0;
             }
-            row_num++;
         }
     }
 

@@ -123,23 +123,26 @@ layers(
     const RMLNetwork& mnet
 );
 
-CharacterVector
+DataFrame
 actors(
     const RMLNetwork& mnet,
-    const CharacterVector& layer_names
+    const CharacterVector& layer_names,
+    bool add_attributes
 );
 
 DataFrame
 vertices(
     const RMLNetwork& mnet,
-    const CharacterVector& layer_names
+    const CharacterVector& layer_names,
+    bool add_attributes
 );
 
 DataFrame
 edges(
     const RMLNetwork& mnet,
     const CharacterVector& layer_names1,
-    const CharacterVector& layer_names2
+    const CharacterVector& layer_names2,
+    bool add_attributes
 );
 
 DataFrame

@@ -15,7 +15,7 @@ Constructs a single graph resulting from merging one or more layers of the netwo
 \item{x}{A multilayer network.}
 \item{layers}{A vector of names of layers. If \code{NULL}, all layers are included in the result.}
 \item{merge.actors}{Whether the vertices corresponding to each actor should be merged into a single vertex (true) or kept separated (false).}
-\item{all.actors}{Whether all actors in the multilayer network should be included in the result (true) or only those present in at least one of the input layers (false).}
+\item{all.actors}{Whether all actors in the multilayer network should be included in the result (true) or only those present in at least one of the input layers (false). This option does not currently make any difference, as only actors who are present in at least one layer can exist since version 4.0.}
 \item{\dots}{Additional arguments. None currently.}
 }
 \value{
