@@ -228,11 +228,13 @@ std::vector<std::pair<const uu::net::Vertex*, const uu::net::Network*>>
             const Rcpp::DataFrame& vertex_matrix
         )
 {
-    std::vector<std::pair<const uu::net::Vertex*, const uu::net::Network*>> res(vertex_matrix.nrow());
     CharacterVector a = vertex_matrix(0);
     CharacterVector l = vertex_matrix(1);
+    size_t num_rows = a.size();
 
-    for (int i=0; i<vertex_matrix.nrow(); i++)
+    std::vector<std::pair<const uu::net::Vertex*, const uu::net::Network*>> res(num_rows);
+            
+    for (int i=0; i<num_rows; i++)
     {
         auto actor = mnet->actors()->get(std::string(a(i)));
 
@@ -267,11 +269,13 @@ std::vector<std::pair<const uu::net::Vertex*, uu::net::Network*>>
             const Rcpp::DataFrame& vertex_matrix
         )
 {
-    std::vector<std::pair<const uu::net::Vertex*, uu::net::Network*>> res(vertex_matrix.nrow());
     CharacterVector a = vertex_matrix(0);
     CharacterVector l = vertex_matrix(1);
+    size_t num_rows = a.size();
 
-    for (int i=0; i<vertex_matrix.nrow(); i++)
+    std::vector<std::pair<const uu::net::Vertex*, uu::net::Network*>> res(num_rows);
+            
+    for (int i=0; i<num_rows; i++)
     {
         auto actor = mnet->actors()->get(std::string(a(i)));
 
@@ -307,13 +311,15 @@ std::vector<std::tuple<const uu::net::Vertex*, const uu::net::Network*, const uu
             const Rcpp::DataFrame& edges
         )
 {
-    std::vector<std::tuple<const uu::net::Vertex*, const uu::net::Network*, const uu::net::Vertex*, const uu::net::Network*>> res(edges.nrow());
     CharacterVector a_from = edges(0);
     CharacterVector l_from = edges(1);
     CharacterVector a_to = edges(2);
     CharacterVector l_to = edges(3);
+    size_t num_rows = a_from.size();
 
-    for (int i=0; i<edges.nrow(); i++)
+    std::vector<std::tuple<const uu::net::Vertex*, const uu::net::Network*, const uu::net::Vertex*, const uu::net::Network*>> res(num_rows);
+            
+    for (int i=0; i<num_rows; i++)
     {
         auto actor1 = mnet->actors()->get(std::string(a_from(i)));
 
@@ -381,13 +387,15 @@ std::vector<std::tuple<const uu::net::Vertex*, uu::net::Network*, const uu::net:
             const Rcpp::DataFrame& edges
         )
 {
-    std::vector<std::tuple<const uu::net::Vertex*, uu::net::Network*, const uu::net::Vertex*, uu::net::Network*>> res(edges.nrow());
     CharacterVector a_from = edges(0);
     CharacterVector l_from = edges(1);
     CharacterVector a_to = edges(2);
     CharacterVector l_to = edges(3);
+    size_t num_rows = a_from.size();
 
-    for (int i=0; i<edges.nrow(); i++)
+    std::vector<std::tuple<const uu::net::Vertex*, uu::net::Network*, const uu::net::Vertex*, uu::net::Network*>> res(num_rows);
+            
+    for (int i=0; i<num_rows; i++)
     {
         auto actor1 = mnet->actors()->get(std::string(a_from(i)));
 

@@ -35,6 +35,7 @@
 #include <limits>
 #include <sstream>
 #include <set>
+#include <algorithm>
 
 #ifdef NS_INFOMAP
 namespace infomap {

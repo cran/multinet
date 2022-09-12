@@ -117,7 +117,7 @@ struct Config
           maxNodeIndexVisible(0),
           showBiNodes(false),
           minBipartiteNodeIndex(0),
-          version(INFOMAP_VERSION)
+          version("0.19.15")
     {
     }
 

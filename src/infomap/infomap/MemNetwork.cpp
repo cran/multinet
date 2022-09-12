@@ -36,6 +36,7 @@
 #include <cstdio>
 #include <set>
 #include <deque>
+#include <algorithm>
 
 #ifdef NS_INFOMAP
 namespace infomap {

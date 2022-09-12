@@ -28,7 +28,7 @@
 #ifndef PROGRAMINTERFACE_H_
 #define PROGRAMINTERFACE_H_
 
-#include <getopt.h>
+//#include <getopt.h>
 #include <vector>
 #include <deque>
 #include <string>
@@ -432,7 +432,7 @@ class ProgramInterface
     void
     exitWithError(std::string message);
 
-    std::vector<option> m_longOptions; // struct option defined in <getopt.h>
+    //std::vector<option> m_longOptions; // struct option defined in <getopt.h>
     std::deque<Option*> m_optionArguments;
     std::deque<TargetBase*> m_nonOptionArguments;
     std::string m_programName;

@@ -267,7 +267,7 @@ read_actor_attributes(
         case MultilayerIOFileSection::ACTORS:
         {
             // @todo no longer actors before layers
-            read_vertex(ml, fields, meta, csv.row_num());
+            read_actor(ml, fields, meta, csv.row_num());
             break;
         }
 
@@ -319,9 +319,10 @@ read_layer(
     throw core::OperationNotSupportedException("Network type not supported (IO)");
 }
 
+
 template <typename ML>
 void
-read_vertex(
+read_actor(
     ML* ml,
     const std::vector<std::string>& fields,
     const MultilayerMetadata& meta,
@@ -334,6 +335,7 @@ read_vertex(
     (void)line_number; // attribute not used
     throw core::OperationNotSupportedException("Network type not supported (IO)");
 }
+
 
 template <typename ML>
 void

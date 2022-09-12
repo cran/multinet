@@ -16,6 +16,7 @@ read_network(
     char separator = ','
 );
 
+/*
 template <>
 void
 read_vertex(
@@ -34,7 +35,7 @@ read_edge(
     const std::vector<core::Attribute>& edge_attributes,
     size_t line_number
 );
-
+*/
 
 }
 }

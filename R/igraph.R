@@ -8,8 +8,8 @@ as.igraph.Rcpp_RMLNetwork <- function (x, layers=NULL, merge.actors=TRUE, all.ac
     dir = max(is_directed_ml(x)$dir)
     
     if (merge.actors) {
-        a_df <- actors_ml(x, layers, add.attributes=T)
-        e <- edges_ml(x, layers, add.attributes=T)
+        a_df <- actors_ml(x, layers, attributes=T)
+        e <- as.data.frame(edges_ml(x, layers, attributes=T))
         #e <- e[e$from_layer %in% layers & e$to_layer %in% layers,]
         e_df <- NULL
         if (length(e)>5) {
@@ -20,24 +20,26 @@ as.igraph.Rcpp_RMLNetwork <- function (x, layers=NULL, merge.actors=TRUE, all.ac
         }
         if (dir) {
             e <- e[e$dir==0,]
-            e_df_reverse <- NULL
-            if (length(e)>5) {
-                e_df_reverse <- data.frame(from_actor=e$to_actor, to_actor=e$from_actor, layers=paste(e$to_layer, "-", e$from_layer, sep = ""), e[6:length(e)])
+            if (nrow(e) > 0) {
+                e_df_reverse <- NULL
+                if (length(e)>5) {
+                    e_df_reverse <- data.frame(from_actor=e$to_actor, to_actor=e$from_actor, layers=paste(e$to_layer, "-", e$from_layer, sep = ""), e[6:length(e)])
+                }
+                else {
+                    e_df_reverse <- data.frame(from_actor=e$to_actor, to_actor=e$from_actor, layers=paste(e$to_layer, "-", e$from_layer, sep = ""))
+                }
+                e_df <- rbind(e_df, e_df_reverse)
             }
-            else {
-                e_df_reverse <- data.frame(from_actor=e$to_actor, to_actor=e$from_actor, layers=paste(e$to_layer, "-", e$from_layer, sep = ""))
-            }
-            e_df <- rbind(e_df, e_df_reverse)
         }
         g <- graph_from_data_frame(vertices=a_df, e_df, directed=dir)
     }
     else {
-        a_df <- vertices_ml(x, layers, add.attributes=T)
+        a_df <- vertices_ml(x, layers, attributes=T)
         v_df <- NULL
         if (length(a_df)>2) {
             v_df <- data.frame(node=paste(a_df$layer, "::", a_df$actor, sep = ""), layer=a_df$layer, a_df[3:length(a_df)])
         }
-        e <- edges_ml(x, layers, add.attributes=T)
+        e <- as.data.frame(edges_ml(x, layers, attributes=T))
         #e <- e[e$from_layer %in% layers & e$to_layer %in% layers,]
         e_df <- NULL
         if (length(e)>5) {
@@ -48,14 +50,16 @@ as.igraph.Rcpp_RMLNetwork <- function (x, layers=NULL, merge.actors=TRUE, all.ac
         }
         if (dir) {
             e <- e[e$dir==0,]
-            e_df_reverse <- NULL
-            if (length(e)>5) {
-                e_df <- data.frame(from_actor=paste(e$to_layer, "::", e$to_actor, sep = ""), to_actor=paste(e$from_layer, "::", e$from_actor, sep = ""), e[6:length(e)])
+            if (nrow(e) > 0) {
+                e_df_reverse <- NULL
+                if (length(e)>5) {
+                    e_df <- data.frame(from_actor=paste(e$to_layer, "::", e$to_actor, sep = ""), to_actor=paste(e$from_layer, "::", e$from_actor, sep = ""), e[6:length(e)])
+                }
+                else {
+                    e_df <- data.frame(from_actor=paste(e$to_layer, "::", e$to_actor, sep = ""), to_actor=paste(e$from_layer, "::", e$from_actor, sep = ""))
+                }
+                e_df <- rbind(e_df, e_df_reverse)
             }
-            else {
-                e_df <- data.frame(from_actor=paste(e$to_layer, "::", e$to_actor, sep = ""), to_actor=paste(e$from_layer, "::", e$from_actor, sep = ""))
-            }
-            e_df <- rbind(e_df, e_df_reverse)
         }
         g <- graph_from_data_frame(vertices=v_df, e_df, directed=dir)
     }

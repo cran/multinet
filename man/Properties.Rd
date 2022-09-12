@@ -22,9 +22,9 @@ The functions \code{nodes_ml} and \code{num_nodes_ml} are deprecated in the curr
 }
 \usage{
 layers_ml(n)
-actors_ml(n, layers = character(0), add.attributes = FALSE)
-vertices_ml(n, layers = character(0), add.attributes = FALSE)
-edges_ml(n, layers1 = character(0), layers2 = character(0), add.attributes = FALSE)
+actors_ml(n, layers = character(0), attributes = FALSE)
+vertices_ml(n, layers = character(0), attributes = FALSE)
+edges_ml(n, layers1 = character(0), layers2 = character(0), attributes = FALSE)
 edges_idx_ml(n)
 
 num_layers_ml(n)
@@ -37,7 +37,7 @@ num_edges_ml(n, layers1 = character(0), layers2 = character(0))
 \item{layers}{An array of names of layers belonging to the network. Only the actors/vertices in these layers are returned. If the array is empty, all the vertices in the network are returned. Notice that this may not correspond to the list of actors: there can be actors that are not present in any layer. These would be returned only using the \code{actors_ml} function.}
 \item{layers1}{The layer(s) from where the edges to be extracted start. If an empty list of layers is passed (default), all the layers are considered.}
 \item{layers2}{The layer(s) where the edges to be extracted end. If an empty list of layers is passed (default), the ending layers are set as equal to those in parameter layer1.}
-\item{add.attributes}{If set to TRUE, one column for each attribute is added to the data frame,
+\item{attributes}{If set to TRUE, one column for each attribute is added to the data frame,
     with the corresponding attribute value.}
 }
 \value{
@@ -52,9 +52,9 @@ The functions num_* compute the number of objects of the requested type.}
 }
 \examples{
 net <- ml_aucs()
-actors_ml(net)
+actors_ml(net, attributes = TRUE)
 layers_ml(net)
-vertices_ml(net)
+vertices_ml(net, attributes = TRUE)
 # only vertices in the "facebook" layer
 vertices_ml(net,"facebook")
 # all edges

@@ -77,7 +77,7 @@ ratio_vertices_in_communities(
     const M* net
 )
 {
-    std::set<MLVertex<M>> vertices;
+    std::set<MLVertex> vertices;
 
     for (auto c: *com)
     {
@@ -202,7 +202,7 @@ ratio_vertices_overlapping(
     const M* net
 )
 {
-    std::map<MLVertex<M>, std::map<Community<M>*, size_t>> vertices;
+    std::map<MLVertex, std::map<Community<M>*, size_t>> vertices;
 
     for (auto c: *com)
     {

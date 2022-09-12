@@ -9,6 +9,7 @@
 #define SRC_IO_BIPARTITECLUSTERREADER_H_
 
 #include "ClusterReader.h"
+#include <algorithm>
 
 #ifdef NS_INFOMAP
 namespace infomap {

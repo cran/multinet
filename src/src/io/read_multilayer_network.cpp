@@ -1,7 +1,9 @@
 #include "core/exceptions/DuplicateElementException.hpp"
+#include "core/exceptions/WrongFormatException.hpp"
 #include "core/exceptions/assert_not_null.hpp"
 #include "io/read_multilayer_network.hpp"
 #include "io/read_network.hpp"
+#include <sstream>
 
 
 namespace uu {
@@ -91,7 +93,28 @@ read_multilayer_network(
         }
     }
 
-    // Read data (vertices, edges, attribute values)
+    for (auto&& attr: meta.interlayer_edge_attributes)
+    {
+        for (auto l1: *net->layers())
+        {
+            for (auto l2: *net->layers())
+            {
+                
+                auto iedges = net->interlayer_edges()->get(l1,l2);
+                
+                if (!iedges) continue;
+                
+                bool res = iedges->attr()->add(attr.name, attr.type);
+                
+                if (!res)
+                {
+                    throw core::DuplicateElementException("edge attribute " + attr.name);
+                }
+            }
+        }
+    }
+    
+    // Read data (vertices, edges, attribute value(s))
     read_multilayer_data(net.get(),  meta, infile, separator);
 
     read_actor_attributes(net.get(),  meta, infile, separator);
@@ -137,7 +160,7 @@ read_layer(
 
 template <>
 void
-read_vertex(
+read_actor(
     MultilayerNetwork* ml,
     const std::vector<std::string>& fields,
     const MultilayerMetadata& meta,
@@ -145,6 +168,15 @@ read_vertex(
 )
 {
     core::assert_not_null(ml, "read_vertex", "ml");
+    
+    size_t num_attrs = meta.vertex_attributes.size();
+    if (fields.size() != 1 + num_attrs)
+    {
+        std::stringstream ss;
+        ss << "[line " << line_number << "] actor name and " <<
+        num_attrs << " attribute value(s) expected";
+        throw core::WrongFormatException(ss.str());
+    }
     
     std::string actor_name = fields.at(0);
 
@@ -168,14 +200,32 @@ read_intralayer_vertex(
 )
 {
     core::assert_not_null(ml, "read_intralayer_vertex", "ml");
+    
+    
+    if (fields.size() < 2)
+    {
+        std::stringstream ss;
+        ss << "[line " << line_number << "] actor name and layer name expected";
+        throw core::WrongFormatException(ss.str());
+    }
+    
     auto l = read_layer<MultilayerNetwork, Network>(ml, fields, 1, line_number);
     auto v = read_actor(ml, l, fields, 0, line_number);
     
     
     auto v_attr = meta.intralayer_vertex_attributes.find(l->name);
-
+    
     if (v_attr != meta.intralayer_vertex_attributes.end())
     {
+        size_t num_attrs = v_attr->second.size();
+        if (fields.size() != 2 + num_attrs)
+        {
+            std::stringstream ss;
+            ss << "[line " << line_number << "] actor name, layer name and " <<
+            num_attrs << " attribute value(s) expected";
+            throw core::WrongFormatException(ss.str());
+        }
+        
         read_attr_values(l->vertices()->attr(), v, v_attr->second, fields, 2, line_number);
     }
 }
@@ -191,6 +241,13 @@ read_intralayer_edge(
 {
     core::assert_not_null(ml, "read_intralayer_edge", "ml");
 
+    if (fields.size() < 3)
+    {
+        std::stringstream ss;
+        ss << "[line " << line_number << "] actor1 name, actor2 name and layer name expected";
+        throw core::WrongFormatException(ss.str());
+    }
+    
     auto l = read_layer<MultilayerNetwork, Network>(ml, fields, 2, line_number);
 
     auto v1 = read_actor(ml, l, fields, 0, line_number);
@@ -209,6 +266,16 @@ read_intralayer_edge(
 
     if (e_attr != meta.intralayer_edge_attributes.end())
     {
+        
+        size_t num_attrs = e_attr->second.size();
+        if (fields.size() != 3 + num_attrs)
+        {
+            std::stringstream ss;
+            ss << "[line " << line_number << "] actor1 name, actor2 name, layer name and " <<
+            num_attrs << " attribute value(s) expected";
+            throw core::WrongFormatException(ss.str());
+        }
+            
         read_attr_values(l->edges()->attr(), e, e_attr->second, fields, 3, line_number);
     }
 }
@@ -225,6 +292,14 @@ read_interlayer_edge(
 {
     (void)meta; // param not used
     core::assert_not_null(ml, "read_interlayer_edge", "ml");
+    
+    if (fields.size() < 4)
+    {
+        std::stringstream ss;
+        ss << "[line " << line_number << "] actor1 name, layer1 name, actor2 name and layer2 name expected";
+        throw core::WrongFormatException(ss.str());
+    }
+    
     auto l1 = read_layer<MultilayerNetwork, Network>(ml, fields, 1, line_number);
     auto v1 = read_actor(ml, l1, fields, 0, line_number);
     auto l2 = read_layer<MultilayerNetwork, Network>(ml, fields, 3, line_number);
@@ -236,6 +311,15 @@ read_interlayer_edge(
 
         auto e_attr = meta.intralayer_edge_attributes.find(l1->name);
 
+        size_t num_attrs = e_attr->second.size();
+        if (fields.size() != 4 + num_attrs)
+        {
+            std::stringstream ss;
+            ss << "[line " << line_number << "] actor1 name, layer1 name, actor2 name, layer2 name and " <<
+            num_attrs << " attribute value(s) expected";
+            throw core::WrongFormatException(ss.str());
+        }
+        
         if (e_attr != meta.intralayer_edge_attributes.end())
         {
             read_attr_values(l1->edges()->attr(), e, e_attr->second, fields, 4, line_number);
@@ -244,11 +328,18 @@ read_interlayer_edge(
 
     else
     {
-        //auto e =
-        ml->interlayer_edges()->add(v1,l1,v2,l2);
+        auto e = ml->interlayer_edges()->add(v1,l1,v2,l2);
 
-        // @todo attr
-        //read_attr_values(ml->interlayer_edges()->attr(), e, meta.interlayer_edge_attributes, fields, 4, line_number);
+        size_t num_attrs = meta.interlayer_edge_attributes.size();
+        if (fields.size() != 4 + num_attrs)
+        {
+            std::stringstream ss;
+            ss << "[line " << line_number << "] actor1 name, layer1 name, actor2 name, layer2 name and " <<
+            num_attrs << " attribute value(s) expected";
+            throw core::WrongFormatException(ss.str());
+        }
+        
+        read_attr_values(ml->interlayer_edges()->get(l1,l2)->attr(), e, meta.interlayer_edge_attributes, fields, 4, line_number);
 
     }
 

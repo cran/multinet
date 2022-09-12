@@ -52,6 +52,7 @@ struct CompNodePair
 template<typename InfomapGreedyDerivedType>
 class InfomapGreedyCommon : public InfomapGreedySpecialized<typename derived_traits<InfomapGreedyDerivedType>::flow_type>
 {
+    public:
     typedef typename derived_traits<InfomapGreedyDerivedType>::flow_type					FlowType;
     typedef typename derived_traits<InfomapGreedyDerivedType>::node_type					NodeType;
     typedef typename derived_traits<InfomapGreedyDerivedType>::deltaflow_type				DeltaFlowType;

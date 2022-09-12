@@ -30,6 +30,7 @@
 
 #include <string>
 #include <map>
+#include <algorithm>
 
 #ifdef NS_INFOMAP
 namespace infomap {

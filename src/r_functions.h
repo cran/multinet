@@ -274,9 +274,9 @@ getAttributes(
 
 DataFrame
 getValues(
-    RMLNetwork& rmnet,
+    const RMLNetwork& rmnet,
     const std::string& attribute_name,
-    const CharacterVector& actor_names,
+    const DataFrame& actor_names,
     const DataFrame& vertex_matrix,
     const DataFrame& edge_matrix
 );
@@ -286,7 +286,7 @@ void
 setValues(
     RMLNetwork& rmnet,
     const std::string& attribute_name,
-    const CharacterVector& actor_names,
+    const DataFrame& actor_names,
     const DataFrame& vertex_matrix,
     const DataFrame& edge_matrix,
     const GenericVector& values

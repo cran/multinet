@@ -11,9 +11,12 @@ namespace core {
 
 // Code taken from anonymous user on stackoverflow - thanks :)
 // This reads a line from a stream, and works for all types of endline (\n, \r, \r\n)
+// TODO wouldn't it be more efficient not to replace t for each new character? check...
 std::istream&
 uu_getline(std::istream& is, std::string& t)
 {
+    bool quote_on = false;
+    
     t.clear();
 
     std::istream::sentry se(is, true);
@@ -26,7 +29,12 @@ uu_getline(std::istream& is, std::string& t)
         switch (c)
         {
         case '\n':
-            return is;
+            if (!quote_on) return is;
+            else
+            {
+                t += "\\n";
+                break;
+            }
 
         case '\r':
             if (sb->sgetc() == '\n')
@@ -34,7 +42,12 @@ uu_getline(std::istream& is, std::string& t)
                 sb->sbumpc();
             }
 
-            return is;
+            if (!quote_on) return is;
+            else
+            {
+                t += "\\n";
+                break;
+            }
 
         case EOF:
             // Also handles the case when the last line has no line ending
@@ -48,7 +61,14 @@ uu_getline(std::istream& is, std::string& t)
             return is;
 
         default:
-            t += (char)c;
+            char character = (char)c;
+            // TODO hardcoded quotation sign - generalise!
+            if (character == '"')
+            {
+                quote_on = !quote_on;
+                //std::cout << t << "\" " << quote_on << std::endl;
+            }
+            t += character;
         }
     }
 }

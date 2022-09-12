@@ -1,3 +1,5 @@
+#include "core/utils/string.hpp"
+
 namespace uu {
 namespace core {
 
@@ -10,7 +12,9 @@ set_as_string(
     const std::string& value
 )
 {
-
+    std::string value_uc = value;
+    to_upper_case(value_uc);
+    
     const Attribute* att = get(attribute_name);
 
     if (!att)
@@ -22,22 +26,29 @@ set_as_string(
     {
     case AttributeType::NUMERIC:
     case AttributeType::DOUBLE:
+        if (value_uc == "NAN") break;
+        if (value_uc == "NULL") break;
         set_double(oid,attribute_name,core::to_double(value));
         break;
 
     case AttributeType::INTEGER:
+        if (value_uc == "NAN") break;
+        if (value_uc == "NULL") break;
         set_int(oid,attribute_name,core::to_int(value));
         break;
 
     case AttributeType::STRING:
+        if (value_uc == "NULL") break;
         set_string(oid,attribute_name,value);
         break;
 
     case AttributeType::TIME:
+        if (value_uc == "NULL") break;
         set_time(oid,attribute_name, core::to_time(value));
         break;
 
     case AttributeType::TEXT:
+        if (value_uc == "NULL") break;
         set_text(oid, attribute_name, core::to_text(value));
         break;
 

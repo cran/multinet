@@ -66,7 +66,7 @@ project_temporal(
     {
         for (auto e1: *net->interlayer_edges()->incident(from, to, v, EdgeMode::INOUT))
         {
-            auto t1 = net->interlayer_edges()->attr()->get_time(e1, "t").value;
+            auto t1 = net->interlayer_edges()->get(from,to)->attr()->get_time(e1, "t").value;
             // @todo check time
 
             for (auto e2: *net->interlayer_edges()->incident(from, to, v, EdgeMode::INOUT))
@@ -76,7 +76,7 @@ project_temporal(
                     continue;
                 }
 
-                auto t2 = net->interlayer_edges()->attr()->get_time(e2, "t").value;
+                auto t2 = net->interlayer_edges()->get(from,to)->attr()->get_time(e2, "t").value;
                 // @todo check time
 
                 auto time_diff = std::chrono::seconds(std::max(t1, t2) - std::min(t1, t2)).count();
@@ -95,7 +95,7 @@ project_temporal(
                 }
 
                 auto edge = target->edges()->add(u1, u2);
-                set_time(target, edge, std::min(t1, t2));
+                add_time(target, edge, std::min(t1, t2));
             }
         }
     }

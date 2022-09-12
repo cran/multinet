@@ -7,6 +7,7 @@
 
 #include "BipartiteClusterReader.h"
 #include <sstream>
+#include <algorithm>
 #include "convert.h"
 
 #ifdef NS_INFOMAP

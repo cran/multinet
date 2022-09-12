@@ -104,14 +104,14 @@ RCPP_MODULE(multinet)
              &actors,
              List::create( _["n"],
              _["layers"]=CharacterVector(),
-             _["add.attributes"]=false),
+             _["attributes"]=false),
              "Returns the list of actors present in the input layers, or in the whole multilayer network if no layers are specified");
 
     function("vertices_ml",
              &vertices,
              List::create( _["n"],
              _["layers"]=CharacterVector(),
-             _["add.attributes"]=false),
+             _["attributes"]=false),
              "Returns the list of vertices in the input layers, or in the whole multilayer network if no layers are specified");
 
     function("edges_ml",
@@ -120,7 +120,7 @@ RCPP_MODULE(multinet)
                 _["n"],
                 _["layers1"]=CharacterVector(),
                 _["layers2"]=CharacterVector(),
-                _["add.attributes"]=false),
+                _["attributes"]=false),
              "Returns the list of edges among vertices in the input layers (if only one set of layers is specified), or from the first set of input layers to the second set of input layers, or in the whole multilayer network if no layers are specified");
 
     function("edges_idx_ml",
@@ -179,8 +179,8 @@ RCPP_MODULE(multinet)
     function("add_attributes_ml", &newAttributes, List::create( _["n"], _["attributes"], _["type"]="string", _["target"]="actor", _["layer"]="", _["layer1"]="", _["layer2"]=""), "Creates a new attribute so that values can be associated to actors, layers, vertices or edges");
     function("attributes_ml", &getAttributes, List::create( _["n"], _["target"]="actor"), "Returns the list of attributes defined for the input multilayer network");
 
-    function("get_values_ml", &getValues, List::create( _["n"], _["attribute"], _["actors"]=CharacterVector(), _["vertices"]=CharacterMatrix(0,0), _["edges"]=CharacterMatrix(0,0)), "Returns the value of an attribute on the specified actors, layers, vertices or edges");
-    function("set_values_ml", &setValues, List::create( _["n"], _["attribute"], _["actors"]=CharacterVector(), _["vertices"]=CharacterMatrix(0,0), _["edges"]=CharacterMatrix(0,0), _["values"]), "Sets the value of an attribute for the specified actors/vertexes/edges");
+    function("get_values_ml", &getValues, List::create( _["n"], _["attribute"], _["actors"]=CharacterMatrix(0,0), _["vertices"]=CharacterMatrix(0,0), _["edges"]=CharacterMatrix(0,0)), "Returns the value of an attribute on the specified actors, layers, vertices or edges");
+    function("set_values_ml", &setValues, List::create( _["n"], _["attribute"], _["actors"]=CharacterMatrix(0,0), _["vertices"]=CharacterMatrix(0,0), _["edges"]=CharacterMatrix(0,0), _["values"]), "Sets the value of an attribute for the specified actors/vertexes/edges");
 
 
     // TRANSFORMATION

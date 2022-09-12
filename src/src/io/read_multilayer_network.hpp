@@ -27,9 +27,10 @@ read_layer(
     size_t line_number
 );
 
+
 template <>
 void
-read_vertex(
+read_actor(
     MultilayerNetwork* ml,
     const std::vector<std::string>& fields,
     const MultilayerMetadata& meta,

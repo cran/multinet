@@ -1,6 +1,7 @@
 #include "core/utils/string.hpp"
 
 #include <algorithm>
+#include <cctype>
 
 namespace uu {
 namespace core {

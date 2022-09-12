@@ -28,7 +28,7 @@ set_values_ml(n, attribute, actors=character(0),
 \item{layer1}{This can be specified only for target "edge", together with layer2, so that the attribute applies to inter-layer edges from layer1 to layer2. If \code{layer1} and \code{layer2} are specified, the parameter \code{layer} should not be used.}
 \item{layer2}{See layer1.}
 \item{attribute}{The name of the attribute to be updated.}
-\item{actors}{A vector of actor names. If this is specified, layers, vertices and edges should not.}
+\item{actors}{A dataframe containing a vector of actor names ("actor"). If this is specified, layers, vertices and edges should not.}
 \item{vertices}{A dataframe of vertices to be updated. The first column specifies actor names, the second layer names. If this is specified, actors, layers and edges should not.}
 \item{edges}{A dataframe containing the vertices to be connected. The four columns must contain, in this order: actor1 name, layer1 name, actor2 name, layer2 name. If this is specified, actors, layers and vertices should not.}
 \item{values}{A vector of values to be set for the corresponding actors, vertices or edges.}
@@ -55,7 +55,7 @@ attributes_ml(net)
 attributes_ml(net,"vertex")
 attributes_ml(net,"edge")
 # setting some values for the newly created attributes
-set_values_ml(net,"name",actors=c("U54","U139"),values=c("John","Johanna"))
+set_values_ml(net,"name",actors=data.frame(actor=c("U54","U139")),values=c("John","Johanna"))
 e <- data.frame(
     c("U139","U139"),
     c("work","work"),
@@ -63,7 +63,7 @@ e <- data.frame(
     c("work","work"))
 set_values_ml(net,"strength",edges=e,values=.47)
 # getting the values back
-get_values_ml(net,"name",actors=c("U139"))
+get_values_ml(net,"name",actors=data.frame(actor="U139"))
 get_values_ml(net,"strength",edges=e)
 # setting attributes based on network properties: create a "degree"
 # attribute and set its value to the degree of each actor
@@ -71,11 +71,11 @@ actors_ml(net)$actor -> a
 layers_ml(net) -> l
 degree_ml(net,actors=a,layers=l,mode="all") -> d
 add_attributes_ml(net,target="actor",type="numeric",attributes="degree")
-set_values_ml(net,attribute="degree",actors=a,values=d)
-get_values_ml(net,attribute="degree",actors="U54")
+set_values_ml(net,attribute="degree",actors=data.frame(actor=a),values=d)
+get_values_ml(net,attribute="degree",actors=data.frame(actor="U54"))
 # select actors based on attribute values (e.g., with degree greater than 40)
-get_values_ml(net,attribute="degree",actors=a) -> degrees
-a[degrees>40]
+get_values_ml(net,attribute="degree",actors=data.frame(actor=a)) -> values
+a[values$degree>40]
 # list all the attributes again
 attributes_ml(net)
 }
