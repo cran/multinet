@@ -13,10 +13,10 @@ namespace core {
 template <class T>
 struct Value
 {
-    /** The value, which is only valid if member `null` is false. */
+    /** The value, which is only valid if member null is false. */
     T value;
 
-    /** Indicates whether member `value` is valid or not available (NA/NULL). */
+    /** Indicates whether member value is valid or not available (NA/NULL). */
     bool null;
 
 
@@ -31,7 +31,7 @@ struct Value
 
     /**
      * Constructs an object with an available value.
-     * The «null« flag is automatically set to false.
+     * The null flag is automatically set to false.
      * @param v the value of this object.
      */
     Value<T>
@@ -46,7 +46,7 @@ struct Value
 
     /**
      * Constructs an object allowing to specify a value and also if the object is available or NULL.
-     * @param v the value of this object, to be used if member «null« is false
+     * @param v the value of this object, to be used if member null is false
      * @param is_null a flag indicating if the value is available or not (NULL)
      */
     Value<T>
@@ -69,8 +69,8 @@ struct Value
 
 /**
  * Prints an object of type Value to an output stream.
- * If `null` is true, "NA" (Not Available) is written to the stream
- * independently of the value stored in member `value`.
+ * If null is true, "NA" (Not Available) is written to the stream
+ * independently of the value stored in member value.
  */
 template <class T>
 std::ostream&
