@@ -1,6 +1,6 @@
-a312ac0fe5f5c744dad04459fc60c8e5 *DESCRIPTION
+bd0d655d7fe8ca2ae23246b85e2a6d40 *DESCRIPTION
 6f0cad7dd9b5d47c5d412413451de9c3 *NAMESPACE
-58f96732a9387f1ec6cd7f5dda80251e *NEWS
+ffa49fa65797834cccd34f5c3e75c99f *NEWS
 1d9b2f9a6c5d34d81fd0f004940352a3 *R/datasets.R
 53195b16d9810bf9d332831641e1fb3a *R/deprecated.R
 10c52b43fc8bce68a2b3902c76d60854 *R/functions.R
@@ -56,7 +56,7 @@ a0616cfea395a956e59b2ad839c1e111 *src/eclat/tract/src/clomax.c
 110b4b084782b03c99f4da45bf1cbd4b *src/eclat/tract/src/fim16.h
 4aaf54228cedfdabf6f245485e1dafa6 *src/eclat/tract/src/patspec.c
 d0d75b56d53046c434d239ceeeba04c3 *src/eclat/tract/src/patspec.h
-ac6c8a2fb8cc59f1c2bae8a53f1f2c99 *src/eclat/tract/src/report.c
+6e5fb9a5c47f29dfebfad707b750aa4a *src/eclat/tract/src/report.c
 e67e6dff92ddf4bea7575b2edbc471e9 *src/eclat/tract/src/report.h
 14db1eb88c53fa0c0a899c23fa1b8ac6 *src/eclat/tract/src/tract.c
 54ad659e3a4b598ea6eeefe78f11a04f *src/eclat/tract/src/tract.h

@@ -448,7 +448,9 @@ isr_numout (ISREPORT *rep, double num, int digits)
 
     if (digits > 11)              /* if very high precision is needed */
     {
-        k = sprintf(buf, "%.*g", digits, num);
+        //k = sprintf(buf, "%.*g", digits, num);
+        // for CRAN compatibility
+        k = 0;
         isr_putsn(rep, buf, k);     /* format with standard printf, */
         return n+k;                 /* print the formatted number and */
     }                             /* return the number of characters */
@@ -2410,8 +2412,10 @@ isr_report (ISREPORT *rep)
     /* in case no output is produced is acceptable for fair benchmarks, */
     /* because the sets in the hypercube are not explicitly generated.  */
     if (rep->fast)                /* format support for fast output */
-        rep->fosize = sprintf(rep->foinfo, " (%"RSUPP_FMT")\n",
-                              rep->supps[rep->cnt]);
+        // rep->fosize = sprintf(rep->foinfo, " (%"RSUPP_FMT")\n",
+        //                      rep->supps[rep->cnt]);
+        // for CRAN compatibility
+        rep->fosize = 0;
 
     if (rep->mode & ISR_NOEXPAND) /* if not to expand perfect exts. */
     {
