@@ -23,7 +23,7 @@ find_max_cliques(
         std::shared_ptr<MultiplexClique<M>> A;
         // This is the list of nodes that can be used to extend A, so that A_ext is still a clique.
         std::vector<std::pair<const Vertex*,std::unordered_set<const typename M::layer_type*> > > B;
-        // This is the list of nodes that can be used to extend A, so that A_ext is still a clique, but that can have already been processed. This list is kept to avoid that the same clique is computed following different orders, e.g., (n1,n2,n3) and (n1,n3,n2)
+        // This is the list of nodes that can be used to extend A, so that A_ext is still a clique, but that have already been processed. This list is kept to avoid that the same clique is computed following different orders, e.g., (n1,n2,n3) and (n1,n3,n2)
         std::vector<std::pair<const Vertex*,std::unordered_set<const typename M::layer_type*> > > C;
         // constructor
         instance(int skip,
@@ -74,6 +74,24 @@ find_max_cliques(
         // fetch clique to be processed
         std::shared_ptr<instance> inst = stack.back();
 
+        /* PRINT INSTANCE
+        std::cout << " ---------------------------- " << std::endl;
+        std::cout << "A " << inst->A->to_string() << std::endl;
+        std::cout << "B ";
+        for (auto v: inst->B)
+        {
+            std::cout << *v.first << " ";
+        }
+        std::cout << std::endl;
+        std::cout << "C ";
+        for (auto v: inst->C)
+        {
+            std::cout << *v.first << " ";
+        }
+        std::cout << std::endl;
+        */
+        
+        
         // If no elements are left to extend the clique: remove from stack
         if (inst->B.size()==0)
         {
@@ -81,13 +99,16 @@ find_max_cliques(
             {
                 stack.pop_back();
             }
-
+            
+            //std::cout << "CONTINUE: cannot extend" << std::endl;
             continue;
         }
 
         // Extend the current clique with one of the elements from B
         auto b = inst->B.begin();
-
+        
+        //std::cout << " --> " << *b->first << std::endl;
+        
         // new clique: A_ext
         std::unordered_set<const typename M::layer_type*> new_layers = core::s_intersection(inst->A->layers,b->second);
         std::unordered_set<const Vertex*> new_actors;
@@ -107,14 +128,25 @@ find_max_cliques(
 
         for (++q; q!=inst->B.end(); ++q)
         {
-            std::unordered_set<const typename M::layer_type*> common = core::s_intersection(q->second,core::s_intersection(b->second,neighboring_layers(mnet,b->first,q->first))); //@todo encapsulate these two intersections into a single function computing them together, for increased readability...
+            /*
+            std::cout << "  check " << *q->first;
+            for (auto l: b->second) std::cout << " " << l->name;
+            std::cout << " !";
+            for (auto l: q->second) std::cout << " " << l->name;
+            std::cout << " !";
+            */
+            auto layers_where_adjacent = neighboring_layers(mnet,b->first,q->first);
+            //for (auto l: layers_where_adjacent) std::cout << " " << l->name;
+            //std::cout << " !";
+            std::unordered_set<const typename M::layer_type*> common = core::s_intersection(q->second,core::s_intersection(b->second,layers_where_adjacent)); //@todo encapsulate these two intersections into a single function computing them together, for increased readability...
 
             if (common.size()>=m)
             {
+                //std::cout << " ! add to B_ext ";
                 std::pair<const Vertex*,std::unordered_set<const typename M::layer_type*> > new_b(q->first,std::unordered_set<const typename M::layer_type*>(common.begin(),common.end()));
                 B_ext.push_back(new_b);
             }
-
+            //std::cout << std::endl;
             // not all layers have been used: we will have to process this again
             if (common.size()<q->second.size())
             {
@@ -140,17 +172,37 @@ find_max_cliques(
         inst->C.push_back(*b);
         inst->B.erase(b);
 
+        /* PRINT INSTANCE
+        
+        std::cout << "A_ext " << A_ext->to_string() << std::endl;
+        std::cout << "B_ext ";
+        for (auto v: B_ext)
+        {
+            std::cout << *v.first << " ";
+        }
+        std::cout << std::endl;
+        std::cout << "C_ext ";
+        for (auto v: C_ext)
+        {
+            std::cout << *v.first << " ";
+        }
+        std::cout << std::endl;
+        */
+
+        
         // check if A_ext can lead to new results, or if it is a new result (that is, maximal) itself
 
         // impossible to grow the current clique to have at least k actors: do not stack it.
         if (A_ext->actors.size()+B_ext.size()<k)
         {
+            //std::cout << "CONTINUE: B too small" << std::endl;
             continue;
         }
 
         // the current clique has less than m layers: do not stack it.
         if (A_ext->layers.size()<m)
         {
+            //std::cout << "CONTINUE: num_layer < m" << std::endl;
             continue;
         }
 
@@ -171,12 +223,13 @@ find_max_cliques(
 
             if (common_layers==max_layers_C)
             {
+                //std::cout << "can extend (C): "  << *c.first << std::endl;
                 can_extend_on_C=true;
                 continue;
             }
         }
 
-        size_t max_layers_B = inst->A->layers.size();
+        size_t max_layers_B = A_ext->layers.size();
 
         for (auto b: B_ext)
         {
@@ -185,6 +238,7 @@ find_max_cliques(
             if (common_layers==max_layers_B)
             {
                 can_extend_on_B=true;
+                //std::cout << "can extend (B): " << *b.first << std::endl;
                 continue;
             }
         }
@@ -193,11 +247,13 @@ find_max_cliques(
                 !can_extend_on_B &&
                 !can_extend_on_C)
         {
+            //std::cout << "RETURN! " << A_ext->to_string() << std::endl;
             result.insert(A_ext);
         }
 
         // put the new clique under processing
         stack.push_back(std::shared_ptr<instance>(new instance(reset_skip?1:inst->skip+1,A_ext,B_ext,C_ext)));
+        //stack.push_back(std::shared_ptr<instance>(new instance(1,A_ext,B_ext,C_ext)));
 
     }
 
@@ -217,7 +273,7 @@ neighboring_layers(
 
     for (auto layer: *mnet->layers())
     {
-        if (layer->edges()->get(actor1,actor2))
+        if (layer->edges()->get(actor1,actor2) || layer->edges()->get(actor2,actor1))
         {
             result.insert(layer);
         }
@@ -390,9 +446,16 @@ find_max_communities2(
     std::unordered_set<std::shared_ptr<MLCPMCommunity<M>>>& result
 )
 {
-
+    //std::cout << "Call: expanding community " << A->to_string() << std::endl;
+    
     std::vector<std::shared_ptr<MultiplexClique<M>>> stack;
-
+    
+    //std::cout << "Candidates: " << std::endl;
+    //for (auto cand: Candidates)
+    //{
+        //std::cout << cand->to_string() << " * ";
+    //}
+    //std::cout << std::endl;
 
     // EXPAND
     while (Candidates.size()!=0)
@@ -401,29 +464,42 @@ find_max_communities2(
         std::shared_ptr<MultiplexClique<M>> c = *element_it;
         Candidates.erase(element_it);
 
+        //std::cout << "Expanding with " << c->to_string() << std::endl;
+        
         std::unordered_set<const typename M::layer_type*> i = core::s_intersection(A->get_layers(),c->layers);
 
 
         if (i.size()==A->get_layers().size())
         {
+            //std::cout << "Same layers " << std::endl;
+            
             if (processedCliques.count(c)>0)
             {
+                //std::cout << "  EXIT - already expanded " << std::endl;
+                
                 // this community has already been expanded from clique c
                 return;
             }
-
+            
+            //std::cout << "  ADD to community " << std::endl;
+            
             A->cliques.insert(c);
-
+            
+            //std::cout << "  new adjacencies: " << std::endl;
+            
             for (auto j: adjacency.at(c))
             {
+                //std::cout << "    " << j->to_string() << std::endl;
                 if (A->cliques.count(j)>0)
                 {
+                    //std::cout << "    CONTINUE - already in community " << std::endl;
                     // clique already present in the community
                     continue;
                 }
 
                 else
                 {
+                    //std::cout << "    ADD CANDIDATE - " << std::endl;
                     Candidates.insert(j);
                 }
             }
@@ -431,21 +507,30 @@ find_max_communities2(
 
         else if (i.size()>=m)
         {
+            //std::cout << "Less layers " << std::endl;
 
             // new combination of layers to expand
             std::shared_ptr<MLCPMCommunity<M>> comm = MLCPMCommunity<M>::create();
             comm->cliques.insert(A->cliques.begin(),A->cliques.end());
             comm->layers.insert(i.begin(),i.end());
 
-
             if (processedLayerCombinations.find(comm->get_layers()) != processedLayerCombinations.end())
             {
+                //std::cout << "    CONTINUE - already expanded " << std::endl;
                 // this has already been expanded earlier
                 continue;
             }
 
-            std::set<std::shared_ptr<MultiplexClique<M>>> newCandidates(Candidates.begin(), Candidates.end());
-            newCandidates.insert(c);
+            //std::set<std::shared_ptr<MultiplexClique<M>>> newCandidates(Candidates.begin(), Candidates.end());
+            //newCandidates.insert(c);
+            
+            std::set<std::shared_ptr<MultiplexClique<M>>> newCandidates;
+            for (auto clique: comm->cliques)
+            {
+                auto hit = adjacency.find(clique);
+                newCandidates.insert(hit->second.begin(), hit->second.end());
+            }
+            
             // @todo inefficient, pass newCandidates by reference?
             find_max_communities2(adjacency,comm,newCandidates,processedCliques,processedLayerCombinations,m,result);
             processedLayerCombinations.insert(comm->get_layers());
@@ -454,7 +539,8 @@ find_max_communities2(
     }
 
     result.insert(A);
-
+    //std::cout << "RESULT - " << A->to_string() << std::endl;
+    
 }
 
 

@@ -1,109 +1,121 @@
+# version 4.2
+
+- Made conversion of list of layers, actors, and vertices from C++ to R more efficient.
+
+- Added resolution parameter and weights to generalised Louvain.
+
+- Small updates to documentation.
+
+- Updated layer degree correlation: the correlation is now computed on the degree, not the number of neighbours. That is, if a vertex V has two incident edges V -> U and V <- U, its degree with mode INOUT is 2 (it was previously 1, as the neighbour is the same).
+
+- Updated clique percolation: fixed a missing duplicate check (potentially leading to redundant sub-communities being returned) and now automatically discarding directionality if executed on a directed graph.
+
 # version 4.1.2
 
-- small fix for CRAN compatibility
+- Small fix for CRAN compatibility
 
 # version 4.1.1
 
-- fixed a comment for CRAN compatibility
+- Fixed a comment for CRAN compatibility
 
 # version 4.1
 
-- new license (Apache 2.0)
-- fixed bug in summary function
-- get_values_ml() returns the name of the attribute (instead of "value" as the name of the column with the values)
-- get_values_ml() and set_values_ml() require a DataFrame also for actors
+- New license (Apache 2.0)
+- Fixed bug in summary function
+- Get_values_ml() returns the name of the attribute (instead of "value" as the name of the column with the values)
+- Get_values_ml() and set_values_ml() require a DataFrame also for actors
 
 # version 4.0.1
 
-- rewritten as.igraph to remove dependency on igraph's ability to read graphml files
-- modified is_directed_ml not to process pairs of layers that have not been initialised (it used to return a warning)
+- Rewritten as.igraph to remove dependency on igraph's ability to read graphml files
+- Modified is_directed_ml not to process pairs of layers that have not been initialised (it used to return a warning)
 
 # version 4.0
 
-- the multilayer network data structure has been re-implemented using multilayer cubes
-- actors must exist on at least one layer
-- removed actor Pucci from florentine data, not being present in any layer
-- improved efficiency of functions returning dataframes
-- removed functions deprecated since versions 3.0 and 3.1
+- The multilayer network data structure has been re-implemented using multilayer cubes
+- Actors must exist on at least one layer
+- Removed actor Pucci from florentine data, not being present in any layer
+- Improved efficiency of functions returning dataframes
+- Removed functions deprecated since versions 3.0 and 3.1
 
 # version 3.3.2
 
-- new default behavior: loops are allowed
-- added generate_communities_ml, to create simple community structures
-- added flat_ec_ml, flat_nw_ml and mdlp_ml clustering algorithms
-- added nmi_ml and omega_index_ml evaluation functions
+- New default behavior: loops are allowed
+- Added generate_communities_ml, to create simple community structures
+- Added flat_ec_ml, flat_nw_ml and mdlp_ml clustering algorithms
+- Added nmi_ml and omega_index_ml evaluation functions
 
 # version 3.3.1
 
-- no significant change (code fix for CRAN compatibility)
+- No significant change (code fix for CRAN compatibility)
 
 # version 3.3
 
-- added some argument checks to plot_ml
-- added option to print layer names inside each frame in plotting
-- updated plot colors (default black for vertices) and added edge transparency
-- added support for edge-by-edge style
-- now add_vertices and add_edges automatically add actors and layers if they do not exist.  Layers are by default undirected.
-- added a more efficient implementation of glouvain, now available as glouvain2.
-- added back project_ml, only performing clique (i.e., unweighted) projections.
-- fixed bug in write_ml (missing comma before "LOOP" keyword)
+- Added some argument checks to plot_ml
+- Added option to print layer names inside each frame in plotting
+- Updated plot colors (default black for vertices) and added edge transparency
+- Added support for edge-by-edge style
+- Now add_vertices and add_edges automatically add actors and layers if they do not exist.  Layers are by default undirected.
+- Added a more efficient implementation of glouvain, now available as glouvain2.
+- Added back project_ml, only performing clique (i.e., unweighted) projections.
+- Fixed bug in write_ml (missing comma before "LOOP" keyword)
 
 # version 3.2
 
 - add_edges_ml now automatically adds the corresponding actors and vertices if they do not exist
-- added support for global edge attributes in addition to local (layer-specific) edge attributes
-- added support for loops in input files
-- updated documentation for IO function: new Input/Output format version 3.0
+- Added support for global edge attributes in addition to local (layer-specific) edge attributes
+- Added support for loops in input files
+- Updated documentation for IO function: new Input/Output format version 3.0
 - & in actor names and attribute values are escaped (&amp;) when saving to igraph objects.
   This prevents issues in the functions using igraph, such as summary()
-- added support for igraph logical attributes, now stored as 0s (false) and 1s (true) in multinet
-- removed unnecessary warning from add_igraph_layer function
-- fixed bug in edges_ml, where for interlayer edges the two layers could get swapped
-- fixed bug in get_values_ml, where for vertices the same layer was used even with multiple input layers
-- fixed bug in clique_percolation_ml (returned different results for different executions)
-- minor updates to the documentation
+- Added support for igraph logical attributes, now stored as 0s (false) and 1s (true) in multinet
+- Removed unnecessary warning from add_igraph_layer function
+- Fixed bug in edges_ml, where for interlayer edges the two layers could get swapped
+- Fixed bug in get_values_ml, where for vertices the same layer was used even with multiple input layers
+- Fixed bug in clique_percolation_ml (returned different results for different executions)
+- Minor updates to the documentation
 
 # version 3.1.0
 
-- removed auto_ptr from the Infomap external library
+- Removed auto_ptr from the Infomap external library
 - add_vertices_ml now automatically adds the corresponding actors if they do not exist
-- minor updates to the documentation
+- Minor updates to the documentation
 
 # version 3.0.3
 
-- added values2graphics to simplify the plotting of attribute values
+- Added values2graphics to simplify the plotting of attribute values
 
 # version 3.0.2
 
-- added modularity_ml
+- Added modularity_ml
 
 # version 3.0.1
 
-- minor code fix, to enable compilation on solaris (changed name to typedef ES)
-- actor measures return as many values as the size of the "actors" input parameter
-- fixed bug in reading directed edges from file (introduced in v3.0.0)
+- Minor code fix, to enable compilation on solaris (changed name to typedef ES)
+- Actor measures return as many values as the size of the "actors" input parameter
+- Fixed bug in reading directed edges from file (introduced in v3.0.0)
 
 # version 3.0.0
 
-- changed style, replacing . with _ in function names (except S3 methods)
-- old functions deprecated, they will disappear from version 4.0.0
-- changed colors in plotting function
+- Changed style, replacing . with _ in function names (except S3 methods)
+- Old functions deprecated, they will disappear from version 4.0.0
+- Changed colors in plotting function
 
 # version 2.0.1
 
-- minor fixes to the code
+- Minor fixes to the code
 
 # version 2.0.0
 
-- added infomap.ml algorithm
-- significantly rewritten the underlying code
-- some functions temporarily removed (pmm.ml, lart.ml, occupation.centrality.ml)
-- custom attributes on interlayer edges temporarily disabled
+- Added infomap.ml algorithm
+- Significantly rewritten the underlying code
+- Some functions temporarily removed (pmm.ml, lart.ml, occupation.centrality.ml)
+- Custom attributes on interlayer edges temporarily disabled
 
 # version 1.1.5
 
-- introduced "vertex" as a synonim of "node", to later replace it
-- added legend functionality to plotting function
-- updated multiforce layout function (fixed frame borders)
-- added summary and as.list functions
+- Introduced "vertex" as a synonim of "node", to later replace it
+- Added legend functionality to plotting function
+- Updated multiforce layout function (fixed frame borders)
+- Added summary and as.list functions
 

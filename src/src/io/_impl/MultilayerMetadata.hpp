@@ -16,7 +16,7 @@ namespace uu {
 namespace net {
 
 struct MultilayerMetadata
-{
+/*{
     GraphType features;
 
     bool is_multiplex = true;
@@ -29,6 +29,18 @@ struct MultilayerMetadata
     std::vector<core::Attribute> interlayer_edge_attributes;
     std::unordered_map<std::string, std::vector<core::Attribute>> intralayer_vertex_attributes;
     std::unordered_map<std::string, std::vector<core::Attribute>> intralayer_edge_attributes;
+};
+
+
+struct MultilayerMetadata2
+*/{
+    bool is_multiplex = true;
+
+    std::vector<core::Attribute> actor_attributes;
+    std::vector<core::Attribute> global_edge_attributes;
+    std::unordered_map<std::string, std::vector<core::Attribute>> vertex_attributes;
+    std::unordered_map<std::string, std::vector<core::Attribute>> intralayer_edge_attributes;
+    std::unordered_map<std::string, std::unordered_map<std::string, std::vector<core::Attribute>>> interlayer_edge_attributes;
 };
 
 }

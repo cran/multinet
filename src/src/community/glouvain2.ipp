@@ -10,7 +10,8 @@ template <typename M>
 std::unique_ptr<CommunityStructure<M>>
                                     glouvain2(
                                         const M* g,
-                                        double omega
+                                        double omega,
+                                        double gamma
                                     )
 {
 
@@ -29,7 +30,7 @@ std::unique_ptr<CommunityStructure<M>>
         //std::cout << "pass" << std::endl;
         passes.push_back(std::move(meta));
         auto w = passes.back().get();
-        meta = pass(w);
+        meta = pass(w, gamma);
     }
 
 

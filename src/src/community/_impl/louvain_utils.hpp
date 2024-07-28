@@ -52,7 +52,8 @@ std::unique_ptr<CommunityStructure<Network>>
 
 std::unique_ptr<MetaNetwork>
 pass(
-    const Network* g
+    const Network* g,
+    double gamma = 1.0
 );
 
 

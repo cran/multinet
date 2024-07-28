@@ -21,7 +21,7 @@ struct Value
 
 
     /** Constructs a NULL value. */
-    Value<T>
+    Value
     (
     ) : value(T()),
         null(true)
@@ -34,7 +34,7 @@ struct Value
      * The null flag is automatically set to false.
      * @param v the value of this object.
      */
-    Value<T>
+    Value
     (
         const T& v
     ) :
@@ -49,7 +49,7 @@ struct Value
      * @param v the value of this object, to be used if member null is false
      * @param is_null a flag indicating if the value is available or not (NULL)
      */
-    Value<T>
+    Value
     (
         const T& v,
         bool is_null

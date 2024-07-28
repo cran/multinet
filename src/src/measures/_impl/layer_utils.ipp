@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <unordered_set>
 #include "core/exceptions/assert_not_null.hpp"
+#include "measures/degree.hpp"
 //#include "core/propertymatrix/summarization.hpp"
 
 namespace uu {
@@ -156,7 +157,7 @@ actor_degree_property_matrix(
 
             else
             {
-                P.set(actor,layer,layer->edges()->neighbors(actor,mode)->size());
+                P.set(actor, layer, degree(layer, actor, mode));
             }
         }
     }

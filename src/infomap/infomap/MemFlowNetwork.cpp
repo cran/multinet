@@ -175,7 +175,7 @@ MemFlowNetwork::calculateFlow(const Network& net, const Config& config)
         // Add M1 flow to dangling State nodes
         unsigned int numDanglingStateNodes = 0;
         unsigned int numDanglingStateNodesCompleted = 0;
-        unsigned int numSelfLinks = 0;
+        //unsigned int numSelfLinks = 0;
         double sumExtraLinkWeight = 0.0;
 
         for (unsigned int i = 0; i < numStateNodes; ++i)
@@ -197,7 +197,7 @@ MemFlowNetwork::calculateFlow(const Network& net, const Config& config)
                     {
                         if (from == to)
                         {
-                            ++numSelfLinks;
+                            //++numSelfLinks;
                         }
 
                         else

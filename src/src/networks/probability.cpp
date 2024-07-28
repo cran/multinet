@@ -19,7 +19,9 @@ is_probabilistic(
 )
 {
     auto attr = net->edges()->attr()->get("p_");
-
+    
+    if (!attr)  return false;
+    
     if (attr->type == core::AttributeType::DOUBLE)
     {
         return true;

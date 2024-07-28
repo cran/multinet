@@ -1,12 +1,11 @@
-cmake_minimum_required( VERSION 3.15...3.18 )
+cmake_minimum_required( VERSION 3.15...3.23 )
 
 # Meta information about the project
 #include( "${PROJECT_SOURCE_DIR}/project-meta-info.in" )
 
 set (META_LIBRARY_NAME			"uunet")
-set (META_PROJECT_VERSION_FULL 		"0.9")
-set (META_PROJECT_HOMEPAGE 		"https://bitbucket.org/uuinfolab/uunet")
-set (META_PROJECT_DESCRIPTION 		"Network analysis library")
+set (META_PROJECT_HOMEPAGE 		"https://github.com/uuinfolab/uunet")
+set (META_PROJECT_DESCRIPTION 	"Network analysis library")
 
 # Configure version header
 #configure_file(${CMAKE_SOURCE_DIR}/src/config.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/include/config.hpp @ONLY)
@@ -30,6 +29,7 @@ target_include_directories ( ${META_LIBRARY_NAME}
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>/ext/eclat/util/src
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>/ext/eclat/apriori/src
 		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>/ext/infomap
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>/ext/boost
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}> )
 
@@ -41,7 +41,7 @@ set_target_properties ( ${META_LIBRARY_NAME} PROPERTIES
 	SOVERSION ${META_LIBRARY_VERSION} )
 
 set_target_properties ( ${META_LIBRARY_NAME} PROPERTIES 
-	CXX_STANDARD 14
+	CXX_STANDARD 17
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS OFF ) 
 
@@ -53,7 +53,7 @@ endif()
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON) # to create a .lib file besides the .dll (windows)
 
-target_compile_features( ${META_LIBRARY_NAME} PUBLIC cxx_std_14 )
+target_compile_features( ${META_LIBRARY_NAME} PUBLIC cxx_std_17 )
 target_compile_options( ${META_LIBRARY_NAME} PUBLIC "$<$<CONFIG:DEBUG>:${LIBRARY_DEBUG_OPTIONS}>" )
 
 # IDEs should put the headers in a nice place
@@ -65,7 +65,7 @@ install(
 	${META_LIBRARY_NAME}-config
 	COMPONENT ${META_LIBRARY_NAME}_dev
 	RUNTIME
-		DESTINATION ${CAMKE_INSTALL_BINDIR}
+		DESTINATION ${CMAKE_INSTALL_BINDIR}
 		COMPONENT ${META_LIBRARY_NAME}_rt
 	LIBRARY
 		DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -101,4 +101,10 @@ install(DIRECTORY "${PROJECT_SOURCE_DIR}/ext/infomap" # source directory
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}" # target directory
         FILES_MATCHING # install only matched files
         PATTERN "*.h" # select header files
+)
+
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/ext/boost" # source directory
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}" # target directory
+        FILES_MATCHING # install only matched files
+        PATTERN "*.hpp" # select header files
 )

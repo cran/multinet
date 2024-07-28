@@ -42,7 +42,7 @@ get_community_list_ml(comm.struct, n)
 \item{min.actors}{Minimum number of actors to form a community.}
 \item{min.layers}{Minimum number of times two actors must be in the same single-layer community to be considered in the same multi-layer community.}
 \item{k}{Minimum number of actors in a clique. Must be at least 3.}
-\item{m}{Minimum number of common layers in a clique.}
+\item{m}{Minimum number of common layers in a clique. Not to be confused with number of edges, as it is meant in the summary function (here we use the notation of the paper introducing this algorithm).}
 \item{gamma}{Resolution parameter for modularity in the generalized louvain method.}
 \item{omega}{Inter-layer weight parameter in the generalized louvain method.}
 \item{overlapping}{Specifies if overlapping clusters can be returned.}
@@ -55,12 +55,18 @@ get_community_list_ml(comm.struct, n)
 \value{
 All community detection algorithms return a data frame where each row contains actor name, layer name and community identifier.
 
+\code{abacus_ml}, \code{flat_ec_ml}, \code{flat_nw_ml}, \code{clique_percolation_ml}, and \code{glouvain_ml} are only implemented to work with undirected networks. \code{clique_percolation_ml} automatically considers the network to be undirected even if the edges are directed. \code{glouvain_ml} also considers weights, if *all* layers have a DOUBLE attribute named w_.
+
 The evaluation functions return a number between -1 and 1. For the comparison functions, 1 indicates
 that the two community structures are equivalent. The maximum possible value of modularity is <= 1
 and depends on the network, so modularity results should not be compared across different networks.
 Also, notice that modularity is only defined for partitioning community structures.
 
-\code{get_community_list_ml} transforms the output of a community detection function into a list by grouping all the nodes having the same community identifier and the same layer.
+\code{get_community_list_ml} transforms the output of a community detection function into a list by grouping all the nodes having the same community identifier and the same layer. Notice that:
+\itemize{
+\item The numbers in the result of get_community_list_ml() correspond to vertices. Number X refers the the Xth vertex as returned by vertices_ml(ml).
+\item This function splits the communities by layer. That is, every community corresponds to multiple entry in the generated list (in general), all with the same value of $cid.
+}
 }
 \references{
 \itemize{

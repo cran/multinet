@@ -8,7 +8,8 @@ namespace net {
 template <typename G>
 std::unique_ptr<CommunityStructure<Network>>
         louvain(
-            const G* g
+            const G* g,
+            double gamma
         )
 {
 
@@ -20,7 +21,7 @@ std::unique_ptr<CommunityStructure<Network>>
     {
         passes.push_back(std::move(meta));
         auto w = passes.back()->get();
-        meta = pass(w);
+        meta = pass(w, gamma);
 
     }
     while (meta);

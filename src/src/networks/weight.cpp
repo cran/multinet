@@ -20,6 +20,8 @@ is_weighted(
 {
     auto attr = net->edges()->attr()->get("w_");
 
+    if (!attr)  return false;
+    
     if (attr->type == core::AttributeType::DOUBLE)
     {
         return true;

@@ -694,8 +694,8 @@ pearson(
     double cov = 0;
     double mean1 = 0;
     double mean2 = 0;
-    double std1 = 0;
-    double std2 = 0;
+    double var1 = 0;
+    double var2 = 0;
 
     long checked_columns = 0;
     long num_incomplete = 0;
@@ -719,14 +719,12 @@ pearson(
 
         checked_columns++;
     }
-
+    
     mean1 += default_val*(P.num_structures-checked_columns);
     mean2 += default_val*(P.num_structures-checked_columns);
     mean1 /= (P.num_structures-num_incomplete);
     mean2 /= (P.num_structures-num_incomplete);
-
-    checked_columns = 0;
-
+    
     for (STRUCTURE s: P.structures())
     {
         Value<double> v1 = P.get(s,c1);
@@ -735,22 +733,20 @@ pearson(
         if (!v1.null && !v2.null)
         {
             cov += (v1.value-mean1)*(v2.value-mean2);
-            std1 += (v1.value-mean1)*(v1.value-mean1);
-            std2 += (v2.value-mean2)*(v2.value-mean2);
+            var1 += (v1.value-mean1)*(v1.value-mean1);
+            var2 += (v2.value-mean2)*(v2.value-mean2);
         }
 
         //if (!v1.null) std1 += (v1.value-_mean1)*(v1.value-_mean1);
         //if (!v2.null) std2 += (v2.value-_mean2)*(v2.value-_mean2);
-        checked_columns++;
         //std::cout << val2 << " " << mean2 << " " << ((val2-mean2)*(val2-mean2)) << std::endl;
     }
 
     cov += (default_val-mean1)*(default_val-mean2)*(P.num_structures-checked_columns);
-    std1 += (default_val-mean1)*(default_val-mean1)*(P.num_structures-checked_columns);
-    std2 += (default_val-mean2)*(default_val-mean2)*(P.num_structures-checked_columns);
-    //std::cout << val2 << " " << mean2 << " " << ((val2-mean2)*(val2-mean2)) << std::endl;
-
-    return cov/std::sqrt(std1)/std::sqrt(std2);
+    var1 += (default_val-mean1)*(default_val-mean1)*(P.num_structures-checked_columns);
+    var2 += (default_val-mean2)*(default_val-mean2)*(P.num_structures-checked_columns);
+    
+    return cov/std::sqrt(var1)/std::sqrt(var2);
 }
 
 template <class STRUCTURE, class CONTEXT, class NUMBER>

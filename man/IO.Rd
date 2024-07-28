@@ -139,7 +139,7 @@ ActorName1,LayerName2,AttributeValueList...
 }
 }
 \usage{
-read_ml(file, name = "unnamed", sep = ',', aligned = FALSE)
+read_ml(file, name = "unnamed", aligned = FALSE)
 write_ml(n, file, format = "multilayer", layers = character(0),
   sep = ',', merge.actors = TRUE, all.actors = FALSE)
 }

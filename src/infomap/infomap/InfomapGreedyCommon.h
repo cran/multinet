@@ -1014,7 +1014,7 @@ InfomapGreedyCommon<InfomapGreedyDerivedType>::tryMoveEachNodeIntoBestModuleInPa
 
     unsigned int numMoved = 0;
     unsigned int numInvalidMoves = 0;
-    double diffSerialParallelCodelength = 0.0;
+    //double diffSerialParallelCodelength = 0.0;
     const unsigned int emptyTarget = numNodes; // Use last node index + 1 as index for empty module target.
     int numNodesInt = static_cast<int>(numNodes);
 
@@ -1299,7 +1299,7 @@ InfomapGreedyCommon<InfomapGreedyDerivedType>::tryMoveEachNodeIntoBestModuleInPa
 
                         current.index = bestModuleIndex;
                         ++numMoved;
-                        diffSerialParallelCodelength += bestDeltaCodelength - deltaCodelength;
+                        //diffSerialParallelCodelength += bestDeltaCodelength - deltaCodelength;
                     }
 
                     else
@@ -1498,10 +1498,9 @@ InfomapGreedyCommon<InfomapGreedyDerivedType>::moveNodesToPredefinedModules()
 
     unsigned int numNodes = Super::m_activeNetwork.size();
 
-    DEBUG_OUT("Begin moving " << numNodes << " nodes to predefined modules, starting with codelength " <<
-              codelength << "..." << std::endl);
+    //DEBUG_OUT("Begin moving " << numNodes << " nodes to predefined modules, starting with codelength " << codelength << "..." << std::endl);
 
-    unsigned int numMoved = 0;
+    //unsigned int numMoved = 0;
 
     for (unsigned int k = 0; k < numNodes; ++k)
     {
@@ -1588,11 +1587,11 @@ InfomapGreedyCommon<InfomapGreedyDerivedType>::moveNodesToPredefinedModules()
             Super::m_moduleMembers[newM] += 1;
 
             current.index = newM;
-            ++numMoved;
+            //++numMoved;
         }
     }
 
-    DEBUG_OUT("Done! Moved " << numMoved << " nodes into " << numActiveModules() << " modules to codelength: " << codelength << std::endl);
+    //DEBUG_OUT("Done! Moved " << numMoved << " nodes into " << numActiveModules() << " modules to codelength: " << codelength << std::endl);
 }
 
 

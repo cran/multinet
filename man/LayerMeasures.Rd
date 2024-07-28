@@ -21,9 +21,9 @@ method = "jaccard.edges", mode = "all", K = 0)
 "min.degree", "max.degree", "sum.degree", "mean.degree", "sd.degree", "skewness.degree", "kurtosis.degree", "entropy.degree", "CV.degree", "jarque.bera.degree".
 For layer comparison:
 \itemize{
-\item{Overlapping:}{"jaccard.actors", "jaccard.edges", "jaccard.triangles", "coverage.actors", "coverage.edges",  "coverage.triangle","sm.actors", "sm.edges", "sm.triangles", "rr.actors", "rr.edges", "rr.triangles", "kulczynski2.actors", "kulczynski2.edges", "kulczynski2.triangles", "hamann.actors", "hamann.edges", "hamann.triangles". The first part of the value indicates the type of comparison function (Jaccard, Coverage, Simple Matching, Russell Rao, Kulczynski, Hamann), the second part indicates the configurations to which the comparison function is applied.}
-\item{Distribution dissimilarity:}{"dissimilarity.degree", "KL.degree", "jeffrey.degree". Notice that these are dissimilarity functions: 0 means highest similarity}
-\item{Correlation:}{"pearson.degree" and "rho.degree"}
+\item Overlapping: "jaccard.actors", "jaccard.edges", "jaccard.triangles", "coverage.actors", "coverage.edges",  "coverage.triangle","sm.actors", "sm.edges", "sm.triangles", "rr.actors", "rr.edges", "rr.triangles", "kulczynski2.actors", "kulczynski2.edges", "kulczynski2.triangles", "hamann.actors", "hamann.edges", "hamann.triangles". The first part of the value indicates the type of comparison function (Jaccard, Coverage, Simple Matching, Russell Rao, Kulczynski, Hamann), the second part indicates the configurations to which the comparison function is applied.
+\item Distribution dissimilarity: "dissimilarity.degree", "KL.degree", "jeffrey.degree". Notice that these are dissimilarity functions: 0 means highest similarity.
+\item Correlation:"pearson.degree" and "rho.degree".
 }
 }
 \item{mode}{This argument is used for distribution dissimilarities and correlations (that is, those methods based on node degree) and can take values "in", "out" or "all" to consider respectively incoming edges, outgoing edges or both.}

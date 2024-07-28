@@ -217,15 +217,15 @@ compare_multiplex(
         throw core::OperationNotSupportedException("Cannot compare distances on different networks");
     }
 
-    long num_intralayer_steps1 = 0;
-    long num_intralayer_steps2 = 0;
+    //long num_intralayer_steps1 = 0;
+    //long num_intralayer_steps2 = 0;
 
     for (auto layer1: *mnet->layers())
     {
         long l1 = length(layer1,layer1);
-        num_intralayer_steps1 += l1;
+        //num_intralayer_steps1 += l1;
         long l2 = other.length(layer1,layer1);
-        num_intralayer_steps2 += l2;
+        //num_intralayer_steps2 += l2;
 
         if (l1 > l2)
         {

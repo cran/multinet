@@ -31,7 +31,7 @@ idx_to_pos(
 
         idx += index[i] * offset;
         offset *= dimensions[i];
-    }
+    } 
 
     return idx;
 }

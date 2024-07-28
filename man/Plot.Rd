@@ -1,6 +1,7 @@
 \name{multinet.plotting}
 \alias{multinet.plotting}
 \alias{plot.Rcpp_RMLNetwork}
+\alias{plot}
 \alias{plot.ml}
 \alias{plot.multinet}
 \alias{values2graphics}
@@ -35,7 +36,7 @@ values2graphics(values, output = "color")
 
 \item{layers}{A vector of layer names, that determine which layers and in which order are plotted.}
 
-\item{vertex.shape}{Symbol to use for nodes, corresponding to the parameter {pch} of the R \code{points} function.  This can either
+\item{vertex.shape}{Symbol to use for nodes, corresponding to the parameter \code{pch} of the R \code{points} function.  This can either
 be a single character or an integer code for one of a set of
 graphics symbols.  See \code{?points} for more details.}
 \item{vertex.size}{synonim of \code{vertex.cex}.}

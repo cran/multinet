@@ -79,7 +79,7 @@ MemoryNetworkAdapter::readClu(std::string filename)
     std::istringstream lineStream;
     std::map<unsigned int, unsigned int> clusters;
     unsigned int maxNodeIndex = 0;
-    unsigned int numParsedNodes = 0;
+    //unsigned int numParsedNodes = 0;
     unsigned int numNodesNotFound = 0;
 
     // # [prior_node | layer] node cluster flow
@@ -101,7 +101,7 @@ MemoryNetworkAdapter::readClu(std::string filename)
             throw FileFormatError(io::Str() << "Couldn't parse [state_node, node, cluster] from line '" << line << "'");
         }
 
-        ++numParsedNodes;
+        //++numParsedNodes;
 
         // Get zero-based indexing
         priorIndex -= m_indexOffset;

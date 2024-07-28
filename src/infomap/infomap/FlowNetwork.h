@@ -56,6 +56,7 @@ class FlowNetwork
             weight(other.weight),
             flow(other.flow)
         {}
+        Link& operator=(const Link& other) = default;
         unsigned int source;
         unsigned int target;
         double weight;

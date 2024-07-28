@@ -10,6 +10,7 @@
 #include "objects/EdgeMode.hpp"
 #include "objects/Vertex.hpp"
 #include "measures/degree.hpp"
+#include "networks/weight.hpp"
 
 namespace uu {
 namespace net {
@@ -32,7 +33,16 @@ convert(
 
     std::vector<std::unique_ptr<const Vertex>> metavertices;
 
-
+    bool weighted = true;
+    for (auto layer: *g->layers())
+    {
+        if (!is_weighted(layer))
+        {
+            weighted = false;
+            break;
+        }
+    }
+    
     size_t v_id = 0;
 
     for (size_t i = 0; i < g->layers()->size(); i++)
@@ -62,7 +72,15 @@ convert(
             auto v1 = mapping.at(iv1);
             auto v2 = mapping.at(iv2);
 
-            meta->edge(v1, v2, i+1);
+            if (weighted)
+            {
+                double w = get_weight(l, e);
+                meta->edge(v1, v2, i+1, w);
+            }
+            else
+            {
+                meta->edge(v1, v2, i+1);
+            }
 
             //std::cout << "adding " << (*v1) << "--" << (*v2) << " on layer " << i << std::endl;
         }
@@ -282,7 +300,8 @@ aggregate(
 
 std::unique_ptr<GMetaNetwork>
 pass(
-    const GMetaNetwork* meta
+    const GMetaNetwork* meta,
+    double gamma
 )
 {
     //std::cout << "PASS" << std::endl;
@@ -427,7 +446,7 @@ pass(
                             auto d1 = w_degree[vertex_layer1];
                             auto d2 = w_degree[vertex_layer2];
 
-                            contribution = A_ij - d1*d2/m[edge_type]/2;
+                            contribution = A_ij - gamma*d1*d2/m[edge_type]/2;
 
                         }
 
@@ -503,7 +522,7 @@ pass(
                         auto d1 = w_degree[vertex_layer1];
                         auto d2 = w_degree[vertex_layer2];
 
-                        contribution = A_ij - d1*d2/m[edge_type]/2;
+                        contribution = A_ij - gamma*d1*d2/m[edge_type]/2;
 
                     }
 

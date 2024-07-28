@@ -52,7 +52,8 @@ aggregate(
 
 std::unique_ptr<GMetaNetwork>
 pass(
-    const GMetaNetwork* meta
+    const GMetaNetwork* meta,
+    double gamma
 );
 
 

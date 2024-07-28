@@ -58,9 +58,9 @@ void renameMultilayer(
 
 RMLNetwork
 readMultilayer(const std::string& input_file,
-               const std::string& name, char sep, bool vertex_aligned)
+               const std::string& name, bool vertex_aligned)
 {
-    return RMLNetwork(uu::net::read_multilayer_network(input_file,name,sep,vertex_aligned));
+    return RMLNetwork(uu::net::read_multilayer_network(input_file,name,vertex_aligned));
 }
 
 
@@ -300,11 +300,16 @@ layers(
 )
 {
     auto mnet = rmnet.get_mlnet();
-    CharacterVector res(0);
-
+    
+    size_t num_layers = mnet->layers()->size();
+    
+    CharacterVector res(num_layers);
+    
+    size_t idx = 0;
     for (auto layer: *mnet->layers())
     {
-        res.push_back(layer->name);
+        res[idx] = layer->name;
+        idx++;
     }
 
     return res;
@@ -318,7 +323,6 @@ actors(
 )
 {
     DataFrame res;
-    CharacterVector actors(0);
     auto mnet = rmnet.get_mlnet();
 
     auto layers = resolve_layers(mnet,layer_names);
@@ -333,23 +337,38 @@ actors(
                 selected_actors.insert(actor);
             }
         }
+        
+        size_t num_actors = selected_actors.size();
+        
+        CharacterVector actors(num_actors);
+        
+        size_t idx = 0;
         for (auto actor: *mnet->actors())
         {
             if (selected_actors.count(actor)>0)
             {
-                actors.push_back(actor->name);
+                actors[idx] = actor->name;
+                idx++;
             }
         }
+        res["actor"] = actors;
     }
     else
     {
+        size_t num_actors = mnet->actors()->size();
+        
+        CharacterVector actors(num_actors);
+        
+        size_t idx = 0;
+        
         for (auto actor: *mnet->actors())
         {
-            actors.push_back(actor->name);
+            actors[idx] = actor->name;
+            idx++;
         }
+        res["actor"] = actors;
     }
 
-    res["actor"] = actors;
     
     if (add_attributes)
     {
@@ -378,8 +397,18 @@ vertices(
     DataFrame res;
     auto mnet = rmnet.get_mlnet();
     auto layers = resolve_layers_unordered(mnet,layer_names);
-    CharacterVector actors, layers_df;
+    
+    size_t num_vertices = 0;
+    
+    for (auto l: layers)
+    {
+        num_vertices += l->vertices()->size();
+    }
+    
+    CharacterVector actors(num_vertices);
+    CharacterVector layers_df(num_vertices);
 
+    size_t idx = 0;
     for (auto l: *mnet->layers())
     {
 
@@ -390,8 +419,9 @@ vertices(
 
         for (auto vertex: *l->vertices())
         {
-            actors.push_back(vertex->name);
-            layers_df.push_back(l->name);
+            actors[idx] = vertex->name;
+            layers_df[idx] = l->name;
+            idx++;
         }
     }
     res["actor"] = actors;
@@ -3086,7 +3116,7 @@ glouvain_ml(
 {
     auto mnet = rmnet.get_mlnet();
 
-    auto com_struct = uu::net::glouvain2<M>(mnet, omega);
+    auto com_struct = uu::net::glouvain2<M>(mnet, omega, gamma);
 
     return to_dataframe(com_struct.get());
 }

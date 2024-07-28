@@ -15,7 +15,8 @@ template <typename M>
 std::unique_ptr<CommunityStructure<M>>
                                     glouvain2(
                                         const M* g,
-                                        double omega
+                                        double omega = 1.0,
+                                        double gamma = 1.0
                                     );
 
 }

@@ -2367,16 +2367,16 @@ InfomapBase::initMemoryNetwork(MemNetwork& network)
                                   m_config.outDirectory << outname << ".rank";
             Log() << "Printing physical flow to " << outName << "... " << std::flush;
             SafeOutFile out(outName.c_str());
-            double sumFlow = 0.0;
-            double sumStateflow = 0.0;
+            //double sumFlow = 0.0;
+            //double sumStateflow = 0.0;
             std::vector<double> m1Flow(network.numNodes(), 0.0);
 
             for (unsigned int i = 0; i < network.numStateNodes(); ++i)
             {
                 const PhysData& physData = getPhysicalMembers(m_treeData.getLeafNode(i))[0];
                 m1Flow[physData.physNodeIndex] += physData.sumFlowFromStateNode;
-                sumFlow += physData.sumFlowFromStateNode;
-                sumStateflow += nodeFlow[i];
+                //sumFlow += physData.sumFlowFromStateNode;
+                //sumStateflow += nodeFlow[i];
             }
 
             for (unsigned int i = 0; i < m1Flow.size(); ++i)
@@ -2779,14 +2779,14 @@ InfomapBase::printPerLevelCodelength(std::ostream& out)
     aggregatePerLevelCodelength(perLevelStats);
 
     unsigned int numLevels = perLevelStats.size();
-    double averageNumNodesPerLevel = 0.0;
+    //double averageNumNodesPerLevel = 0.0;
 
-    for (unsigned int i = 0; i < numLevels; ++i)
-    {
-        averageNumNodesPerLevel += perLevelStats[i].numNodes();
-    }
+    //for (unsigned int i = 0; i < numLevels; ++i)
+    //{
+    //    averageNumNodesPerLevel += perLevelStats[i].numNodes();
+    //}
 
-    averageNumNodesPerLevel /= numLevels;
+    //averageNumNodesPerLevel /= numLevels;
 
     out << "Per level number of modules:         [";
 

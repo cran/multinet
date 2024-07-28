@@ -85,7 +85,7 @@ RCPP_MODULE(multinet)
     
     // IO
 
-    function("read_ml", &readMultilayer, List::create( _["file"], _["name"]="unnamed", _["sep"]=',', _["aligned"]=false), "Reads a multilayer network from a file");
+    function("read_ml", &readMultilayer, List::create( _["file"], _["name"]="unnamed", _["aligned"]=false), "Reads a multilayer network from a file");
 
     function("write_ml", &writeMultilayer, List::create( _["n"], _["file"], _["format"]="multilayer", _["layers"]=CharacterVector(), _["sep"]=',', _["merge.actors"]=true, _["all.actors"]=false), "Writes a multilayer network to a file");
 
