@@ -1,8 +1,8 @@
 Package: multinet
 Type: Package
 Title: Analysis and mining of multilayer social networks
-Version: 4.2
-Date: 2024-07-26
+Version: 4.2.1
+Date: 2024-11-02
 Authors@R: c(person("Matteo", "Magnani", role = c("aut", "cre"), email = "matteo.magnani@it.uu.se"), person("Luca", "Rossi", role = "aut", comment="API design"), person("Davide", "Vega", role = "aut", comment="API and code design"), person("Obaida", "Hanteer", role = "ctb", comment="mdlpa, flat_ec, flat_nw, some community evaluation functions"))
 Maintainer: Matteo Magnani <matteo.magnani@it.uu.se>
 Description: Functions for the creation/generation and analysis of multilayer social networks <doi:10.18637/jss.v098.i08>.
@@ -22,10 +22,10 @@ Note: a previous version of the library (main version number: 3) was
         up-to-date code), and Howard Hinnant's date and time library
         <https://github.com/HowardHinnant/date>. The code from these
         libraries has been included in our source package.
-Packaged: 2024-07-28 07:54:53 UTC; matteomagnani
+Packaged: 2024-11-02 09:00:39 UTC; matteomagnani
 Author: Matteo Magnani [aut, cre],
   Luca Rossi [aut] (API design),
   Davide Vega [aut] (API and code design),
   Obaida Hanteer [ctb] (mdlpa, flat_ec, flat_nw, some community
     evaluation functions)
-Date/Publication: 2024-07-28 09:50:02 UTC
+Date/Publication: 2024-11-02 10:50:02 UTC

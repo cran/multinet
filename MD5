@@ -1,6 +1,6 @@
-1dcfeca9fa419b7aeee96af94639cddc *DESCRIPTION
+30ee486c202bad372a8b1fd7925ef9bd *DESCRIPTION
 6f0cad7dd9b5d47c5d412413451de9c3 *NAMESPACE
-89fb7c0b5098ea6386ffa31f58c3371c *NEWS
+3d5c249994b91d18f748f48407102abf *NEWS
 1d9b2f9a6c5d34d81fd0f004940352a3 *R/datasets.R
 53195b16d9810bf9d332831641e1fb3a *R/deprecated.R
 b4c5753b51c89d259054c5927a9e6131 *R/functions.R
@@ -32,8 +32,8 @@ d326bebb27fdc45280afa092bee9c50d *man/Properties.Rd
 5ce84597c61fa91280c3fca2858ee229 *man/Transformation.Rd
 028ec9c6e7bb0b2c7aebb0b86ca23dd7 *man/multinet-package.Rd
 503c7418f2d4ae12fbec918234947bd6 *man/summary.Rd
-195263c07ac65aacd3ddf87442a9c2dc *src/Makevars
-195263c07ac65aacd3ddf87442a9c2dc *src/Makevars.win
+1dc58b399171e41e0bce2da86c7f1006 *src/Makevars
+1dc58b399171e41e0bce2da86c7f1006 *src/Makevars.win
 7e2bc22edf40469e8712ac2e71f17028 *src/RcppExports.cpp
 4ac4fe2fe0d8c6f0fa5cde1e2f1feec6 *src/boost/boost/assert.hpp
 17d901fe3fd940e4c8d362506b56f21d *src/boost/boost/assert/source_location.hpp
@@ -2606,14 +2606,14 @@ ad5a8ff7f9ec327529c6fe3708539078 *src/src/io/_impl/GraphIOFileSection.cpp
 a84ca0f2ede42130376074961b058c29 *src/src/io/_impl/GraphIOFileSection.hpp
 fb67cf66bc40f4e7f7f089b0fb4dad4d *src/src/io/_impl/GraphMetadata.hpp
 27a00868bc3ef4dd2b891c1b8b788faa *src/src/io/_impl/MultilayerMetadata.hpp
-910fe3a1b2ecfe7bbfff753e30c33ac8 *src/src/io/_impl/parser/mlpass1/actions.hpp
-e0e182db6ed57f835bbfd48d2faa5263 *src/src/io/_impl/parser/mlpass1/grammar.hpp
+a2b01484789cd5abef4d6f86f0cf2915 *src/src/io/_impl/parser/mlpass1/actions.hpp
+fd33dff6fbd939e6dcd7f10f43e0280e *src/src/io/_impl/parser/mlpass1/grammar.hpp
 6acb2db0460cc101a9b9bb84762d0653 *src/src/io/_impl/parser/mlpass1/parser.cpp
 363b3b0a0b3ed1c6138db20e102a3e88 *src/src/io/_impl/parser/mlpass1/parser.hpp
 c152ac2ed1ff145c77487666de099062 *src/src/io/_impl/parser/mlpass1/utility_functions.cpp
 7eb3fc0c80b70bafb1e67b3f7261b0a3 *src/src/io/_impl/parser/mlpass1/utility_functions.hpp
-44f8b7132cd8e9a1181afbd644cc3e75 *src/src/io/_impl/parser/mlpass2/actions.hpp
-6af9fc7ee50028caf50622b13dcc87d1 *src/src/io/_impl/parser/mlpass2/grammar.hpp
+ff73c42115f6f5e86f38dd0c30d10bcf *src/src/io/_impl/parser/mlpass2/actions.hpp
+d482ba9814c1064c2726bbaa526948d9 *src/src/io/_impl/parser/mlpass2/grammar.hpp
 2fa056ba581d192c0365cc5c2b8ea682 *src/src/io/_impl/parser/mlpass2/parser.cpp
 acf99334b12fcc18db105950359f79a1 *src/src/io/_impl/parser/mlpass2/parser.hpp
 750f131ceb8cb4de647e1350750c4e32 *src/src/io/_impl/parser/mlpass2/utility_functions.hpp
@@ -2636,7 +2636,7 @@ f0fbac56f2ed65f18ec927e23d1e64c2 *src/src/io/read_temporal_network.hpp
 54b30572d2717708c6a4fac17807b444 *src/src/io/write_multilayer_communities.ipp
 dbe4665493ed7e4d4c8d019f6c50f4cc *src/src/io/write_multilayer_network.cpp
 7cdc2e3ffccf0f9aa95e302c2bed6463 *src/src/io/write_multilayer_network.hpp
-0edb7266c0fc8b60c4777c897d82d381 *src/src/io/write_multilayer_network.ipp
+4c7b01ca91fa9fd570e849d689d09c72 *src/src/io/write_multilayer_network.ipp
 3ceabf4c433f23416e1d5df05e098577 *src/src/layout/XYZCoordinates.hpp
 4cf29a4c5dad62860ace9da79c3037e2 *src/src/layout/circular.hpp
 3284364ca8fa9b610ccce8dd4909b068 *src/src/layout/circular.ipp
@@ -2693,7 +2693,7 @@ d8b8a20f110981ee4c4c11461321d4aa *src/src/networks/_impl/stores/EdgeStore.cpp
 ae8f411fac763f8429763d029f7473db *src/src/networks/_impl/stores/EdgeStore.hpp
 f0d25e74442c6d5813373a85dbf4c05f *src/src/networks/_impl/stores/LayerStore.cpp
 70c73fd8f2825ba9865763a5f5d50a4f *src/src/networks/_impl/stores/LayerStore.hpp
-b347fb22f672a6d64161b480f6c11545 *src/src/networks/_impl/stores/MLECubeStore.cpp
+04533b9f05aa7b66a03f3612a19c62f3 *src/src/networks/_impl/stores/MLECubeStore.cpp
 60d9eb09c3f286d166815d60665dfa3d *src/src/networks/_impl/stores/MLECubeStore.hpp
 69aeefddb6beb61b491da951686da22c *src/src/networks/_impl/stores/MultiEdgeStore.cpp
 b2690062fac0f4c0e50be7785d2a4406 *src/src/networks/_impl/stores/MultiEdgeStore.hpp

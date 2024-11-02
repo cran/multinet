@@ -3,6 +3,7 @@
 
 #include <boost/config/warning_disable.hpp>
 #include <boost/spirit/home/x3.hpp>
+#include <boost/spirit/home/support/char_encoding/unicode.hpp>
 #include <boost/spirit/home/x3/support/utility/error_reporting.hpp>
 #include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
 
@@ -264,7 +265,9 @@ auto const edge_def =
     id > ',' > id > ',' > id > *(',' > val % ',') > eol // fourth can also be id, so the grammar is less restrictive
     ;
 auto const id_def =
-    +char_("A-Za-z0-9._")
+    +(alnum | blank | punct - ',')
+    //x3::no_skip[+(alnum | blank | punct - ',')]
+    //+char_("A-Za-z0-9._")
     //char_("A-Za-z_") > *char_("A-Za-z0-9._")
     ;
 auto const val_def =

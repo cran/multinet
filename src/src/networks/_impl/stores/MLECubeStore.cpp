@@ -275,6 +275,8 @@ init(
         throw core::OperationNotSupportedException("cannot process interlayer edges on the same layer");
     }
 
+    if (get_(layer1, layer2)) return nullptr; // already initialised
+    
     auto key = std::make_pair(std::min(layer1, layer2), std::max(layer1, layer2));
     std::string name = layer1->vertices()->name + "-" + layer2->vertices()->name;
     interlayer_edges_[key] = std::make_unique<ECube>(name, layer1->vertices(), layer2->vertices(), dir);

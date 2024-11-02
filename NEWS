@@ -1,3 +1,7 @@
+# version 4.2.1
+
+- Fixed I/O bugs.
+
 # version 4.2
 
 - Made conversion of list of layers, actors, and vertices from C++ to R more efficient.

@@ -125,7 +125,7 @@ struct layer_def_act
 
             std::string layer_name1 = layer_spec.at(1);
             std::string layer_name2 = layer_spec.at(2);
-
+            
             if (layer_name1 == layer_name2)
             {
                 auto l = net->layers()->get(layer_name1);
@@ -146,6 +146,7 @@ struct layer_def_act
                 auto dir = layer_type.is_directed ? EdgeDir::DIRECTED : EdgeDir::UNDIRECTED;
                 auto loops = layer_type.allows_loops ? LoopMode::ALLOWED : LoopMode::DISALLOWED;
                 net->layers()->add(layer_name1, dir, loops);
+                
             }
 
             else
@@ -179,6 +180,7 @@ struct layer_def_act
                 }
 
                 net->interlayer_edges()->init(layer1, layer2, dir);
+
             }
         }
     }
@@ -345,26 +347,25 @@ struct vertex_act
         // Get layer (or create it)
         std::string layer_name = vertex.at(1);
         auto layer = net->layers()->get(layer_name);
-
+        
         if (!layer)
         {
             layer = net->layers()->add(layer_name);
         }
-
         std::string actor_name = vertex.at(0);
-
+        
         auto actor = net->actors()->get(actor_name);
-
+        
         if (!actor)
         {
-            actor = layer->vertices()->add(actor_name);
+            layer->vertices()->add(actor_name);
         }
 
         else
         {
             layer->vertices()->add(actor);
         }
-
+        
         // attributes read in pass 2
     }
 };

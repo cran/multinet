@@ -66,7 +66,6 @@ struct vertex_act
 
         std::string actor_name = vertex.at(0);
         auto actor = net->actors()->get(actor_name);
-
         read_attr_values(layer->vertices()->attr(), actor, meta.vertex_attributes[layer_name], vertex, 2);
     }
 };
@@ -92,7 +91,8 @@ struct edge_act
             auto actor1 = net->actors()->get(actor_name1);
             auto actor2 = net->actors()->get(actor_name2);
             auto e = layer->edges()->add(actor1, actor2);
-
+            if (!e) e = layer->edges()->get(actor1, actor2);
+            
             read_attr_values(layer->edges()->attr(), e, meta.intralayer_edge_attributes[layer_name], edge, 3);
 
         }

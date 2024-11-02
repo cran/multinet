@@ -77,60 +77,91 @@ write_multilayer_network(
 
     outfile << std::endl;
 
-    outfile << "#ACTOR ATTRIBUTES" << std::endl;
-
-    for (auto attr: *mnet->actors()->attr())
+    if (mnet->actors()->attr()->size() > 0)
     {
-        outfile << attr->name << sep << core::to_string(attr->type) << std::endl;
-    }
-
-    outfile << std::endl;
-
-    outfile << "#VERTEX ATTRIBUTES" << std::endl;
-
-    for (auto layer=begin; layer!=end; ++layer)
-    {
-        for (auto attr: *(*layer)->vertices()->attr())
-        {
-            outfile << (*layer)->name << sep << attr->name << sep << core::to_string(attr->type) << std::endl;
-        }
-    }
-
-    outfile << std::endl;
-
-    outfile << "#EDGE ATTRIBUTES" << std::endl;
-
-    /*std::set<std::string> global_attributes;
-
-    for (auto attr: *mnet->interlayer_edges()->attr())
-    {
-        global_attributes.insert(attr->name);
-    }*/
-
-    for (auto layer=begin; layer!=end; ++layer)
-    {
-        for (auto attr: *(*layer)->edges()->attr())
-        {
-            /*if (global_attributes.find(attr->name) == global_attributes.end())
-            {
-                continue;
-            }*/
-
-            outfile << (*layer)->name << sep << attr->name << sep
-                    << core::to_string(attr->type) << std::endl;
-        }
-    }
-
-    /*if (!is_multiplex)
-    {
-        for (auto attr: *mnet->interlayer_edges()->attr())
+        outfile << "#ACTOR ATTRIBUTES" << std::endl;
+        
+        for (auto attr: *mnet->actors()->attr())
         {
             outfile << attr->name << sep << core::to_string(attr->type) << std::endl;
         }
-    }*/
+        
+        outfile << std::endl;
+    }
+    
+    bool has_vertex_att = false;
+    
+    for (auto layer=begin; layer!=end; ++layer)
+    {
+        if ((*layer)->vertices()->attr()->size()>0)
+        {
+            has_vertex_att = true;
+        }
+    }
 
-    outfile << std::endl;
-
+    if (has_vertex_att)
+    {
+        outfile << "#VERTEX ATTRIBUTES" << std::endl;
+        
+        for (auto layer=begin; layer!=end; ++layer)
+        {
+            for (auto attr: *(*layer)->vertices()->attr())
+            {
+                outfile << (*layer)->name << sep << attr->name << sep << core::to_string(attr->type) << std::endl;
+            }
+        }
+        
+        outfile << std::endl;
+    }
+    
+    
+    bool has_edge_att = false;
+    
+    
+    for (auto layer=begin; layer!=end; ++layer)
+    {
+        if ((*layer)->edges()->attr()->size()>0)
+        {
+            has_edge_att = true;
+        }
+    }
+    
+    if (has_edge_att)
+    {
+        outfile << "#EDGE ATTRIBUTES" << std::endl;
+        
+        /*std::set<std::string> global_attributes;
+         
+         for (auto attr: *mnet->interlayer_edges()->attr())
+         {
+         global_attributes.insert(attr->name);
+         }*/
+        
+        for (auto layer=begin; layer!=end; ++layer)
+        {
+            for (auto attr: *(*layer)->edges()->attr())
+            {
+                /*if (global_attributes.find(attr->name) == global_attributes.end())
+                 {
+                 continue;
+                 }*/
+                
+                outfile << (*layer)->name << sep << attr->name << sep
+                << core::to_string(attr->type) << std::endl;
+            }
+        }
+        
+        /*if (!is_multiplex)
+         {
+         for (auto attr: *mnet->interlayer_edges()->attr())
+         {
+         outfile << attr->name << sep << core::to_string(attr->type) << std::endl;
+         }
+         }*/
+        
+        outfile << std::endl;
+    }
+    
     outfile << "#ACTORS" << std::endl;
 
     for (auto actor: *mnet->actors())
@@ -148,7 +179,9 @@ write_multilayer_network(
                 break;
 
             case core::AttributeType::STRING:
-                outfile << sep << actor_attrs->get_string(actor,attr->name);
+                if (actor_attrs->get_string(actor,attr->name).value.find(',') != std::string::npos)
+                    outfile << sep << "\"" << actor_attrs->get_string(actor,attr->name) << "\"" ;
+                else outfile << sep <<  actor_attrs->get_string(actor,attr->name);
                 break;
 
             case core::AttributeType::TIME:
@@ -186,7 +219,9 @@ write_multilayer_network(
                     break;
 
                 case core::AttributeType::STRING:
-                    outfile << sep << node_attrs->get_string(actor,attr->name);
+                        if (node_attrs->get_string(actor,attr->name).value.find(',') != std::string::npos)
+                            outfile << sep << "\"" << node_attrs->get_string(actor,attr->name) << "\"" ;
+                        else outfile << sep <<  node_attrs->get_string(actor,attr->name);
                     break;
 
                 case core::AttributeType::TIME:
@@ -220,11 +255,11 @@ write_multilayer_network(
 
             else
             {
-                if (is_multiplex)
-                {
+                //if (is_multiplex)
+                //{
                     outfile << edge->v1->name << sep << (*layer)->name
                             << sep << edge->v2->name << sep << (*layer)->name;
-                }
+                //}
             }
 
             auto edge_attrs = (*layer)->edges()->attr();
@@ -245,7 +280,9 @@ write_multilayer_network(
                     break;
 
                 case core::AttributeType::STRING:
-                    outfile << sep << edge_attrs->get_string(edge,attr->name);
+                    if (edge_attrs->get_string(edge,attr->name).value.find(',') != std::string::npos)
+                        outfile << sep << "\"" << edge_attrs->get_string(edge,attr->name) << "\"" ;
+                    else outfile << sep <<  edge_attrs->get_string(edge,attr->name);
                     break;
 
                 case core::AttributeType::TIME:
@@ -284,7 +321,7 @@ write_multilayer_network(
         }
     }
 
-    outfile << std::endl;
+    //outfile << std::endl;
 
     // INTERLAYER EDGES
 
