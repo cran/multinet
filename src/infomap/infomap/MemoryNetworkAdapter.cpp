@@ -73,7 +73,7 @@ MemoryNetworkAdapter::readExternalHierarchy(std::string filename)
 void
 MemoryNetworkAdapter::readClu(std::string filename)
 {
-    Log() << "Parsing memory node clusters from '" << filename << "'... " << std::flush;
+    //Log() << "Parsing memory node clusters from '" << filename << "'... " << std::flush;
     SafeInFile input(filename.c_str());
     std::string line;
     std::istringstream lineStream;
@@ -133,7 +133,7 @@ MemoryNetworkAdapter::readClu(std::string filename)
 
     if (numNodesNotFound > 0)
     {
-        Log() << "\n -> Warning: " << numNodesNotFound << " memory nodes not found in network.";
+        //Log() << "\n -> Warning: " << numNodesNotFound << " memory nodes not found in network.";
     }
 
 
@@ -153,7 +153,7 @@ MemoryNetworkAdapter::readClu(std::string filename)
         }
     }
 
-    Log() << "\n -> Parsed " << clusterNumber - 1 << " unique clusters for " << clusters.size() << " nodes.";
+    //Log() << "\n -> Parsed " << clusterNumber - 1 << " unique clusters for " << clusters.size() << " nodes.";
 
     // Store the parsed cluster indices in a vector
     std::vector<unsigned int> modules(m_numNodes);
@@ -182,7 +182,7 @@ MemoryNetworkAdapter::readClu(std::string filename)
 
     if (numNonSelectedNodes > 0)
     {
-        Log() << "\n -> Put the rest " << numNonSelectedNodes << " nodes in their own modules";
+        //Log() << "\n -> Put the rest " << numNonSelectedNodes << " nodes in their own modules";
     }
 
     unsigned int numModules = clusterNumber - 1;
@@ -211,7 +211,7 @@ MemoryNetworkAdapter::readClu(std::string filename)
         m_treeData.root()->addChild(moduleNodes[i]);
     }
 
-    Log() << "\n -> Generated " << numModules << " modules." << std::endl;
+    //Log() << "\n -> Generated " << numModules << " modules." << std::endl;
 }
 
 void
@@ -220,7 +220,7 @@ MemoryNetworkAdapter::readHumanReadableTree(std::string filename)
     std::string line;
     std::string buf;
     SafeInFile input(filename.c_str());
-    Log() << "Parsing memory node tree from '" << filename << "'... " << std::flush;
+    //Log() << "Parsing memory node tree from '" << filename << "'... " << std::flush;
 
     std::unique_ptr<NodeBase> root(m_treeData.nodeFactory().createNode("tmpRoot", 1.0, 0.0));
     std::vector<double> flowValues(m_numNodes);
@@ -345,13 +345,13 @@ MemoryNetworkAdapter::readHumanReadableTree(std::string filename)
     if (nodeCount < m_numNodes)
     {
         // Add unassigned nodes to their own modules
-        unsigned int numUnassignedNodes = m_numNodes - nodeCount;
-        Log() << "\n -> Warning: " << numUnassignedNodes << " unassigned nodes are put in their own modules.";
+        //unsigned int numUnassignedNodes = m_numNodes - nodeCount;
+        //Log() << "\n -> Warning: " << numUnassignedNodes << " unassigned nodes are put in their own modules.";
     }
 
     if (numNodesNotFound > 0)
     {
-        Log() << "\n -> Warning: " << numNodesNotFound << " memory nodes not found in network.";
+        //Log() << "\n -> Warning: " << numNodesNotFound << " memory nodes not found in network.";
     }
 
     // Re-root loaded tree
@@ -401,11 +401,11 @@ MemoryNetworkAdapter::readHumanReadableTree(std::string filename)
         }
     }
 
-    Log() << "done! Found " << maxDepth << " levels." << std::endl;
+    //Log() << "done! Found " << maxDepth << " levels." << std::endl;
 
     if (!header.empty())
     {
-        Log(1) << " -> Parsed header: '" << header << "'" << std::endl;
+        //Log(1) << " -> Parsed header: '" << header << "'" << std::endl;
     }
 }
 

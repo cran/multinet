@@ -468,7 +468,7 @@ inline
 void
 InfomapGreedy<InfomapImplementation>::debugPrintInfomapTerms()
 {
-    Log() << "(moduleLength: " << -exit_log_exit << " + " << flow_log_flow << " - " << nodeFlow_log_nodeFlow << " = " << moduleCodelength <<")\n";
+    //Log() << "(moduleLength: " << -exit_log_exit << " + " << flow_log_flow << " - " << nodeFlow_log_nodeFlow << " = " << moduleCodelength <<")\n";
 }
 
 #ifdef NS_INFOMAP

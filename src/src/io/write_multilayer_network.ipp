@@ -331,7 +331,7 @@ write_multilayer_network(
         {
             for (auto layer2=begin; layer2!=end; ++layer2)
             {
-                if (layer1==layer2)
+                if (*layer1 <= *layer2)
                 {
                     continue;
                 }
@@ -339,7 +339,7 @@ write_multilayer_network(
                 if (!mnet->interlayer_edges()->get(*layer1,*layer2)) continue;
                 for (auto edge: *mnet->interlayer_edges()->get((*layer1),(*layer2)))
                 {
-                    outfile << edge->v1->name << sep << (*layer1)->name << sep << edge->v2->name << sep << (*layer2)->name;
+                    outfile << edge->v1->name << sep << edge->c1->name << sep << edge->v2->name << sep << edge->c2->name;
 
                     /*auto edge_attrs = mnet->interlayer_edges()->attr();
 

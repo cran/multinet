@@ -1,3 +1,8 @@
+# version 4.2.2
+
+- abacus has been temporarily removed (the function can still be called, but returns a warning and an empty result). 
+- Minor update for CRAN compatibility.
+
 # version 4.2.1
 
 - Fixed I/O bugs.

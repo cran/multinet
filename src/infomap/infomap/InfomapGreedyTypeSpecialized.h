@@ -332,7 +332,7 @@ InfomapGreedyTypeSpecialized<FlowType, WithMemory>::preClusterMultiplexNetwork(b
         return false;
     }
 
-    Log() << "Pre-cluster multiplex network layer by layer... " << std::endl;
+    //Log() << "Pre-cluster multiplex network layer by layer... " << std::endl;
 
     unsigned int memNodeIndex = 0;
     std::map<StateNode, unsigned int> memNodeToIndex;
@@ -373,7 +373,7 @@ InfomapGreedyTypeSpecialized<FlowType, WithMemory>::preClusterMultiplexNetwork(b
         Network& network = networkIt->second;
         network.setConfig(perLayerConfig);
         network.finalizeAndCheckNetwork(false);
-        Log() << "  Layer " << layer << ": Cluster " << network.numNodes() << " nodes and " << network.numLinks() << " links... ";
+        //Log() << "  Layer " << layer << ": Cluster " << network.numNodes() << " nodes and " << network.numLinks() << " links... ";
 
         Log::setSilent(true);
         InfomapGreedyTypeSpecialized<FlowUndirected, WithoutMemory> infomap(perLayerConfig);
@@ -381,7 +381,7 @@ InfomapGreedyTypeSpecialized<FlowType, WithMemory>::preClusterMultiplexNetwork(b
         infomap.run(network, tree);
         Log::setSilent(isSilent);
 
-        Log() << "-> Codelength " << tree.codelength() << " in " << tree.numTopModules() << " modules.\n";
+        //Log() << "-> Codelength " << tree.codelength() << " in " << tree.numTopModules() << " modules.\n";
 
         for (LeafIterator leafIt(tree.leafIter()); !leafIt.isEnd(); ++leafIt)
         {
@@ -417,7 +417,7 @@ InfomapGreedyTypeSpecialized<FlowType, WithMemory>::preClusterMultiplexNetwork(b
         Super::m_treeData.root()->addChild(moduleNodes[i]);
     }
 
-    Log() << "\n -> Generated " << numModules << " modules." << std::endl;
+    //Log() << "\n -> Generated " << numModules << " modules." << std::endl;
 
     Super::initPreClustering(printResults);
     return true;
@@ -471,7 +471,7 @@ InfomapGreedyTypeSpecialized<FlowType, WithMemory>::aggregateFlowValuesFromLeafT
 
     if (std::abs(sumRootFlow - 1.0) > 1e-10)
     {
-        Log() << "Warning, aggregated physical flow is not exactly 1.0, but " << sumRootFlow << ".\n";
+        //Log() << "Warning, aggregated physical flow is not exactly 1.0, but " << sumRootFlow << ".\n";
     }
 
     return numLevels;
@@ -1083,8 +1083,8 @@ InfomapGreedyTypeSpecialized<FlowType, WithMemory>::saveHierarchicalNetwork(Hier
     std::vector<unsigned int> memNodeIndexToLeafModuleIndex(Super::m_treeData.numLeafNodes());
     unsigned int numCondensedNodes = 0;
 
-    Log() << "merging " << Super::m_treeData.numLeafNodes() << " memory nodes within " <<
-          leafModules.size() << " modules..." << std::flush;
+    //Log() << "merging " << Super::m_treeData.numLeafNodes() << " memory nodes within " <<
+    //      leafModules.size() << " modules..." << std::flush;
 
     // Aggregate memory nodes with the same physical node if in the same module
     for (unsigned int i = 0; i < leafModules.size(); ++i)
@@ -1112,7 +1112,7 @@ InfomapGreedyTypeSpecialized<FlowType, WithMemory>::saveHierarchicalNetwork(Hier
         }
     }
 
-    Log() << " to " << numCondensedNodes << " nodes... " << std::flush;
+    //Log() << " to " << numCondensedNodes << " nodes... " << std::flush;
     ioNetwork.prepareAddLeafNodes(numCondensedNodes);
 
     unsigned int sortedNodeIndex = 0;
@@ -1275,7 +1275,7 @@ InfomapGreedyTypeSpecialized<FlowType, WithMemory>::printFlowNetwork(std::ostrea
     else
     {
         //TODO: Implement printing of flow network for unexpanded memory network!
-        Log() << "Notice: Printing flow network currently only implemented for expanded memory network.\n";
+        //Log() << "Notice: Printing flow network currently only implemented for expanded memory network.\n";
     }
 
     //	std::map<unsigned int, PhysNode> physicalNetwork;

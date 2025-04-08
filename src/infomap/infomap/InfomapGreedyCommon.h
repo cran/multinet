@@ -209,7 +209,7 @@ InfomapGreedyCommon<InfomapGreedyDerivedType>::aggregateFlowValuesFromLeafToRoot
 
     if (std::abs(rootData.flow - 1.0) > 1e-10)
     {
-        Log() << "Warning, aggregated flow is not exactly 1.0, but " << rootData.flow << ".\n";
+        //Log() << "Warning, aggregated flow is not exactly 1.0, but " << rootData.flow << ".\n";
     }
 
     // Aggregate enter and exit flow between modules

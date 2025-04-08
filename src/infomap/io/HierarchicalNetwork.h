@@ -71,7 +71,7 @@ numeric_cast(U value)
     //				static_cast<T>(value);
     if (value > std::numeric_limits<T>::max())
     {
-        Log() << " [Warning: truncating internal serial network size] ";
+        //Log() << " [Warning: truncating internal serial network size] ";
         return std::numeric_limits<T>::max();
     }
 
@@ -1100,9 +1100,9 @@ class HierarchicalNetwork
     void
     sortLeafNodes()
     {
-        Log() << "Sort leaf nodes according to original order... ";
+        //Log() << "Sort leaf nodes according to original order... ";
         std::sort(m_leafNodes.begin(), m_leafNodes.end(), compareLeafNodePredicate);
-        Log() << "done!" << std::endl;
+        //Log() << "done!" << std::endl;
     }
 
     Config m_config;

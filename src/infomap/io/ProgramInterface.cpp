@@ -69,38 +69,38 @@ ProgramInterface::~ProgramInterface()
 void
 ProgramInterface::exitWithUsage(bool showAdvanced)
 {
-    Log() << "Name:" << std::endl;
-    Log() << "        " << m_programName << " - " << m_shortProgramDescription << std::endl;
-    Log() << "\nUsage:" << std::endl;
-    Log() << "        " << m_executableName;
+    //Log() << "Name:" << std::endl;
+    //Log() << "        " << m_programName << " - " << m_shortProgramDescription << std::endl;
+    //Log() << "\nUsage:" << std::endl;
+    //Log() << "        " << m_executableName;
 
     for (unsigned int i = 0; i < m_nonOptionArguments.size(); ++i)
         if (showAdvanced || !m_nonOptionArguments[i]->isAdvanced)
         {
-            Log() << " " << m_nonOptionArguments[i]->variableName;
+            //Log() << " " << m_nonOptionArguments[i]->variableName;
         }
 
     if (!m_optionArguments.empty())
     {
-        Log() << " [options]";
+        //Log() << " [options]";
     }
 
-    Log() << std::endl;
+    //Log() << std::endl;
 
     if (m_programDescription != "")
     {
-        Log() << "\nDescription:\n        " << m_programDescription << std::endl;
+        //Log() << "\nDescription:\n        " << m_programDescription << std::endl;
     }
 
     for (unsigned int i = 0; i < m_nonOptionArguments.size(); ++i)
         if (showAdvanced || !m_nonOptionArguments[i]->isAdvanced)
         {
-            Log() << "\n[" << m_nonOptionArguments[i]->variableName << "]\n    " << m_nonOptionArguments[i]->description << std::endl;
+            //Log() << "\n[" << m_nonOptionArguments[i]->variableName << "]\n    " << m_nonOptionArguments[i]->description << std::endl;
         }
 
     if (!m_optionArguments.empty())
     {
-        Log() << "\n[options]" << std::endl;
+        //Log() << "\n[options]" << std::endl;
     }
 
     // First stringify the options part to get the maximum length
@@ -129,49 +129,49 @@ ProgramInterface::exitWithUsage(bool showAdvanced)
 
         if (showAdvanced || !opt.isAdvanced)
         {
-            Log() << optionStrings[i] << std::string(numSpaces, ' ') << opt.description;
+            //Log() << optionStrings[i] << std::string(numSpaces, ' ') << opt.description;
 
             if (!opt.printNumericValue().empty())
             {
-                Log() << " (Default: " << opt.printNumericValue() << ")";
+                //Log() << " (Default: " << opt.printNumericValue() << ")";
             }
 
-            Log() << "\n";
+            //Log() << "\n";
         }
     }
 
-    Log() << std::endl;
+    //Log() << std::endl;
     //std::exit(0);
 }
 
 void
 ProgramInterface::exitWithVersionInformation()
 {
-    Log() << m_programName << " version " << m_programVersion << std::endl;
-    Log() << "See www.mapequation.org for more info." << std::endl;
+    //Log() << m_programName << " version " << m_programVersion << std::endl;
+    //Log() << "See www.mapequation.org for more info." << std::endl;
     //std::exit(0);
 }
 
 void
 ProgramInterface::exitWithError(std::string message)
 {
-    Log() << m_programName << " version " << m_programVersion << std::endl;
+    //Log() << m_programName << " version " << m_programVersion << std::endl;
     //std::cerr << message;
     (void)message; // replacement to disable messages
-    Log() << "\nUsage: " << m_executableName;
+    //Log() << "\nUsage: " << m_executableName;
 
     for (unsigned int i = 0; i < m_nonOptionArguments.size(); ++i)
         if (!m_nonOptionArguments[i]->isAdvanced)
         {
-            Log() << " " << m_nonOptionArguments[i]->variableName;
+            //Log() << " " << m_nonOptionArguments[i]->variableName;
         }
 
     if (!m_optionArguments.empty())
     {
-        Log() << " [options]";
+        //Log() << " [options]";
     }
 
-    Log() << ". Run with option '-h' for more information." << std::endl;
+    //Log() << ". Run with option '-h' for more information." << std::endl;
     //std::exit(1);
 }
 

@@ -132,7 +132,7 @@ MultiplexNetwork::readInputData(std::string filename)
 void
 MultiplexNetwork::parseMultiplexNetwork(std::string filename)
 {
-    Log() << "Parsing multilayer network from file '" << filename << "'... " << std::flush;
+    //Log() << "Parsing multilayer network from file '" << filename << "'... " << std::flush;
 
     SafeInFile input(filename.c_str());
 
@@ -165,7 +165,7 @@ MultiplexNetwork::parseMultiplexNetwork(std::string filename)
 
         else if (header == "*Multiplex" || header == "*multiplex")
         {
-            Log() << "\nWarning: Header '*Multiplex' has been deprecated, use *Multilayer\n";
+            //Log() << "\nWarning: Header '*Multiplex' has been deprecated, use *Multilayer\n";
             line = parseMultiplexLinks(input);
         }
 
@@ -175,7 +175,7 @@ MultiplexNetwork::parseMultiplexNetwork(std::string filename)
         }
     }
 
-    Log() << "done!\n";
+    //Log() << "done!\n";
 
     finalizeAndCheckNetwork();
 
@@ -195,7 +195,7 @@ MultiplexNetwork::parseMultipleNetworks()
     for (unsigned int i = 0; i < networkFilenames.size(); ++i)
     {
         m_networks.push_back(Network(m_config));
-        Log() << "[Network layer " << (i + 1) << " from file '" << networkFilenames[i] << "']:\n";
+        //Log() << "[Network layer " << (i + 1) << " from file '" << networkFilenames[i] << "']:\n";
         m_networks[i].readInputData(networkFilenames[i]);
     }
 
@@ -203,7 +203,7 @@ MultiplexNetwork::parseMultipleNetworks()
 
     unsigned int numInterLinksFound = 0; //TODO: Assume last additional data is inter-layer data if #additionalInputs > 1 && multiplexRelaxRate < 0
 
-    Log() << "Generating memory network... " << std::flush;
+    //Log() << "Generating memory network... " << std::flush;
 
     bool simulateInterLayerLinks = m_config.multiplexJSRelaxRate >= 0.0 ||  m_config.multiplexRelaxRate >= 0.0 || numInterLinksFound == 0;
 
@@ -266,21 +266,21 @@ MultiplexNetwork::adjustForDifferentNumberOfNodes()
 
     if (differentNodeCount && m_config.multiplexAddMissingNodes)
     {
-        Log() << "Adjusting to same set of physical nodes in each layer... " << std::flush;
+        //Log() << "Adjusting to same set of physical nodes in each layer... " << std::flush;
         unsigned int numAdjusted = 0;
 
         for (unsigned int layerIndex = 0; layerIndex < m_networks.size(); ++layerIndex)
         {
             if (m_networks[layerIndex].numNodes() != maxNumNodes)
             {
-                //				Log() << "  Layer " << (layerIndex + 1) << ": " <<
+                //				//Log() << "  Layer " << (layerIndex + 1) << ": " <<
                 //						m_networks[layerIndex].numNodes() << " -> " << maxNumNodes << " nodes." << std::endl;
                 ++numAdjusted;
                 m_networks[layerIndex].finalizeAndCheckNetwork(false, maxNumNodes);
             }
         }
 
-        Log() << "done! Adjusted " << numAdjusted << "/" << m_networks.size() << " networks to have " << maxNumNodes << " nodes." << std::endl;
+        //Log() << "done! Adjusted " << numAdjusted << "/" << m_networks.size() << " networks to have " << maxNumNodes << " nodes." << std::endl;
     }
 
     return maxNumNodes;
@@ -326,7 +326,7 @@ MultiplexNetwork::createIntraLinksToNeighbouringNodesInTargetLayer(unsigned int 
     LinkMap::const_iterator targetLayerOutLinkIt = targetLayerLinks.find(nodeIndex);
     bool linkAdded = false;
 
-    // Log() << "    -> add state link between (" << sourceLayer << "," << nodeIndex << ") to (" << targetLayer << ", *)\n";
+    // //Log() << "    -> add state link between (" << sourceLayer << "," << nodeIndex << ") to (" << targetLayer << ", *)\n";
     if (targetLayerOutLinkIt != targetLayerLinks.end())
     {
         const std::map<unsigned int, double>& targetLayerOutLinks = targetLayerOutLinkIt->second;
@@ -341,7 +341,7 @@ MultiplexNetwork::createIntraLinksToNeighbouringNodesInTargetLayer(unsigned int 
 
             // Add weight also as teleportation weight to first state node
             addStateLink(sourceLayer, nodeIndex, targetLayer, targetLayerTargetNodeIndex, interIntraLinkWeight, stateNodeWeight, 0.0);
-            // Log() << "      -> added state link (" << sourceLayer << "," << nodeIndex << ") to (" << targetLayer << "," << targetLayerTargetNodeIndex << "), interIntraLinkWeight: " << interIntraLinkWeight << ", stateNodeWeight: " << stateNodeWeight << "\n";
+            // //Log() << "      -> added state link (" << sourceLayer << "," << nodeIndex << ") to (" << targetLayer << "," << targetLayerTargetNodeIndex << "), interIntraLinkWeight: " << interIntraLinkWeight << ", stateNodeWeight: " << stateNodeWeight << "\n";
             linkAdded = true;
         }
     }
@@ -352,7 +352,7 @@ MultiplexNetwork::createIntraLinksToNeighbouringNodesInTargetLayer(unsigned int 
 void
 MultiplexNetwork::generateMemoryNetworkWithInterLayerLinksFromData()
 {
-    Log() << "Generating memory network with inter layer links from data... " << std::flush;
+    //Log() << "Generating memory network with inter layer links from data... " << std::flush;
     // First generate memory links from intra links (from ordinary links within each network)
     std::vector<std::vector<double> > sumOutWeights(m_networks.size());
 
@@ -395,11 +395,11 @@ MultiplexNetwork::generateMemoryNetworkWithInterLayerLinksFromData()
         }
     }
 
-    Log() << "connecting layers... " << std::flush;
+    //Log() << "connecting layers... " << std::flush;
 
     if (m_config.isUndirected())
     {
-        Log() << "using undirected intra-layer links... " << std::flush;
+        //Log() << "using undirected intra-layer links... " << std::flush;
     }
 
 
@@ -521,11 +521,11 @@ MultiplexNetwork::generateMemoryNetworkWithInterLayerLinksFromData()
         }
     }
 
-    Log() << "done!" << std::endl;
+    //Log() << "done!" << std::endl;
 
     if (numInterLinksIgnored > 0)
     {
-        Log() << "  -> Warning: " << numInterLinksIgnored << " links defined as inter-layer links was same-layer links and ignored.\n";
+        //Log() << "  -> Warning: " << numInterLinksIgnored << " links defined as inter-layer links was same-layer links and ignored.\n";
     }
 }
 
@@ -535,7 +535,7 @@ MultiplexNetwork::generateMemoryNetworkWithSimulatedInterLayerLinks()
     // Simulate inter-layer links
     double relaxRate = m_config.multiplexRelaxRate < 0 ? 0.15 : m_config.multiplexRelaxRate; //TODO: Set default in config and use separate bool
 
-    Log() << "Generating memory network with multilayer relax rate " << relaxRate << "... " << std::flush;
+    //Log() << "Generating memory network with multilayer relax rate " << relaxRate << "... " << std::flush;
 
     std::vector<LinkMap> oppositeLinkMaps;
 
@@ -561,7 +561,7 @@ MultiplexNetwork::generateMemoryNetworkWithSimulatedInterLayerLinks()
             sumOutLinkWeightAllLayers += m_networks[i].sumLinkOutWeight()[nodeIndex];
         }
 
-        // Log() << "\n===== Node index: " << nodeIndex << " / " << (m_numNodes - 1) << " ======" <<
+        // //Log() << "\n===== Node index: " << nodeIndex << " / " << (m_numNodes - 1) << " ======" <<
         // "  sumOutLinkWeightAllLayers: " << sumOutLinkWeightAllLayers << "\n";
 
         for (unsigned int layer1 = 0; layer1 < m_networks.size(); ++layer1)
@@ -581,14 +581,14 @@ MultiplexNetwork::generateMemoryNetworkWithSimulatedInterLayerLinks()
 
             if (!m_networks[layer1].haveNode(nodeIndex))
             {
-                // Log() << "  SKIP layer " << layer1 << ", no node " << nodeIndex << "!\n";
+                // //Log() << "  SKIP layer " << layer1 << ", no node " << nodeIndex << "!\n";
                 continue;
             }
 
 
             double sumOutLinkWeightLayer1 = m_networks[layer1].sumLinkOutWeight()[nodeIndex];
 
-            // Log() << "  Layer " << layer1 << ", sumOutLinkWeight: " << sumOutLinkWeightLayer1 << "\n";
+            // //Log() << "  Layer " << layer1 << ", sumOutLinkWeight: " << sumOutLinkWeightLayer1 << "\n";
 
             // StateNode stateSource(layer1, nodeIndex);
             //			StateLinkMap::iterator stateSourceIt = m_stateLinks.lower_bound(stateSource);
@@ -610,7 +610,7 @@ MultiplexNetwork::generateMemoryNetworkWithSimulatedInterLayerLinks()
 
                 double stateNodeWeightNormalizationFactor = 1.0;
 
-                // Log() << "    -> Layer " << layer2 << ", linkWeightNormalizationFactor: " << linkWeightNormalizationFactor << "\n";
+                // //Log() << "    -> Layer " << layer2 << ", linkWeightNormalizationFactor: " << linkWeightNormalizationFactor << "\n";
 
                 createIntraLinksToNeighbouringNodesInTargetLayer(layer1, nodeIndex, layer2, m_networks[layer2].linkMap(), linkWeightNormalizationFactor, stateNodeWeightNormalizationFactor);
 
@@ -623,7 +623,7 @@ MultiplexNetwork::generateMemoryNetworkWithSimulatedInterLayerLinks()
         }
     }
 
-    Log() << "done!" << std::endl;
+    //Log() << "done!" << std::endl;
 }
 
 void
@@ -632,7 +632,7 @@ MultiplexNetwork::generateMemoryNetworkWithJensenShannonSimulatedInterLayerLinks
     // Simulate inter-layer links
     double jsrelaxRate = m_config.multiplexJSRelaxRate < 0 ? 0.15 : m_config.multiplexJSRelaxRate; //TODO: Set default in config and use separate bool
 
-    Log() << "Generating memory network with Jensen-Shannon-weighted multilayer relax rate " << jsrelaxRate << "... " << std::flush;
+    //Log() << "Generating memory network with Jensen-Shannon-weighted multilayer relax rate " << jsrelaxRate << "... " << std::flush;
 
     std::vector<LinkMap> oppositeLinkMaps;
 
@@ -841,7 +841,7 @@ MultiplexNetwork::generateMemoryNetworkWithJensenShannonSimulatedInterLayerLinks
         }
     }
 
-    Log() << "done!" << std::endl;
+    //Log() << "done!" << std::endl;
 }
 
 double
@@ -935,7 +935,7 @@ MultiplexNetwork::calculateJensenShannonDivergence(bool &intersect, const IntraL
         div = 1.0;
     }
 
-    // Log() << "\n" << div << " " << (pi1+pi2) << " " << h12 << " " << pi1 << " " << h1 << " " << pi2 << " " << h2;
+    // //Log() << "\n" << div << " " << (pi1+pi2) << " " << h12 << " " << pi1 << " " << h1 << " " << pi2 << " " << h2;
 
     return div;
 
@@ -980,7 +980,7 @@ MultiplexNetwork::calculateJensenShannonDivergence(bool &intersect, std::vector<
         layer2linkIt = getUndirLinkItPtr(layer2OutLinkItVec);
 
         int diff = (*layer1linkIt)->first - (*layer2linkIt)->first;
-        // Log() << "\n" << (*layer1linkIt)->first << " " << (*layer1linkIt)->second << " " << (*layer2linkIt)->first << " " << (*layer2linkIt)->second;
+        // //Log() << "\n" << (*layer1linkIt)->first << " " << (*layer1linkIt)->second << " " << (*layer2linkIt)->first << " " << (*layer2linkIt)->second;
 
         if (diff < 0)
         {
@@ -1115,7 +1115,7 @@ MultiplexNetwork::addMemoryNetworkFromMultiplexLinks()
         return;
     }
 
-    Log() << "Adding memory network from multilayer links... " << std::flush;
+    //Log() << "Adding memory network from multilayer links... " << std::flush;
 
     for (MultiplexLinkMap::const_iterator it(m_multiplexLinks.begin()); it != m_multiplexLinks.end(); ++it)
     {
@@ -1130,7 +1130,7 @@ MultiplexNetwork::addMemoryNetworkFromMultiplexLinks()
         }
     }
 
-    Log() << "done!" << std::endl;
+    //Log() << "done!" << std::endl;
 }
 
 std::string
@@ -1322,17 +1322,17 @@ MultiplexNetwork::finalizeAndCheckNetwork(bool printSummary)
 {
     if (!m_networks.empty())
     {
-        Log() << " --> Found " << m_numIntraLinksFound << " intra-network links in " << m_networks.size() << " layers.\n";
+        //Log() << " --> Found " << m_numIntraLinksFound << " intra-network links in " << m_networks.size() << " layers.\n";
     }
 
     if (!m_interLinkLayers.empty())
     {
-        Log() << " --> Found " << m_numInterLinksFound << " inter-network links in " << m_interLinkLayers.size() << " layers.\n";
+        //Log() << " --> Found " << m_numInterLinksFound << " inter-network links in " << m_interLinkLayers.size() << " layers.\n";
     }
 
     if (!m_multiplexLinkLayers.empty())
     {
-        Log() << " --> Found " << m_numMultiplexLinksFound << " multilayer links in " << m_multiplexLinkLayers.size() << " layers.\n";
+        //Log() << " --> Found " << m_numMultiplexLinksFound << " multilayer links in " << m_multiplexLinkLayers.size() << " layers.\n";
     }
 
     if (!m_interLinkLayers.empty())
@@ -1357,7 +1357,7 @@ MultiplexNetwork::finalizeAndCheckNetwork(bool printSummary)
         {
             if (printLayerSummary)
             {
-                Log() << "Intra-network links on layer " << (layerIndex + 1) << ": " << std::flush;
+                //Log() << "Intra-network links on layer " << (layerIndex + 1) << ": " << std::flush;
             }
 
             m_networks[layerIndex].finalizeAndCheckNetwork(false);

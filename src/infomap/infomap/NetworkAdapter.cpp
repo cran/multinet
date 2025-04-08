@@ -90,7 +90,7 @@ NetworkAdapter::readClu(std::string filename)
         return;
     }
 
-    Log() << "Parsing '" << filename << "'... " << std::flush;
+    //Log() << "Parsing '" << filename << "'... " << std::flush;
     ClusterReader cluReader(m_config.zeroBasedNodeNumbers);
     cluReader.readData(filename);
     const std::map<unsigned int, unsigned int>& clusters = cluReader.clusters();
@@ -100,11 +100,11 @@ NetworkAdapter::readClu(std::string filename)
     // 	throw InputDomainError(io::Str() << "Max node index in cluster file is " << cluReader.maxNodeIndex() <<
     // 			" but there are only " << m_numNodes << " in the network.");
 
-    Log() << "done!";
+    //Log() << "done!";
 
     if (cluReader.numParsedRows() > clusters.size())
     {
-        Log() << "\n -> Warning: " << (cluReader.numParsedRows() - clusters.size()) << " duplicate node indices!";
+        //Log() << "\n -> Warning: " << (cluReader.numParsedRows() - clusters.size()) << " duplicate node indices!";
     }
 
 
@@ -132,7 +132,7 @@ NetworkAdapter::readClu(std::string filename)
         }
     }
 
-    Log() << "\n -> Parsed " << clusterNumber - 1 << " unique clusters for " << clusters.size() << " nodes.";
+    //Log() << "\n -> Parsed " << clusterNumber - 1 << " unique clusters for " << clusters.size() << " nodes.";
 
     // Store the parsed cluster indices in a vector
     std::vector<unsigned int> modules(m_numNodes);
@@ -158,7 +158,7 @@ NetworkAdapter::readClu(std::string filename)
 
     if (numNodesNotFound > 0)
     {
-        Log() << "\n -> Warning: " << numNodesNotFound << " nodes not found in network.";
+        //Log() << "\n -> Warning: " << numNodesNotFound << " nodes not found in network.";
     }
 
     // Put non-selected nodes (if any) in its own module
@@ -176,7 +176,7 @@ NetworkAdapter::readClu(std::string filename)
 
     if (numNonSelectedNodes > 0)
     {
-        Log() << "\n -> Put the rest " << numNonSelectedNodes << " nodes in their own modules";
+        //Log() << "\n -> Put the rest " << numNonSelectedNodes << " nodes in their own modules";
     }
 
     unsigned int numModules = clusterNumber - 1;
@@ -205,13 +205,13 @@ NetworkAdapter::readClu(std::string filename)
         m_treeData.root()->addChild(moduleNodes[i]);
     }
 
-    Log() << "\n -> Generated " << numModules << " modules." << std::endl;
+    //Log() << "\n -> Generated " << numModules << " modules." << std::endl;
 }
 
 void
 NetworkAdapter::readBipartiteClu(std::string filename)
 {
-    Log() << "Parsing '" << filename << "'... " << std::flush;
+    //Log() << "Parsing '" << filename << "'... " << std::flush;
     BipartiteClusterReader cluReader(m_config.zeroBasedNodeNumbers);
     cluReader.readData(filename);
     const std::map<unsigned int, unsigned int>& nClusters = cluReader.clusters();
@@ -228,13 +228,13 @@ NetworkAdapter::readBipartiteClu(std::string filename)
         throw InputDomainError(io::Str() << "Max feature node index in cluster file is " << cluReader.maxFeatureNodeIndex() <<
                                " but there are only " << numFeatureNodes << " feature nodes in the network.");
 
-    Log() << "done!";
+    //Log() << "done!";
 
     unsigned int numMappedNodes = nClusters.size() + fClusters.size();
 
     if (cluReader.numParsedRows() > numMappedNodes)
     {
-        Log() << "\n -> Warning: " << (cluReader.numParsedRows() - numMappedNodes) << " duplicate node indices!";
+        //Log() << "\n -> Warning: " << (cluReader.numParsedRows() - numMappedNodes) << " duplicate node indices!";
     }
 
 
@@ -266,7 +266,7 @@ NetworkAdapter::readBipartiteClu(std::string filename)
         }
     }
 
-    Log() << "\n -> Parsed " << clusterNumber - 1 << " unique clusters for " << numMappedNodes << " nodes.";
+    //Log() << "\n -> Parsed " << clusterNumber - 1 << " unique clusters for " << numMappedNodes << " nodes.";
 
     // Store the parsed cluster indices in a vector
     std::vector<unsigned int> modules(m_numNodes);
@@ -303,7 +303,7 @@ NetworkAdapter::readBipartiteClu(std::string filename)
 
     if (numNonSelectedNodes > 0)
     {
-        Log() << "\n -> Put the rest " << numNonSelectedNodes << " nodes in their own modules";
+        //Log() << "\n -> Put the rest " << numNonSelectedNodes << " nodes in their own modules";
     }
 
     unsigned int numModules = clusterNumber - 1;
@@ -332,7 +332,7 @@ NetworkAdapter::readBipartiteClu(std::string filename)
         m_treeData.root()->addChild(moduleNodes[i]);
     }
 
-    Log() << "\n -> Generated " << numModules << " modules." << std::endl;
+    //Log() << "\n -> Generated " << numModules << " modules." << std::endl;
 }
 
 void
@@ -341,7 +341,7 @@ NetworkAdapter::readHumanReadableTree(std::string filename)
     std::string line;
     std::string buf;
     SafeInFile input(filename.c_str());
-    Log() << "Parsing tree '" << filename << "'... " << std::flush;
+    //Log() << "Parsing tree '" << filename << "'... " << std::flush;
 
     std::unique_ptr<NodeBase> root(m_treeData.nodeFactory().createNode("tmpRoot", 1.0, 0.0));
     std::vector<double> flowValues(m_numNodes);
@@ -470,13 +470,13 @@ NetworkAdapter::readHumanReadableTree(std::string filename)
     if (nodeCount < m_numNodes)
     {
         // Add unassigned nodes to their own modules
-        unsigned int numUnassignedNodes = m_numNodes - nodeCount;
-        Log() << "\n -> Warning: " << numUnassignedNodes << " unassigned nodes are put in their own modules.";
+        //unsigned int numUnassignedNodes = m_numNodes - nodeCount;
+        //Log() << "\n -> Warning: " << numUnassignedNodes << " unassigned nodes are put in their own modules.";
     }
 
     if (numNodesNotFound > 0)
     {
-        Log() << "\n -> Warning: " << numNodesNotFound << " nodes not found in network.";
+        //Log() << "\n -> Warning: " << numNodesNotFound << " nodes not found in network.";
     }
 
     // Re-root loaded tree
@@ -526,11 +526,11 @@ NetworkAdapter::readHumanReadableTree(std::string filename)
         }
     }
 
-    Log() << "done! Found " << maxDepth << " levels." << std::endl;
+    //Log() << "done! Found " << maxDepth << " levels." << std::endl;
 
     if (!header.empty())
     {
-        Log(1) << " -> Parsed header: '" << header << "'" << std::endl;
+        //Log(1) << " -> Parsed header: '" << header << "'" << std::endl;
     }
 }
 

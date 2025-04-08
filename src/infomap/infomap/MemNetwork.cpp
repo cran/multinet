@@ -72,7 +72,7 @@ MemNetwork::readInputData(std::string filename)
 void
 MemNetwork::parseTrigram(std::string filename)
 {
-    Log() << "Parsing directed trigram from file '" << filename << "'... " << std::flush;
+    ////Log() << "Parsing directed trigram from file '" << filename << "'... " << std::flush;
     string line;
     string buf;
     SafeInFile input(filename.c_str());
@@ -140,7 +140,7 @@ MemNetwork::parseTrigram(std::string filename)
         }
     }
 
-    Log() << "done!" << std::endl;
+    ////Log() << "done!" << std::endl;
 
     finalizeAndCheckNetwork();
 
@@ -149,8 +149,8 @@ MemNetwork::parseTrigram(std::string filename)
 void
 MemNetwork::parseStateNetwork(std::string filename)
 {
-    Log() << "Parsing state network from file '" <<
-          filename << "'... " << std::flush;
+    //Log() << "Parsing state network from file '" <<
+       //   filename << "'... " << std::flush;
 
     SafeInFile input(filename.c_str());
 
@@ -188,7 +188,7 @@ MemNetwork::parseStateNetwork(std::string filename)
         {
             if (!m_config.parseAsUndirected())
             {
-                Log() << "\n --> Notice: Links marked as undirected but parsed as directed.\n";
+                //Log() << "\n --> Notice: Links marked as undirected but parsed as directed.\n";
             }
 
             line = parseStateLinks(input);
@@ -196,19 +196,19 @@ MemNetwork::parseStateNetwork(std::string filename)
 
         else if (header == "*MemoryNodes" || header == "*memorynodes")
         {
-            Log() << "\n --> Notice: Skip content under " << header << ". ";
+            //Log() << "\n --> Notice: Skip content under " << header << ". ";
             line = Network::skipUntilHeader(input);
         }
 
         else if (header == "*DanglingStates" || header == "*danglingstates")
         {
-            Log() << "\n --> Notice: Skip content under " << header << ". ";
+            //Log() << "\n --> Notice: Skip content under " << header << ". ";
             line = Network::skipUntilHeader(input);
         }
 
         else if (header == "*Contexts" || header == "*contexts")
         {
-            Log() << "\n --> Notice: Skip content under " << header << ". ";
+            //Log() << "\n --> Notice: Skip content under " << header << ". ";
             line = Network::skipUntilHeader(input);
         }
 
@@ -218,7 +218,7 @@ MemNetwork::parseStateNetwork(std::string filename)
         }
     }
 
-    Log() << "done!" << std::endl;
+    //Log() << "done!" << std::endl;
 
     finalizeAndCheckNetwork();
 }
@@ -331,7 +331,7 @@ MemNetwork::parseStateLinks(std::ifstream& file)
 void
 MemNetwork::simulateMemoryFromOrdinaryNetwork()
 {
-    Log() << "Simulating memory from ordinary network by chaining pair of overlapping links to trigrams... " << std::flush;
+    //Log() << "Simulating memory from ordinary network by chaining pair of overlapping links to trigrams... " << std::flush;
 
     // Reset some data from ordinary network
     m_totalLinkWeight = 0.0;
@@ -340,7 +340,7 @@ MemNetwork::simulateMemoryFromOrdinaryNetwork()
 
     if (m_config.originallyUndirected)
     {
-        Log() << "(inflating undirected network... " << std::flush;
+        //Log() << "(inflating undirected network... " << std::flush;
         LinkMap oldNetwork;
         oldNetwork.swap(m_links);
 
@@ -361,7 +361,7 @@ MemNetwork::simulateMemoryFromOrdinaryNetwork()
 
         // Dispose old network from memory
         LinkMap().swap(oldNetwork);
-        Log() << ") " << std::flush;
+        //Log() << ") " << std::flush;
     }
 
     for (LinkMap::const_iterator linkIt(m_links.begin()); linkIt != m_links.end(); ++linkIt)
@@ -403,7 +403,7 @@ MemNetwork::simulateMemoryFromOrdinaryNetwork()
         }
     }
 
-    Log() << "done!" << std::endl;
+    //Log() << "done!" << std::endl;
 }
 
 void
@@ -414,9 +414,9 @@ MemNetwork::simulateMemoryToIncompleteData()
         return;
     }
 
-    Log() << "\n  -> Found " << m_numStateLinksFound << " trigrams with " <<
-          m_numIncompleteStateLinksFound << " incomplete trigrams.";
-    Log() << "\n  -> Patching " << m_numIncompleteStateLinks << " incomplete trigrams.." << std::flush;
+    //Log() << "\n  -> Found " << m_numStateLinksFound << " trigrams with " <<
+       //   m_numIncompleteStateLinksFound << " incomplete trigrams.";
+    //Log() << "\n  -> Patching " << m_numIncompleteStateLinks << " incomplete trigrams.." << std::flush;
 
     // Store all incomplete data on a compact array, with fast mapping from incomplete link source index to the compact index
     std::vector<std::deque<ComplementaryData> > complementaryData(m_numIncompleteStateLinks);
@@ -437,7 +437,7 @@ MemNetwork::simulateMemoryToIncompleteData()
         }
     }
 
-    Log() << "." << std::endl;
+    //Log() << "." << std::endl;
     unsigned int lastProgress = 0;
     unsigned int linkCount = 0;
 
@@ -512,15 +512,15 @@ MemNetwork::simulateMemoryToIncompleteData()
 
             if (progress != lastProgress)
             {
-                Log() << "\r    -> Collecting matches... (" << progress * 0.1 << "%)      " << std::flush;
+                //Log() << "\r    -> Collecting matches... (" << progress * 0.1 << "%)      " << std::flush;
                 lastProgress = progress;
             }
 
         }
     }
 
-    Log() << "\r    -> Found " << numExactMatches << " exact, " << numPartialMatches << " partial and " <<
-          numShiftedMatches << " shifted matches.\n" << std::flush;
+    //Log() << "\r    -> Found " << numExactMatches << " exact, " << numPartialMatches << " partial and " <<
+      //    numShiftedMatches << " shifted matches.\n" << std::flush;
     linkCount = 0;
     unsigned int numStateLinksBefore = m_numStateLinks;
     unsigned int tempNumStateLinksBefore = 0;
@@ -604,23 +604,23 @@ MemNetwork::simulateMemoryToIncompleteData()
 
         if (progress != lastProgress)
         {
-            Log() << "\r    -> Patching network from collected matches in priority... (" << progress * 0.1 << "%)      " << std::flush;
+            //Log() << "\r    -> Patching network from collected matches in priority... (" << progress * 0.1 << "%)      " << std::flush;
             lastProgress = progress;
         }
     }
 
-    Log() << "\n  -> " << m_numStateLinks - numStateLinksBefore << " memory links added and " <<
-          m_numAggregatedStateLinks - numAggregatedLinksBefore << " updated:" <<
-          "\n    -> " << numIncompleteLinksWithExactMatches << " incomplete " << io::toPlural("link", numIncompleteLinksWithExactMatches) << " patched by " <<
-          numExactAggregations << " updates and " << numExactLinksAdded << " new links from exact matches." <<
-          "\n    -> " << numIncompleteLinksWithPartialMatches << " incomplete " << io::toPlural("link", numIncompleteLinksWithPartialMatches) << " patched by " <<
-          numPartialAggregations << " updates and " << numPartialLinksAdded << " new links from partial matches." <<
-          "\n    -> " << numIncompleteLinksWithShiftedMatches << " incomplete " << io::toPlural("link", numIncompleteLinksWithShiftedMatches) << " patched by " <<
-          numShiftedAggregations << " updates and " << numShiftedLinksAdded << " new links from shifted matches." << std::flush;
+    //Log() << "\n  -> " << m_numStateLinks - numStateLinksBefore << " memory links added and " <<
+       //   m_numAggregatedStateLinks - numAggregatedLinksBefore << " updated:" <<
+        //  "\n    -> " << numIncompleteLinksWithExactMatches << " incomplete " << io::toPlural("link", numIncompleteLinksWithExactMatches) << " patched by " <<
+       //   numExactAggregations << " updates and " << numExactLinksAdded << " new links from exact matches." <<
+      //    "\n    -> " << numIncompleteLinksWithPartialMatches << " incomplete " << io::toPlural("link", numIncompleteLinksWithPartialMatches) << " patched by " <<
+      //    numPartialAggregations << " updates and " << numPartialLinksAdded << " new links from partial matches." <<
+    //      "\n    -> " << numIncompleteLinksWithShiftedMatches << " incomplete " << io::toPlural("link", numIncompleteLinksWithShiftedMatches) << " patched by " <<
+     //     numShiftedAggregations << " updates and " << numShiftedLinksAdded << " new links from shifted matches." << std::flush;
 
     if (numIncompleteLinksWithNoMatches != 0)
     {
-        Log() << "\n    -> " << numIncompleteLinksWithNoMatches << " incomplete " << io::toPlural("link", numIncompleteLinksWithNoMatches) << " with no matches patched by self-links." << std::flush;
+        //Log() << "\n    -> " << numIncompleteLinksWithNoMatches << " incomplete " << io::toPlural("link", numIncompleteLinksWithNoMatches) << " with no matches patched by self-links." << std::flush;
     }
 
 }
@@ -984,7 +984,7 @@ MemNetwork::finalizeAndCheckNetwork(bool printSummary)
 
     if (m_minNodeIndex == 1 && m_config.zeroBasedNodeNumbers)
     {
-        Log() << "(Warning: minimum physical node index is one, check that you don't use zero based numbering if it's not true.)\n";
+        //Log() << "(Warning: minimum physical node index is one, check that you don't use zero based numbering if it's not true.)\n";
     }
 
     if (!m_config.isStateNetwork())
@@ -993,7 +993,7 @@ MemNetwork::finalizeAndCheckNetwork(bool printSummary)
 
         if (numMissingPhysicalNodesAdded)
         {
-            Log() << "  -> Added " << numMissingPhysicalNodesAdded << " self-memory nodes for missing physical nodes.\n";
+            //Log() << "  -> Added " << numMissingPhysicalNodesAdded << " self-memory nodes for missing physical nodes.\n";
         }
     }
 
@@ -1090,65 +1090,65 @@ MemNetwork::printParsingResult(bool includeFirstOrderData)
 {
     if (includeFirstOrderData)
     {
-        Log() << "-------------------\n";
-        Log() << "First order data:";
-        Log() << "\n  -> Found " << m_numNodesFound << " nodes and " << m_numLinksFound << " links.";
+        //Log() << "-------------------\n";
+        //Log() << "First order data:";
+        //Log() << "\n  -> Found " << m_numNodesFound << " nodes and " << m_numLinksFound << " links.";
 
         if (m_numAggregatedLinks > 0)
         {
-            Log() << "\n  -> " << m_numAggregatedLinks << " links was aggregated to existing links. ";
+            //Log() << "\n  -> " << m_numAggregatedLinks << " links was aggregated to existing links. ";
         }
 
         if (m_numSelfLinks > 0 && !m_config.includeSelfLinks)
         {
-            Log() << "\n  -> " << m_numSelfLinks << " self-links was ignored. ";
+            //Log() << "\n  -> " << m_numSelfLinks << " self-links was ignored. ";
         }
 
         if (m_config.nodeLimit > 0)
         {
-            Log() << "\n  -> " << (m_numNodesFound - m_numNodes) << "/" << m_numNodesFound << " last nodes ignored due to limit. ";
+            //Log() << "\n  -> " << (m_numNodesFound - m_numNodes) << "/" << m_numNodesFound << " last nodes ignored due to limit. ";
         }
 
-        Log() << "\n  -> Resulting size: " << m_numNodes << " nodes";
+        //Log() << "\n  -> Resulting size: " << m_numNodes << " nodes";
 
         if (!m_nodeWeights.empty() && std::abs(m_sumNodeWeights / m_numNodes - 1.0) > 1e-9)
         {
-            Log() << " (with total weight " << m_sumNodeWeights << ")";
+            //Log() << " (with total weight " << m_sumNodeWeights << ")";
         }
 
-        Log() << " and " << m_numLinks << " links";
+        //Log() << " and " << m_numLinks << " links";
 
         if (std::abs(m_totalLinkWeight / m_numLinks - 1.0) > 1e-9)
         {
-            Log() << " (with total weight " << m_totalLinkWeight << ")";
+            //Log() << " (with total weight " << m_totalLinkWeight << ")";
         }
 
-        Log() << ".";
-        Log() << "-------------------\n";
+        //Log() << ".";
+        //Log() << "-------------------\n";
     }
 
     if (m_numLinksIgnoredByWeightThreshold > 0)
     {
-        Log() << "  -> Ignored " << m_numLinksIgnoredByWeightThreshold << io::toPlural(" link", m_numLinksIgnoredByWeightThreshold) << " with average weight " << m_totalLinkWeightIgnored / m_numLinksIgnoredByWeightThreshold << ".\n";
+        //Log() << "  -> Ignored " << m_numLinksIgnoredByWeightThreshold << io::toPlural(" link", m_numLinksIgnoredByWeightThreshold) << " with average weight " << m_totalLinkWeightIgnored / m_numLinksIgnoredByWeightThreshold << ".\n";
     }
 
     if (m_numStateNodesFound > 0)
     {
-        Log() << "  -> Found " << numPhysicalNodes() << " physical nodes, " << m_numStateNodesFound << " state nodes and " << m_numStateLinksFound << " links.\n";
+        //Log() << "  -> Found " << numPhysicalNodes() << " physical nodes, " << m_numStateNodesFound << " state nodes and " << m_numStateLinksFound << " links.\n";
     }
 
     else
     {
-        Log() << "  -> Found " << m_numNodesFound << " nodes and " << m_numStateLinksFound << " memory links.\n";
-        Log() << "  -> Generated " << m_stateNodes.size() << " memory nodes and " << m_numStateLinks << " memory links.\n";
+        //Log() << "  -> Found " << m_numNodesFound << " nodes and " << m_numStateLinksFound << " memory links.\n";
+        //Log() << "  -> Generated " << m_stateNodes.size() << " memory nodes and " << m_numStateLinks << " memory links.\n";
     }
 
     if (m_numAggregatedStateLinks > 0)
     {
-        Log() << "  -> Aggregated " << m_numAggregatedStateLinks << " memory links.\n";
+        //Log() << "  -> Aggregated " << m_numAggregatedStateLinks << " memory links.\n";
     }
 
-    Log() << std::flush;
+    //Log() << std::flush;
 }
 
 void

@@ -5,7 +5,6 @@
 #include "operations/union.hpp"
 #include "operations/project.hpp"
 #include "community/glouvain2.hpp"
-#include "community/abacus.hpp"
 #include "community/infomap.hpp"
 #include "community/flat.hpp"
 #include "community/mlp.hpp"
@@ -81,6 +80,7 @@ writeMultilayer(
     if (format=="multilayer")
     {
         write_multilayer_network(mnet,layers.begin(),layers.end(),output_file,sep);
+        return;
     }
 
     else if (format=="graphml")
@@ -91,6 +91,7 @@ writeMultilayer(
         }
 
         write_graphml(mnet,layers.begin(),layers.end(),output_file,merge_actors,all_actors);
+        return;
     }
 
     else
@@ -924,6 +925,7 @@ addLayers(
             mnet->layers()->add(layer_name, dir, uu::net::LoopMode::ALLOWED);
         }
     }
+    return;
 }
 
 void
@@ -939,6 +941,7 @@ addActors(
         auto actor_name = std::string(actor_names[i]);
         mnet->actors()->add(actor_name);
     }
+    return;
 }
 
 void
@@ -984,6 +987,7 @@ addNodes(
         }
         
     }
+    return;
 }
 
 void
@@ -1048,6 +1052,7 @@ addEdges(
             mnet->interlayer_edges()->add(actor1, layer1, actor2, layer2);
         }
     }
+    return;
 }
 
 void
@@ -1102,6 +1107,7 @@ setDirected(
             }
         }
     }
+    return;
 }
 
 void
@@ -1116,6 +1122,7 @@ deleteLayers(
         auto layer = mnet->layers()->get(std::string(layer_names(i)));
         mnet->layers()->erase(layer);
     }
+    return;
 }
 
 void
@@ -1131,6 +1138,7 @@ deleteActors(
     {
         mnet->actors()->erase(actor);
     }
+    return;
 }
 
 void
@@ -1148,6 +1156,7 @@ deleteNodes(
         auto layer = vertex.second;
         layer->vertices()->erase(actor);
     }
+    return;
 }
 
 void
@@ -1176,6 +1185,7 @@ deleteEdges(
             mnet->interlayer_edges()->erase(actor1, layer1, actor2, layer2);
         }
     }
+    return;
 }
 
 
@@ -1310,6 +1320,7 @@ newAttributes(
     {
         stop("wrong target: " + target);
     }
+    return;
 }
 
 
@@ -2037,6 +2048,7 @@ setValues(
     {
         stop("Required at least one parameter: \"actors\", \"vertices\" or \"edges\"");
     }
+    return;
 }
 
 // TRANSFORMATION
@@ -2099,6 +2111,7 @@ flatten(
     {
         stop("Unexpected value: method");
     }
+    return;
 }
 
 
@@ -2121,6 +2134,7 @@ void project(
 
     }
     else stop("Unexpected value: algorithm");
+    return;
 }
 
 // MEASURES
@@ -3156,17 +3170,18 @@ abacus_ml(
 {
     auto mnet = rmnet.get_mlnet();
 
-    try
-    {
-        auto com_struct = uu::net::abacus(mnet, min_actors, min_layers);
-        return to_dataframe(com_struct.get());
-    }
+    //try
+    //{
+    //    auto com_struct = uu::net::abacus(mnet, min_actors, min_layers);
+    //    return to_dataframe(com_struct.get());
+    //}
 
-    catch (std::exception& e)
-    {
-        Rcout << "Warning: could not run external library: " << e.what() << std::endl;
+    //catch (std::exception& e)
+    //{
+        Rcout << "Warning: could not run external library: eclat" //<< e.what()
+    << std::endl;
         Rcout << "Returning empty community set." << std::endl;
-    }
+    //}
 
     auto com_struct = std::make_unique<uu::net::CommunityStructure<uu::net::MultilayerNetwork>>();
     return to_dataframe(com_struct.get());

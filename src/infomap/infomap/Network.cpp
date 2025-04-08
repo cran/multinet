@@ -128,8 +128,8 @@ Network::parsePajekNetwork(std::string filename)
         return;
     }
 
-    Log() << "Parsing " << (m_config.isUndirected() ? "undirected" : "directed") << " network from file '" <<
-          filename << "'... " << std::flush;
+    //Log() << "Parsing " << (m_config.isUndirected() ? "undirected" : "directed") << " network from file '" //<<
+         // filename << "'... " << std::flush;
 
     SafeInFile input(filename.c_str());
 
@@ -148,7 +148,7 @@ Network::parsePajekNetwork(std::string filename)
 
     if (m_config.parseAsUndirected() && (buf == "*Arcs" || buf == "*arcs"))
     {
-        Log() << "\n --> Notice: Links marked as directed in pajek file but parsed as undirected.\n";
+        //Log() << "\n --> Notice: Links marked as directed in pajek file but parsed as undirected.\n";
     }
 
     // Read links in format "from to weight", for example "1 3 2" (all integers) and each undirected link only ones (weight is optional).
@@ -166,7 +166,7 @@ Network::parsePajekNetwork(std::string filename)
         addLink(n1, n2, weight);
     }
 
-    Log() << "done!" << std::endl;
+    //Log() << "done!" << std::endl;
 
     finalizeAndCheckNetwork();
 }
@@ -174,8 +174,8 @@ Network::parsePajekNetwork(std::string filename)
 void
 Network::parsePajekNetworkWithoutIOStreams(std::string filename)
 {
-    Log() << "Parsing " << (m_config.isUndirected() ? "undirected" : "directed") << " network from file '" <<
-          filename << "' (without iostreams)... " << std::flush;
+    //Log() << "Parsing " << (m_config.isUndirected() ? "undirected" : "directed") << " network from file '" //<<
+      //    filename << "' (without iostreams)... " << std::flush;
     FILE* file;
     file = fopen(filename.c_str(), "r");
 
@@ -299,7 +299,7 @@ Network::parsePajekNetworkWithoutIOStreams(std::string filename)
 
     if (m_config.parseAsUndirected() && (strncmp(line, "*Arcs", 5) == 0 || strncmp(line, "*arcs", 5) == 0))
     {
-        Log() << "\n --> Notice: Links marked as directed in pajek file but parsed as undirected.\n";
+        //Log() << "\n --> Notice: Links marked as directed in pajek file but parsed as undirected.\n";
     }
 
 
@@ -315,7 +315,7 @@ Network::parsePajekNetworkWithoutIOStreams(std::string filename)
 
     fclose(file);
 
-    Log() << "done!" << std::endl;
+    //Log() << "done!" << std::endl;
 
     finalizeAndCheckNetwork();
 }
@@ -332,8 +332,8 @@ Network::parseLinkList(std::string filename)
     string line;
     string buf;
     SafeInFile input(filename.c_str());
-    Log() << "Parsing " << (m_config.directed ? "directed" : "undirected") << " link list from file '" <<
-          filename << "'... " << std::flush;
+    //Log() << "Parsing " << (m_config.directed ? "directed" : "undirected") << " link list from file '" <<
+        //  filename << "'... " << std::flush;
 
     std::istringstream ss;
 
@@ -354,7 +354,7 @@ Network::parseLinkList(std::string filename)
         addLink(n1, n2, weight);
     }
 
-    Log() << "done!" << std::endl;
+    //Log() << "done!" << std::endl;
 
     finalizeAndCheckNetwork();
 }
@@ -362,8 +362,8 @@ Network::parseLinkList(std::string filename)
 void
 Network::parseLinkListWithoutIOStreams(std::string filename)
 {
-    Log() << "Parsing " << (m_config.isUndirected() ? "undirected" : "directed") << " link list from file '" <<
-          filename << "' (without iostreams)... " << std::flush;
+    //Log() << "Parsing " << (m_config.isUndirected() ? "undirected" : "directed") << " link list from file '" <<
+        //  filename << "' (without iostreams)... " << std::flush;
     FILE* file;
     file = fopen(filename.c_str(), "r");
 
@@ -388,7 +388,7 @@ Network::parseLinkListWithoutIOStreams(std::string filename)
 
     fclose(file);
 
-    Log() << "done! ";
+    //Log() << "done! ";
 
     finalizeAndCheckNetwork();
 }
@@ -396,8 +396,8 @@ Network::parseLinkListWithoutIOStreams(std::string filename)
 void
 Network::parseGeneralNetwork(std::string filename)
 {
-    Log() << "Parsing network from file '" <<
-          filename << "'... " << std::flush;
+    //Log() << "Parsing network from file '" <<
+        //  filename << "'... " << std::flush;
 
     SafeInFile input(filename.c_str());
 
@@ -416,7 +416,7 @@ Network::parseGeneralNetwork(std::string filename)
         {
             if (!m_config.parseAsUndirected())
             {
-                Log() << "\n --> Notice: Links marked as undirected but parsed as directed.\n";
+                //Log() << "\n --> Notice: Links marked as undirected but parsed as directed.\n";
             }
 
             line = parseLinks(input);
@@ -426,7 +426,7 @@ Network::parseGeneralNetwork(std::string filename)
         {
             if (m_config.parseAsUndirected())
             {
-                Log() << "\n --> Notice: Links marked as directed but parsed as undirected.\n";
+                //Log() << "\n --> Notice: Links marked as directed but parsed as undirected.\n";
             }
 
             line = parseLinks(input);
@@ -438,7 +438,7 @@ Network::parseGeneralNetwork(std::string filename)
         }
     }
 
-    Log() << "done!" << std::endl;
+    //Log() << "done!" << std::endl;
 
     finalizeAndCheckNetwork();
 }
@@ -446,8 +446,8 @@ Network::parseGeneralNetwork(std::string filename)
 void
 Network::parseBipartiteNetwork(std::string filename)
 {
-    Log() << "Parsing bipartite network from file '" <<
-          filename << "'... " << std::flush;
+    //Log() << "Parsing bipartite network from file '" <<
+       //   filename << "'... " << std::flush;
 
     SafeInFile input(filename.c_str());
 
@@ -466,7 +466,7 @@ Network::parseBipartiteNetwork(std::string filename)
         {
             if (!m_config.parseAsUndirected())
             {
-                Log() << "\n --> Notice: Links marked as undirected but parsed as directed.\n";
+                //Log() << "\n --> Notice: Links marked as undirected but parsed as directed.\n";
             }
 
             line = parseBipartiteLinks(input);
@@ -476,7 +476,7 @@ Network::parseBipartiteNetwork(std::string filename)
         {
             if (m_config.parseAsUndirected())
             {
-                Log() << "\n --> Notice: Links marked as directed but parsed as undirected.\n";
+                //Log() << "\n --> Notice: Links marked as directed but parsed as undirected.\n";
             }
 
             line = parseBipartiteLinks(input);
@@ -488,7 +488,7 @@ Network::parseBipartiteNetwork(std::string filename)
         }
     }
 
-    Log() << "done!" << std::endl;
+    //Log() << "done!" << std::endl;
 
     m_config.bipartite = true;
 
@@ -683,7 +683,7 @@ Network::parseVertices(std::ifstream& file, std::string header, bool required)
 
     if (m_sumNodeWeights < 1e-10)
     {
-        Log() << " (Warning: All node weights zero, changing to one) ";
+        //Log() << " (Warning: All node weights zero, changing to one) ";
 
         for (unsigned int i = 0; i < m_numNodes; ++i)
         {
@@ -987,7 +987,7 @@ Network::finalizeAndCheckNetwork(bool printSummary, unsigned int desiredNumberOf
 
     if (m_minNodeIndex == 1 && m_config.zeroBasedNodeNumbers)
     {
-        Log() << "(Warning: minimum link index is one, check that you don't use zero based numbering if it's not true.) ";
+        //Log() << "(Warning: minimum link index is one, check that you don't use zero based numbering if it's not true.) ";
     }
 
     if (!m_bipartiteLinks.empty())
@@ -1226,69 +1226,69 @@ Network::printParsingResult(bool onlySummary)
 
     if (onlySummary)
     {
-        Log() << " ==> " << getParsingResultSummary() << '\n';
+        //Log() << " ==> " << getParsingResultSummary() << '\n';
         return;
     }
 
     if (!dataModified)
     {
-        Log() << " ==> " << getParsingResultSummary();
+        //Log() << " ==> " << getParsingResultSummary();
     }
 
     else
     {
-        Log() << " --> Found " << m_numNodesFound << io::toPlural(" node", m_numNodesFound);
-        Log() << " and " << m_numLinksFound << io::toPlural(" link", m_numLinksFound) << ".";
+        //Log() << " --> Found " << m_numNodesFound << io::toPlural(" node", m_numNodesFound);
+        //Log() << " and " << m_numLinksFound << io::toPlural(" link", m_numLinksFound) << ".";
     }
 
     if (m_numAggregatedLinks > 0)
     {
-        Log() << "\n --> Aggregated " << m_numAggregatedLinks << io::toPlural(" link", m_numAggregatedLinks) << " to existing links.";
+        //Log() << "\n --> Aggregated " << m_numAggregatedLinks << io::toPlural(" link", m_numAggregatedLinks) << " to existing links.";
     }
 
     if (m_numSelfLinksFound > 0 && !m_config.includeSelfLinks)
     {
-        Log() << "\n --> Ignored " << m_numSelfLinksFound << io::toPlural(" self-link", m_numSelfLinksFound) << ".";
+        //Log() << "\n --> Ignored " << m_numSelfLinksFound << io::toPlural(" self-link", m_numSelfLinksFound) << ".";
     }
 
     if (m_numLinksIgnoredByWeightThreshold > 0)
     {
-        Log() << "\n --> Ignored " << m_numLinksIgnoredByWeightThreshold << io::toPlural(" link", m_numLinksIgnoredByWeightThreshold) << " with total weight " << m_totalLinkWeightIgnored << ".";
+        //Log() << "\n --> Ignored " << m_numLinksIgnoredByWeightThreshold << io::toPlural(" link", m_numLinksIgnoredByWeightThreshold) << " with total weight " << m_totalLinkWeightIgnored << ".";
     }
 
     unsigned int numNodesIgnored = m_numNodesFound - m_numNodes;
 
     if (m_config.nodeLimit > 0)
     {
-        Log() << "\n --> Ignored " << numNodesIgnored << io::toPlural(" node", numNodesIgnored) << " due to specified limit.";
+        //Log() << "\n --> Ignored " << numNodesIgnored << io::toPlural(" node", numNodesIgnored) << " due to specified limit.";
     }
 
     if (m_numDanglingNodes > 0)
     {
-        Log() << "\n --> " << m_numDanglingNodes << " dangling " << io::toPlural("node", m_numDanglingNodes) << " (nodes with no outgoing links).";
+        //Log() << "\n --> " << m_numDanglingNodes << " dangling " << io::toPlural("node", m_numDanglingNodes) << " (nodes with no outgoing links).";
     }
 
     if (m_numAdditionalLinks > 0)
     {
-        Log() << "\n --> Added " << m_numAdditionalLinks << io::toPlural(" self-link", m_numAdditionalLinks) << " with total weight " << m_sumAdditionalLinkWeight << ".";
+        //Log() << "\n --> Added " << m_numAdditionalLinks << io::toPlural(" self-link", m_numAdditionalLinks) << " with total weight " << m_sumAdditionalLinkWeight << ".";
     }
 
     if (m_numSelfLinks > 0)
     {
-        Log() << "\n --> " << m_numSelfLinks << io::toPlural(" self-link", m_numSelfLinks);
-        Log() << " with total weight " << m_totalSelfLinkWeight << " (" << (m_totalSelfLinkWeight / m_totalLinkWeight * 100) << "% of the total link weight).";
+        //Log() << "\n --> " << m_numSelfLinks << io::toPlural(" self-link", m_numSelfLinks);
+        //Log() << " with total weight " << m_totalSelfLinkWeight << " (" << (m_totalSelfLinkWeight / m_totalLinkWeight * 100) << "% of the total link weight).";
     }
 
     if (dataModified)
     {
-        Log() << "\n ==> " << getParsingResultSummary();
+        //Log() << "\n ==> " << getParsingResultSummary();
     }
 
-    if (isBipartite())
-        Log() << "\nBipartite => " << m_numNodes - m_numBipartiteNodes << " ordinary nodes and " <<
-              m_numBipartiteNodes << " feature nodes.";
-
-    Log() << std::endl;
+    if (isBipartite()) {
+        //Log() << "\nBipartite => " << m_numNodes - m_numBipartiteNodes << " ordinary nodes and " <<
+        //   m_numBipartiteNodes << " feature nodes.";
+    }
+    //Log() << std::endl;
 }
 
 std::string

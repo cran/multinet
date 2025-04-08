@@ -37,7 +37,7 @@ namespace infomap {
 void
 FlowNetwork::calculateFlow(const Network& network, const Config& config)
 {
-    Log() << "Calculating global flow... " << std::flush;
+    //Log() << "Calculating global flow... " << std::flush;
 
     // Prepare data in sequence containers for fast access of individual elements
     unsigned int numNodes = network.numNodes();
@@ -86,9 +86,9 @@ FlowNetwork::calculateFlow(const Network& network, const Config& config)
             m_nodeFlow[link.target] += link.flow;
         }
 
-        Log() << "\n  -> Using directed links with raw flow.";
-        Log() << "\n  -> Total link weight: " << totalLinkWeight << ".";
-        Log() << std::endl;
+        //Log() << "\n  -> Using directed links with raw flow.";
+        //Log() << "\n  -> Total link weight: " << totalLinkWeight << ".";
+        //Log() << std::endl;
         finalize(network, config, true);
         return;
     }
@@ -97,14 +97,14 @@ FlowNetwork::calculateFlow(const Network& network, const Config& config)
     {
         if (config.outdirdir)
         {
-            Log() << "\n  -> Counting only ingoing links.";
+            //Log() << "\n  -> Counting only ingoing links.";
         }
 
         else
-            Log() << "\n  -> Using undirected links" << (config.undirdir? ", switching to directed after steady state." :
-                    ".");
+            //Log() << "\n  -> Using undirected links" << (config.undirdir? ", switching to directed after steady state." :
+            //        ".");
 
-        Log() << std::endl;
+        //Log() << std::endl;
 
         if (config.undirdir || config.outdirdir)
         {
@@ -148,8 +148,8 @@ FlowNetwork::calculateFlow(const Network& network, const Config& config)
         return;
     }
 
-    Log() << "\n  -> Using " << (config.recordedTeleportation ? "recorded" : "unrecorded") << " teleportation to " <<
-          (config.teleportToNodes ? "nodes" : "links") << ". " << std::flush;
+    //Log() << "\n  -> Using " << (config.recordedTeleportation ? "recorded" : "unrecorded") << " teleportation to " <<
+        //  (config.teleportToNodes ? "nodes" : "links") << ". " << std::flush;
 
 
     // Calculate the teleport rate distribution
@@ -252,7 +252,7 @@ FlowNetwork::calculateFlow(const Network& network, const Config& config)
         // Normalize if needed
         if (std::abs(sum - 1.0) > 1.0e-10)
         {
-            Log() << "(Normalizing ranks after " <<	numIterations << " power iterations with error " << (sum-1.0) << ") ";
+            //Log() << "(Normalizing ranks after " <<	numIterations << " power iterations with error " << (sum-1.0) << ") ";
 
             for (unsigned int i = 0; i < numNodes; ++i)
             {
@@ -295,7 +295,7 @@ FlowNetwork::calculateFlow(const Network& network, const Config& config)
         linkIt->flow *= beta * nodeFlowTmp[linkIt->source] / sumNodeRank;
     }
 
-    Log() << "\n  -> PageRank calculation done in " << numIterations << " iterations." << std::endl;
+    //Log() << "\n  -> PageRank calculation done in " << numIterations << " iterations." << std::endl;
     finalize(network, config);
 }
 
