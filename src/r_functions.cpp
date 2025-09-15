@@ -5,6 +5,7 @@
 #include "operations/union.hpp"
 #include "operations/project.hpp"
 #include "community/glouvain2.hpp"
+#include "community/abacus.hpp"
 #include "community/infomap.hpp"
 #include "community/flat.hpp"
 #include "community/mlp.hpp"
@@ -3169,23 +3170,8 @@ abacus_ml(
 )
 {
     auto mnet = rmnet.get_mlnet();
-
-    //try
-    //{
-    //    auto com_struct = uu::net::abacus(mnet, min_actors, min_layers);
-    //    return to_dataframe(com_struct.get());
-    //}
-
-    //catch (std::exception& e)
-    //{
-        Rcout << "Warning: could not run external library: eclat" //<< e.what()
-    << std::endl;
-        Rcout << "Returning empty community set." << std::endl;
-    //}
-
-    auto com_struct = std::make_unique<uu::net::CommunityStructure<uu::net::MultilayerNetwork>>();
+    auto com_struct = uu::net::abacus(mnet, min_actors, min_layers);
     return to_dataframe(com_struct.get());
-
 }
 
 DataFrame
