@@ -15,9 +15,9 @@ namespace net {
  **/
 std::pair<std::unique_ptr<uu::net::MultilayerNetwork>, std::unique_ptr<CommunityStructure<uu::net::MultilayerNetwork>>>
 generate_pep(
-    size_t num_of_layers,
-    size_t num_of_actors,
-    size_t num_of_seeds,
+    std::size_t num_of_layers,
+    std::size_t num_of_actors,
+    std::size_t num_of_seeds,
     const std::vector<double>& p_internal,
     const std::vector<double>& p_external
 );
@@ -28,10 +28,10 @@ generate_pep(
  **/
 std::pair<std::unique_ptr<uu::net::MultilayerNetwork>, std::unique_ptr<CommunityStructure<uu::net::MultilayerNetwork>>>
 generate_peo(
-    size_t num_of_layers,
-    size_t num_of_actors,
-    size_t num_of_seeds,
-    size_t overlapping_size,
+    std::size_t num_of_layers,
+    std::size_t num_of_actors,
+    std::size_t num_of_seeds,
+    std::size_t overlapping_size,
     const std::vector<double>& p_internal,
     const std::vector<double>& p_external
 );
@@ -42,9 +42,9 @@ generate_peo(
  **/
 std::pair<std::unique_ptr<uu::net::MultilayerNetwork>, std::unique_ptr<CommunityStructure<uu::net::MultilayerNetwork>>>
 generate_sep(
-    size_t num_of_layers,
-    size_t num_of_actors,
-    size_t num_of_seeds,
+    std::size_t num_of_layers,
+    std::size_t num_of_actors,
+    std::size_t num_of_seeds,
     const std::vector<double>& p_internal,
     const std::vector<double>& p_external
 );
@@ -55,10 +55,10 @@ generate_sep(
  **/
 std::pair<std::unique_ptr<uu::net::MultilayerNetwork>, std::unique_ptr<CommunityStructure<uu::net::MultilayerNetwork>>>
 generate_seo(
-    size_t num_of_layers,
-    size_t num_of_actors,
-    size_t num_of_seeds,
-    size_t overlapping_size,
+    std::size_t num_of_layers,
+    std::size_t num_of_actors,
+    std::size_t num_of_seeds,
+    std::size_t overlapping_size,
     const std::vector<double>& p_internal,
     const std::vector<double>& p_external
 );

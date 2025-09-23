@@ -29,7 +29,7 @@ end(
     return store_->end();
 }
 
-size_t
+std::size_t
 VertexStore::
 size(
 ) const
@@ -121,7 +121,7 @@ get(
 const Vertex*
 VertexStore::
 at(
-    size_t pos
+    std::size_t pos
 ) const
 {
     return store_->at(pos);

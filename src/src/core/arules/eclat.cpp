@@ -8,21 +8,21 @@ namespace core {
 
 void
 eclat(
-      const std::vector<std::vector<size_t>>& data,
+      const std::vector<std::vector<std::size_t>>& data,
       std::vector<freq_itemset>& freq,
       std::vector<freq_itemset>& closed,
-      size_t min_sup,
-      size_t min_size
+      std::size_t min_sup,
+      std::size_t min_size
 )
 {
     
-    std::map<std::vector<size_t>, std::vector<freq_itemset>> freq_supersets;
+    std::map<std::vector<std::size_t>, std::vector<freq_itemset>> freq_supersets;
     
     // F1
     std::vector<freq_itemset> F1;
-    for (size_t el = 0; el < data.size(); el++)
+    for (std::size_t el = 0; el < data.size(); el++)
     {
-        size_t s = data[el].size();
+        std::size_t s = data[el].size();
         if (s >= min_sup)
         {
             auto new_fr = freq_itemset({el}, data[el]);

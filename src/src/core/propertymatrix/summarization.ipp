@@ -762,7 +762,7 @@ rankify(
         StructureComparisonFunction<STRUCTURE,CONTEXT,NUMBER> f(this,&c);
         std::sort(ranks.begin(), ranks.end(), f);
 
-        size_t i=0;
+        std::size_t i=0;
 
         while (i<ranks.size())
         {
@@ -774,7 +774,7 @@ rankify(
                 continue;
             }
 
-            size_t last_tie = i;
+            std::size_t last_tie = i;
 
             while (i+1<ranks.size())
             {
@@ -788,7 +788,7 @@ rankify(
                 i++;
             }
 
-            for (size_t j=last_tie; j<=i; j++)
+            for (std::size_t j=last_tie; j<=i; j++)
             {
                 set(ranks[j],c,((double)last_tie+i)/2+1);
             }

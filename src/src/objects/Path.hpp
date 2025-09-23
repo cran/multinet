@@ -44,7 +44,7 @@ class
     /**
      * Returns the number of edges in the path.
      */
-    size_t
+    std::size_t
     length(
     ) const;
 

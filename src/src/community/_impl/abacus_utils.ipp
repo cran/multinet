@@ -17,35 +17,35 @@ eclat_merge(
     // eclat format: list of tids ( = community+layer) per actor
     
     // actor id to item id
-    std::unordered_map<size_t, size_t> items_id;
+    std::unordered_map<std::size_t, std::size_t> items_id;
     // transaction id to layer id
-    std::unordered_map<size_t, size_t> trans;
+    std::unordered_map<std::size_t, std::size_t> trans;
     // item id to actor id
-    std::unordered_map<size_t, size_t> items;
+    std::unordered_map<std::size_t, std::size_t> items;
     // transactions
-    std::vector<std::vector<size_t>> data;
+    std::vector<std::vector<std::size_t>> data;
     
-    size_t tid = 0;
-    size_t iid = 0;
+    std::size_t tid = 0;
+    std::size_t iid = 0;
     
     // Layers
     for (auto pair: single_layer_communities)
     {
-        size_t layer_id = mnet->layers()->index_of(pair.first);
+        std::size_t layer_id = mnet->layers()->index_of(pair.first);
         // Communities
         for (auto c: *pair.second)
         {
             // Actors
             for (auto node: *c)
             {
-                size_t actor = mnet->actors()->index_of(node);
+                std::size_t actor = mnet->actors()->index_of(node);
                 
                 if (items_id.find(actor) == items_id.end())
                 {
                     items_id[actor] = iid;
                     items[iid] = actor;
                     iid++;
-                    std::vector<size_t> tids;
+                    std::vector<std::size_t> tids;
                     data.push_back(tids);
                 }
                 data[items_id[actor]].push_back(tid);
@@ -73,12 +73,12 @@ eclat_merge(
         auto current = std::make_unique<PillarCommunity<M>>();
         for (auto actor: itemset.items)
         {
-            size_t actor_id = items[actor];
+            std::size_t actor_id = items[actor];
             current->add_actor(mnet->actors()->at(actor_id));
         }
         for (auto tid: itemset.tids)
         {
-            size_t layer_id = trans[tid];
+            std::size_t layer_id = trans[tid];
             current->add_layer(mnet->layers()->at(layer_id));
         }
         result.insert(std::move(current));

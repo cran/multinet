@@ -73,7 +73,7 @@ class
     ) const;
 
     /** Returns the number of objects in the collection */
-    size_t
+    std::size_t
     size(
     ) const;
 
@@ -130,7 +130,7 @@ class
      */
     const Edge*
     at(
-        size_t pos
+        std::size_t pos
     ) const;
 
     /** Returns a random object, uniform probability */

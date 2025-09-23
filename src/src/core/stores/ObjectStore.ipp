@@ -32,7 +32,7 @@ typename ObjectStore<OBJECT_TYPE>::iterator
 
 
 template <typename OBJECT_TYPE>
- size_t
+ std::size_t
  ObjectStore<OBJECT_TYPE>::
  size(
  ) const
@@ -81,7 +81,7 @@ template <typename OBJECT_TYPE>
  const OBJECT_TYPE*
  ObjectStore<OBJECT_TYPE>::
  at(
-     size_t pos
+     std::size_t pos
  ) const
  {
      return data->at(pos);

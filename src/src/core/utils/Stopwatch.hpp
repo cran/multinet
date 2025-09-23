@@ -40,7 +40,7 @@ class Stopwatch
 
     long
     millis(
-        size_t lap
+        std::size_t lap
     )
     {
         return std::chrono::duration_cast<std::chrono::milliseconds>(times.at(lap)-times.at(lap-1)).count();
@@ -48,7 +48,7 @@ class Stopwatch
 
     long
     sec(
-        size_t lap
+        std::size_t lap
     )
     {
         return std::chrono::duration_cast<std::chrono::seconds>(times.at(lap)-times.at(lap-1)).count();
@@ -58,7 +58,7 @@ class Stopwatch
     sec_last(
     )
     {
-        size_t last_lap = times.size()-1;
+        std::size_t last_lap = times.size()-1;
         return std::chrono::duration_cast<std::chrono::seconds>(times.at(last_lap)-times.at(last_lap-1)).count();
     }
 

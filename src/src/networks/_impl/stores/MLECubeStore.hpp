@@ -123,7 +123,7 @@ class
     ) const;
 
 
-    size_t
+    std::size_t
     size(
     ) const;
 

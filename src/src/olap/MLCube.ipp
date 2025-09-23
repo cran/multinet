@@ -49,18 +49,18 @@ MLCube(
     const std::vector<std::vector<std::string>>& members
 )
 {
-    size_t length = 1;
+    std::size_t length = 1;
 
-    for (size_t d_idx = 0; d_idx < members.size(); d_idx++)
+    for (std::size_t d_idx = 0; d_idx < members.size(); d_idx++)
     {
         length *= members[d_idx].size();
         dim_.push_back(dimensions[d_idx]);
         dim_idx_[dimensions[d_idx]] = d_idx;
         size_.push_back(members[d_idx].size());
         members_.push_back(std::vector<std::string>());
-        members_idx_.push_back(std::unordered_map<std::string, size_t>());
+        members_idx_.push_back(std::unordered_map<std::string, std::size_t>());
 
-        for (size_t m_idx = 0; m_idx < members[d_idx].size(); m_idx++)
+        for (std::size_t m_idx = 0; m_idx < members[d_idx].size(); m_idx++)
         {
             members_[d_idx].push_back(members[d_idx][m_idx]);
             members_idx_[d_idx][members[d_idx][m_idx]] = m_idx;
@@ -74,7 +74,7 @@ MLCube(
 
 
 template <class STORE>
-size_t
+std::size_t
 MLCube<STORE>::
 size(
 ) const
@@ -84,7 +84,7 @@ size(
 
 
 template <class STORE>
-size_t
+std::size_t
 MLCube<STORE>::
 order(
 ) const
@@ -94,7 +94,7 @@ order(
 
 
 template <class STORE>
-std::vector<size_t>
+std::vector<std::size_t>
 MLCube<STORE>::
 dsize(
 ) const
@@ -148,7 +148,7 @@ template <class STORE>
 const std::vector<std::string>&
 MLCube<STORE>::
 members(
-    size_t dim_idx
+    std::size_t dim_idx
 ) const
 {
     return members_.at(dim_idx);
@@ -192,7 +192,7 @@ add(
 {
     if (data_.size() > 1)
     {
-        for (size_t i = 0; i < data_.size(); i++)
+        for (std::size_t i = 0; i < data_.size(); i++)
         {
             data_[i]->add(v);
         }
@@ -215,7 +215,7 @@ add(
     {
         auto v = data_[0]->add(key);
 
-        for (size_t i = 1; i < data_.size(); i++)
+        for (std::size_t i = 1; i < data_.size(); i++)
         {
             data_[i]->add(v);
         }
@@ -262,7 +262,7 @@ template <class STORE>
 typename STORE::value_type*
 MLCube<STORE>::
 at(
-    size_t pos
+    std::size_t pos
 ) const
 {
     return elements_->at(pos);
@@ -300,7 +300,7 @@ erase(
     {
         bool erased = false;
 
-        for (size_t i = 0; i < data_.size(); i++)
+        for (std::size_t i = 0; i < data_.size(); i++)
         {
             if (data_[i]->erase(v))
             {
@@ -325,7 +325,7 @@ erase(
     {
         bool erased = false;
 
-        for (size_t i = 0; i < data_.size(); i++)
+        for (std::size_t i = 0; i < data_.size(); i++)
         {
             if (data_[i]->erase(key))
             {
@@ -354,10 +354,10 @@ template <class STORE>
 STORE*
 MLCube<STORE>::
 cell(
-    const std::vector<size_t>& index
+    const std::vector<std::size_t>& index
 )
 {
-    size_t idx = pos(index);
+    std::size_t idx = pos(index);
     return data_[idx].get();
 }
 
@@ -369,7 +369,7 @@ cell(
     const std::vector<std::string>& index
 )
 {
-    size_t idx = pos(index);
+    std::size_t idx = pos(index);
     return data_[idx].get();
 }
 
@@ -377,10 +377,10 @@ template <class STORE>
 const STORE*
 MLCube<STORE>::
 cell(
-    const std::vector<size_t>& index
+    const std::vector<std::size_t>& index
 ) const
 {
-    size_t idx = pos(index);
+    std::size_t idx = pos(index);
     return data_[idx].get();
 }
 
@@ -392,12 +392,12 @@ cell(
     const std::vector<std::string>& index
 ) const
 {
-    size_t idx = pos(index);
+    std::size_t idx = pos(index);
     return data_[idx].get();
 }
 
 template <class STORE>
-size_t
+std::size_t
 MLCube<STORE>::
 num_cells(
 ) const
@@ -423,7 +423,7 @@ template <class STORE>
 STORE*
 MLCube<STORE>::
 init(
-    size_t pos,
+    std::size_t pos,
     const std::shared_ptr<STORE>& store
 )
 {
@@ -445,7 +445,7 @@ template <class STORE>
 STORE*
 MLCube<STORE>::
 init(
-    const std::vector<size_t>& index,
+    const std::vector<std::size_t>& index,
     const std::shared_ptr<STORE>& store
 )
 {
@@ -467,7 +467,7 @@ template <class STORE>
 void
 MLCube<STORE>::
 register_obs(
-    size_t pos
+    std::size_t pos
 )
 {
     data_[pos]->attach(union_obs.get());
@@ -477,7 +477,7 @@ template <class STORE>
 void
 MLCube<STORE>::
 register_obs(
-    const std::vector<size_t>& index
+    const std::vector<std::size_t>& index
 )
 {
     register_obs(pos(index));
@@ -593,8 +593,8 @@ erase_dimension(
     members_idx_.pop_back();
     
     // number of cells in the new cube (only true/used if order>0)
-    size_t num_cells = 1;
-    for (size_t s: size_) num_cells *= s;
+    std::size_t num_cells = 1;
+    for (std::size_t s: size_) num_cells *= s;
     
     //  -> A: to order 0
     if (dim_.size() == 0)
@@ -651,7 +651,7 @@ add_member(
         throw core::ElementNotFoundException("dimension " + dim_name);
     }
 
-    size_t d_idx = dim->second;
+    std::size_t d_idx = dim->second;
 
     size_[d_idx] += 1;
     members_[d_idx].push_back(memb_name);
@@ -674,7 +674,7 @@ add_member(
     {
         // Create new data
 
-        size_t new_num_cells = data_.size() / (size_[d_idx]-1) * (size_[d_idx]);
+        std::size_t new_num_cells = data_.size() / (size_[d_idx]-1) * (size_[d_idx]);
         data_ = std::vector<std::shared_ptr<STORE>>(new_num_cells);
 
         // Copy cells and elements
@@ -683,13 +683,13 @@ add_member(
 
         for (auto index: old_indexes)
         {
-            size_t pos_old_data = idx_to_pos(index, old_size);
+            std::size_t pos_old_data = idx_to_pos(index, old_size);
             init(index, old_data[pos_old_data]);
             register_obs(index);
 
             // @todo make more efficient
 
-            std::vector<size_t> index_new_cell = index;
+            std::vector<std::size_t> index_new_cell = index;
             index_new_cell[d_idx] = size_[d_idx] - 1;
 
             auto new_cell = cell(index_new_cell);
@@ -716,7 +716,7 @@ erase_member(
     {
         throw core::ElementNotFoundException("dimension " + dim_name);
     }
-    size_t d_idx = dim->second;
+    std::size_t d_idx = dim->second;
     
     erase_member(dim_name, members_[d_idx].back());
 }
@@ -742,14 +742,14 @@ erase_member(
     {
         throw core::ElementNotFoundException("dimension " + dim_name);
     }
-    size_t d_idx = dim->second;
+    std::size_t d_idx = dim->second;
     
     auto mem = members_idx_[d_idx].find(memb_name);
     if (mem == members_idx_[d_idx].end())
     {
         throw core::ElementNotFoundException("member " + memb_name);
     }
-    size_t m_idx = mem->second;
+    std::size_t m_idx = mem->second;
 
     // updating metadata
     
@@ -757,13 +757,13 @@ erase_member(
     members_[d_idx].erase(members_[d_idx].begin() + m_idx);
     members_idx_[d_idx].erase(memb_name);
     
-    for (size_t i = 0; i < members_[d_idx].size(); i++)
+    for (std::size_t i = 0; i < members_[d_idx].size(); i++)
     {
         std::string name = members_[d_idx][i];
         members_idx_[d_idx][name] = i;
     }
 
-    size_t new_num_cells = data_.size() * size_[d_idx] / (size_[d_idx] + 1);
+    std::size_t new_num_cells = data_.size() * size_[d_idx] / (size_[d_idx] + 1);
 
     // C -> C
     if (new_num_cells > 1)
@@ -780,19 +780,19 @@ erase_member(
         {
             if (index[d_idx] < m_idx)
             {
-                size_t pos_old_data = idx_to_pos(index, old_size);
+                std::size_t pos_old_data = idx_to_pos(index, old_size);
                 data_[pos(index)] = old_data[pos_old_data];
             }
             else if (index[d_idx] > m_idx)
             {
                 auto new_index = index;
                 new_index[d_idx] -= 1;
-                size_t pos_old_data = idx_to_pos(index, old_size);
+                std::size_t pos_old_data = idx_to_pos(index, old_size);
                 data_[pos(new_index)] = old_data[pos_old_data];
             }
             else
             {
-                size_t pos_old_data = idx_to_pos(index, old_size);
+                std::size_t pos_old_data = idx_to_pos(index, old_size);
                 for (auto el: *old_data[pos_old_data])
                 {
                     union_obs->notify_erase(el);
@@ -817,7 +817,7 @@ void
 MLCube<STORE>::
 sort(
     const std::string& dim_name,
-    const std::vector<size_t>& f
+    const std::vector<std::size_t>& f
 )
 {
     // Temporarily saving current data
@@ -831,13 +831,13 @@ sort(
     {
         throw core::ElementNotFoundException("dimension " + dim_name);
     }
-    size_t d_idx = dim->second;
+    std::size_t d_idx = dim->second;
     
     // Updating the cube's metadata (dimensions, size, ...)
     
     auto old_members = members_[d_idx];
     
-    for (size_t i = 0; i < size_[d_idx]; i++)
+    for (std::size_t i = 0; i < size_[d_idx]; i++)
     {
         std::string memb_name_at_i = old_members[f[i]];
         members_[d_idx][i] = memb_name_at_i;
@@ -862,7 +862,7 @@ template <class STORE>
 void
 MLCube<STORE>::
 pivot(
-    const std::vector<size_t>& f
+    const std::vector<std::size_t>& f
 )
 {
     // Temporarily saving current data
@@ -874,7 +874,7 @@ pivot(
     auto old_dim = dim_;
     auto old_members = members_;
     auto old_members_idx = members_idx_;
-    for (size_t i = 0; i < size_.size(); i++)
+    for (std::size_t i = 0; i < size_.size(); i++)
     {
         size_[i] = old_size[f[i]];
         dim_[i] = old_dim[f[i]];
@@ -891,21 +891,21 @@ pivot(
 
     for (auto index: old_indexes)
     {
-        auto new_index = std::vector<size_t>(size_.size());
-        for (size_t i = 0; i < size_.size(); i++)
+        auto new_index = std::vector<std::size_t>(size_.size());
+        for (std::size_t i = 0; i < size_.size(); i++)
         {
             new_index[i] = index[f[i]];
         }
-        size_t pos_old_data = idx_to_pos(index, old_size);
+        std::size_t pos_old_data = idx_to_pos(index, old_size);
         data_[pos(new_index)] = old_data[pos_old_data];
     }
 }
 
 template <class STORE>
-size_t
+std::size_t
 MLCube<STORE>::
 pos(
-    const std::vector<size_t>& index
+    const std::vector<std::size_t>& index
 ) const
 {
     return idx_to_pos(index, size_);
@@ -913,7 +913,7 @@ pos(
 
 
 template <class STORE>
-size_t
+std::size_t
 MLCube<STORE>::
 pos(
     const std::vector<std::string>& members
@@ -924,7 +924,7 @@ pos(
 
 
 template <class STORE>
-std::vector<size_t>
+std::vector<std::size_t>
 MLCube<STORE>::
 index_of(
     const std::vector<std::string>& members
@@ -936,9 +936,9 @@ index_of(
         throw core::WrongParameterException("parameter must have the same size as the cube order");
     }
 
-    std::vector<size_t> res;
+    std::vector<std::size_t> res;
 
-    for (size_t i = 0; i < members.size(); i++)
+    for (std::size_t i = 0; i < members.size(); i++)
     {
         auto member = members[i];
         auto f = members_idx_[i].find(member);
@@ -966,8 +966,8 @@ resize(
 )
 {
     // new cube cells (data_)
-    size_t num_cells = 1;
-    for (size_t s: size_) num_cells *= s;
+    std::size_t num_cells = 1;
+    for (std::size_t s: size_) num_cells *= s;
     data_ = std::vector<std::shared_ptr<STORE>>(num_cells);
 
     // new union set of all elements in the cube (elements_)
@@ -975,7 +975,7 @@ resize(
     
     // registering the observers to keep the union set correct
     union_obs = std::make_unique<core::UnionObserver<STORE>>(elements_.get());
-    for (size_t p = 0; p < data_.size(); p++)
+    for (std::size_t p = 0; p < data_.size(); p++)
     {
         init(p, store_factory->get_store());
         register_obs(p);
@@ -995,7 +995,7 @@ discretize(
     std::set<const typename STORE::value_type*> candidate_to_erase;
     
     // iterate over previous stores
-    size_t old_pos = 0;
+    std::size_t old_pos = 0;
     for (auto index: old_indexes)
     {
         // adding one dimension to the index
@@ -1007,7 +1007,7 @@ discretize(
             std::vector<bool> to_add = f(el);
 
             bool added = false;
-            for (size_t i = 0; i < to_add.size(); i++)
+            for (std::size_t i = 0; i < to_add.size(); i++)
             {
                 if (to_add[i])
                 {
@@ -1040,7 +1040,7 @@ discretize(
     const D& f
 )
 {
-    std::vector<size_t> index = {0};
+    std::vector<std::size_t> index = {0};
         
     // distribute all the previous  elements to the new stores, based on f()
     std::set<const typename STORE::value_type*> candidate_to_erase;
@@ -1049,7 +1049,7 @@ discretize(
         std::vector<bool> to_add = f(el);
 
         bool added = false;
-        for (size_t i = 0; i < to_add.size(); i++)
+        for (std::size_t i = 0; i < to_add.size(); i++)
         {
             if (to_add[i])
             {
@@ -1104,11 +1104,11 @@ compact(
 )
 {
     // iterate over previous stores
-    size_t old_pos = 0;
+    std::size_t old_pos = 0;
     for (auto index: old_indexes)
     {
         // adding one dimension to the index
-        std::vector<size_t> new_index(index.begin(), index.end() - 1);
+        std::vector<std::size_t> new_index(index.begin(), index.end() - 1);
         
         // distribute all the elements in this store to the new store
         for (auto el: *old_data[old_pos++])

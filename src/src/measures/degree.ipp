@@ -9,15 +9,15 @@ namespace uu {
 namespace net {
 
 template<typename G>
-size_t
+std::size_t
 maximum_degree(
     const G* g,
     const EdgeMode mode
 )
 {
     core::assert_not_null(g, "maximum_degree", "g");
-    size_t max = 0;
-    size_t d;
+    std::size_t max = 0;
+    std::size_t d;
 
     for (auto v: *g->vertices())
     {
@@ -37,15 +37,15 @@ maximum_degree(
 
 
 template<typename G>
-size_t
+std::size_t
 minimum_degree(
     const G* g,
     const EdgeMode mode
 )
 {
     core::assert_not_null(g, "minimum_degree", "g");
-    size_t min = 0;
-    size_t d;
+    std::size_t min = 0;
+    std::size_t d;
     bool first = true;
 
     for (auto v: *g->vertices())
@@ -71,7 +71,7 @@ minimum_degree(
 
 
 template<typename G>
-std::vector<size_t>
+std::vector<std::size_t>
 degree_sequence(
     const G* g,
     const EdgeMode mode
@@ -79,11 +79,11 @@ degree_sequence(
 {
     core::assert_not_null(g, "degree_sequence", "g");
 
-    size_t order = g->vertices()->size();
-    std::vector<size_t> res;
+    std::size_t order = g->vertices()->size();
+    std::vector<std::size_t> res;
     res.reserve(order);
 
-    size_t d;
+    std::size_t d;
 
     for (auto v: *g->vertices())
     {
@@ -91,7 +91,7 @@ degree_sequence(
         res.push_back(d);
     }
 
-    std::sort(res.begin(), res.end(), std::greater<size_t>());
+    std::sort(res.begin(), res.end(), std::greater<std::size_t>());
     return res;
 }
 
@@ -99,17 +99,17 @@ degree_sequence(
 
 
 template<typename G>
-std::vector<size_t>
+std::vector<std::size_t>
 degree_distribution(
     const G* g,
     const EdgeMode mode
 )
 {
     core::assert_not_null(g, "degree_distribution", "g");
-    core::Counter<size_t> dd;
+    core::Counter<std::size_t> dd;
 
-    size_t max = 0;
-    size_t d;
+    std::size_t max = 0;
+    std::size_t d;
 
     for (auto v: *g->vertices())
     {
@@ -122,7 +122,7 @@ degree_distribution(
         }
     }
 
-    std::vector<size_t> res;
+    std::vector<std::size_t> res;
     res.reserve(max+1);
 
     for (d = 0; d<=max; d++)
@@ -155,7 +155,7 @@ average_degree(
 }
 
 template<typename G>
-size_t
+std::size_t
 degree(
     const G* g,
     const Vertex* v,

@@ -18,7 +18,7 @@ template <class M>
 void
 shuffle(
     M* net,
-    size_t num
+    std::size_t num
 );
 
 }

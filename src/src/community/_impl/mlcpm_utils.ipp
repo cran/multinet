@@ -7,8 +7,8 @@ template <typename M>
 std::unordered_set<std::shared_ptr<MultiplexClique<M>>>
 find_max_cliques(
     const M* mnet,
-    size_t k,
-    size_t m
+    std::size_t k,
+    std::size_t m
 )
 {
 
@@ -215,11 +215,11 @@ find_max_cliques(
         bool can_extend_on_B = false;
         bool can_extend_on_C = false;
 
-        size_t max_layers_C = A_ext->layers.size();
+        std::size_t max_layers_C = A_ext->layers.size();
 
         for (auto c: C_ext)
         {
-            size_t common_layers = core::s_intersection(A_ext->layers,c.second).size();
+            std::size_t common_layers = core::s_intersection(A_ext->layers,c.second).size();
 
             if (common_layers==max_layers_C)
             {
@@ -229,11 +229,11 @@ find_max_cliques(
             }
         }
 
-        size_t max_layers_B = A_ext->layers.size();
+        std::size_t max_layers_B = A_ext->layers.size();
 
         for (auto b: B_ext)
         {
-            size_t common_layers = core::s_intersection(A_ext->layers,b.second).size();
+            std::size_t common_layers = core::s_intersection(A_ext->layers,b.second).size();
 
             if (common_layers==max_layers_B)
             {
@@ -287,7 +287,7 @@ neighboring_layers(
 
 template <typename M>
 std::map<std::shared_ptr<MultiplexClique<M>>,std::unordered_set<std::shared_ptr<MultiplexClique<M>>> >
-        build_max_adjacency_graph(const std::unordered_set<std::shared_ptr<MultiplexClique<M>>>& C, size_t k, size_t m)
+        build_max_adjacency_graph(const std::unordered_set<std::shared_ptr<MultiplexClique<M>>>& C, std::size_t k, std::size_t m)
 {
     std::map<std::shared_ptr<MultiplexClique<M>>,std::unordered_set<std::shared_ptr<MultiplexClique<M>>> > result;
 
@@ -302,8 +302,8 @@ std::map<std::shared_ptr<MultiplexClique<M>>,std::unordered_set<std::shared_ptr<
                 continue;
             }
 
-            size_t common_actors = core::s_intersection(c1->actors,c2->actors).size();
-            size_t common_layers = core::s_intersection(c1->layers,c2->layers).size();
+            std::size_t common_actors = core::s_intersection(c1->actors,c2->actors).size();
+            std::size_t common_layers = core::s_intersection(c1->layers,c2->layers).size();
 
             if (common_actors>=k-1 && common_layers>=m)
             {
@@ -322,7 +322,7 @@ template <typename M>
 std::unordered_set<std::shared_ptr<MLCPMCommunity<M>>>
 find_max_communities(
     const std::map<std::shared_ptr<MultiplexClique<M>>,std::unordered_set<std::shared_ptr<MultiplexClique<M>>> >& adjacency,
-    size_t m)
+    std::size_t m)
 {
 
     // result: empty set of communities
@@ -360,7 +360,7 @@ find_max_communities(
     std::vector<std::shared_ptr<MultiplexClique<M>>> Candidates,
     std::unordered_set<std::shared_ptr<MultiplexClique<M>>>& processedCliques,
     layer_sets<M>& processedLayerCombinations,
-    size_t m,
+    std::size_t m,
     std::unordered_set<std::shared_ptr<MLCPMCommunity<M>>>& result
 )
 {
@@ -442,7 +442,7 @@ find_max_communities2(
     std::set<std::shared_ptr<MultiplexClique<M>>>& Candidates,
     std::unordered_set<std::shared_ptr<MultiplexClique<M>>>& processedCliques,
     layer_sets<M>& processedLayerCombinations,
-    size_t m,
+    std::size_t m,
     std::unordered_set<std::shared_ptr<MLCPMCommunity<M>>>& result
 )
 {

@@ -9,8 +9,8 @@ namespace core {
 std::string
 freq_itemset::
 to_string(
-          const std::unordered_map<size_t,std::string>& trans_map,
-          const std::unordered_map<size_t,std::string>& items_map
+          const std::unordered_map<std::size_t,std::string>& trans_map,
+          const std::unordered_map<std::size_t,std::string>& items_map
           ) const
 {
     std::stringstream ss;

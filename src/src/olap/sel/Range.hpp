@@ -15,8 +15,8 @@ class Range
   public:
 
     Range(
-        size_t from,
-        size_t to
+        std::size_t from,
+        std::size_t to
     );
 
 
@@ -27,7 +27,7 @@ class Range
     virtual
     void
     eval(
-        size_t size
+        std::size_t size
     ) override;
 
 
@@ -38,15 +38,15 @@ class Range
 
 
     virtual
-    size_t
+    std::size_t
     next(
     ) override;
 
   private:
 
-    size_t from_;
-    size_t to_;
-    size_t current_;
+    std::size_t from_;
+    std::size_t to_;
+    std::size_t current_;
     bool has_next_;
 
 };

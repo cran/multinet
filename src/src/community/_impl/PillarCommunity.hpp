@@ -30,7 +30,7 @@ class
     get_actors(
     ) const;
 
-    size_t
+    std::size_t
     num_actors(
     ) const;
 
@@ -43,7 +43,7 @@ class
     get_layers(
     ) const;
 
-    size_t
+    std::size_t
     num_layers(
     ) const;
 
@@ -109,7 +109,7 @@ to_string(
 ) const
 {
     std::string result = "";
-    size_t idx = 0;
+    std::size_t idx = 0;
 
     for (auto actor: actors)
     {

@@ -24,9 +24,9 @@ get_random_engine(
  * @param max
  * @throws OperationNotSupprtedException if the range is larger than the number of random numbers that can be returned by the system
  */
-size_t
+std::size_t
 irand(
-    size_t max
+    std::size_t max
 );
 
 /**
@@ -52,9 +52,9 @@ lrand(
  * Returns a number from 0 to num_tests with the number of successes in a sequence of num_tests
  * yes/no experiments, each of which succeeds with probability p.
  */
-size_t
+std::size_t
 get_binomial(
-    size_t num_tests,
+    std::size_t num_tests,
     double p
 );
 
@@ -63,23 +63,23 @@ get_binomial(
  * Returns a number from 0 to MAX_LEVEL with geometrically decreasing
  * probability (returns 0 with probability (1-P), 1 with probability (1-P)*(1-P), etc.).
  */
-size_t
+std::size_t
 random_level(
-    size_t MAX_LEVEL,
+    std::size_t MAX_LEVEL,
     double P
 );
 
 /**
- * Returns k random integers (size_t) in the range [0,max[ using an
+ * Returns k random integers (std::size_t) in the range [0,max[ using an
  * approximately uniform probability distribution.
  * @param max
  * @param k
  * @throw WrongParameterException if k >= max
  */
-std::vector<size_t>
+std::vector<std::size_t>
 get_k_uniform(
-    size_t max,
-    size_t k
+    std::size_t max,
+    std::size_t k
 );
 
 /**
@@ -95,7 +95,7 @@ test(
  * where each element of the vector contains the probability of selecting
  * it. It is assumed that the elements of the vector sum up to 1.
  */
-size_t
+std::size_t
 test(
     const std::vector<double>& options
 );
@@ -108,7 +108,7 @@ test(
  * @todo this function seems useless, as the previous can be used by just passing
  * options.at(row_num). Check in the code where it is used.
  */
-size_t
+std::size_t
 test(
     const std::vector<std::vector<double> >& options,
     int row_num

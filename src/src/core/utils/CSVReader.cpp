@@ -207,13 +207,13 @@ trim_fields(
 void
 CSVReader::
 set_expected_num_fields(
-    size_t expected_num_fields
+    std::size_t expected_num_fields
 )
 {
     expected_num_fields_ = expected_num_fields;
 }
 
-size_t
+std::size_t
 CSVReader::
 skipped_lines(
 ) const
@@ -289,9 +289,9 @@ get_next()
     {
         std::vector<std::string> quoted_record;
         bool quote_on = false;
-        size_t quote_start = 0;
+        std::size_t quote_start = 0;
 
-        for (size_t pos=0; pos<record.size(); pos++)
+        for (std::size_t pos=0; pos<record.size(); pos++)
         {
             std::string f = record.at(pos);
 
@@ -333,7 +333,7 @@ get_next()
 
                     std::stringstream ss;
 
-                    for (size_t i=quote_start; i<=pos; i++)
+                    for (std::size_t i=quote_start; i<=pos; i++)
                     {
                         ss << record.at(i);
 

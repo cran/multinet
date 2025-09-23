@@ -11,8 +11,8 @@ namespace net {
 
 std::unique_ptr<Network>
 erdos_renyi_nm(
-    size_t n,
-    size_t m
+    std::size_t n,
+    std::size_t m
 )
 {
     std::string name = "ER";
@@ -24,7 +24,7 @@ erdos_renyi_nm(
 
     for (auto edge_id:  edge_ids)
     {
-        size_t v_id1 = 0;
+        std::size_t v_id1 = 0;
 
         while (edge_id >= n - v_id1 - 1)
         {
@@ -32,7 +32,7 @@ erdos_renyi_nm(
             v_id1++;
         }
 
-        size_t v_id2 = edge_id + v_id1 + 1;
+        std::size_t v_id2 = edge_id + v_id1 + 1;
 
         auto v1 = g->vertices()->at(v_id1);
         auto v2 = g->vertices()->at(v_id2);
@@ -47,12 +47,12 @@ erdos_renyi_nm(
 
 std::unique_ptr<Network>
 erdos_renyi_np(
-    size_t n,
+    std::size_t n,
     double p
 )
 {
-    size_t max_edges = n*(n-1)/2;
-    size_t m = core::get_binomial(max_edges, p);
+    std::size_t max_edges = n*(n-1)/2;
+    std::size_t m = core::get_binomial(max_edges, p);
     return erdos_renyi_nm(n, m);
 
 }

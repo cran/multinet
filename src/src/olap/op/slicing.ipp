@@ -6,7 +6,7 @@ std::unique_ptr<C>
 vslice(
     const std::string& cube_name,
     C* cube,
-    const std::vector<std::vector<size_t>>& indexes
+    const std::vector<std::vector<std::size_t>>& indexes
 )
 {
 
@@ -70,12 +70,12 @@ template <typename C>
 std::vector<std::vector<std::string>>
                                    filter_members(
                                        const C* cube,
-                                       const std::vector<std::vector<size_t>>& indexes
+                                       const std::vector<std::vector<std::size_t>>& indexes
                                    )
 {
     std::vector<std::vector<std::string>> new_members;
 
-    for (size_t i = 0; i < indexes.size(); i++)
+    for (std::size_t i = 0; i < indexes.size(); i++)
     {
         auto member_names = cube->members(i);
 

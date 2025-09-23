@@ -58,10 +58,10 @@ namespace std {
 template <>
 struct hash<uu::net::Triad>
 {
-    size_t
+    std::size_t
     operator()(const uu::net::Triad& t) const
     {
-        size_t seed = 0;
+        std::size_t seed = 0;
 
         for (auto v: t)
         {

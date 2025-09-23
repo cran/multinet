@@ -24,7 +24,7 @@ operator==(
     auto it1 = begin();
     auto it2 = comp.begin();
 
-    for (size_t i = 0; i<2; i++)
+    for (std::size_t i = 0; i<2; i++)
     {
         if ((*it1)!=(*it2))
         {

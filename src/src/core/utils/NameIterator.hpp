@@ -18,7 +18,7 @@ class NameIterator
      */
     NameIterator(
         const std::string& prefix,
-        size_t num_names
+        std::size_t num_names
     );
 
 
@@ -37,15 +37,15 @@ class NameIterator
 
         iterator(
             const std::string& prefix,
-            size_t num_names,
-            size_t num_digits
+            std::size_t num_names,
+            std::size_t num_digits
         );
 
         iterator(
             const std::string& prefix,
-            size_t num_names,
-            size_t num_digits,
-            size_t current
+            std::size_t num_names,
+            std::size_t num_digits,
+            std::size_t current
         );
 
         /** Returns the name pointed by this iterator */
@@ -80,11 +80,11 @@ class NameIterator
 
         std::string prefix_;
 
-        size_t num_names_;
+        std::size_t num_names_;
 
-        size_t current_;
+        std::size_t current_;
 
-        size_t num_digits_;
+        std::size_t num_digits_;
 
     };
 
@@ -100,9 +100,9 @@ class NameIterator
 
     std::string prefix_;
 
-    size_t num_names_;
+    std::size_t num_names_;
 
-    size_t num_digits_;
+    std::size_t num_digits_;
 };
 
 }

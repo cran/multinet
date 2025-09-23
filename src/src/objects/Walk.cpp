@@ -53,7 +53,7 @@ extend(
 }
 
 
-size_t
+std::size_t
 Walk::
 length(
 ) const

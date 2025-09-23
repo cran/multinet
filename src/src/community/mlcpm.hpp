@@ -11,8 +11,8 @@ template <typename M>
 std::unique_ptr<CommunityStructure<M>>
 mlcpm(
     const M* mnet,
-    size_t k,
-    size_t m
+    std::size_t k,
+    std::size_t m
 );
 
 

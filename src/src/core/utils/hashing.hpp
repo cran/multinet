@@ -35,7 +35,7 @@ struct hash<std::pair<T1,T2>>
     std::size_t
     operator () (const std::pair<T1,T2> &p) const
     {
-        size_t res;
+        std::size_t res;
         uu::core::hash_combine(res, p.first);
         uu::core::hash_combine(res, p.second);
         return res;
@@ -48,7 +48,7 @@ struct hash<std::set<T> >
     std::size_t
     operator () (const std::set<T> &s) const
     {
-        size_t res;
+        std::size_t res;
 
         for (T el: s)
         {

@@ -68,7 +68,7 @@ end(
 }
 
 
-size_t
+std::size_t
 EdgeStore::
 size(
 ) const
@@ -229,7 +229,7 @@ contains(
 const Edge*
 EdgeStore::
 at(
-    size_t pos
+    std::size_t pos
 ) const
 {
     return edges_->at(pos);

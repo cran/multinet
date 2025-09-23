@@ -3,16 +3,16 @@
 namespace uu {
 namespace core {
 
-std::vector<std::vector<size_t>>
+std::vector<std::vector<std::size_t>>
 generate_subsets(
-                 const std::vector<size_t>& items
+                 const std::vector<std::size_t>& items
                  )
 {
-    std::vector<std::vector<size_t>> res;
-    for (size_t exclude = 0; exclude < items.size(); exclude++)
+    std::vector<std::vector<std::size_t>> res;
+    for (std::size_t exclude = 0; exclude < items.size(); exclude++)
     {
-        std::vector<size_t> subset;
-        for (size_t idx = 0; idx < items.size(); idx++)
+        std::vector<std::size_t> subset;
+        for (std::size_t idx = 0; idx < items.size(); idx++)
         {
             if (idx != exclude)
             {

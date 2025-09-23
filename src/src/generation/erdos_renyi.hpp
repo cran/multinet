@@ -12,8 +12,8 @@ namespace net {
  **/
 std::unique_ptr<Network>
 erdos_renyi_nm(
-    size_t n,
-    size_t m
+    std::size_t n,
+    std::size_t m
 );
 
 
@@ -22,7 +22,7 @@ erdos_renyi_nm(
  **/
 std::unique_ptr<Network>
 erdos_renyi_np(
-    size_t n,
+    std::size_t n,
     double p
 );
 

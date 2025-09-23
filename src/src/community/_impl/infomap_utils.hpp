@@ -59,15 +59,15 @@ multinet_to_infomap(
 )
 {
 
-    std::unordered_map<const Vertex*, size_t> actors_ids;
-    size_t a_id = 0;
+    std::unordered_map<const Vertex*, std::size_t> actors_ids;
+    std::size_t a_id = 0;
 
     for (auto a: *net->actors())
     {
         actors_ids[a] = a_id++;
     }
 
-    size_t l_id = 0;
+    std::size_t l_id = 0;
 
     for (auto l: *net->layers())
     {
@@ -89,15 +89,15 @@ std::unique_ptr<CommunityStructure<M>>
                                         infomap::HierarchicalNetwork& resultNetwork
                                     )
 {
-    std::unordered_map<size_t, const Vertex*> actors;
-    size_t a_id = 0;
+    std::unordered_map<std::size_t, const Vertex*> actors;
+    std::size_t a_id = 0;
 
     for (auto a: *net->actors())
     {
         actors[a_id++] = a;
     }
 
-    std::unordered_map<size_t, std::vector<MLVertex>> comm;
+    std::unordered_map<std::size_t, std::vector<MLVertex>> comm;
 
     /*
     for (infomap::LeafIterator leafIt(&resultNetwork.getRootNode()); !leafIt.isEnd(); ++leafIt)
@@ -158,10 +158,10 @@ multinet_to_infomap(
 )
 {
 
-    size_t num_actors = net->actors()->size();
-    std::unordered_map<const Vertex*, size_t> actors_ids(num_actors);
+    std::size_t num_actors = net->actors()->size();
+    std::unordered_map<const Vertex*, std::size_t> actors_ids(num_actors);
     std::vector<const Vertex*> actors;
-    size_t a_id = 1;
+    std::size_t a_id = 1;
 
     for (auto a: *net->actors())
     {
@@ -175,7 +175,7 @@ multinet_to_infomap(
     outfile << "# " << filename << std::endl;
     outfile << "*Vertices " << net->actors()->size() << std::endl;
 
-    for (size_t a_id=0; a_id<num_actors; a_id++)
+    for (std::size_t a_id=0; a_id<num_actors; a_id++)
     {
         outfile << (a_id+1) << " \"" << actors.at(a_id)->name << "\"" << std::endl;
     }
@@ -183,7 +183,7 @@ multinet_to_infomap(
     outfile << "*Multilayer" << std::endl;
     outfile << "# layer node layer node [weight]" << std::endl;
 
-    size_t l_id = 1;
+    std::size_t l_id = 1;
 
     for (auto l: *net->layers())
     {
@@ -230,15 +230,15 @@ std::unique_ptr<CommunityStructure<M>>
     ids.close();
      */
 
-    std::unordered_map<size_t, const Vertex*> actors;
-    size_t a_id = 1;
+    std::unordered_map<std::size_t, const Vertex*> actors;
+    std::size_t a_id = 1;
 
     for (auto a: *net->actors())
     {
         actors[a_id++] = a;
     }
 
-    std::unordered_map<size_t, std::vector<MLVertex>> comm;
+    std::unordered_map<std::size_t, std::vector<MLVertex>> comm;
 
     core::CSVReader clusters;
     clusters.set_field_separator(' ');

@@ -13,13 +13,13 @@ namespace net {
 
 
 template <typename M>
-size_t
+std::size_t
 size_largest_community(
     const CommunityStructure<M>* com
 );
 
 template <typename M>
-std::pair<size_t,size_t>
+std::pair<std::size_t,std::size_t>
 size_largest_communities(
     const CommunityStructure<M>* com
 );

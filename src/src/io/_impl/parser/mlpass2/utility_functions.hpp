@@ -27,7 +27,7 @@ read_attr_values(
     EPtr element,
     const std::vector<core::Attribute>& attributes,
     const std::vector<std::string>& line,
-    size_t from_idx
+    std::size_t from_idx
 );
 
 /* This function assumes that all the attribute values are present.
@@ -39,7 +39,7 @@ read_attr_values(
     EPtr element,
     const std::vector<core::Attribute>& attributes,
     const std::vector<std::string>& line,
-    size_t from_idx
+    std::size_t from_idx
 )
 {
     if (line.size()-from_idx != attributes.size())
@@ -48,7 +48,7 @@ read_attr_values(
         ss << "\"" <<
            line.at(0);
 
-        for (size_t i = 1; i < from_idx; i++)
+        for (std::size_t i = 1; i < from_idx; i++)
         {
             ss << "," << line.at(i);
         }
@@ -57,7 +57,7 @@ read_attr_values(
         throw core::WrongFormatException(ss.str());
     }
 
-    for (size_t i=from_idx; i<from_idx+attributes.size(); i++)
+    for (std::size_t i=from_idx; i<from_idx+attributes.size(); i++)
     {
         switch (attributes.at(i-from_idx).type)
         {

@@ -3,12 +3,12 @@ namespace net {
 
 
 template <typename M>
-size_t
+std::size_t
 size_largest_community(
     const CommunityStructure<M>* com
 )
 {
-    size_t s = 0;
+    std::size_t s = 0;
 
     for (auto c: *com)
     {
@@ -24,17 +24,17 @@ size_largest_community(
 }
 
 template <typename M>
-std::pair<size_t,size_t>
+std::pair<std::size_t,std::size_t>
 size_largest_communities(
     const CommunityStructure<M>* com
 )
 {
-    size_t s1 = 0;
-    size_t s2 = 0;
+    std::size_t s1 = 0;
+    std::size_t s2 = 0;
 
     for (auto c: *com)
     {
-        size_t s_i = c->size();
+        std::size_t s_i = c->size();
 
         if (s_i > s1)
         {
@@ -57,7 +57,7 @@ size_ratio_largest_communities(
     const CommunityStructure<M>* com
 )
 {
-    std::pair<size_t,size_t> p = size_largest_communities(com);
+    std::pair<std::size_t,std::size_t> p = size_largest_communities(com);
 
     if (p.second == 0)
     {
@@ -84,7 +84,7 @@ ratio_vertices_in_communities(
         vertices.insert(c->begin(), c->end());
     }
 
-    size_t num_vertices = 0;
+    std::size_t num_vertices = 0;
 
     for (auto layer: *net->layers())
     {
@@ -121,7 +121,7 @@ ratio_actors_in_pillars(
     const M* net
 )
 {
-    std::map<const Vertex*, std::map<Community<M>*, size_t>> actors;
+    std::map<const Vertex*, std::map<Community<M>*, std::size_t>> actors;
 
     for (auto c: *com)
     {
@@ -131,7 +131,7 @@ ratio_actors_in_pillars(
         }
     }
 
-    size_t count = 0;
+    std::size_t count = 0;
 
     for (auto pair: actors)
     {
@@ -142,7 +142,7 @@ ratio_actors_in_pillars(
             continue;
         }
 
-        size_t num_layers = 0;
+        std::size_t num_layers = 0;
 
         for (auto layer: *net->layers())
         {
@@ -170,7 +170,7 @@ ratio_actors_overlapping(
     const M* net
 )
 {
-    std::map<const Vertex*, std::map<Community<M>*, size_t>> actors;
+    std::map<const Vertex*, std::map<Community<M>*, std::size_t>> actors;
 
     for (auto c: *com)
     {
@@ -180,7 +180,7 @@ ratio_actors_overlapping(
         }
     }
 
-    size_t count = 0;
+    std::size_t count = 0;
 
     for (auto pair: actors)
     {
@@ -202,7 +202,7 @@ ratio_vertices_overlapping(
     const M* net
 )
 {
-    std::map<MLVertex, std::map<Community<M>*, size_t>> vertices;
+    std::map<MLVertex, std::map<Community<M>*, std::size_t>> vertices;
 
     for (auto c: *com)
     {
@@ -212,7 +212,7 @@ ratio_vertices_overlapping(
         }
     }
 
-    size_t count = 0;
+    std::size_t count = 0;
 
     for (auto pair: vertices)
     {
@@ -224,7 +224,7 @@ ratio_vertices_overlapping(
         }
     }
 
-    size_t num_vertices = 0;
+    std::size_t num_vertices = 0;
 
     for (auto layer: *net->layers())
     {
@@ -240,7 +240,7 @@ ratio_singleton_communities(
     const CommunityStructure<M>* com
 )
 {
-    size_t count = 0;
+    std::size_t count = 0;
 
     for (auto c: *com)
     {

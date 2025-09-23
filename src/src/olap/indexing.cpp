@@ -4,10 +4,10 @@ namespace uu {
 namespace net {
 
 
-size_t
+std::size_t
 idx_to_pos(
-    const std::vector<size_t>& index,
-    const std::vector<size_t>& dimensions
+    const std::vector<std::size_t>& index,
+    const std::vector<std::size_t>& dimensions
 )
 {
     if (index.size() != dimensions.size())
@@ -16,10 +16,10 @@ idx_to_pos(
         throw core::OutOfBoundsException(err);
     }
 
-    size_t idx = 0;
-    size_t offset = 1;
+    std::size_t idx = 0;
+    std::size_t offset = 1;
 
-    for (size_t i = 0; i < dimensions.size(); i++)
+    for (std::size_t i = 0; i < dimensions.size(); i++)
     {
         if (index[i] >= dimensions[i])
         {

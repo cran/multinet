@@ -30,7 +30,7 @@ operator==(
     std::set<const Vertex*>::iterator it1 = actors.begin();
     std::set<const Vertex*>::iterator it2 = comp.actors.begin();
 
-    for (size_t i = 0; i<actors.size(); i++)
+    for (std::size_t i = 0; i<actors.size(); i++)
     {
         if ((*it1)!=(*it2))
         {
@@ -44,7 +44,7 @@ operator==(
     typename std::set<const typename M::layer_type*>::iterator itl1 = layers.begin();
     typename std::set<const typename M::layer_type*>::iterator itl2 = comp.layers.begin();
 
-    for (size_t i = 0; i<layers.size(); i++)
+    for (std::size_t i = 0; i<layers.size(); i++)
     {
         if ((*itl1)!=(*itl2))
         {
@@ -73,7 +73,7 @@ operator!=(
     std::set<const Vertex*>::iterator it1 = actors.begin();
     std::set<const Vertex*>::iterator it2 = comp.actors.begin();
 
-    for (size_t i = 0; i<actors.size(); i++)
+    for (std::size_t i = 0; i<actors.size(); i++)
     {
         if ((*it1)!=(*it2))
         {
@@ -87,7 +87,7 @@ operator!=(
     typename std::set<const typename M::layer_type*>::iterator itl1 = layers.begin();
     typename std::set<const typename M::layer_type*>::iterator itl2 = comp.layers.begin();
 
-    for (size_t i = 0; i<layers.size(); i++)
+    for (std::size_t i = 0; i<layers.size(); i++)
     {
         if ((*itl1)!=(*itl2))
         {
@@ -119,7 +119,7 @@ operator<(const MultiplexClique<M>& comp) const
     std::set<const Vertex*>::iterator it1 = actors.begin();
     std::set<const Vertex*>::iterator it2 = comp.actors.begin();
 
-    for (size_t i = 0; i<actors.size(); i++)
+    for (std::size_t i = 0; i<actors.size(); i++)
     {
         if ((*it1)<(*it2))
         {
@@ -138,7 +138,7 @@ operator<(const MultiplexClique<M>& comp) const
     typename std::set<const typename M::layer_type*>::iterator itl1 = layers.begin();
     typename std::set<const typename M::layer_type*>::iterator itl2 = comp.layers.begin();
 
-    for (size_t i = 0; i<layers.size(); i++)
+    for (std::size_t i = 0; i<layers.size(); i++)
     {
         if ((*itl1)<(*itl2))
         {
@@ -175,7 +175,7 @@ operator>(const MultiplexClique<M>& comp) const
     std::set<const Vertex*>::iterator it1 = actors.begin();
     std::set<const Vertex*>::iterator it2 = comp.actors.begin();
 
-    for (size_t i = 0; i<actors.size(); i++)
+    for (std::size_t i = 0; i<actors.size(); i++)
     {
         if ((*it1)>(*it2))
         {
@@ -194,7 +194,7 @@ operator>(const MultiplexClique<M>& comp) const
     typename std::set<const typename M::layer_type*>::iterator itl1 = layers.begin();
     typename std::set<const typename M::layer_type*>::iterator itl2 = comp.layers.begin();
 
-    for (size_t i = 0; i<layers.size(); i++)
+    for (std::size_t i = 0; i<layers.size(); i++)
     {
         if ((*itl1)>(*itl2))
         {

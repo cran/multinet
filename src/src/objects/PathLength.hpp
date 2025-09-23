@@ -53,7 +53,7 @@ class PathLength
     /**
      * @return The total number of steps (that is, traversed edges).
      */
-    size_t
+    std::size_t
     length(
     ) const;
 
@@ -61,7 +61,7 @@ class PathLength
      * @return The number of steps (that is, traversed edges) inside a given layer.
      * @param layer only edges between nodes in this layer are considered.
      */
-    size_t
+    std::size_t
     length(
         const typename M::layer_type* layer
     ) const;
@@ -71,7 +71,7 @@ class PathLength
      * @param from first layer.
      * @param to second layer.
      */
-    size_t
+    std::size_t
     length(
         const typename M::layer_type* from,
         const typename M::layer_type* to

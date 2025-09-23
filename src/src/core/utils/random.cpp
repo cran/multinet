@@ -22,9 +22,9 @@ get_random_engine(
     return engine;
 }
 
-size_t
+std::size_t
 irand(
-    size_t max
+    std::size_t max
 )
 {
     std::uniform_int_distribution<int> distribution(0,max-1);
@@ -42,13 +42,13 @@ lrand(
 
 }
 
-size_t
+std::size_t
 get_binomial(
-    size_t tests,
+    std::size_t tests,
     double p
 )
 {
-    std::binomial_distribution<size_t> distribution(tests, p);
+    std::binomial_distribution<std::size_t> distribution(tests, p);
     return distribution(get_random_engine());
 
 }
@@ -62,9 +62,9 @@ drand()
     return distribution(get_random_engine()); // [0,1[
 }
 
-size_t
+std::size_t
 random_level(
-    size_t MAX_LEVEL,
+    std::size_t MAX_LEVEL,
     double P
 )
 {
@@ -77,32 +77,32 @@ random_level(
 
     double num = std::log(r);
     double denum = std::log(1.0-P);
-    size_t lvl = (size_t)(num/denum);
+    std::size_t lvl = (std::size_t)(num/denum);
     return lvl < MAX_LEVEL ? lvl : MAX_LEVEL;
 }
 
-std::vector<size_t>
+std::vector<std::size_t>
 get_k_uniform(
-    size_t max,
-    size_t k
+    std::size_t max,
+    std::size_t k
 )
 {
 
     if (k>max) throw core::WrongParameterException("get_k_uniform: k must be <= max");
     
-    std::vector<size_t> res(k, 0);
+    std::vector<std::size_t> res(k, 0);
 
-    size_t rand = irand(max);
+    std::size_t rand = irand(max);
 
-    size_t last_position = 1;
+    std::size_t last_position = 1;
 
     res[0] = rand;
 
-    for (size_t i = 1; i < k; i++)
+    for (std::size_t i = 1; i < k; i++)
     {
         rand = irand(max-i);
 
-        size_t pos = 0;
+        std::size_t pos = 0;
 
         while (pos < last_position && res[pos] <= rand)
         {
@@ -112,7 +112,7 @@ get_k_uniform(
 
         last_position++;
 
-        for (size_t idx = last_position - 1; idx > pos; idx--)
+        for (std::size_t idx = last_position - 1; idx > pos; idx--)
         {
             res[idx] = res[idx-1];
         }
@@ -133,7 +133,7 @@ test(
     return distribution(get_random_engine());
 }
 
-size_t
+std::size_t
 test(
     const std::vector<double>& options
 )
@@ -141,7 +141,7 @@ test(
     // For efficiency reasons, we do not check if the values sum to 1
     double prob_failing_previous_tests=1;
 
-    for (size_t idx=0; idx<options.size()-1; idx++)
+    for (std::size_t idx=0; idx<options.size()-1; idx++)
     {
         double adjusted_prob = options.at(idx)/prob_failing_previous_tests;
 
@@ -157,16 +157,16 @@ test(
     return options.size()-1;
 }
 
-size_t
+std::size_t
 test(
     const std::vector<std::vector<double> >& options,
-    size_t row_num
+    std::size_t row_num
 )
 {
     // For efficiency reasons, we do not check if the values sum to 1
     double prob_failing_previous_tests=1;
 
-    for (size_t idx=0; idx<options.at(row_num).size()-1; idx++)
+    for (std::size_t idx=0; idx<options.at(row_num).size()-1; idx++)
     {
         double adjusted_prob = options.at(row_num).at(idx)/prob_failing_previous_tests;
 

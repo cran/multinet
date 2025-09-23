@@ -6,7 +6,7 @@ namespace net {
 
 Set::
 Set(
-    const std::vector<size_t>& indexes
+    const std::vector<std::size_t>& indexes
 ) : indexes_(indexes)
 {
     has_next_ = false;
@@ -16,7 +16,7 @@ Set(
 void
 Set::
 eval(
-    size_t size
+    std::size_t size
 )
 {
     for (auto idx: indexes_)
@@ -44,7 +44,7 @@ has_next(
 }
 
 
-size_t
+std::size_t
 Set::
 next(
 )

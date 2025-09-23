@@ -66,13 +66,13 @@ extend_dimension(
     {
         auto old_elements_ = cube->data_->elements_;
 
-        size_t new_num_cells = members.size();
+        std::size_t new_num_cells = members.size();
         cube->data_->data_ = std::vector<std::shared_ptr<typename C::store_type>>(new_num_cells);
 
         cube->data_->init(cube->get_store()); // initialize elements_
         cube->data_->union_obs = std::make_unique<core::UnionObserver<typename C::store_type, typename C::value_type>>(cube->data_->elements_.get());
 
-        for (size_t p = 0; p < cube->data_->data_.size(); p++)
+        for (std::size_t p = 0; p < cube->data_->data_.size(); p++)
         {
             cube->data_->init(p, cube->get_store());
             cube->data_->register_obs(p);
@@ -85,7 +85,7 @@ extend_dimension(
         {
             std::vector<bool> to_add = discretize(el);
 
-            for (size_t i = 0; i < to_add.size(); i++)
+            for (std::size_t i = 0; i < to_add.size(); i++)
             {
                 if (to_add[i])
                 {
@@ -113,13 +113,13 @@ extend_dimension(
 
         // Create new data
 
-        size_t new_num_cells = cube->data_->data_.size() * members.size();
+        std::size_t new_num_cells = cube->data_->data_.size() * members.size();
         cube->data_->data_ = std::vector<std::shared_ptr<typename C::store_type>>(new_num_cells);
 
         init(cube->get_store()); // initialize elements_
         cube->data_->union_obs = std::make_unique<core::UnionObserver<typename C::store_type, typename C::value_type>>(cube->data_->elements_.get());
 
-        for (size_t p = 0; p < cube->data_->data_.size(); p++)
+        for (std::size_t p = 0; p < cube->data_->data_.size(); p++)
         {
             cube->data_->init(p, cube->get_store());
             cube->data_->register_obs(p);
@@ -127,7 +127,7 @@ extend_dimension(
 
         // Copy elements from each cell in the previous cube to the new corresponding cells
 
-        size_t old_pos = 0;
+        std::size_t old_pos = 0;
 
         for (auto index: old_indexes)
         {
@@ -135,7 +135,7 @@ extend_dimension(
             {
                 std::vector<bool> to_add = discretize(el);
 
-                for (size_t i = 0; i < to_add.size(); i++)
+                for (std::size_t i = 0; i < to_add.size(); i++)
                 {
                     if (to_add[i])
                     {

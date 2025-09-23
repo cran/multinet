@@ -41,7 +41,7 @@ class Walk
     /**
      * Returns the number of edges in the walk.
      */
-    size_t
+    std::size_t
     length(
     ) const;
 

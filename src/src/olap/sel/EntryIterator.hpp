@@ -30,7 +30,7 @@ class EntryIterator
      */
     EntryIterator(
         CUBE* c,
-        const std::vector<std::vector<size_t>>& indexes
+        const std::vector<std::vector<std::size_t>>& indexes
     );
 
     /**

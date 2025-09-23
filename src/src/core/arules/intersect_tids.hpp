@@ -2,14 +2,15 @@
 #define UU_CORE_ARULES_INTERSECTTIDS_H_
 
 #include <vector>
+#include <cstddef>
 
 namespace uu {
 namespace core {
 
-std::vector<size_t>
+std::vector<std::size_t>
 intersect_tids(
-               std::vector<size_t> tids1,
-               std::vector<size_t> tids2
+               std::vector<std::size_t> tids1,
+               std::vector<std::size_t> tids2
                );
 
 }

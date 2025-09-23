@@ -10,16 +10,16 @@ bottom_up_search(
      const std::vector<freq_itemset>& atoms,
      std::vector<freq_itemset>& freq,
      std::vector<freq_itemset>& closed,
-     std::map<std::vector<size_t>, std::vector<freq_itemset>>& freq_supersets,
-     size_t min_sup,
-     size_t min_size
+     std::map<std::vector<std::size_t>, std::vector<freq_itemset>>& freq_supersets,
+     std::size_t min_sup,
+     std::size_t min_size
      )
 {
     std::vector<std::vector<freq_itemset>> T;
-    for (size_t fr1 = 0; fr1 < atoms.size(); fr1++)
+    for (std::size_t fr1 = 0; fr1 < atoms.size(); fr1++)
     {
         std::vector<freq_itemset> new_atoms;
-        for (size_t fr2 = fr1 + 1; fr2 < atoms.size(); fr2++)
+        for (std::size_t fr2 = fr1 + 1; fr2 < atoms.size(); fr2++)
         {
             auto fr = join_itemsets(atoms[fr1], atoms[fr2]);
             if (fr.s >= min_sup)

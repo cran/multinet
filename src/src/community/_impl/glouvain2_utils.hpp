@@ -34,7 +34,7 @@ convert(
 void
 expand(
     const std::vector<std::unique_ptr<GMetaNetwork>>& levels,
-    size_t i,
+    std::size_t i,
     const Vertex* v,
     Community<const Vertex*>* com
 );
@@ -47,7 +47,7 @@ std::unique_ptr<CommunityStructure<Network>>
 std::unique_ptr<GMetaNetwork>
 aggregate(
     const GMetaNetwork* meta,
-    std::unordered_map<const Vertex*, size_t> community
+    std::unordered_map<const Vertex*, std::size_t> community
 );
 
 std::unique_ptr<GMetaNetwork>

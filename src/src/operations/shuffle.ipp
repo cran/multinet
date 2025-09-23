@@ -5,7 +5,7 @@ template <class M>
 void
 shuffle(
     M* net,
-    size_t num
+    std::size_t num
 )
 {
     for (auto&& l: *net->layers())
@@ -17,9 +17,9 @@ shuffle(
 
         auto link_swap_succes = false;
 
-        for (size_t i = 0; i < num; i += 1)
+        for (std::size_t i = 0; i < num; i += 1)
         {
-            size_t trials = 0;
+            std::size_t trials = 0;
 
             do
             {

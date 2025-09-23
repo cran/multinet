@@ -130,21 +130,21 @@ class
     /**
      * Returns the number of elements in the cube.
      */
-    size_t
+    std::size_t
     size(
     ) const;
 
     /**
      * Returns the order (number of dimensions) of this cube.
      */
-    size_t
+    std::size_t
     order(
     ) const;
 
     /**
      * Returns the number of members for each dimension.
      */
-    std::vector<size_t>
+    std::vector<std::size_t>
     dsize(
     ) const;
 
@@ -175,7 +175,7 @@ class
      */
     const std::vector<std::string>&
     members(
-        size_t dim_idx
+        std::size_t dim_idx
     ) const;
 
     /** Returns an iterator to the first edge in the cube */
@@ -286,7 +286,7 @@ class
      */
     const Edge *
     at(
-        size_t pos
+        std::size_t pos
     ) const;
 
     /** Returns a random edge, with uniform probability. */
@@ -377,7 +377,7 @@ class
      */
     SimpleEdgeStore*
     cell(
-        const std::vector<size_t>& index
+        const std::vector<std::size_t>& index
     );
 
     /**
@@ -386,7 +386,7 @@ class
      */
     const SimpleEdgeStore*
     cell(
-        const std::vector<size_t>& index
+        const std::vector<std::size_t>& index
     ) const;
 
     /**
@@ -408,7 +408,7 @@ class
     ) const;
 
     /** Returns the number of cells in the cube. */
-    size_t
+    std::size_t
     num_cells(
     ) const;
 
@@ -495,7 +495,7 @@ class
      */
     SimpleEdgeStore*
     init(
-        const std::vector<size_t>& index,
+        const std::vector<std::size_t>& index,
         const std::shared_ptr<SimpleEdgeStore>& store
     );
 
@@ -504,7 +504,7 @@ class
      */
     SimpleEdgeStore*
     init(
-        size_t pos,
+        std::size_t pos,
         const std::shared_ptr<SimpleEdgeStore>& store
     );
 
@@ -513,7 +513,7 @@ class
      */
     SimpleEdgeStore*
     init(
-        const std::vector<size_t>& index
+        const std::vector<std::size_t>& index
     );
 
     /**
@@ -521,7 +521,7 @@ class
      */
     SimpleEdgeStore*
     init(
-        size_t pos
+        std::size_t pos
     );
 
     /**
@@ -539,7 +539,7 @@ class
      */
     void
     register_obs(
-        const std::vector<size_t>& index
+        const std::vector<std::size_t>& index
     );
 
     /**
@@ -548,7 +548,7 @@ class
      */
     void
     register_obs(
-        size_t pos
+        std::size_t pos
     );
 
   private:

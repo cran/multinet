@@ -12,7 +12,7 @@ components(
     std::vector<int> membership(order(g), -1);
 
     int comp_id = 0;
-    size_t vertex_pos = 0;
+    std::size_t vertex_pos = 0;
 
     for (auto v: *g->vertices())
     {
@@ -28,7 +28,7 @@ components(
 
             for (auto current_vertex: bfs)
             {
-                size_t pos_current_vertex = g->vertices()->index_of(current_vertex);
+                std::size_t pos_current_vertex = g->vertices()->index_of(current_vertex);
 
                 membership.at(pos_current_vertex) = comp_id;
             }

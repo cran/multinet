@@ -55,7 +55,7 @@ class
     ) const;
 
     /** Returns the number of objects in the store. */
-    size_t
+    std::size_t
     size(
     ) const;
 
@@ -100,7 +100,7 @@ class
      */
     const OBJECT_TYPE*
     at(
-        size_t pos
+        std::size_t pos
     ) const;
 
     /** Returns a random object, selected with uniform probability. */

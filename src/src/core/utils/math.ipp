@@ -112,9 +112,9 @@ s_intersection(
 )
 {
     std::unordered_set<T> result;
-    size_t idx = 0; // index of the smallest set
+    std::size_t idx = 0; // index of the smallest set
 
-    for (size_t i=1; i<sets.size(); i++)
+    for (std::size_t i=1; i<sets.size(); i++)
     {
         if (sets.at(i).size() < sets.at(idx).size())
         {
@@ -126,7 +126,7 @@ s_intersection(
     {
         bool in_intersection = true;
 
-        for (size_t i=0; i<sets.size(); i++)
+        for (std::size_t i=0; i<sets.size(); i++)
         {
             if (i==idx)
             {
@@ -158,9 +158,9 @@ s_intersection(
 {
     // NOTE: it can be made more efficient exploiting sorting
     std::unordered_set<T> result;
-    size_t idx = 0; // index of the smallest set
+    std::size_t idx = 0; // index of the smallest set
 
-    for (size_t i=1; i<sets.size(); i++)
+    for (std::size_t i=1; i<sets.size(); i++)
     {
         if (sets.at(i).size() < sets.at(idx).size())
         {
@@ -172,7 +172,7 @@ s_intersection(
     {
         bool in_intersection = true;
 
-        for (size_t i=0; i<sets.size(); i++)
+        for (std::size_t i=0; i<sets.size(); i++)
         {
             if (i==idx)
             {

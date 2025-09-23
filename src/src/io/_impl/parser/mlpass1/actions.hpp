@@ -101,7 +101,7 @@ struct layer_def_act
 
             GraphType layer_type;
 
-            for (size_t idx = 1; idx<layer_spec.size(); idx++)
+            for (std::size_t idx = 1; idx<layer_spec.size(); idx++)
             {
                 std::string layer_feature = layer_spec.at(idx);
                 read_layer_type(layer_feature, layer_type);
@@ -137,7 +137,7 @@ struct layer_def_act
 
                 GraphType layer_type;
 
-                for (size_t idx = 3; idx<layer_spec.size(); idx++)
+                for (std::size_t idx = 3; idx<layer_spec.size(); idx++)
                 {
                     std::string layer_feature = layer_spec.at(idx);
                     read_layer_type(layer_feature, layer_type);

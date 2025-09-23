@@ -7,8 +7,8 @@ namespace net {
 template <typename M>
 PAModel<M>::
 PAModel(
-    size_t m0,
-    size_t m
+    std::size_t m0,
+    std::size_t m
 )
 {
     PAModel<M>::m0 = m0;
@@ -45,7 +45,7 @@ init_step(
     std::set<const Vertex*> new_actors;
 
     // choosing the m0 initial actors
-    for (size_t i=0; i<m0; i++)
+    for (std::size_t i=0; i<m0; i++)
     {
         auto new_actor = available_actors.get_at_random();
         new_actors.insert(new_actor);

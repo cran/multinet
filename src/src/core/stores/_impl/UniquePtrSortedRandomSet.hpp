@@ -40,7 +40,7 @@ class
      * @param start_capacity the initial capacity for which the sorted set is optimized
      */
     UniquePtrSortedRandomSet(
-        size_t start_capacity
+        std::size_t start_capacity
     ) : super(start_capacity) {};
 
 

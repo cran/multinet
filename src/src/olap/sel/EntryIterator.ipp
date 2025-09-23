@@ -7,7 +7,7 @@ template <typename CUBE>
 EntryIterator<CUBE>::
 EntryIterator(
     CUBE* c,
-    const std::vector<std::vector<size_t>>& indexes
+    const std::vector<std::vector<std::size_t>>& indexes
 )
     : c_(c), idx_(IndexIterator(indexes))
 {
@@ -26,21 +26,21 @@ EntryIterator(
     // @todo check null
     c_ = c;
 
-    size_t num_dimensions = c->dim().size();
+    std::size_t num_dimensions = c->dim().size();
 
     if (num_dimensions != indexes.size())
     {
         throw core::OutOfBoundsException("cube dimensions and indexes not matching in size");
     }
 
-    std::vector<std::vector<size_t>> indexes2;
+    std::vector<std::vector<std::size_t>> indexes2;
 
     auto size = c->size();
 
-    for (size_t i = 0; i < num_dimensions; i++)
+    for (std::size_t i = 0; i < num_dimensions; i++)
     {
         indexes[i].eval(size[i]);
-        indexes2.push_back(std::vector<size_t>());
+        indexes2.push_back(std::vector<std::size_t>());
 
         while (indexes[i].has_next())
         {

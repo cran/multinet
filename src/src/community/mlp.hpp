@@ -63,7 +63,7 @@ subset(
 )
 {
     std::set<Obj> res;
-    size_t idx = 0;
+    std::size_t idx = 0;
 
     while (spec > 0)
     {
@@ -228,7 +228,7 @@ std::unique_ptr<CommunityStructure<M>>
             const Vertex* act2 = sub_pair.first;
 
             // size of intersection
-            size_t intersection = 0;
+            std::size_t intersection = 0;
 
             for (auto l: actors_relevant_dimensions[act2])
             {
@@ -251,11 +251,11 @@ std::unique_ptr<CommunityStructure<M>>
 
     // (4)The labeling step
     //ActorListSharedPtr actors = mnet->get_actors();
-    std::unordered_map<const Vertex*, size_t> membership; // community membership
+    std::unordered_map<const Vertex*, std::size_t> membership; // community membership
     std::vector<const Vertex*> order; //order vector to decide in which order to process the actors
 
     //Initialize labels
-    size_t label=0;
+    std::size_t label=0;
 
     for (const Vertex* actor: *mnet->actors())
     {
@@ -297,7 +297,7 @@ std::unique_ptr<CommunityStructure<M>>
             }
 
             //find the label in the group of neighbours that has the maximum sum of w
-            size_t winning_label = neigh_groups_weights.begin()->first;
+            std::size_t winning_label = neigh_groups_weights.begin()->first;
             double max = neigh_groups_weights.begin()->second;
 
             for (auto pair: neigh_groups_weights)
@@ -342,7 +342,7 @@ std::unique_ptr<CommunityStructure<M>>
                 const Vertex* neighbour = pair.first;
 
                 // size of intersection
-                size_t intersection = 0;
+                std::size_t intersection = 0;
 
                 for (auto l: actors_relevant_dimensions[actor])
                 {
@@ -377,7 +377,7 @@ std::unique_ptr<CommunityStructure<M>>
         {
             //std::cout << (*actor) << ": " << std::endl;
             //group the neighbours according to their labels calculate the sum of w within each group
-            std::unordered_map<size_t, double> neigh_groups_weights;
+            std::unordered_map<std::size_t, double> neigh_groups_weights;
 
             for (auto pair:updated_attraction_weights[actor])
             {
@@ -396,7 +396,7 @@ std::unique_ptr<CommunityStructure<M>>
                 }
             }
 
-            std::vector<size_t> winning_groups_labels;
+            std::vector<std::size_t> winning_groups_labels;
 
             for (auto pair: neigh_groups_weights)
             {
@@ -417,7 +417,7 @@ std::unique_ptr<CommunityStructure<M>>
         //break;
     }
 
-    std::unordered_map<size_t, std::vector<const Vertex*>> group_by_community_id;
+    std::unordered_map<std::size_t, std::vector<const Vertex*>> group_by_community_id;
 
     for (auto pair: membership)
     {

@@ -13,14 +13,14 @@ namespace net {
 std::vector<double>
 optimize_slices(
     const Network* original_net,
-    size_t max_slices = 50)
+    std::size_t max_slices = 50)
 {
 
     std::vector<double> res;
 
     //std::cerr << "testing network file: " << name << std::endl;
 
-    for (size_t ts = 1; ts < max_slices; ++ts)
+    for (std::size_t ts = 1; ts < max_slices; ++ts)
     {
 
         //std::cerr << "num slices: " << ts << std::endl;
@@ -32,7 +32,7 @@ optimize_slices(
         double modul = ordered_modularity(sliced_net.get(), com.get(), 1.0);
 
         // get a high modularity result - try generalized_louvain 5 times and take the maximum
-        for (size_t i=0; i<5; i++)
+        for (std::size_t i=0; i<5; i++)
         {
             auto com_alt = uu::net::glouvain2(sliced_net.get(), 1.0);
             double modul_alt = ordered_modularity(sliced_net.get(), com.get(), 1.0);
@@ -52,7 +52,7 @@ optimize_slices(
         double rand_modul = ordered_modularity(sliced_rand_net.get(), com.get(), 1.0);
 
         // get a high modularity result - try generalized_louvain 5 times and take the maximum
-        for (size_t i=0; i<5; i++)
+        for (std::size_t i=0; i<5; i++)
         {
             auto rand_com_alt = uu::net::glouvain2(sliced_rand_net.get(), 1.0);
             double rand_modul_alt = ordered_modularity(sliced_rand_net.get(), rand_com.get(), 1.0);

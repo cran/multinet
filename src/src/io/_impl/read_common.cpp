@@ -16,7 +16,7 @@ void
 read_graph_type(
     const std::string& graph_type_spec,
     GraphType& graph_type,
-    size_t line_number
+    std::size_t line_number
 )
 {
     std::string feat = graph_type_spec;
@@ -151,7 +151,7 @@ read_metadata(
 
         case GraphIOFileSection::VERTEX_ATTRIBUTES:
         {
-            size_t from_idx = 0;
+            std::size_t from_idx = 0;
             auto vertex_att = read_attr_def(fields, from_idx, csv.row_num());
             meta.vertex_attributes.push_back(std::move(vertex_att));
             break;
@@ -159,7 +159,7 @@ read_metadata(
 
         case GraphIOFileSection::EDGE_ATTRIBUTES:
         {
-            size_t from_idx = 0;
+            std::size_t from_idx = 0;
             auto edge_att = read_attr_def(fields, from_idx, csv.row_num());
             meta.edge_attributes.push_back(std::move(edge_att));
             break;
@@ -180,7 +180,7 @@ read_metadata(
 std::string
 read_version(
     const std::string& line,
-    size_t line_number
+    std::size_t line_number
 )
 {
 
@@ -206,8 +206,8 @@ read_version(
 core::Attribute
 read_attr_def(
     const std::vector<std::string>& line,
-    size_t from_idx,
-    size_t line_number
+    std::size_t from_idx,
+    std::size_t line_number
 )
 {
     if (line.size()!=2+from_idx)
@@ -257,7 +257,7 @@ read_vertex(
     Network* g,
     const std::vector<std::string>& fields,
     const std::vector<core::Attribute>& vertex_attributes,
-    size_t line_number
+    std::size_t line_number
 )
 {
 
@@ -284,7 +284,7 @@ read_edge(
     Network* g,
     const std::vector<std::string>& fields,
     const std::vector<core::Attribute>& edge_attributes,
-    size_t line_number
+    std::size_t line_number
 )
 {
 

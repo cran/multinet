@@ -42,7 +42,7 @@ project_temporal(
     const typename M::layer_type* from,
     const typename M::layer_type* to,
     Network* target,
-    size_t delta_time
+    std::size_t delta_time
 );
 
 

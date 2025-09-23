@@ -19,27 +19,27 @@ std::unordered_map<const Vertex*, std::set<PathLength<M>> >
       public:
         int
         operator()(
-            const std::pair<PathLength<M>, size_t>& lhs,
-            const std::pair<PathLength<M>, size_t>& rhs
+            const std::pair<PathLength<M>, std::size_t>& lhs,
+            const std::pair<PathLength<M>, std::size_t>& rhs
         ) const
         {
             return lhs.second < rhs.second;
 
         }
     };
-    std::unordered_map<const Vertex*,std::set<std::pair<PathLength<M>,size_t>,TimestampComparator> > distances;
+    std::unordered_map<const Vertex*,std::set<std::pair<PathLength<M>,std::size_t>,TimestampComparator> > distances;
     // timestamps, used for efficiency reasons to avoid processing edges when no changes have occurred since the last iteration
-    size_t ts = 0;
-    std::unordered_map<const typename M::layer_type*, std::map<std::pair<const Vertex*, const Vertex*>, size_t>> last_updated;
+    std::size_t ts = 0;
+    std::unordered_map<const typename M::layer_type*, std::map<std::pair<const Vertex*, const Vertex*>, std::size_t>> last_updated;
 
     // initialize distance array - for every target vertex there is still no found path leading to it...
     for (auto actor: *mnet->actors())
     {
-        distances[actor] = std::set<std::pair<PathLength<M>,size_t>,TimestampComparator>();
+        distances[actor] = std::set<std::pair<PathLength<M>,std::size_t>,TimestampComparator>();
     }
     // ...except for the source node, reachable from itself via an empty path
     PathLength<M> empty(mnet);
-    distances[from].insert(std::pair<PathLength<M>,size_t>(empty,ts));
+    distances[from].insert(std::pair<PathLength<M>,std::size_t>(empty,ts));
 
     bool changes; // keep updating the paths until when no changes occur during one full scan of the edges
 
@@ -57,7 +57,7 @@ std::unordered_map<const Vertex*, std::set<PathLength<M>> >
                     
                     // last updated
                     auto key = std::make_pair(node_from,node_to);
-                    size_t lastUpdate = last_updated[layer][key];
+                    std::size_t lastUpdate = last_updated[layer][key];
                     last_updated[layer][key] = ts;
 
                     
@@ -88,7 +88,7 @@ std::unordered_map<const Vertex*, std::set<PathLength<M>> >
 
                         // compare the new distance with the other temporary distances to e.v2
                         bool should_be_inserted = true;
-                        std::set<std::pair<PathLength<M>,size_t>,TimestampComparator> dominated; // here we store the distances that will be removed if dominated by the new one
+                        std::set<std::pair<PathLength<M>,std::size_t>,TimestampComparator> dominated; // here we store the distances that will be removed if dominated by the new one
 
                         for (auto previous: distances[node_to])
                         {
@@ -128,7 +128,7 @@ std::unordered_map<const Vertex*, std::set<PathLength<M>> >
                         if (should_be_inserted)
                         {
                             //cout << " INSERT NEW for " << actor2->name << " - " << extended_distance << endl;
-                            distances[node_to].insert(std::pair<PathLength<M>,size_t>(extended_distance,ts));
+                            distances[node_to].insert(std::pair<PathLength<M>,std::size_t>(extended_distance,ts));
                             //cout << "insert " << mnet.getGlobalName(actor2) << " - " << extended_distance << endl;
                             //cout << "add " << paths[toGlobalId].size() << "\n";
                             //cout << "New path " << fromGlobalId << " => "
@@ -138,7 +138,7 @@ std::unordered_map<const Vertex*, std::set<PathLength<M>> >
 
                         // remove dominated paths
                         // ?? why not just remove?
-                        std::set<std::pair<PathLength<M>,size_t>,TimestampComparator> diff;
+                        std::set<std::pair<PathLength<M>,std::size_t>,TimestampComparator> diff;
                         std::set_difference(distances[node_to].begin(),
                                             distances[node_to].end(), dominated.begin(),
                                             dominated.end(), std::inserter(diff, diff.end()));

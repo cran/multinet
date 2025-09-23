@@ -5267,7 +5267,7 @@ FwdIter
 scan_keyword(std::basic_istream<CharT, Traits>& is, FwdIter kb, FwdIter ke)
 {
     using namespace std;
-    size_t nkw = static_cast<size_t>(std::distance(kb, ke));
+    std::size_t nkw = static_cast<std::size_t>(std::distance(kb, ke));
     const unsigned char doesnt_match = '\0';
     const unsigned char might_match = '\1';
     const unsigned char does_match = '\2';
@@ -5287,8 +5287,8 @@ scan_keyword(std::basic_istream<CharT, Traits>& is, FwdIter kb, FwdIter ke)
         stat_hold.reset(status);
     }
 
-    size_t n_might_match = nkw;  // At this point, any keyword might match
-    size_t n_does_match = 0;     // but none of them definitely do
+    std::size_t n_might_match = nkw;  // At this point, any keyword might match
+    std::size_t n_does_match = 0;     // but none of them definitely do
     // Initialize all statuses to might_match, except for "" keywords are does_match
     unsigned char* st = status;
 
@@ -5308,7 +5308,7 @@ scan_keyword(std::basic_istream<CharT, Traits>& is, FwdIter kb, FwdIter ke)
     }
 
     // While there might be a match, test keywords against the next CharT
-    for (size_t indx = 0; is && n_might_match > 0; ++indx)
+    for (std::size_t indx = 0; is && n_might_match > 0; ++indx)
     {
         // Peek at the next CharT but don't consume it
         auto ic = is.peek();

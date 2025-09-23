@@ -6,16 +6,16 @@ namespace net {
 
 IndexIterator::
 IndexIterator(
-    const std::vector<size_t>& size
+    const std::vector<std::size_t>& size
 )
 {
-    std::vector<std::vector<size_t>> indexes;
+    std::vector<std::vector<std::size_t>> indexes;
 
-    for (size_t i=0; i<size.size(); i++)
+    for (std::size_t i=0; i<size.size(); i++)
     {
-        indexes.push_back(std::vector<size_t>());
+        indexes.push_back(std::vector<std::size_t>());
 
-        for (size_t j=0; j<size.at(i); j++)
+        for (std::size_t j=0; j<size.at(i); j++)
         {
             indexes.at(i).push_back(j);
         }
@@ -27,7 +27,7 @@ IndexIterator(
 
 IndexIterator::
 IndexIterator(
-    const std::vector<std::vector<size_t>>& indexes
+    const std::vector<std::vector<std::size_t>>& indexes
 ) : indexes_(indexes)
 {
 }
@@ -52,8 +52,8 @@ end(
 
 IndexIterator::iterator::
 iterator(
-    const std::vector<std::vector<size_t>>& indexes,
-    const std::vector<size_t>& current
+    const std::vector<std::vector<std::size_t>>& indexes,
+    const std::vector<std::size_t>& current
 ) : indexes_(indexes), current_(current)
 {
 }
@@ -61,7 +61,7 @@ iterator(
 
 IndexIterator::iterator::
 iterator(
-    const std::vector<std::vector<size_t>>& indexes
+    const std::vector<std::vector<std::size_t>>& indexes
 ) : indexes_(indexes)
 {
     // check there is no empty set of selectors
@@ -75,21 +75,21 @@ iterator(
     }
 
     // set the first index
-    for (size_t i = 0; i < indexes_.size(); i++)
+    for (std::size_t i = 0; i < indexes_.size(); i++)
     {
         current_.push_back(0);
     }
 }
 
 
-std::vector<size_t>
+std::vector<std::size_t>
 IndexIterator::iterator::
 operator*(
 )
 {
-    std::vector<size_t> res;
+    std::vector<std::size_t> res;
 
-    for (size_t idx = 0; idx < indexes_.size(); idx++)
+    for (std::size_t idx = 0; idx < indexes_.size(); idx++)
     {
         auto val = indexes_.at(idx).at(current_.at(idx));
         res.push_back(val);
@@ -106,7 +106,7 @@ operator++(
 {
     // PREFIX
 
-    for (size_t idx = 0; idx < indexes_.size(); idx++)
+    for (std::size_t idx = 0; idx < indexes_.size(); idx++)
     {
         if (current_.at(idx) < indexes_.at(idx).size() - 1)
         {

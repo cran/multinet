@@ -15,7 +15,7 @@ namespace net {
  * @return the sum of the degrees of v in the input layers
  */
 template <typename LayerIterator>
-size_t
+std::size_t
 degree(
     LayerIterator first,
     LayerIterator last,

@@ -14,7 +14,7 @@ namespace net {
  * @return the degree of the vertex with the maximum degree in g
  */
 template<typename G>
-size_t
+std::size_t
 maximum_strength(
     const G* g,
     const EdgeMode mode = EdgeMode::INOUT
@@ -28,7 +28,7 @@ maximum_strength(
  * @return the degree of the vertex with the minimum degree in g
  */
 template<typename G>
-size_t
+std::size_t
 minimum_strength(
     const G* g,
     const EdgeMode mode = EdgeMode::INOUT

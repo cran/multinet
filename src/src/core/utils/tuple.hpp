@@ -14,11 +14,11 @@ namespace uu {
 namespace core {
 
 
-template <size_t N1, size_t N2, typename Func, size_t I = 0>
+template <std::size_t N1, std::size_t N2, typename Func, std::size_t I = 0>
 typename std::enable_if<I == N1*N2>::type
 for_each_in_seq(Func) {}
 
-template <size_t N1, size_t N2, typename Func, size_t I = 0>
+template <std::size_t N1, std::size_t N2, typename Func, std::size_t I = 0>
 typename std::enable_if<I < N1*N2>::type
 for_each_in_seq(Func func)
 {
@@ -31,7 +31,7 @@ for_each_in_seq(Func func)
 // an example
 struct print_pair
 {
-    template <size_t N1, size_t N2, size_t I1, size_t I2>
+    template <std::size_t N1, std::size_t N2, std::size_t I1, std::size_t I2>
     void
     go ()
     {
@@ -49,11 +49,11 @@ struct print_pair
 // From StackOverflow
 // https://stackoverflow.com/questions/16387354/template-tuple-calling-a-function-on-each-element
 
-template<size_t I = 0, typename Func, typename ...Ts>
+template<std::size_t I = 0, typename Func, typename ...Ts>
 typename std::enable_if<I == sizeof...(Ts)>::type
 for_each_in_tuple(std::tuple<Ts...> &, Func) {}
 
-template<size_t I = 0, typename Func, typename ...Ts>
+template<std::size_t I = 0, typename Func, typename ...Ts>
 typename std::enable_if<I < sizeof...(Ts)>::type
 for_each_in_tuple(std::tuple<Ts...> & tpl, Func func)
 {

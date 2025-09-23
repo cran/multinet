@@ -17,7 +17,7 @@ namespace net {
 std::unique_ptr<OrderedMultiplexNetwork>
 slice_equal_time(
     const Network* tnet,
-    size_t num_partitions
+    std::size_t num_partitions
 )
 {
 
@@ -28,7 +28,7 @@ slice_equal_time(
     std::vector<std::vector<const Edge*>> partitioned_edge_vector;
 
     // create ordered layers for each time partition
-    for (size_t i = 0; i<num_partitions; i++)
+    for (std::size_t i = 0; i<num_partitions; i++)
     {
         EdgeDir dir = (tnet->is_directed()? EdgeDir::DIRECTED : EdgeDir::UNDIRECTED);
         //auto g = std::make_unique<uu::net::Network>("l" + std::to_string(i), dir);
@@ -65,7 +65,7 @@ slice_equal_time(
 
         for (auto t: times)
         {
-            size_t idx = ((t - min_time) / split_time);
+            std::size_t idx = ((t - min_time) / split_time);
 
             if (idx == num_partitions)
             {

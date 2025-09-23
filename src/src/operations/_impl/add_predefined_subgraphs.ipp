@@ -12,7 +12,7 @@ template<typename G>
 std::vector<const Vertex*>
 add_vertices(
     G* g,
-    size_t n,
+    std::size_t n,
     const std::string& base_vertex_name
 )
 {
@@ -74,7 +74,7 @@ template<typename G>
 void
 add_complete_subgraph(
     G* g,
-    size_t n,
+    std::size_t n,
     const std::string& base_vertex_name
 )
 {
@@ -106,8 +106,8 @@ template<typename G>
 void
 add_complete_bipartite_subgraph(
     G* g,
-    size_t n1,
-    size_t n2,
+    std::size_t n1,
+    std::size_t n2,
     const std::string& base_vertex_name1,
     const std::string& base_vertex_name2
 )
@@ -137,13 +137,13 @@ template<typename G>
 void
 add_path(
     G* g,
-    size_t n,
+    std::size_t n,
     const std::string& base_vertex_name
 )
 {
     auto vertices = add_vertices(g, n, base_vertex_name);
 
-    for (size_t i = 0; i < n-1; i++)
+    for (std::size_t i = 0; i < n-1; i++)
     {
         auto v1 = vertices.at(i);
         auto v2 = vertices.at(i+1);
@@ -156,13 +156,13 @@ template<typename G>
 void
 add_cycle(
     G* g,
-    size_t n,
+    std::size_t n,
     const std::string& base_vertex_name
 )
 {
     auto vertices = add_vertices(g, n, base_vertex_name);
 
-    for (size_t i = 0; i < n-1; i++)
+    for (std::size_t i = 0; i < n-1; i++)
     {
         auto v1 = vertices.at(i);
         auto v2 = vertices.at(i+1);
@@ -179,7 +179,7 @@ template<typename G>
 void
 add_wheel(
     G* g,
-    size_t n,
+    std::size_t n,
     const std::string& base_vertex_name
 )
 {
@@ -187,7 +187,7 @@ add_wheel(
 
     auto vc = vertices.at(0);
 
-    for (size_t i = 1; i < n-1; i++)
+    for (std::size_t i = 1; i < n-1; i++)
     {
         auto v1 = vertices.at(i);
         auto v2 = vertices.at(i+1);

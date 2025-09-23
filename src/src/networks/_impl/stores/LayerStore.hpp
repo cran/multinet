@@ -57,7 +57,7 @@ class LayerStore
         const Network* layer
     );
 
-    size_t
+    std::size_t
     index_of(
         const Network* layer
     ) const;
@@ -65,15 +65,15 @@ class LayerStore
 
     const Network*
     at(
-        size_t pos
+        std::size_t pos
     ) const;
 
     Network*
     at(
-        size_t pos
+        std::size_t pos
     );
 
-    size_t
+    std::size_t
     size(
     ) const;
 

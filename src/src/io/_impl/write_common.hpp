@@ -53,13 +53,13 @@ template <typename OT>
 void
 read_attributes(
     int from_idx, std::shared_ptr<AttributeStore<OT> >& as, std::shared_ptr<OT>& obj, const std::vector<std::string>& fields, const std::vector<core::Attribute>& attributes,
-    size_t line_number);
+    std::size_t line_number);
 
 template <typename OT>
 void
 read_attributes(
     int from_idx, std::shared_ptr<TemporalAttributeStore<OT> >& as, std::shared_ptr<OT>& obj, const std::vector<std::string>& fields, const std::vector<core::Attribute>& attributes,
-    size_t line_number);
+    std::size_t line_number);
 */
 
 } // namespace net

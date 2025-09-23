@@ -12,7 +12,7 @@ std::unique_ptr<CommunityStructure<G>>
                                     )
 {
 
-    std::unordered_map<const Vertex*, size_t> membership; // community membership
+    std::unordered_map<const Vertex*, std::size_t> membership; // community membership
     std::vector<const Vertex*> order; // order vector to decide in which order to process the nodes
     
     // Initialize labels
@@ -39,7 +39,7 @@ std::unique_ptr<CommunityStructure<G>>
         // re-assign labels
         for (auto node: order)
         {
-            core::Counter<size_t> num_neighbors;
+            core::Counter<std::size_t> num_neighbors;
 
             for (auto neigh: *net->edges()->neighbors(node,EdgeMode::INOUT))
             {

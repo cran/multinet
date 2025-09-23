@@ -17,14 +17,14 @@ class Set
   public:
 
     Set(
-        const std::vector<size_t>& indexes
+        const std::vector<std::size_t>& indexes
     );
 
     /**  */
     virtual
     void
     eval(
-        size_t size
+        std::size_t size
     ) override;
 
     /**  */
@@ -36,14 +36,14 @@ class Set
 
     /**  */
     virtual
-    size_t
+    std::size_t
     next(
     ) override;
 
   private:
 
-    std::vector<size_t> indexes_;
-    size_t current_;
+    std::vector<std::size_t> indexes_;
+    std::size_t current_;
     bool has_next_;
 
 };

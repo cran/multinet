@@ -13,18 +13,18 @@ template <typename M>
 void
 evolve(
     M* net,
-    size_t num_actors,
+    std::size_t num_actors,
     const std::vector<std::string>& layer_names,
     const std::vector<double>& pr_internal_event,
     const std::vector<double>& pr_external_event,
     const std::vector<std::vector<double>>& dependency,
     const std::vector<EvolutionModel<M>*>& evolution_model,
-    size_t num_of_steps
+    std::size_t num_of_steps
 )
 {
-    std::unordered_map<std::string, size_t> layer_idx;
+    std::unordered_map<std::string, std::size_t> layer_idx;
 
-    for (size_t n=0; n<net->layers()->size(); n++)
+    for (std::size_t n=0; n<net->layers()->size(); n++)
     {
         layer_idx[net->layers()->at(n)->name] = n;
     }
@@ -39,7 +39,7 @@ evolve(
 
     std::vector<double> pr_no_event;
 
-    for (size_t i=0; i<pr_internal_event.size(); i++)
+    for (std::size_t i=0; i<pr_internal_event.size(); i++)
     {
         pr_no_event.push_back(1.0 - pr_internal_event.at(i) - pr_external_event.at(i));
     }
@@ -47,7 +47,7 @@ evolve(
 
     // Initialization
     std::vector<std::shared_ptr<const Vertex>> actors(num_actors);
-    size_t pos = 0;
+    std::size_t pos = 0;
     for (auto actor: uu::core::NameIterator("A", num_actors))
     {
         actors[pos++] = std::make_shared<const Vertex>(actor);
@@ -55,9 +55,9 @@ evolve(
     
     std::vector<GenericObjectList<Vertex>> available_actors(net->layers()->size());
 
-    for (size_t idx=0; idx<net->layers()->size(); idx++)
+    for (std::size_t idx=0; idx<net->layers()->size(); idx++)
     {
-        size_t n = layer_idx.at(layer_names.at(idx));
+        std::size_t n = layer_idx.at(layer_names.at(idx));
         available_actors[n] = GenericObjectList<Vertex>();
 
         for (auto actor: actors)
@@ -71,12 +71,12 @@ evolve(
 
 
     // Evolution
-    for (size_t i=0; i<num_of_steps; i++)
+    for (std::size_t i=0; i<num_of_steps; i++)
     {
-        for (size_t idx=0; idx<net->layers()->size(); idx++)
+        for (std::size_t idx=0; idx<net->layers()->size(); idx++)
         {
 
-            size_t n = layer_idx.at(layer_names.at(idx));
+            std::size_t n = layer_idx.at(layer_names.at(idx));
 
             auto target_layer = net->layers()->at(n);
 
@@ -96,7 +96,7 @@ evolve(
             {
                 // EXTERNAL EVOLUTION
                 // choose a layer from which to import edges.
-                size_t layer_index = core::test(dependency[n]);
+                std::size_t layer_index = core::test(dependency[n]);
                 auto external_layer = net->layers()->get(layer_names.at(layer_index));
 
                 evolution_model[n]->external_evolution_step(net, target_layer, available_actors[n], external_layer);

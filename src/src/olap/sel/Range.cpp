@@ -7,8 +7,8 @@ namespace net {
 
 Range::
 Range(
-    size_t from,
-    size_t to
+    std::size_t from,
+    std::size_t to
 )
 {
     from_ = from;
@@ -21,7 +21,7 @@ Range(
 void
 Range::
 eval(
-    size_t size
+    std::size_t size
 )
 {
     if (from_ >= size || to_ >= size)
@@ -43,7 +43,7 @@ has_next(
 }
 
 
-size_t
+std::size_t
 Range::
 next(
 )

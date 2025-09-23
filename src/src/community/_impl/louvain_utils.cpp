@@ -68,12 +68,12 @@ convert(
 std::unique_ptr<MetaNetwork>
 aggregate(
     const Network* g,
-    std::unordered_map<const Vertex*, size_t> community
+    std::unordered_map<const Vertex*, std::size_t> community
 )
 {
     auto meta = std::make_unique<MetaNetwork>();
 
-    std::unordered_map<size_t, std::set<const Vertex*>> vertices;
+    std::unordered_map<std::size_t, std::set<const Vertex*>> vertices;
 
     for (auto pair: community)
     {
@@ -114,7 +114,7 @@ aggregate(
 void
 expand(
     const std::vector<std::unique_ptr<MetaNetwork>>& levels,
-    size_t i,
+    std::size_t i,
     const Vertex* v,
     Community<Network>* com
 )
@@ -144,7 +144,7 @@ std::unique_ptr<CommunityStructure<Network>>
 {
     auto res = std::make_unique<CommunityStructure<Network>>();
 
-    size_t i = levels.size()-1;
+    std::size_t i = levels.size()-1;
 
     for (auto v: *levels.at(i)->get()->vertices())
     {
@@ -166,10 +166,10 @@ pass(
 {
     //std::cout << "PASS" << std::endl;
 
-    std::unordered_map<const Vertex*, size_t> community;
-    std::unordered_map<size_t, std::set<const Vertex*>> vertices_in_community;
+    std::unordered_map<const Vertex*, std::size_t> community;
+    std::unordered_map<std::size_t, std::set<const Vertex*>> vertices_in_community;
     std::unordered_map<const Vertex*, double> w_degree;
-    size_t comm_id = 0;
+    std::size_t comm_id = 0;
 
     double m = 0; // todo CHECK!! Maybe it's just the number of edges?
 
@@ -201,7 +201,7 @@ pass(
             w_degree[v] = strength(g, v);
 
             auto current_community = community.at(v);
-            std::set<size_t> neighboring_communities;
+            std::set<std::size_t> neighboring_communities;
 
             for (auto n: *g->edges()->neighbors(v))
             {
@@ -218,7 +218,7 @@ pass(
                 continue;
             }
 
-            std::unordered_map<size_t, double> improvement;
+            std::unordered_map<std::size_t, double> improvement;
 
             for (auto c: neighboring_communities)
             {

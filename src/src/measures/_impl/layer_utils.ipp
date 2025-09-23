@@ -201,10 +201,10 @@ namespace std {
 template <>
 struct hash<std::pair<const uu::net::Vertex*,const uu::net::Vertex*>>
 {
-    size_t
+    std::size_t
     operator()(const std::pair<const uu::net::Vertex*,const uu::net::Vertex*>& d) const
     {
-        size_t seed = 0;
+        std::size_t seed = 0;
 
         seed ^= hash<const uu::net::Vertex*>()(d.first) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
         seed ^= hash<const uu::net::Vertex*>()(d.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);

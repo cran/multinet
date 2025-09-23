@@ -14,11 +14,11 @@ template <typename M>
 class ERModel :
     public EvolutionModel<M>
 {
-    size_t m0;
+    std::size_t m0;
   public:
 
     ERModel(
-        size_t m0
+        std::size_t m0
     );
 
     ~ERModel();

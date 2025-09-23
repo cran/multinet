@@ -14,7 +14,7 @@ namespace net {
 std::vector<double>
 optimize_slices(
     const Network* original_net,
-    size_t max_slices);
+    std::size_t max_slices);
 
 }
 }

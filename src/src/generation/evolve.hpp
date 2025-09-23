@@ -37,13 +37,13 @@ template <typename M>
 void
 evolve(
     M* net,
-    size_t num_actors,
+    std::size_t num_actors,
     const std::vector<std::string>& layer_names,
     const std::vector<double>& pr_internal_event,
     const std::vector<double>& pr_external_event,
     const std::vector<std::vector<double>>& dependency,
     const std::vector<EvolutionModel<M>*>& evolution_model,
-    size_t num_of_steps
+    std::size_t num_of_steps
 );
 
 

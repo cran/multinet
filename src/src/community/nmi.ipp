@@ -45,7 +45,7 @@ nmi(
         for (auto community2: *com2)
         {
             // intersection - @todo call some existing function...
-            size_t common_nodes = 0;
+            std::size_t common_nodes = 0;
 
             for (auto v: *community1)
             {

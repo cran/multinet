@@ -25,9 +25,9 @@ convert(
     std::map<MLVertex, const Vertex*> mapping;
     std::map<const Vertex*, MLVertex> reverse_mapping;
 
-    //std::map<MLVertex<MultilayerNetwork>, size_t> deg;
+    //std::map<MLVertex<MultilayerNetwork>, std::size_t> deg;
     //std::map<MLVertex<MultilayerNetwork>, double> ome;
-    //std::map<const Network*, size_t> m;
+    //std::map<const Network*, std::size_t> m;
 
     auto meta = std::make_unique<GMetaNetwork>();
 
@@ -43,9 +43,9 @@ convert(
         }
     }
     
-    size_t v_id = 0;
+    std::size_t v_id = 0;
 
-    for (size_t i = 0; i < g->layers()->size(); i++)
+    for (std::size_t i = 0; i < g->layers()->size(); i++)
     {
         auto l = g->layers()->at(i);
 
@@ -141,9 +141,9 @@ convert(
     std::vector<std::unique_ptr<const Vertex>> metavertices;
 
 
-    size_t v_id = 0;
+    std::size_t v_id = 0;
 
-    for (size_t i = 0; i < g->layers()->size(); i++)
+    for (std::size_t i = 0; i < g->layers()->size(); i++)
     {
         auto l = g->layers()->at(i);
 
@@ -174,7 +174,7 @@ convert(
 
     for (auto v: *g->actors())
     {
-        for (size_t i = 0; i < g->layers()->size()-1; i++)
+        for (std::size_t i = 0; i < g->layers()->size()-1; i++)
         {
             auto l1 = g->layers()->at(i);
             auto l2 = g->layers()->at(i+1);
@@ -205,7 +205,7 @@ convert(
 void
 expand(
     const std::vector<std::unique_ptr<GMetaNetwork>>& levels,
-    size_t i,
+    std::size_t i,
     const Vertex* v,
     Community<Network>* com
 )
@@ -235,7 +235,7 @@ std::unique_ptr<CommunityStructure<Network>>
 {
     auto res = std::make_unique<CommunityStructure<Network>>();
 
-    size_t i = levels.size()-1;
+    std::size_t i = levels.size()-1;
 
     for (auto v: *levels.at(i)->get()->vertices())
     {
@@ -253,12 +253,12 @@ std::unique_ptr<CommunityStructure<Network>>
 std::unique_ptr<GMetaNetwork>
 aggregate(
     const GMetaNetwork* meta,
-    std::unordered_map<const Vertex*, size_t> community
+    std::unordered_map<const Vertex*, std::size_t> community
 )
 {
     auto meta_agg = std::make_unique<GMetaNetwork>();
 
-    std::unordered_map<size_t, std::set<const Vertex*>> vertices;
+    std::unordered_map<std::size_t, std::set<const Vertex*>> vertices;
 
     for (auto pair: community)
     {
@@ -306,10 +306,10 @@ pass(
 {
     //std::cout << "PASS" << std::endl;
 
-    std::unordered_map<const Vertex*, size_t> community;
-    std::unordered_map<size_t, std::set<const Vertex*>> vertices_in_community;
-    std::map<std::pair<const Vertex*, size_t>, double> w_degree;
-    size_t comm_id = 0;
+    std::unordered_map<const Vertex*, std::size_t> community;
+    std::unordered_map<std::size_t, std::set<const Vertex*>> vertices_in_community;
+    std::map<std::pair<const Vertex*, std::size_t>, double> w_degree;
+    std::size_t comm_id = 0;
 
     // initializing communities
     for (auto v: *meta->get()->vertices())
@@ -354,9 +354,9 @@ pass(
 
             auto current_community = community.at(v);
             // communities of vertices adjacent to v
-            std::set<size_t> neighboring_communities;
+            std::set<std::size_t> neighboring_communities;
             // layers where v has positive degree (0 = interlayer)
-            std::set<size_t> positive_degree;
+            std::set<std::size_t> positive_degree;
 
             for (auto e: *meta->get()->edges()->incident(v))
             {
@@ -383,7 +383,7 @@ pass(
                 continue;
             }
 
-            std::unordered_map<size_t, double> improvement;
+            std::unordered_map<std::size_t, double> improvement;
 
             for (auto c: neighboring_communities)
             {
@@ -395,7 +395,7 @@ pass(
                     //std::cout << (*n) << " (";
 
                     auto edges = meta->get()->edges()->get(v, n);
-                    std::unordered_map<size_t, const Edge*> edge_map;
+                    std::unordered_map<std::size_t, const Edge*> edge_map;
 
                     for (auto e: edges)
                     {
@@ -471,7 +471,7 @@ pass(
                 //std::cout << (*n) << " (";
 
                 auto edges = meta->get()->edges()->get(v, n);
-                std::unordered_map<size_t, const Edge*> edge_map;
+                std::unordered_map<std::size_t, const Edge*> edge_map;
 
                 for (auto e: edges)
                 {

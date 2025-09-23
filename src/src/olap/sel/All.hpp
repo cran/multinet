@@ -20,7 +20,7 @@ class All
     virtual
     void
     eval(
-        size_t size
+        std::size_t size
     ) override;
 
     /**  */
@@ -32,14 +32,14 @@ class All
 
     /**  */
     virtual
-    size_t
+    std::size_t
     next(
     ) override;
 
   private:
 
-    size_t max_;
-    size_t current_;
+    std::size_t max_;
+    std::size_t current_;
     bool has_next_;
 
 };

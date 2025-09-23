@@ -15,7 +15,7 @@ namespace net {
  * @return the degree of the vertex with the maximum degree in g
  */
 template<typename G>
-size_t
+std::size_t
 maximum_degree(
     const G* g,
     const EdgeMode mode = EdgeMode::INOUT
@@ -29,7 +29,7 @@ maximum_degree(
  * @return the degree of the vertex with the minimum degree in g
  */
 template<typename G>
-size_t
+std::size_t
 minimum_degree(
     const G* g,
     const EdgeMode mode = EdgeMode::INOUT
@@ -56,7 +56,7 @@ average_degree(
  * @return a vector of length n with the ordered sequence of vertex degrees in g
  */
 template<typename G>
-std::vector<size_t>
+std::vector<std::size_t>
 degree_sequence(
     const G* g,
     const EdgeMode mode = EdgeMode::INOUT
@@ -69,7 +69,7 @@ degree_sequence(
  * @return a vector dd, where dd[i] is the number of vertices having degree i
  */
 template<typename G>
-std::vector<size_t>
+std::vector<std::size_t>
 degree_distribution(
     const G* g,
     const EdgeMode mode = EdgeMode::INOUT
@@ -83,7 +83,7 @@ degree_distribution(
  * @return the (mode-)degree of v in g
  */
 template<typename G>
-size_t
+std::size_t
 degree(
     const G* g,
     const Vertex* v,

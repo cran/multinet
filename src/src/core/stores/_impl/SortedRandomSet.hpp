@@ -53,16 +53,16 @@ class SortedRandomSet
     std::shared_ptr<SortedRandomSetEntry<ELEMENT_TYPE>> header;
 
     /* Number of entries for which the sorted set is optimized. */
-    size_t capacity = 1;
+    std::size_t capacity = 1;
 
     /* Current number of entries. */
-    size_t num_entries = 0;
+    std::size_t num_entries = 0;
 
     /* Maximum level */
-    size_t MAX_LEVEL = 0;
+    std::size_t MAX_LEVEL = 0;
 
     /* Current maximum level in use. */
-    size_t level;
+    std::size_t level;
 
   public:
 
@@ -117,7 +117,7 @@ class SortedRandomSet
      * @param start_capacity the initial capacity for which the sorted set is optimized
      */
     SortedRandomSet(
-        size_t start_capacity
+        std::size_t start_capacity
     );
 
     /** Iterator over the objects in this collection. */
@@ -184,7 +184,7 @@ class SortedRandomSet
     ) const;
 
     /** Returns the number of objects in the collection */
-    size_t
+    std::size_t
     size(
     ) const;
 
@@ -215,7 +215,7 @@ class SortedRandomSet
      */
     const ELEMENT_TYPE&
     at(
-        size_t
+        std::size_t
     ) const;
 
     /** Returns a random object, uniform probability */
@@ -300,7 +300,7 @@ clear()
     {
         tmp.push_back(next);
 
-        for (size_t i=0; i<current->forward.size(); i++)
+        for (std::size_t i=0; i<current->forward.size(); i++)
         {
             current->forward[i] = nullptr;
         }
@@ -314,7 +314,7 @@ clear()
 template <class ELEMENT_TYPE>
 SortedRandomSet<ELEMENT_TYPE>::
 SortedRandomSet(
-    size_t start_capacity
+    std::size_t start_capacity
 )
 {
     capacity = start_capacity;
@@ -403,7 +403,7 @@ operator!=(
 }
 
 template <class ELEMENT_TYPE>
-size_t
+std::size_t
 SortedRandomSet<ELEMENT_TYPE>::size(
 ) const
 {
@@ -474,7 +474,7 @@ template <class ELEMENT_TYPE>
 const ELEMENT_TYPE&
 SortedRandomSet<ELEMENT_TYPE>::
 at(
-    size_t pos
+    std::size_t pos
 ) const
 {
     if (pos < 0 || pos >= num_entries)
@@ -483,7 +483,7 @@ at(
     }
 
     std::shared_ptr<const SortedRandomSetEntry<ELEMENT_TYPE>> x = header;
-    size_t so_far=0;
+    std::size_t so_far=0;
 
     for (int i = level; i >= 0; i--)
     {
@@ -516,8 +516,8 @@ add(
     std::shared_ptr<SortedRandomSetEntry<ELEMENT_TYPE>> x = header;
     std::vector<std::shared_ptr<SortedRandomSetEntry<ELEMENT_TYPE>> > update;
     update.resize(level+1);
-    std::vector<size_t> skipped_positions_per_level;
-    size_t skipped_positions = 0;
+    std::vector<std::size_t> skipped_positions_per_level;
+    std::size_t skipped_positions = 0;
     skipped_positions_per_level.resize(level+1,0);
 
     for (int i = level; i >= 0; i--)
@@ -549,14 +549,14 @@ add(
             header->increment(num_entries);
         }
 
-        size_t lvl = random_level(MAX_LEVEL,P);
+        std::size_t lvl = random_level(MAX_LEVEL,P);
 
         if (lvl > level)
         {
             update.resize(lvl+1);
             skipped_positions_per_level.resize(lvl+1,0);
 
-            for (size_t i = level + 1; i <= lvl; i++)
+            for (std::size_t i = level + 1; i <= lvl; i++)
             {
                 update[i] = header;
                 update[i]->link_length[i] = num_entries;
@@ -567,9 +567,9 @@ add(
 
         x = std::make_shared<SortedRandomSetEntry<ELEMENT_TYPE> >(lvl, value);
 
-        for (size_t i = 0; i <= lvl; i++)
+        for (std::size_t i = 0; i <= lvl; i++)
         {
-            size_t offset = skipped_positions-skipped_positions_per_level[i];
+            std::size_t offset = skipped_positions-skipped_positions_per_level[i];
 
             x->forward[i] = update[i]->forward[i];
 
@@ -587,7 +587,7 @@ add(
             update[i]->link_length[i] = offset+1;
         }
 
-        for (size_t i = lvl+1; i <= level; i++)
+        for (std::size_t i = lvl+1; i <= level; i++)
         {
             update[i]->link_length[i]++;
         }
@@ -613,8 +613,8 @@ add(
     std::shared_ptr<SortedRandomSetEntry<ELEMENT_TYPE>> x = header;
     std::vector<std::shared_ptr<SortedRandomSetEntry<ELEMENT_TYPE>> > update;
     update.resize(level+1);
-    std::vector<size_t> skipped_positions_per_level;
-    size_t skipped_positions = 0;
+    std::vector<std::size_t> skipped_positions_per_level;
+    std::size_t skipped_positions = 0;
     skipped_positions_per_level.resize(level+1,0);
 
     for (int i = level; i >= 0; i--)
@@ -646,14 +646,14 @@ add(
             header->increment(num_entries);
         }
 
-        size_t lvl = random_level(MAX_LEVEL,P);
+        std::size_t lvl = random_level(MAX_LEVEL,P);
 
         if (lvl > level)
         {
             update.resize(lvl+1);
             skipped_positions_per_level.resize(lvl+1,0);
 
-            for (size_t i = level + 1; i <= lvl; i++)
+            for (std::size_t i = level + 1; i <= lvl; i++)
             {
                 update[i] = header;
                 update[i]->link_length[i] = num_entries;
@@ -664,9 +664,9 @@ add(
 
         x = std::make_shared<SortedRandomSetEntry<ELEMENT_TYPE> >(lvl, std::move(value));
 
-        for (size_t i = 0; i <= lvl; i++)
+        for (std::size_t i = 0; i <= lvl; i++)
         {
-            size_t offset = skipped_positions-skipped_positions_per_level[i];
+            std::size_t offset = skipped_positions-skipped_positions_per_level[i];
 
             x->forward[i] = update[i]->forward[i];
 
@@ -684,7 +684,7 @@ add(
             update[i]->link_length[i] = offset+1;
         }
 
-        for (size_t i = lvl+1; i <= level; i++)
+        for (std::size_t i = lvl+1; i <= level; i++)
         {
             update[i]->link_length[i]++;
         }
@@ -735,7 +735,7 @@ erase(
 
     if (eq(x->value, value))
     {
-        for (size_t i = 0; i <= level; i++)
+        for (std::size_t i = 0; i <= level; i++)
         {
             if (update[i]->forward[i] != x)
             {

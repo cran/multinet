@@ -42,9 +42,9 @@ AttributeStore<OBJECT_TYPE>::
 read_attributes(
     const OBJECT_TYPE* const obj,
     const std::vector<std::string>& fields,
-    size_t offset,
+    std::size_t offset,
     const std::vector<Attribute>& attributes,
-    size_t line_number
+    std::size_t line_number
 )
 {
 

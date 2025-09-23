@@ -43,7 +43,7 @@ class
      * @param start_capacity the initial capacity for which the sorted set is optimized
      */
     PtrSortedRandomSet(
-        size_t start_capacity
+        std::size_t start_capacity
     );
 
 
@@ -106,7 +106,7 @@ class
     ) const;
 
     /** Returns the number of objects in the collection */
-    size_t
+    std::size_t
     size(
     ) const;
 
@@ -127,7 +127,7 @@ class
      */
     E*
     at(
-        size_t
+        std::size_t
     ) const;
 
     /** Returns a random object, uniform probability */
@@ -172,7 +172,7 @@ PtrSortedRandomSet(
 template <typename E, typename PTR, typename PtrLT, typename PtrEQ>
 PtrSortedRandomSet<E, PTR, PtrLT, PtrEQ>::
 PtrSortedRandomSet(
-    size_t start_capacity
+    std::size_t start_capacity
 ) : set(start_capacity)
 {
 }
@@ -275,7 +275,7 @@ operator!=(
 }
 
 template <typename E, typename PTR, typename PtrLT, typename PtrEQ>
-size_t
+std::size_t
 PtrSortedRandomSet<E, PTR, PtrLT, PtrEQ>::size(
 ) const
 {
@@ -312,7 +312,7 @@ template <typename E, typename PTR, typename PtrLT, typename PtrEQ>
 E*
 PtrSortedRandomSet<E, PTR, PtrLT, PtrEQ>::
 at(
-    size_t pos
+    std::size_t pos
 ) const
 {
     return set.at(pos).get();

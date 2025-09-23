@@ -52,7 +52,7 @@ read_data(
 std::string
 read_version(
     const std::string& input,
-    size_t line_number
+    std::size_t line_number
 );
 
 /**
@@ -64,7 +64,7 @@ void
 read_graph_type(
     const std::string& graph_type,
     GraphType& meta,
-    size_t line_number
+    std::size_t line_number
 );
 
 /**
@@ -80,8 +80,8 @@ read_graph_type(
 core::Attribute
 read_attr_def(
     const std::vector<std::string>& line,
-    size_t from_idx,
-    size_t line_number
+    std::size_t from_idx,
+    std::size_t line_number
 );
 
 template <typename ASPtr, typename EPtr>
@@ -91,8 +91,8 @@ read_attr_values(
     EPtr element,
     const std::vector<core::Attribute>& attributes,
     const std::vector<std::string>& line,
-    size_t from_idx,
-    size_t line_number
+    std::size_t from_idx,
+    std::size_t line_number
 );
 
 
@@ -101,8 +101,8 @@ const Vertex*
 read_vertex(
     G* g,
     const std::vector<std::string>& fields,
-    size_t from_idx,
-    size_t line_number
+    std::size_t from_idx,
+    std::size_t line_number
 );
 
 template <typename G>
@@ -110,8 +110,8 @@ const Edge*
 read_edge(
     G* g,
     const std::vector<std::string>& fields,
-    size_t from_idx,
-    size_t line_number
+    std::size_t from_idx,
+    std::size_t line_number
 );
 
 void
@@ -119,7 +119,7 @@ read_vertex(
     Network* g,
     const std::vector<std::string>& fields,
     const std::vector<core::Attribute>& vertex_attributes,
-    size_t line_number
+    std::size_t line_number
 );
 
 
@@ -128,7 +128,7 @@ read_edge(
     Network* g,
     const std::vector<std::string>& fields,
     const std::vector<core::Attribute>& edge_attributes,
-    size_t line_number
+    std::size_t line_number
 );
 
 
@@ -235,8 +235,8 @@ const Vertex*
 read_vertex(
     G* g,
     const std::vector<std::string>& fields,
-    size_t from_idx,
-    size_t line_number
+    std::size_t from_idx,
+    std::size_t line_number
 )
 {
     (void)line_number; // attribute not used
@@ -260,8 +260,8 @@ const Edge*
 read_edge(
     G* g,
     const std::vector<std::string>& fields,
-    size_t from_idx,
-    size_t line_number
+    std::size_t from_idx,
+    std::size_t line_number
 )
 {
     (void)line_number; // attribute not used
@@ -306,13 +306,13 @@ read_attr_values(
     EPtr element,
     const std::vector<core::Attribute>& attributes,
     const std::vector<std::string>& line,
-    size_t from_idx,
-    size_t line_number
+    std::size_t from_idx,
+    std::size_t line_number
 )
 {
     (void)line_number; // attribute not used
 
-    for (size_t i=from_idx; i<from_idx+attributes.size(); i++)
+    for (std::size_t i=from_idx; i<from_idx+attributes.size(); i++)
     {
         switch (attributes.at(i-from_idx).type)
         {

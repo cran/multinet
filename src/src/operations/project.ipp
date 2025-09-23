@@ -45,7 +45,7 @@ project_temporal(
     const typename M::layer_type* from,
     const typename M::layer_type* to,
     Network* target,
-    size_t delta_time
+    std::size_t delta_time
 )
 {
     core::assert_not_null(from, "project_temporal", "from");
@@ -81,7 +81,7 @@ project_temporal(
 
                 auto time_diff = std::chrono::seconds(std::max(t1, t2) - std::min(t1, t2)).count();
 
-                if (delta_time <= (size_t) time_diff)
+                if (delta_time <= (std::size_t) time_diff)
                 {
                     continue;
                 }

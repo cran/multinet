@@ -16,14 +16,14 @@ class IndexIterator
      * Creates indexes (number of dimensions).
      */
     IndexIterator(
-        const std::vector<size_t>& indexes
+        const std::vector<std::size_t>& indexes
     );
 
     /**
      * Creates indexes.
      */
     IndexIterator(
-        const std::vector<std::vector<size_t>>& indexes
+        const std::vector<std::vector<std::size_t>>& indexes
     );
 
 
@@ -35,24 +35,24 @@ class IndexIterator
       public:
 
         typedef ptrdiff_t difference_type; //almost always ptrdiff_t
-        typedef std::vector<size_t> value_type; //almost always T
-        typedef const std::vector<size_t>& reference; //almost always T& or const T&
-        typedef std::vector<size_t>* pointer; //almost always T* or const T*
+        typedef std::vector<std::size_t> value_type; //almost always T
+        typedef const std::vector<std::size_t>& reference; //almost always T& or const T&
+        typedef std::vector<std::size_t>* pointer; //almost always T* or const T*
         typedef std::forward_iterator_tag iterator_category;
 
 
         iterator(
-            const std::vector<std::vector<size_t>>& indexes
+            const std::vector<std::vector<std::size_t>>& indexes
         );
 
         // @todo check encapsulation
         iterator(
-            const std::vector<std::vector<size_t>>& indexes,
-            const std::vector<size_t>& current
+            const std::vector<std::vector<std::size_t>>& indexes,
+            const std::vector<std::size_t>& current
         );
 
         /** Return the object pointed by this iterator */
-        std::vector<size_t>
+        std::vector<std::size_t>
         operator*(
         );
 
@@ -82,13 +82,13 @@ class IndexIterator
       private:
 
         /* selection expressed as indexes of each dimension */
-        std::vector<std::vector<size_t>> indexes_;
+        std::vector<std::vector<std::size_t>> indexes_;
 
         /** Entry currently pointed to by this iterator */
-        std::vector<size_t> current_;
+        std::vector<std::size_t> current_;
 
         /** Order in which to increment the indexes */
-        std::vector<size_t> pivot_;
+        std::vector<std::size_t> pivot_;
     };
 
     iterator
@@ -102,7 +102,7 @@ class IndexIterator
   private:
 
     /* selection expressed as indexes of each dimension */
-    std::vector<std::vector<size_t>> indexes_;
+    std::vector<std::vector<std::size_t>> indexes_;
 
 };
 

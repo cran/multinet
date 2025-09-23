@@ -21,7 +21,7 @@ step(
 }
 
 template <typename M>
-size_t
+std::size_t
 PathLength<M>::
 length(
 ) const
@@ -30,7 +30,7 @@ length(
 }
 
 template <typename M>
-size_t
+std::size_t
 PathLength<M>::
 length(
     const typename M::layer_type* layer
@@ -40,7 +40,7 @@ length(
 }
 
 template <typename M>
-size_t
+std::size_t
 PathLength<M>::
 length(
     const typename M::layer_type* from,

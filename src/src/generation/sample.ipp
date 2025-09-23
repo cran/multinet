@@ -21,7 +21,7 @@ sample(
 {
 
     core::assert_not_null(net, "sample", "net");
-    size_t num_layers = net->layers()->size();
+    std::size_t num_layers = net->layers()->size();
     if (num_layers != pr_internal_connectivity.size())
     {
         throw core::WrongParameterException("pr_internal_connectivity size does not match number of layers");
@@ -35,14 +35,14 @@ sample(
 
     for (auto com: *communities)
     {
-        for (size_t layer_id=0; layer_id<net->layers()->size(); layer_id++)
+        for (std::size_t layer_id=0; layer_id<net->layers()->size(); layer_id++)
         {
 
         }
 
         for (auto n: *com)
         {
-            size_t layer_id = net->layers()->index_of(n.c);
+            std::size_t layer_id = net->layers()->index_of(n.c);
             auto&& it = layer_communities[layer_id].find(com);
 
             if (it == layer_communities[layer_id].end())
@@ -60,7 +60,7 @@ sample(
 
     for (auto layer: *net->layers())
     {
-        size_t l = net->layers()->index_of(layer);
+        std::size_t l = net->layers()->index_of(layer);
 
         for (auto&& pair: layer_communities[l])
         {
@@ -93,11 +93,11 @@ sample(
             {
 
                 auto&& community2 = it2->second;
-                size_t n1 = community1->size();
-                size_t n2 = community2->size();
-                size_t num_trials = std::ceil(std::log(1.0 - prob)/std::log((n1*n2-1.0)/(n1*n2)));
+                std::size_t n1 = community1->size();
+                std::size_t n2 = community2->size();
+                std::size_t num_trials = std::ceil(std::log(1.0 - prob)/std::log((n1*n2-1.0)/(n1*n2)));
 
-                for (size_t i=0; i<num_trials; i++)
+                for (std::size_t i=0; i<num_trials; i++)
                 {
                     auto v1 = community1->get_at_random();
                     auto v2 = community2->get_at_random();

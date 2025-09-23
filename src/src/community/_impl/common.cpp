@@ -5,7 +5,7 @@ namespace net {
 
 std::unique_ptr<CommunityStructure<Network>>
         to_community_structure(
-            std::unordered_map<const Vertex*, size_t> membership
+            std::unordered_map<const Vertex*, std::size_t> membership
         )
 {
     auto result = std::make_unique<CommunityStructure<Network>>();

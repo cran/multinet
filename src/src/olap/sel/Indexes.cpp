@@ -1,4 +1,4 @@
-#include "olap/sel//Indexes.hpp"
+#include "olap/sel/Indexes.hpp"
 
 namespace uu {
 namespace net {
@@ -13,7 +13,7 @@ Indexes(
 void
 Indexes::
 eval(
-    size_t size
+    std::size_t size
 )
 {
     (void)size;
@@ -29,7 +29,7 @@ has_next(
 }
 
 
-size_t
+std::size_t
 Indexes::
 next(
 )

@@ -35,7 +35,7 @@ GMetaNetwork::
 edge(
     const Vertex* u,
     const Vertex* v,
-    size_t type,
+    std::size_t type,
     double weight
 )
 {
@@ -69,7 +69,7 @@ get_weight(
     return edge_weight.at(e);
 }
 
-size_t
+std::size_t
 GMetaNetwork::
 get_type(
     const Edge* e

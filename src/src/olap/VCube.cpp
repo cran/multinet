@@ -22,7 +22,7 @@ VCube(
 
     if (cube.order() > 0)
     {
-        for (size_t i = 0; i < cube.order(); i++)
+        for (std::size_t i = 0; i < cube.order(); i++)
         {
             add_dimension(cube.dimensions()[i], cube.members(i));
         }
@@ -47,7 +47,7 @@ VCube(
     }
 }
 
-size_t
+std::size_t
 VCube::
 size(
 ) const
@@ -56,7 +56,7 @@ size(
 }
 
 
-size_t
+std::size_t
 VCube::
 order(
 ) const
@@ -65,7 +65,7 @@ order(
 }
 
 
-std::vector<size_t>
+std::vector<std::size_t>
 VCube::
 dsize(
 ) const
@@ -105,7 +105,7 @@ members(
 const std::vector<std::string>&
 VCube::
 members(
-    size_t dim_idx
+    std::size_t dim_idx
 ) const
 {
     return data_->members(dim_idx);
@@ -194,7 +194,7 @@ get(
 const Vertex*
 VCube::
 at(
-    size_t pos
+    std::size_t pos
 ) const
 {
     return data_->at(pos);
@@ -301,7 +301,7 @@ void
 VCube::
 sort(
     const std::string& dim_name,
-    const std::vector<size_t>& f
+    const std::vector<std::size_t>& f
 )
 {
     data_->sort(dim_name, f);
@@ -310,7 +310,7 @@ sort(
 void
 VCube::
 pivot(
-    const std::vector<size_t>& f
+    const std::vector<std::size_t>& f
 )
 {
     data_->pivot(f);
@@ -319,7 +319,7 @@ pivot(
 VertexStore*
 VCube::
 cell(
-    const std::vector<size_t>& index
+    const std::vector<std::size_t>& index
 )
 {
     return data_->cell(index);
@@ -329,7 +329,7 @@ cell(
 const VertexStore*
 VCube::
 cell(
-    const std::vector<size_t>& index
+    const std::vector<std::size_t>& index
 ) const
 {
     return data_->cell(index);
@@ -356,7 +356,7 @@ cell(
 }
 
 
-size_t
+std::size_t
 VCube::
 num_cells(
 ) const
@@ -417,7 +417,7 @@ init(
 VertexStore*
 VCube::
 init(
-    const std::vector<size_t>& index,
+    const std::vector<std::size_t>& index,
     const std::shared_ptr<VertexStore>& store
 )
 {
@@ -427,7 +427,7 @@ init(
 VertexStore*
 VCube::
 init(
-    size_t pos,
+    std::size_t pos,
     const std::shared_ptr<VertexStore>& store
 )
 {
@@ -437,7 +437,7 @@ init(
 VertexStore*
 VCube::
 init(
-    const std::vector<size_t>& index
+    const std::vector<std::size_t>& index
 )
 {
     return data_->init(index, get_store());
@@ -446,7 +446,7 @@ init(
 VertexStore*
 VCube::
 init(
-    size_t pos
+    std::size_t pos
 )
 {
     return data_->init(pos, get_store());
@@ -463,7 +463,7 @@ register_obs(
 void
 VCube::
 register_obs(
-    const std::vector<size_t>& index
+    const std::vector<std::size_t>& index
 )
 {
     data_->register_obs(index);
@@ -472,7 +472,7 @@ register_obs(
 void
 VCube::
 register_obs(
-    size_t pos
+    std::size_t pos
 )
 {
     data_->register_obs(pos);

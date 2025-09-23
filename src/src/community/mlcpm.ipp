@@ -8,8 +8,8 @@ template <typename M>
 std::unique_ptr<CommunityStructure<M>>
 mlcpm(
     const M* mnet,
-    size_t k,
-    size_t m
+    std::size_t k,
+    std::size_t m
 )
 {
     // Step 1: find max-cliques
@@ -35,7 +35,7 @@ mlcpm(
     // @todo use a Network instead?
 
     //
-    size_t num_adj_edges = 0;
+    std::size_t num_adj_edges = 0;
     for (auto el: adjacency)
         num_adj_edges += el.second.size();
     //std::cout << "size adjacency: " << num_adj_edges << std::endl;

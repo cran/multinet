@@ -15,7 +15,7 @@ namespace net {
  */
 std::unique_ptr<Network>
 null_graph(
-    size_t n,
+    std::size_t n,
     EdgeDir dir = EdgeDir::UNDIRECTED,
     LoopMode allows_loops = LoopMode::DISALLOWED
 );
@@ -26,7 +26,7 @@ null_graph(
  */
 std::unique_ptr<MultilayerNetwork>
 null_multiplex(
-    size_t n,
+    std::size_t n,
     const std::vector<EdgeDir>& dir,
     const std::vector<LoopMode>& allows_loops
 );
@@ -37,8 +37,8 @@ null_multiplex(
  */
 std::unique_ptr<MultilayerNetwork>
 null_multiplex(
-    size_t n,
-    size_t l
+    std::size_t n,
+    std::size_t l
 );
 
 /**
@@ -48,7 +48,7 @@ null_multiplex(
  */
 std::unique_ptr<Network>
 complete_graph(
-    size_t n,
+    std::size_t n,
     EdgeDir dir = EdgeDir::UNDIRECTED
 );
 
@@ -60,8 +60,8 @@ complete_graph(
  */
 std::unique_ptr<Network>
 complete_bipartite_graph(
-    size_t n1,
-    size_t n2,
+    std::size_t n1,
+    std::size_t n2,
     EdgeDir dir = EdgeDir::UNDIRECTED
 );
 
@@ -71,7 +71,7 @@ complete_bipartite_graph(
  */
 std::unique_ptr<Network>
 path_graph(
-    size_t n,
+    std::size_t n,
     EdgeDir dir = EdgeDir::UNDIRECTED
 );
 
@@ -80,7 +80,7 @@ path_graph(
  */
 std::unique_ptr<Network>
 cycle_graph(
-    size_t n,
+    std::size_t n,
     EdgeDir dir = EdgeDir::UNDIRECTED
 );
 
@@ -92,7 +92,7 @@ cycle_graph(
  */
 std::unique_ptr<Network>
 wheel_graph(
-    size_t n
+    std::size_t n
 );
 
 }

@@ -43,7 +43,7 @@ class
     /**
      * Returns the number of edges in the trail.
      */
-    size_t
+    std::size_t
     length(
     ) const;
 

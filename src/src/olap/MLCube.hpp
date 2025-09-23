@@ -68,21 +68,21 @@ class MLCube
     /**
      * Returns the number of elements in the cube.
      */
-    size_t
+    std::size_t
     size(
     ) const;
 
     /**
      * Returns the order (number of dimensions) of this cube.
      */
-    size_t
+    std::size_t
     order(
     ) const;
 
     /**
      * Returns the number of members for each dimension.
      */
-    std::vector<size_t>
+    std::vector<std::size_t>
     dsize(
     ) const;
 
@@ -113,7 +113,7 @@ class MLCube
      */
     const std::vector<std::string>&
     members(
-        size_t dim_idx
+        std::size_t dim_idx
     ) const;
 
     /** Returns an iterator to the first object in the collection */
@@ -176,7 +176,7 @@ class MLCube
      */
     typename STORE::value_type*
     at(
-        size_t pos
+        std::size_t pos
     ) const;
 
     /** Returns a random object, uniform probability */
@@ -257,12 +257,12 @@ class MLCube
     void
     sort(
         const std::string& dim_name,
-        const std::vector<size_t>& f
+        const std::vector<std::size_t>& f
     );
     
     void
     pivot(
-        const std::vector<size_t>& f
+        const std::vector<std::size_t>& f
     );
     
     /**
@@ -271,7 +271,7 @@ class MLCube
      */
     STORE*
     cell(
-        const std::vector<size_t>& index
+        const std::vector<std::size_t>& index
     );
 
     /**
@@ -280,7 +280,7 @@ class MLCube
      */
     const STORE*
     cell(
-        const std::vector<size_t>& index
+        const std::vector<std::size_t>& index
     ) const;
 
     /**
@@ -301,7 +301,7 @@ class MLCube
         const std::vector<std::string>& index
     ) const;
 
-    size_t
+    std::size_t
     num_cells(
     ) const;
 
@@ -330,13 +330,13 @@ class MLCube
      */
     STORE*
     init(
-        const std::vector<size_t>& index,
+        const std::vector<std::size_t>& index,
         const std::shared_ptr<STORE>& store
     );
 
     STORE*
     init(
-        size_t pos,
+        std::size_t pos,
         const std::shared_ptr<STORE>& store
     );
 
@@ -358,14 +358,14 @@ class MLCube
 
     STORE*
     init(
-        const std::vector<size_t>& index
+        const std::vector<std::size_t>& index
     );
        */
     /*
     virtual
     STORE*
     init(
-        size_t pos
+        std::size_t pos
     ) = 0;
 
 
@@ -381,29 +381,29 @@ class MLCube
 
     void
     register_obs(
-        size_t pos
+        std::size_t pos
     );
 
     void
     register_obs(
-        const std::vector<size_t>& index
+        const std::vector<std::size_t>& index
     );
 
     /* index of a dimension
-    size_t
+    std::size_t
     index_of(
         const std::string& dim
     ) const;
 
      index of a member given a dimension
-    size_t
+    std::size_t
     index_of(
         const std::string& dim,
         const std::string& member
     ) const;
 
      computes a numerical index from a label-based index
-    std::vector<size_t>
+    std::vector<std::size_t>
     index_of(
         const std::vector<std::string>& index
     ) const;
@@ -427,7 +427,7 @@ class MLCube
     void
     insert(
         const std::shared_ptr<STORE>& value,
-        const std::vector<size_t>& index
+        const std::vector<std::size_t>& index
     );
 
     void
@@ -448,27 +448,27 @@ class MLCube
     ) const = 0;
 
 
-    size_t
+    std::size_t
     pos(
-        const std::vector<size_t>& index,
-        const std::vector<size_t>& dimensions
+        const std::vector<std::size_t>& index,
+        const std::vector<std::size_t>& dimensions
     ) const;
     */
 
-    size_t
+    std::size_t
     pos(
-        const std::vector<size_t>& index
+        const std::vector<std::size_t>& index
     ) const;
 
 
-    std::vector<size_t>
+    std::vector<std::size_t>
     index_of(
         const std::vector<std::string>& members
     ) const;
 
 
 
-    size_t
+    std::size_t
     pos(
         const std::vector<std::string>& index
     ) const;
@@ -526,7 +526,7 @@ class MLCube
 
     /*void
     init(
-        size_t pos
+        std::size_t pos
     );*/
 
   protected:
@@ -545,22 +545,22 @@ class MLCube
     std::unique_ptr<core::UnionObserver<STORE>> union_obs;
 
     // Dimensions (that is, number of members for each dimension)
-    std::vector<size_t> size_;
+    std::vector<std::size_t> size_;
 
     // Offsets
-    //std::vector<size_t> off_;
+    //std::vector<std::size_t> off_;
 
     // Dimension names
     std::vector<std::string> dim_;
 
     // Index of each dimension (by name)
-    std::unordered_map<std::string,size_t> dim_idx_;
+    std::unordered_map<std::string,std::size_t> dim_idx_;
 
     // Members, for each dimension
     std::vector<std::vector<std::string>> members_;
 
     // Index of each member (by name), for each dimension
-    std::vector<std::unordered_map<std::string, size_t>> members_idx_;
+    std::vector<std::unordered_map<std::string, std::size_t>> members_idx_;
 
     // Element attributes
     std::unique_ptr<core::AttributeStore<typename STORE::value_type>> attr_;

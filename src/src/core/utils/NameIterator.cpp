@@ -9,7 +9,7 @@ namespace core {
 NameIterator::
 NameIterator(
     const std::string& prefix,
-    size_t num_names
+    std::size_t num_names
 ) :
     prefix_(prefix),
     num_names_(num_names)
@@ -31,8 +31,8 @@ NameIterator(
 NameIterator::iterator::
 iterator(
     const std::string& prefix,
-    size_t num_names,
-    size_t num_digits
+    std::size_t num_names,
+    std::size_t num_digits
 ):
     prefix_(prefix),
     num_names_(num_names),
@@ -44,9 +44,9 @@ iterator(
 NameIterator::iterator::
 iterator(
     const std::string& prefix,
-    size_t num_names,
-    size_t num_digits,
-    size_t current
+    std::size_t num_names,
+    std::size_t num_digits,
+    std::size_t current
 ):
     prefix_(prefix),
     num_names_(num_names),
@@ -62,13 +62,13 @@ operator*(
 {
 
     std::string c = std::to_string(current_);
-    size_t length = c.length();
+    std::size_t length = c.length();
 
     std::stringstream ss;
 
     ss << prefix_;
 
-    for (size_t i = 0; i < num_digits_ - length; i++)
+    for (std::size_t i = 0; i < num_digits_ - length; i++)
     {
         ss << "0";
     }

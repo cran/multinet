@@ -18,7 +18,7 @@ namespace net {
 std::unique_ptr<OrderedMultiplexNetwork>
 slice_equal_time(
     const Network* tnet,
-    size_t num_partitions
+    std::size_t num_partitions
 );
 
 }

@@ -38,7 +38,7 @@ class SharedPtrSortedRandomSet
      * @param start_capacity the initial capacity for which the sorted set is optimized
      */
     SharedPtrSortedRandomSet(
-        size_t start_capacity
+        std::size_t start_capacity
     ) : super(start_capacity) {};
 
     virtual

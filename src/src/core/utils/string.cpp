@@ -22,7 +22,7 @@ to_xml(
     std::string& in
 )
 {
-    size_t pos = 0;
+    std::size_t pos = 0;
 
     while ((pos = in.find("&", pos)) != std::string::npos)
     {

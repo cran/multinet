@@ -64,7 +64,7 @@ add(
 
     // Slice
 
-    std::vector<std::vector<size_t>> dim = {{store.size()}};
+    std::vector<std::vector<std::size_t>> dim = {{store.size()}};
     std::unique_ptr<VCube> vertices = vslice(layer_name, actors_, dim);
 
     // Add egdes
@@ -105,7 +105,7 @@ erase(
     return res;
 }
 
-size_t
+std::size_t
 LayerStore::
 index_of(
     const Network* layer
@@ -115,7 +115,7 @@ index_of(
     return store.index_of(layer);
 }
 
-size_t
+std::size_t
 LayerStore::
 size(
 ) const
@@ -127,7 +127,7 @@ size(
 const Network*
 LayerStore::
 at(
-    size_t pos
+    std::size_t pos
 ) const
 {
     return store.at(pos);
@@ -136,7 +136,7 @@ at(
 Network*
 LayerStore::
 at(
-    size_t pos
+    std::size_t pos
 )
 {
     return store.at(pos);

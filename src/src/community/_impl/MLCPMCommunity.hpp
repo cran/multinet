@@ -28,7 +28,7 @@ struct layer_set_comparator
         typename std::set<const typename M::layer_type*>::iterator it1 = a.begin();
         typename std::set<const typename M::layer_type*>::iterator it2 = b.begin();
 
-        for (size_t i=0; i<a.size(); i++)
+        for (std::size_t i=0; i<a.size(); i++)
         {
             if ((*it1)<(*it2))
             {
@@ -62,7 +62,7 @@ class
     );
 
     MLCPMCommunity(
-        size_t cid,
+        std::size_t cid,
         std::unordered_set<std::shared_ptr<MultiplexClique<M>>> cliques,
         typename std::unordered_set<const typename M::layer_type*> layers
     );
@@ -143,7 +143,7 @@ MLCPMCommunity() :
 template <typename M>
 MLCPMCommunity<M>::
 MLCPMCommunity(
-    size_t id,
+    std::size_t id,
     std::unordered_set<std::shared_ptr<MultiplexClique<M>>> cliques,
     std::unordered_set<const typename M::layer_type*> layers
 ) :

@@ -37,7 +37,7 @@ class
     ELEMENT_TYPE value;
 
     /** The number of occurrences of value. */
-    size_t counter;
+    std::size_t counter;
 
     /** An array of pointers to the next entry, for each level in the skip list. */
     std::vector<std::shared_ptr<SortedRandomBagEntry<ELEMENT_TYPE>>> forward;

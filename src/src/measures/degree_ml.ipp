@@ -7,7 +7,7 @@ namespace uu {
 namespace net {
 
 template <typename LayerIterator>
-size_t
+std::size_t
 degree(
     LayerIterator first,
     LayerIterator last,

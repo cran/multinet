@@ -8,7 +8,7 @@ namespace net {
  * Returns the number of vertices in the graph.
  */
 template<typename G>
-size_t
+std::size_t
 order(
     const G* g
 );

@@ -57,10 +57,10 @@ namespace std {
 template <>
 struct hash<uu::net::Dyad>
 {
-    size_t
+    std::size_t
     operator()(const uu::net::Dyad& d) const
     {
-        size_t seed = 0;
+        std::size_t seed = 0;
 
         for (auto v: d)
         {

@@ -10,11 +10,11 @@ namespace core {
 
 void
 eclat(
-      const std::vector<std::vector<size_t>>& data,
+      const std::vector<std::vector<std::size_t>>& data,
       std::vector<freq_itemset>& freq,
       std::vector<freq_itemset>& closed,
-      size_t min_sup,
-      size_t min_size
+      std::size_t min_sup,
+      std::size_t min_size
 );
 
 }

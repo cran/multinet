@@ -16,7 +16,7 @@ modularity(
 {
 
     double res = 0;
-    size_t m = g->edges()->size();
+    std::size_t m = g->edges()->size();
     if (m==0) return 0;
 
     for (auto community: *communities)
@@ -190,9 +190,9 @@ ordered_modularity(const M* mnet, const COMM* communities, double omega)
     }
 
     // quick fix
-    std::map<const uu::net::Network*,size_t> layer_index; // FIX ME!!
+    std::map<const uu::net::Network*,std::size_t> layer_index; // FIX ME!!
 
-    for (size_t l_idx=0; l_idx<mnet->layers()->size(); l_idx++)
+    for (std::size_t l_idx=0; l_idx<mnet->layers()->size(); l_idx++)
     {
         layer_index[mnet->layers()->at(l_idx)] = l_idx;
     }

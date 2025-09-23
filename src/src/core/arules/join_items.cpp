@@ -3,16 +3,16 @@
 namespace uu {
 namespace core {
 
-std::vector<size_t>
+std::vector<std::size_t>
 join_items(
-           std::vector<size_t> items1,
-           std::vector<size_t> items2
+           std::vector<std::size_t> items1,
+           std::vector<std::size_t> items2
            )
 {
     
-    std::vector<size_t> res;
-    size_t idx1 = 0;
-    size_t idx2 = 0;
+    std::vector<std::size_t> res;
+    std::size_t idx1 = 0;
+    std::size_t idx2 = 0;
     while (idx1 < items1.size() && idx2 < items2.size())
     {
         if (items1[idx1] < items2[idx2])

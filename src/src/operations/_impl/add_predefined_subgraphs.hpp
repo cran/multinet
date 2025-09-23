@@ -14,7 +14,7 @@ template<typename G>
 std::vector<const Vertex*>
 add_vertices(
     G* g,
-    size_t n,
+    std::size_t n,
     const std::string& base_vertex_name = "v"
 );
 
@@ -43,7 +43,7 @@ template<typename G>
 void
 add_complete_subgraph(
     G* g,
-    size_t n,
+    std::size_t n,
     const std::string& base_vertex_name = "v"
 );
 
@@ -56,8 +56,8 @@ template<typename G>
 void
 add_complete_bipartite_subgraph(
     G* g,
-    size_t n1,
-    size_t n2,
+    std::size_t n1,
+    std::size_t n2,
     const std::string& base_vertex_name1 = "v",
     const std::string& base_vertex_name2 = "u"
 );
@@ -70,7 +70,7 @@ template<typename G>
 void
 add_path(
     G* g,
-    size_t n,
+    std::size_t n,
     const std::string& base_vertex_name = "v"
 );
 
@@ -81,7 +81,7 @@ template<typename G>
 void
 add_cycle(
     G* g,
-    size_t n,
+    std::size_t n,
     const std::string& base_vertex_name = "v"
 );
 
@@ -95,7 +95,7 @@ template<typename G>
 void
 add_wheel(
     G* g,
-    size_t n,
+    std::size_t n,
     const std::string& base_vertex_name = "v"
 );
 

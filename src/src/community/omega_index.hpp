@@ -23,7 +23,7 @@ double
 omega_index(
     const CommunityStructure<M>* com1,
     const CommunityStructure<M>* com2,
-    size_t num_elements
+    std::size_t num_elements
 );
 
 }

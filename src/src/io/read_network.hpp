@@ -23,7 +23,7 @@ read_vertex(
     Network* g,
     const std::vector<std::string>& fields,
     const std::vector<core::Attribute>& vertex_attributes,
-    size_t line_number
+    std::size_t line_number
 );
 
 
@@ -33,7 +33,7 @@ read_edge(
     Network* g,
     const std::vector<std::string>& fields,
     const std::vector<core::Attribute>& edge_attributes,
-    size_t line_number
+    std::size_t line_number
 );
 */
 

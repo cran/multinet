@@ -4,7 +4,7 @@ namespace uu {
 namespace net {
 
 template<typename G>
-size_t
+std::size_t
 order(
     const G* g
 )

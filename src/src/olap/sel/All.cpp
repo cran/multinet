@@ -14,7 +14,7 @@ All(
 void
 All::
 eval(
-    size_t size
+    std::size_t size
 )
 {
     if (size > 0)
@@ -35,7 +35,7 @@ has_next(
 }
 
 
-size_t
+std::size_t
 All::
 next(
 )

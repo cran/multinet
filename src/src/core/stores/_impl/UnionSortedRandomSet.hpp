@@ -205,7 +205,7 @@ UnionSortedRandomSet<ELEMENT_TYPE>::
 summary(
 ) const
 {
-    size_t s = size();
+    std::size_t s = size();
     std::string summary =
         std::to_string(s) +
         (s==1?" element":" elements");

@@ -14,7 +14,7 @@ class MetaNetwork
   public:
 
     std::unique_ptr<Network> w;
-    size_t order = 0;
+    std::size_t order = 0;
     std::unordered_map<const Vertex*, std::set<const Vertex*>> mapping;
     std::unordered_map<const Vertex*, const Vertex*> reverse_mapping;
 

@@ -53,7 +53,7 @@ public core::Observer<typename S::value_type>
     /** Internal object store. */
     S* store_;
     /** Count of elements */
-    std::unordered_map<typename S::value_type*, size_t> count;
+    std::unordered_map<typename S::value_type*, std::size_t> count;
 
 };
 

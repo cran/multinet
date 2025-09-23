@@ -16,14 +16,14 @@ class
     public EvolutionModel<M>
 {
 
-    size_t m0;
-    size_t m;
+    std::size_t m0;
+    std::size_t m;
 
   public:
 
     PAModel(
-        size_t m0,
-        size_t m
+        std::size_t m0,
+        std::size_t m
     );
 
     ~PAModel();

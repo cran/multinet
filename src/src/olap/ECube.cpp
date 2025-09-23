@@ -111,7 +111,7 @@ vcube2(
 }
 
 
-size_t
+std::size_t
 ECube::
 size(
 ) const
@@ -120,7 +120,7 @@ size(
 }
 
 
-size_t
+std::size_t
 ECube::
 order(
 ) const
@@ -129,7 +129,7 @@ order(
 }
 
 
-std::vector<size_t>
+std::vector<std::size_t>
 ECube::
 dsize(
 ) const
@@ -169,7 +169,7 @@ members(
 const std::vector<std::string>&
 ECube::
 members(
-    size_t dim_idx
+    std::size_t dim_idx
 ) const
 {
     return data_->members(dim_idx);
@@ -321,7 +321,7 @@ get(
 const Edge*
 ECube::
 at(
-    size_t pos
+    std::size_t pos
 ) const
 {
     return data_->at(pos);
@@ -424,7 +424,7 @@ add_member(
 SimpleEdgeStore*
 ECube::
 cell(
-    const std::vector<size_t>& index
+    const std::vector<std::size_t>& index
 )
 {
     return data_->cell(index);
@@ -434,7 +434,7 @@ cell(
 const SimpleEdgeStore*
 ECube::
 cell(
-    const std::vector<size_t>& index
+    const std::vector<std::size_t>& index
 ) const
 {
     return data_->cell(index);
@@ -461,7 +461,7 @@ cell(
 }
 
 
-size_t
+std::size_t
 ECube::
 num_cells(
 ) const
@@ -541,7 +541,7 @@ init(
 SimpleEdgeStore*
 ECube::
 init(
-    const std::vector<size_t>& index,
+    const std::vector<std::size_t>& index,
     const std::shared_ptr<SimpleEdgeStore>& store
 )
 {
@@ -551,7 +551,7 @@ init(
 SimpleEdgeStore*
 ECube::
 init(
-    size_t pos,
+    std::size_t pos,
     const std::shared_ptr<SimpleEdgeStore>& store
 )
 {
@@ -561,7 +561,7 @@ init(
 SimpleEdgeStore*
 ECube::
 init(
-    const std::vector<size_t>& index
+    const std::vector<std::size_t>& index
 )
 {
     return data_->init(index, get_store());
@@ -570,7 +570,7 @@ init(
 SimpleEdgeStore*
 ECube::
 init(
-    size_t pos
+    std::size_t pos
 )
 {
     return data_->init(pos, get_store());
@@ -589,7 +589,7 @@ register_obs(
 void
 ECube::
 register_obs(
-    const std::vector<size_t>& index
+    const std::vector<std::size_t>& index
 )
 {
     data_->register_obs(index);
@@ -599,7 +599,7 @@ register_obs(
 void
 ECube::
 register_obs(
-    size_t pos
+    std::size_t pos
 )
 {
     data_->register_obs(pos);
@@ -629,7 +629,7 @@ erase(
 
     else
     {
-        for (size_t i = 0; i < data_->data_.size(); i++)
+        for (std::size_t i = 0; i < data_->data_.size(); i++)
         {
             data_->data_[i]->erase(vcube, vertex);
         }

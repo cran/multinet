@@ -17,12 +17,12 @@ MLECubeStore(
     attr_ = std::make_unique<core::AttributeStore<Edge>>();
 }
 
-size_t
+std::size_t
 MLECubeStore::
 size(
 ) const
 {
-    size_t res = 0;
+    std::size_t res = 0;
 
     for (auto&& pair: interlayer_edges_)
     {

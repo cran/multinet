@@ -2,6 +2,7 @@
 #define UU_OLAP_SEL_INDEXES_H_
 
 #include <stddef.h>
+#include <cstddef>
 
 namespace uu {
 namespace net {
@@ -17,7 +18,7 @@ class Indexes
     virtual
     void
     eval(
-        size_t size
+        std::size_t size
     );
 
     /**  */
@@ -29,7 +30,7 @@ class Indexes
 
     /**  */
     virtual
-    size_t
+    std::size_t
     next(
     );
 

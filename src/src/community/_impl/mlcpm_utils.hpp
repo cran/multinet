@@ -14,8 +14,8 @@ template <typename M>
 std::unique_ptr<CommunityStructure<M>>
 mlcpm(
     const M* mnet,
-    size_t k,
-    size_t m
+    std::size_t k,
+    std::size_t m
 );
 
 
@@ -28,8 +28,8 @@ template <typename M>
 std::unordered_set<std::shared_ptr<MultiplexClique<M>>>
 find_max_cliques(
     const M* mnet,
-    size_t k,
-    size_t m
+    std::size_t k,
+    std::size_t m
 );
 
 
@@ -45,15 +45,15 @@ template <typename M>
 std::map<std::shared_ptr<MultiplexClique<M>>,std::unordered_set<std::shared_ptr<MultiplexClique<M>>> >
 build_max_adjacency_graph(
     const std::unordered_set<std::shared_ptr<MultiplexClique<M>>>& C,
-    size_t k,
-    size_t m
+    std::size_t k,
+    std::size_t m
 );
 
 template <typename M>
 std::unordered_set<std::shared_ptr<MLCPMCommunity<M>>>
 find_max_communities(
     const std::map<std::shared_ptr<MultiplexClique<M>>,std::unordered_set<std::shared_ptr<MultiplexClique<M>>> >& adjacency,
-    size_t m
+    std::size_t m
 );
 
 
@@ -65,7 +65,7 @@ find_max_communities(
     std::vector<std::shared_ptr<MultiplexClique<M>>> Candidates,
     std::unordered_set<std::shared_ptr<MultiplexClique<M>>>& processedCliques,
     layer_sets<M>& processedLayerCombinations,
-    size_t m,
+    std::size_t m,
     std::unordered_set<std::shared_ptr<MLCPMCommunity<M>>>& result
 );
 

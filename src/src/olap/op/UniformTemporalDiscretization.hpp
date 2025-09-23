@@ -20,7 +20,7 @@ class
     core::Time min_;
     core::Time max_;
     std::chrono::system_clock::duration width_;
-    size_t n_;
+    std::size_t n_;
 
   public:
 
@@ -28,7 +28,7 @@ class
         const STORE* store,
         const core::Time& min,
         const core::Time& max,
-        size_t n
+        std::size_t n
     ) : store_(store), min_(min), max_(max), n_(n)
     {
         if (max_ <= min_)
@@ -61,7 +61,7 @@ class
 
             else
             {
-                size_t idx = trunc((time-min_)/width_);
+                std::size_t idx = trunc((time-min_)/width_);
                 res[idx] = true;
             }
         }

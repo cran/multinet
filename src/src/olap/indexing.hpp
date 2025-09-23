@@ -7,10 +7,10 @@
 namespace uu {
 namespace net {
 
-size_t
+std::size_t
 idx_to_pos(
-    const std::vector<size_t>& index,
-    const std::vector<size_t>& dimensions
+    const std::vector<std::size_t>& index,
+    const std::vector<std::size_t>& dimensions
 );
 
 }
