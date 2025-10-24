@@ -19,12 +19,12 @@ summary.Rcpp_RMLNetwork <- function(object, ...) {
         for (i in 1 : length(mlnet.layers)) {
             mlnet.table[i,1] = vcount(mlnet.layers[[i]])
             mlnet.table[i,2] = ecount(mlnet.layers[[i]])
-            mlnet.table[i,3] = is.directed(mlnet.layers[[i]])
+            mlnet.table[i,3] = is_directed(mlnet.layers[[i]])
             mlnet.table[i,4] = count_components(mlnet.layers[[i]], mode = "strong")
             mlnet.table[i,5] = max(components(mlnet.layers[[i]], mode = "strong")$csize)
-            mlnet.table[i,6] = graph.density(mlnet.layers[[i]])
+            mlnet.table[i,6] = edge_density(mlnet.layers[[i]])
             mlnet.table[i,7] = transitivity(mlnet.layers[[i]])
-            mlnet.table[i,8] = average.path.length(mlnet.layers[[i]])
+            mlnet.table[i,8] = mean_distance(mlnet.layers[[i]])
             mlnet.table[i,9] = diameter(mlnet.layers[[i]])
         }
     }

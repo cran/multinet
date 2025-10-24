@@ -1,3 +1,7 @@
+# version 4.3.2
+
+- made compatible with latest version of igraph.
+
 # version 4.3.1
 
 - updated to version 0.9.1 of the uunet library. Prevents an error on some compilers, not caught by CRAN checks.

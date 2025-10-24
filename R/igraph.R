@@ -5,7 +5,7 @@ as.igraph.Rcpp_RMLNetwork <- function (x, layers=NULL, merge.actors=TRUE, all.ac
     if (is.null(layers)) {
         layers <- layers_ml(x)
     }
-    dir = max(is_directed_ml(x)$dir)
+    dir = as.logical(max(is_directed_ml(x)$dir))
     
     if (merge.actors) {
         a_df <- actors_ml(x, layers, attributes=T)
