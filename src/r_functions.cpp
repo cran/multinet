@@ -6,7 +6,7 @@
 #include "operations/project.hpp"
 #include "community/glouvain2.hpp"
 #include "community/abacus.hpp"
-#include "community/infomap.hpp"
+
 #include "community/flat.hpp"
 #include "community/mlp.hpp"
 #include "community/mlcpm.hpp"
@@ -3144,20 +3144,8 @@ infomap_ml(const RMLNetwork& rmnet,
            bool include_self_links
           )
 {
-    auto mnet = rmnet.get_mlnet();
-
-    try
-    {
-        auto com_struct = uu::net::infomap(mnet, overlapping, directed, include_self_links);
-        return to_dataframe(com_struct.get());
-    }
-
-    catch (std::exception& e)
-    {
-        Rcout << "Warning: could not run external library: " << e.what() << std::endl;
-        Rcout << "Returning empty community set." << std::endl;
-    }
-
+    Rcout << "Warning: the function is currently not available, because of code incompatibility with CRAN. Returning an empty community set." << std::endl;
+ 
     auto com_struct = std::make_unique<uu::net::CommunityStructure<uu::net::MultilayerNetwork>>();
     return to_dataframe(com_struct.get());
 }

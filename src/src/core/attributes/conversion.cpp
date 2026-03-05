@@ -8,7 +8,7 @@ namespace uu {
 namespace core {
 
 time_t
-timegm(
+uunet_timegm(
     std::tm * timeptr
 )
 {
@@ -160,13 +160,14 @@ epoch_to_time (
     int seconds_since_epoch
 )
 {
-    Time epoch;
-    std::istringstream in1{"1970-01-01 00:00:00 +0000"};
-    in1 >> date::parse(kDEFAULT_TIME_FORMAT, epoch);
-
+    //Time epoch;
+    //std::istringstream in1{"1970-01-01 00:00:00 +0000"};
+    //in1 >> date::parse(kDEFAULT_TIME_FORMAT.c_str(), epoch);
+    
+    std::chrono::time_point<std::chrono::system_clock> epoch{};
     std::chrono::seconds secs (seconds_since_epoch);
 
-    return epoch + secs;
+    return std::chrono::time_point_cast<std::chrono::seconds>(epoch + secs);
 
 }
 
@@ -197,11 +198,17 @@ to_time (
     const std::string& format
 )
 {
-    Time result;
-    std::istringstream in{time_as_string};
-    in >> date::parse(format, result);
+    //Time result;
+    //std::istringstream in{time_as_string};
+    //in >> date::parse(format, result);
 
-    return result;
+    //return result;
+    std::istringstream ss{time_as_string};
+    std::tm t = {};
+    ss >> std::get_time(&t, format.c_str());
+
+    auto time = uunet_timegm(&t);
+    return std::chrono::time_point_cast<std::chrono::seconds>(std::chrono::system_clock::from_time_t(time));
 }
 
 
